@@ -1,0 +1,13 @@
+{
+  "name": "scrapy2",
+  "type": "module",
+  "version": "1.0.0",
+  "author": {
+    "name": "Piotr Siwy",
+    "email": "xpiteqx@gmail.com"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^22.8.0"
+  }
+}
