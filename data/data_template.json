@@ -1,0 +1,52 @@
+{
+    "sports":[
+        {
+            "name":"CS2",
+            "tournaments":
+            [
+                {
+                    "name":"BLAST Premier: Fall Groups 2024",
+                    "matches":
+                    [
+                        {
+                            "teamHome":"Virtus.pro",
+                            "teamAway":"Liquid",
+                            "datetime":"July 31, 19:30",
+                            "mode":"BO3",
+                            "urls": [],
+                            "markets":
+                            [
+                                {
+                                    "name":"Match Winner",
+                                    "odds":
+                                    [
+                                        {
+                                            "name":"home",
+                                            "coefs":
+                                            [
+                                                {
+                                                    "book":"Thunderpick",
+                                                    "value":1.52
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name":"away",
+                                            "coefs":
+                                            [
+                                                {
+                                                    "book":"Thunderpick",
+                                                    "value":2.35
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
