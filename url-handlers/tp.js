@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 
 export async function handleURL_tp(data, url){
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: false,
     args: ["--disable-web-security"]
   });  
   
@@ -136,7 +136,6 @@ export async function handleURL_tp(data, url){
 //    console.log('coef: ');
 //    console.log(JSON.stringify(coef, null, 2));
       // get all the other markets
-    // TODO i need scrolling here
     selector = 'div.market-accordion';
     await page.waitForSelector(selector);
     const marketHandles = await page.$$(selector);
