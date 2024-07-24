@@ -1,5 +1,6 @@
 import { handleURL_tp } from './url-handlers/tp.js'
 import { handleURL_ms } from './url-handlers/ms.js'
+import { handleURL_esb } from './url-handlers/esb.js'
 
 import { readFileSync, writeFileSync } from 'fs'
 
@@ -22,17 +23,27 @@ const urls_ms =
   'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077812',
 ];
 
+const urls_esb =
+[
+  'https://esportsbet.io/de/esportsbull/OddsPage/29762888/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
+];
+
 // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
 // https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
 const allPromises = [];
 
-for(const url of urls_tp){
-  const promise = handleURL_tp(data, url);
-  allPromises.push(promise);
-}
+// for(const url of urls_tp){
+//   const promise = handleURL_tp(data, url);
+//   allPromises.push(promise);
+// }
 
-for(const url of urls_ms){
-  const promise = handleURL_ms(data, url);
+// for(const url of urls_ms){
+//   const promise = handleURL_ms(data, url);
+//   allPromises.push(promise);
+// }
+
+for(const url of urls_esb){
+  const promise = handleURL_esb(data, url);
   allPromises.push(promise);
 }
 

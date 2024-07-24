@@ -113,7 +113,7 @@ export async function handleURL_ms(data, url){
           market.odds.push({name: oddName, coefs: []})
           odd = market.odds.findLast(o => o.name === oddName);
         }
-        const value = await oddHandle.$eval('span.coef', e => e.textContent);
+        const value = await oddHandle.$eval('span.coef', e => parseFloat(e.textContent));
 //console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
         coef = odd.coefs.findLast(c => c.book === 'Mystake');
         if(!coef){
