@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
-import moment from "moment-timezone";
 
-export async function handleURL(data, url){
+export async function handleURL_tp(data, url){
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ["--disable-web-security"]
@@ -58,15 +57,14 @@ export async function handleURL(data, url){
     el = await page.waitForSelector(selector);
     const datetime = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
 //    console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
-    selector = "div.match-header__bo";
-    el = await page.waitForSelector(selector);
-    const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
+    // selector = "div.match-header__bo";
+    // el = await page.waitForSelector(selector);
+    // const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
 //    console.log('>>>>>>>>>>>>>>> scraped mode: ' + mode);
     let match = tournament.matches.findLast(m =>
         m.teamHome === teamHome &&
         m.teamAway === teamAway &&
-        m.datetime === datetime &&
-        m.mode     === mode
+        m.datetime === datetime
     )
     if(!match){
       /* tournament is new */
@@ -74,15 +72,13 @@ export async function handleURL(data, url){
         teamHome: teamHome,
         teamAway: teamAway,
         datetime: datetime,
-        mode: mode,
         urls: [],
         markets: []
       });
       match = tournament.matches.findLast(m =>
           m.teamHome === teamHome &&
           m.teamAway === teamAway &&
-          m.datetime === datetime &&
-          m.mode     === mode
+          m.datetime === datetime
       );
     }
     match.urls.push({book: 'Thunderpick', url: url});
@@ -212,85 +208,3 @@ export async function handleURL(data, url){
   }
   
 }
-
-// export async function handleURL_tp_parallel(urls){
-//   let browser;
-//   // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
-//   (async () => {
-//     browser = await puppeteer.launch({
-//       headless: "new",
-//       args: ["--disable-web-security"]
-//     });
-
-
-//     const matches = (await Promise.allSettled(
-//       urls.map(async (url) => {
-//         const page = await browser.newPage();
-//         page.setViewport({width:1000, height:30000})
-
-//         await page.goto(url);
-
-//         const marketArray = [];
-
-//         { 
-//           // scrape the main-market
-//           const odds = [];
-//           const sel = 'div.main-market > button';
-//           await page.waitForSelector(sel);
-//           const oddHandles = await page.$$(sel);
-////           // console.log('oddHandles: ' + oddHandles);
-//           for(let i = 0; i < oddHandles.length; i++){
-//               const coefHandle = await oddHandles[i].$('span', el => el.textContent);
-//               const coef = coefHandle ? coefHandle.evaluate(el => el.textContent) : '0';
-//               odds.push({
-//                 name: (i+1).toString(),
-//                 odd: {
-//                   book: 'tp',
-//                   coef: coef
-//                 }
-//               });
-//           }
-//           marketArray.push({name:'Match winner', odds: odds});
-//         }
-//         {
-//           // scrape all the other markets
-//           const sel = '.market-accordion';
-//           const marketHandles = await page.$$(sel);
-////           // console.log('marketHandles: (' + marketHandles.length + ') ' + marketHandles);
-//           for(const marketHandle of marketHandles){
-//             const name = await marketHandle.$eval('div.market-accordion__market-name', el => el.textContent);
-//             const odds = [];
-//             const oddHandles = await marketHandle.$$('button.odds-button');
-////             // console.log('oddHandles: (' + oddHandles.length + ') ' + oddHandles);
-//             for(const oddHandle of oddHandles){
-//               const coefHandle = await oddHandle.$('span.odds-button__odds');
-//               const coef = coefHandle ? await coefHandle.evaluate(el => el.textContent) : '0'
-//               odds.push({
-//                 name: await oddHandle.$eval('div.odds-button__name', el => el.textContent),
-//                 odd: {
-//                   book: 'tp',
-//                   coef: coef,
-//                 }
-//               })
-//             }
-//             marketArray.push({name:name, odds:odds});
-//           }
-//         }
-        
-//         // for(const market of marketArray){
-////         //     console.log(market.name);
-//         //     for(const odd of market.odds){
-////         //         console.log(odd);
-//         //     }
-//         // }
-
-//         await page.close();
-//         return marketArray;
-//       })))
-//       .filter(e => e.status === "fulfilled")
-//       .map(e => e.value);
-////     console.log(matches);
-//   })()
-//     .catch(err => console.error(err))
-//     .finally(() => browser?.close());
-// }
