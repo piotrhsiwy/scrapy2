@@ -1,0 +1,28 @@
+{
+    "mapping": [
+        {
+            "specificName": "BO3 Series Win",
+            "globalID":     "MW"
+        },
+        {
+            "specificName": "B03 Hdp: VP -1.5",
+            "globalID":     "MHDP"
+        },
+        {
+            "specificName": "B03 Hdp: TL -1.5",
+            "globalID":     "MHDP"
+        },
+        {
+            "specificName": "Game 1 Win",
+            "globalID":     "M1W"
+        },
+        {
+            "specificName": "Game 2 Win",
+            "globalID":     "M2W"
+        },
+        {
+            "specificName": "Game 3 Win",
+            "globalID":     "M3W"
+        }
+    ]
+}

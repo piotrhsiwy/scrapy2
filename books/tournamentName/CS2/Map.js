@@ -1,0 +1,47 @@
+// idea from https://www.geeksforgeeks.org/enums-in-javascript/
+export const tournamentNameMap = Object.freeze
+({
+    BPFG2024:           'BLAST Premier: Fall Groups 2024',
+});
+
+/* TEMPLATE TO USE WHEN CREATING SPECIFIC MAPPING .JS files
+
+({
+    "LOL":                "League of Legends",
+    "CS2":                "Counter-Strike 2",
+    "DOTA2":              "DOTA 2",
+    "MOBILE_MOBA":        "Mobile Moba",
+    "VALORANT":           "Valorant",
+    "MOBILE_LEGENDS":     "Mobile Legends: Bang Bang",
+    "OVERWATCH2":         "Overwatch 2",
+    "RAINBOW6":           "Rainbow 6",
+    "COD":                "Call of Duty",
+    "SC2":                "Starcraft 2",
+    "SC_BROODWAR":        "Startcraft Broodwar",
+    "ROCKET_LEAGUE":      "Rocket League",
+    "CROSSFIRE":          "CrossFire",
+    "WARCRAFT3":          "Warcraft 3",
+    "PUBG_MOBILE":        "PUBG Mobile",
+    "WILD_RIFT":          "League of Legends: Wild Rift",
+    "EA_SPORTS_FC":       "EA Sports FC",
+    "COD_WARZONE":        "Call of Duty: Warzone",
+    "HEARTSTONE":         "Heartstone",
+    "NBA2K":              "NBA 2K",
+    "PUBG":               "PUBG",
+    "FORTNITE":           "Fortnite",
+    "TFT":                "Teamfightt Tactics",
+    "FREE_FIRE":          "Free Fire",
+    "STREET_FIGHTER6":    "Street Fighter 6",
+    "TEKKEN8":            "Tekken 8",
+    "APEX_LEGENDS":       "Apex Legends",
+    "RENNSPORT":          "Rennsport",
+    "HALO":               "Halo",
+    "E_CRICKET":          "E-Cricket",
+    "ARENA_OF_VALOR":     "Arena of Valor",
+    "AGE_OF_EMPIRES":     "Age of Empires",
+    "KING_OF_GLORY":      "King of Glory",
+    "E_BASKETBALL":       "E-Basketball",
+    "E_SOCCER":           "E-Soccer",
+});
+
+*/

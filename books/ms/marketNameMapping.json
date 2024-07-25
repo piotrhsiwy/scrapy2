@@ -1,0 +1,30 @@
+{
+    "mapping": [
+        {
+            "specificName": "Match winner",
+            "globalID":     "MW"
+        },
+        {
+            "specificName": "Map advantage",
+            "globalID":     "MHDP"
+        },
+        {
+            "specificName": "Correct score",
+            "globalID":     "CS"
+        },
+        {
+            "specificName": "1st map - Winner",
+            "globalID":     "M1W"
+        },
+        {
+            "specificName": "2st map - Winner",
+            "globalID":     "M2W"
+        }
+,
+        {
+            "specificName": "3st map - Winner",
+            "globalID":     "M3W"
+        }
+
+    ]
+}

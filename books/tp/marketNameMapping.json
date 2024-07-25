@@ -1,0 +1,30 @@
+{
+    "mapping": [
+        {
+            "specificName": "Match Winner",
+            "globalID":     "MW"
+        },
+        {
+            "specificName": "Match Handicap",
+            "globalID":     "MHDP"
+        },
+        {
+            "specificName": "Best of 3 Correct Match Score",
+            "globalID":     "CS"
+        },
+        {
+            "specificName": "Map 1 Winner",
+            "globalID":     "M1W"
+        },
+        {
+            "specificName": "2st map - Winner",
+            "globalID":     "M2W"
+        }
+,
+        {
+            "specificName": "3st map - Winner",
+            "globalID":     "M3W"
+        }
+
+    ]
+}
