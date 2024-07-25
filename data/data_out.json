@@ -36,12 +36,12 @@
                           "value": 1.58
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 1.668
-                        },
-                        {
                           "book": "Mystake",
                           "value": 1.58
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.668
                         }
                       ]
                     },
@@ -53,12 +53,12 @@
                           "value": 2.2
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 2.219
-                        },
-                        {
                           "book": "Mystake",
                           "value": 2.27
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.219
                         }
                       ]
                     }
@@ -282,6 +282,52 @@
                   ]
                 },
                 {
+                  "name": "Total maps",
+                  "odds": [
+                    {
+                      "name": "Over Liquid.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.9
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over 53.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 53.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Match winner / Map 2 winner",
                   "odds": [
                     {
@@ -323,6 +369,68 @@
                   ]
                 },
                 {
+                  "name": "Map 1 Winner",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.79
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.78
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.729
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.93
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.92
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.119
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Winner",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.57
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.28
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Number of maps parity",
                   "odds": [
                     {
@@ -340,6 +448,52 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.85
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "1st map - Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.91
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.77
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.97
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.72
                         }
                       ]
                     }
@@ -378,39 +532,105 @@
                   ]
                 },
                 {
-                  "name": "Map 1 Winner",
+                  "name": "1st map - Rounds handicap",
                   "odds": [
                     {
-                      "name": "Virtus.pro",
+                      "name": "Virtus.pro -2.5",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.78
-                        },
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.729
-                        },
-                        {
                           "book": "Mystake",
-                          "value": 1.79
+                          "value": 2.13
                         }
                       ]
                     },
                     {
-                      "name": "Liquid",
+                      "name": "Liquid 2.5",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.92
-                        },
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.119
-                        },
+                          "book": "Mystake",
+                          "value": 1.61
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Rounds handicap",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -2.5",
+                      "coefs": [
                         {
                           "book": "Mystake",
-                          "value": 1.93
+                          "value": 1.81
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 2.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.86
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Race to Rounds (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.72
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.66
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.61
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.2
                         }
                       ]
                     }
@@ -710,6 +930,249 @@
                   ]
                 },
                 {
+                  "name": "Will there be Overtime? (Map 2)",
+                  "odds": [
+                    {
+                      "name": "No",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.08
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Yes",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 7
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Race to Rounds (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Will there be Overtime? (Map 1)",
+                  "odds": [
+                    {
+                      "name": "No",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Yes",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 6.4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Rounds handicap 1st Half (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.17
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.59
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Winner 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.61
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round Advantage 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Winner 1st Half (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.86
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.86
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "1st map - Rounds odd/even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Rounds odd/even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 1 Win (Live Odds)",
                   "odds": [
                     {
@@ -793,29 +1256,6 @@
                   ]
                 },
                 {
-                  "name": "Game 1 Total Rounds21.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.995
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.805
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Round 1 Winner - Map 1",
                   "odds": [
                     {
@@ -833,6 +1273,29 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.88
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 Total Rounds21.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.995
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.805
                         }
                       ]
                     }
@@ -862,6 +1325,29 @@
                   ]
                 },
                 {
+                  "name": "Round 13 Winner - Map 1",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 1 First to Win 5 Rounds",
                   "odds": [
                     {
@@ -885,14 +1371,21 @@
                   ]
                 },
                 {
-                  "name": "Round 13 Winner - Map 1",
+                  "name": "First Half Winner 1X2 - Map 1",
                   "odds": [
                     {
                       "name": "Virtus.pro",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.82
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Draw",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
                         }
                       ]
                     },
@@ -900,8 +1393,7 @@
                       "name": "Liquid",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.88
+                          "book": "Thunderpick"
                         }
                       ]
                     }
@@ -931,7 +1423,7 @@
                   ]
                 },
                 {
-                  "name": "First Half Winner 1X2 - Map 1",
+                  "name": "Second Half Winner 1X2 - Map 1",
                   "odds": [
                     {
                       "name": "Virtus.pro",
@@ -977,81 +1469,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Second Half Winner 1X2 - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Draw",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 13th Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 First Round Win",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.833
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.906
                         }
                       ]
                     }
@@ -1121,6 +1538,52 @@
                       "coefs": [
                         {
                           "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 13th Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 First Round Win",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.833
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.906
                         }
                       ]
                     }
@@ -1232,29 +1695,6 @@
                   ]
                 },
                 {
-                  "name": "Total maps",
-                  "odds": [
-                    {
-                      "name": "Over Liquid.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.9
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under Liquid.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Correct pistol round score - map 1",
                   "odds": [
                     {
@@ -1292,23 +1732,23 @@
                   ]
                 },
                 {
-                  "name": "Total rounds",
+                  "name": "Game 1 Team With Most Assists Player (Flash Assists Include)",
                   "odds": [
                     {
-                      "name": "Over 53.5",
+                      "name": "Virtus.pro",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Esportsbet",
+                          "value": 1.766
                         }
                       ]
                     },
                     {
-                      "name": "Under 53.5",
+                      "name": "Liquid",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Esportsbet",
+                          "value": 1.984
                         }
                       ]
                     }
@@ -1560,29 +2000,6 @@
                   ]
                 },
                 {
-                  "name": "Game 1 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.766
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.984
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 1 Total Rounds Odd Or Even",
                   "odds": [
                     {
@@ -1600,29 +2017,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Winner",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.57
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.28
                         }
                       ]
                     }
@@ -1652,29 +2046,6 @@
                   ]
                 },
                 {
-                  "name": "1st map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.91
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.77
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 1 Total Bombs Explode Odd Or Even",
                   "odds": [
                     {
@@ -1692,29 +2063,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.97
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.72
                         }
                       ]
                     }
@@ -1744,30 +2092,7 @@
                   ]
                 },
                 {
-                  "name": "1st map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.13
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.61
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Win",
+                  "name": "Map 2 Winner",
                   "odds": [
                     {
                       "name": "Virtus.pro",
@@ -1775,6 +2100,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.729
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.55
                         }
                       ]
                     },
@@ -1784,29 +2113,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.119
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
+                        },
                         {
-                          "book": "Mystake",
-                          "value": 1.81
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.86
+                          "book": "Thunderpick",
+                          "value": 2.3
                         }
                       ]
                     }
@@ -1830,65 +2140,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.805
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Race to Rounds (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.72
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.66
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.61
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.2
                         }
                       ]
                     }
@@ -1941,29 +2192,6 @@
                   ]
                 },
                 {
-                  "name": "Will there be Overtime? (Map 2)",
-                  "odds": [
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.08
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 7
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 First to Win 10 Rounds",
                   "odds": [
                     {
@@ -1987,89 +2215,7 @@
                   ]
                 },
                 {
-                  "name": "Race to Rounds (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 First Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 13th Round Total Kills7.5",
                   "odds": [
                     {
                       "name": "Over",
@@ -2257,23 +2403,23 @@
                   ]
                 },
                 {
-                  "name": "Will there be Overtime? (Map 1)",
+                  "name": "Game 2 13th Round Total Kills7.5",
                   "odds": [
                     {
-                      "name": "No",
+                      "name": "Over",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.1
+                          "book": "Esportsbet",
+                          "value": 2.262
                         }
                       ]
                     },
                     {
-                      "name": "Yes",
+                      "name": "Under",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 6.4
+                          "book": "Esportsbet",
+                          "value": 1.592
                         }
                       ]
                     }
@@ -2303,29 +2449,6 @@
                   ]
                 },
                 {
-                  "name": "Rounds handicap 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.17
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.59
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 13th Round Win",
                   "odds": [
                     {
@@ -2343,52 +2466,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.906
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Winner 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.61
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round Advantage 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
                         }
                       ]
                     }
@@ -2418,29 +2495,6 @@
                   ]
                 },
                 {
-                  "name": "Winner 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.86
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.86
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 13th Round First Kill",
                   "odds": [
                     {
@@ -2458,29 +2512,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.906
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
                         }
                       ]
                     }
@@ -2510,29 +2541,6 @@
                   ]
                 },
                 {
-                  "name": "2nd map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 Team With Most Damage Dealt Player",
                   "odds": [
                     {
@@ -2550,29 +2558,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.015
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.766
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.984
                         }
                       ]
                     }
@@ -2632,6 +2617,29 @@
                   ]
                 },
                 {
+                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.766
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.984
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 2 Total Rounds Odd Or Even",
                   "odds": [
                     {
@@ -2649,29 +2657,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
                         }
                       ]
                     }
@@ -2719,7 +2704,53 @@
                   ]
                 },
                 {
+                  "name": "Game 2 Total Enemy Kills Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 2 Total Bombs Explode Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Bombs Defused Odd Or Even",
                   "odds": [
                     {
                       "name": "Odd",
@@ -2765,30 +2796,7 @@
                   ]
                 },
                 {
-                  "name": "Game 2 Total Bombs Defused Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Win",
+                  "name": "Map 3 Winner",
                   "odds": [
                     {
                       "name": "Virtus.pro",
@@ -2796,6 +2804,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.759
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.65
                         }
                       ]
                     },
@@ -2805,6 +2817,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.075
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.1
                         }
                       ]
                     }
@@ -4478,29 +4494,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 2.6
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Map 2 Winner",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.55
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.3
                         }
                       ]
                     }
@@ -6823,29 +6816,6 @@
                   ]
                 },
                 {
-                  "name": "Map 3 Winner",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.65
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Round Handicap - Map 3",
                   "odds": [
                     {
@@ -9137,12 +9107,12 @@
               "datetime": "2024-07-31T15:00:00.000Z",
               "urls": [
                 {
-                  "book": "Esportsbet",
-                  "url": "https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
-                },
-                {
                   "book": "Thunderpick",
                   "url": "https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/natus-vincere-vs-big/833218"
+                },
+                {
+                  "book": "Esportsbet",
+                  "url": "https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
                 },
                 {
                   "book": "Mystake",
@@ -9161,12 +9131,12 @@
                           "value": 1.17
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 1.225
-                        },
-                        {
                           "book": "Mystake",
                           "value": 1.17
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.225
                         }
                       ]
                     },
@@ -9178,12 +9148,12 @@
                           "value": 4.4
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 4.273
-                        },
-                        {
                           "book": "Mystake",
                           "value": 4.4
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 4.273
                         }
                       ]
                     }
@@ -9273,15 +9243,6 @@
                   "name": "Correct Score",
                   "odds": [
                     {
-                      "name": "2:0",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.75
-                        }
-                      ]
-                    },
-                    {
                       "name": "BIG:0",
                       "coefs": [
                         {
@@ -9316,6 +9277,38 @@
                           "value": 8.4
                         }
                       ]
+                    },
+                    {
+                      "name": "2:0",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.75
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total maps",
+                  "odds": [
+                    {
+                      "name": "Over BIG.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under BIG.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.56
+                        }
+                      ]
                     }
                   ]
                 },
@@ -9343,6 +9336,68 @@
                   ]
                 },
                 {
+                  "name": "Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over 46.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 46.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Map 1 Winner",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.33
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.38
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.342
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 3.1
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.8
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 3.276
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Natus Vincere Wins At Least One Map",
                   "odds": [
                     {
@@ -9360,6 +9415,29 @@
                         {
                           "book": "Thunderpick",
                           "value": 8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Winner",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.26
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 3.5
                         }
                       ]
                     }
@@ -9407,6 +9485,75 @@
                   ]
                 },
                 {
+                  "name": "1st map - Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over BIG0.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.72
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under BIG0.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.96
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over BIG0.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.75
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under BIG0.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.92
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "1st map - Rounds handicap",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere -3.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.77
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 3.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.91
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Match winner / Map 2 winner",
                   "odds": [
                     {
@@ -9448,6 +9595,88 @@
                   ]
                 },
                 {
+                  "name": "2nd map - Rounds handicap",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere -4.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.92
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 4.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.76
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Race to Rounds (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.53
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.37
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Natus Vincere 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.75
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Natus Vincere 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.33
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 3.25
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Number of maps parity",
                   "odds": [
                     {
@@ -9465,29 +9694,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.55
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Win (Live Odds)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": null
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": null
                         }
                       ]
                     }
@@ -9526,85 +9732,82 @@
                   ]
                 },
                 {
-                  "name": "BO3 Hdp: NaVi -1.5",
+                  "name": "Will there be Overtime? (Map 2)",
                   "odds": [
                     {
-                      "name": "Natus Vincere",
+                      "name": "No",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 1.784
+                          "book": "Mystake",
+                          "value": 1.07
                         }
                       ]
                     },
                     {
-                      "name": "BIG",
+                      "name": "Yes",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 2.022
+                          "book": "Mystake",
+                          "value": 7.4
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "BO3 Hdp: BIG -1.5",
+                  "name": "Race to Rounds (Map 1)",
                   "odds": [
                     {
-                      "name": "Natus Vincere",
+                      "name": "Natus Vincere 3",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 1.073
+                          "book": "Mystake",
+                          "value": 1.61
                         }
                       ]
                     },
                     {
-                      "name": "BIG",
+                      "name": "BIG 3",
                       "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 8.121
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Map 1 Winner",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.38
-                        },
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.342
-                        },
                         {
                           "book": "Mystake",
-                          "value": 1.33
+                          "value": 2.2
                         }
                       ]
                     },
                     {
-                      "name": "BIG",
+                      "name": "Natus Vincere 6",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 2.8
-                        },
-                        {
-                          "book": "Esportsbet",
-                          "value": 3.276
-                        },
+                          "book": "Mystake",
+                          "value": 1.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 6",
+                      "coefs": [
                         {
                           "book": "Mystake",
-                          "value": 3.1
+                          "value": 2.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Natus Vincere 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.44
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.6
                         }
                       ]
                     }
@@ -9904,6 +10107,236 @@
                   ]
                 },
                 {
+                  "name": "Will there be Overtime? (Map 1)",
+                  "odds": [
+                    {
+                      "name": "No",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.08
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Yes",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 7
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Rounds handicap 1st Half (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere -1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.64
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.08
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Winner 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.31
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 3.2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 Win (Live Odds)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": null
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": null
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round Advantage 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere -2.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG 2.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BO3 Hdp: NaVi -1.5",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.784
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.022
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Winner 1st Half (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.44
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.6
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "BO3 Hdp: BIG -1.5",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.073
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 8.121
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "1st map - Rounds odd/even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2nd map - Rounds odd/even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 1 Total Rounds21.5",
                   "odds": [
                     {
@@ -10065,23 +10498,14 @@
                   ]
                 },
                 {
-                  "name": "Total maps",
+                  "name": "Correct Round Score - Map 1",
                   "odds": [
                     {
-                      "name": "Over BIG.5",
+                      "name": "13:00",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 2.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under BIG.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.56
+                          "book": "Thunderpick",
+                          "value": 12
                         }
                       ]
                     }
@@ -10111,23 +10535,23 @@
                   ]
                 },
                 {
-                  "name": "Total rounds",
+                  "name": "Round 1 Winner - Map 1",
                   "odds": [
                     {
-                      "name": "Over 46.5",
+                      "name": "Natus Vincere",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Thunderpick",
+                          "value": 1.65
                         }
                       ]
                     },
                     {
-                      "name": "Under 46.5",
+                      "name": "BIG",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Thunderpick",
+                          "value": 2.1
                         }
                       ]
                     }
@@ -10180,378 +10604,6 @@
                   ]
                 },
                 {
-                  "name": "2nd map - Winner",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.26
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 3.5
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Team With Most Kills Player",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.422
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.723
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over BIG0.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.72
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under BIG0.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.96
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Team With Most Damage Dealt Player",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.436
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.676
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over BIG0.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.75
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under BIG0.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.92
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.505
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.463
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere -3.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.77
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 3.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.91
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Total Rounds Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.008
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere -4.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.92
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 4.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.76
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Correct Round Score - Map 1",
-                  "odds": [
-                    {
-                      "name": "13:00",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 12
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Race to Rounds (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.53
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.37
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Natus Vincere 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.75
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Natus Vincere 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.33
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 3.25
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Total Bombs Explode Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 1 Winner - Map 1",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.65
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Total Bombs Defused Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Round 13 Winner - Map 1",
                   "odds": [
                     {
@@ -10575,37 +10627,14 @@
                   ]
                 },
                 {
-                  "name": "Will there be Overtime? (Map 2)",
-                  "odds": [
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.07
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 7.4
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Win",
+                  "name": "Game 1 Team With Most Kills Player",
                   "odds": [
                     {
                       "name": "Natus Vincere",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.342
+                          "value": 1.422
                         }
                       ]
                     },
@@ -10614,7 +10643,7 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 3.276
+                          "value": 2.723
                         }
                       ]
                     }
@@ -10650,105 +10679,46 @@
                   ]
                 },
                 {
-                  "name": "Race to Rounds (Map 1)",
+                  "name": "Game 1 Team With Most Damage Dealt Player",
                   "odds": [
                     {
-                      "name": "Natus Vincere 3",
+                      "name": "Natus Vincere",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.61
+                          "book": "Esportsbet",
+                          "value": 1.436
                         }
                       ]
                     },
                     {
-                      "name": "BIG 3",
+                      "name": "BIG",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 2.2
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Natus Vincere 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Natus Vincere 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.44
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.6
+                          "book": "Esportsbet",
+                          "value": 2.676
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Game 2 Total Rounds21.5",
+                  "name": "Game 1 Team With Most Assists Player (Flash Assists Include)",
                   "odds": [
                     {
-                      "name": "Over",
+                      "name": "Natus Vincere",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.93
+                          "value": 1.505
                         }
                       ]
                     },
                     {
-                      "name": "Under",
+                      "name": "BIG",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.862
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Round Handicap",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere -3.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 3.51
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG +3.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 3.51
+                          "value": 2.463
                         }
                       ]
                     }
@@ -10784,46 +10754,23 @@
                   ]
                 },
                 {
-                  "name": "Game 2 First to Win 5 Rounds",
+                  "name": "Game 1 Total Rounds Odd Or Even",
                   "odds": [
                     {
-                      "name": "Natus Vincere",
+                      "name": "Odd",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.53
+                          "value": 2.008
                         }
                       ]
                     },
                     {
-                      "name": "BIG",
+                      "name": "Even",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 2.4
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Will there be Overtime? (Map 1)",
-                  "odds": [
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.08
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 7
+                          "value": 1.747
                         }
                       ]
                     }
@@ -10899,14 +10846,87 @@
                   ]
                 },
                 {
-                  "name": "Game 2 First to Win 10 Rounds",
+                  "name": "Game 1 Total Enemy Kills Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 Total Bombs Explode Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 1 Total Bombs Defused Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Map 2 Winner",
                   "odds": [
                     {
                       "name": "Natus Vincere",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.436
+                          "value": 1.342
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.25
                         }
                       ]
                     },
@@ -10915,67 +10935,25 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 2.676
+                          "value": 3.276
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.5
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Rounds handicap 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere -1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.64
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.08
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Winner 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.31
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 3.2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 First Round Total Kills7.5",
+                  "name": "Game 2 Total Rounds21.5",
                   "odds": [
                     {
                       "name": "Over",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 2.262
+                          "value": 1.93
                         }
                       ]
                     },
@@ -10984,76 +10962,7 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round Advantage 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere -2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG 2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 13th Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Winner 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.44
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.6
+                          "value": 1.862
                         }
                       ]
                     }
@@ -11257,6 +11166,121 @@
                   ]
                 },
                 {
+                  "name": "Game 2 Round Handicap",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere -3.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 3.51
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG +3.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 3.51
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 First to Win 5 Rounds",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.53
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 First to Win 10 Rounds",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.436
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.676
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 First Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 13th Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 2 First Round Win",
                   "odds": [
                     {
@@ -11274,29 +11298,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.032
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
                         }
                       ]
                     }
@@ -11326,29 +11327,6 @@
                   ]
                 },
                 {
-                  "name": "2nd map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 2 First Round First Kill",
                   "odds": [
                     {
@@ -11366,144 +11344,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.032
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 13th Round First Kill",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.729
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.032
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Kills Player",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.422
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.723
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Damage Dealt Player",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.436
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.676
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.505
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.463
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Rounds Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.008
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
                         }
                       ]
                     }
@@ -11691,6 +11531,144 @@
                   ]
                 },
                 {
+                  "name": "Game 2 13th Round First Kill",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.729
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.032
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Kills Player",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.422
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.723
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Damage Dealt Player",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.436
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.676
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.505
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.463
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Rounds Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.008
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.747
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Enemy Kills Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 2 Total Bombs Explode Odd Or Even",
                   "odds": [
                     {
@@ -11737,7 +11715,7 @@
                   ]
                 },
                 {
-                  "name": "Game 3 Win",
+                  "name": "Map 3 Winner",
                   "odds": [
                     {
                       "name": "Natus Vincere",
@@ -11745,6 +11723,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.416
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.32
                         }
                       ]
                     },
@@ -11754,6 +11736,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.907
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.1
                         }
                       ]
                     }
@@ -11783,6 +11769,19 @@
                   ]
                 },
                 {
+                  "name": "Correct first half round score - map 1",
+                  "odds": [
+                    {
+                      "name": "12:00",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 3 Round Handicap",
                   "odds": [
                     {
@@ -11806,6 +11805,20 @@
                   ]
                 },
                 {
+                  "name": "Correct pistol round score - map 1",
+                  "odds": [
+                    {
+                      "name": "2:0",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 3 First to Win 5 Rounds",
                   "odds": [
                     {
@@ -11823,148 +11836,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.282
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First to Win 10 Rounds",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.498
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.484
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 13th Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Correct first half round score - map 1",
-                  "odds": [
-                    {
-                      "name": "12:00",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First Round Win",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.758
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.995
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Correct pistol round score - map 1",
-                  "odds": [
-                    {
-                      "name": "2:0",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.8
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 13th Round Win",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.758
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.995
                         }
                       ]
                     }
@@ -12216,6 +12087,121 @@
                   ]
                 },
                 {
+                  "name": "Game 3 First to Win 10 Rounds",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.498
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.484
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 First Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 13th Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 First Round Win",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.758
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.995
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 13th Round Win",
+                  "odds": [
+                    {
+                      "name": "Natus Vincere",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.758
+                        }
+                      ]
+                    },
+                    {
+                      "name": "BIG",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.995
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Game 3 First Round First Kill",
                   "odds": [
                     {
@@ -12325,98 +12311,6 @@
                         {
                           "book": "Esportsbet",
                           "value": 2.329
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Rounds Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.008
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Bombs Explode Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Bombs Defused Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
                         }
                       ]
                     }
@@ -12582,6 +12476,98 @@
                       "coefs": [
                         {
                           "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 Total Rounds Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.008
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.747
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 Total Enemy Kills Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 Total Bombs Explode Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 Total Bombs Defused Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
                         }
                       ]
                     }
@@ -13601,29 +13587,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 3.8
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Map 2 Winner",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.25
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.5
                         }
                       ]
                     }
@@ -15938,29 +15901,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 3.5
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Map 3 Winner",
-                  "odds": [
-                    {
-                      "name": "Natus Vincere",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.32
-                        }
-                      ]
-                    },
-                    {
-                      "name": "BIG",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.1
                         }
                       ]
                     }
