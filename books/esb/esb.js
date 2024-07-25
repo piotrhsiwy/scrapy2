@@ -215,8 +215,11 @@ export async function handleURL_esb(data, url){
           odd = market.odds.findLast(o => o.name === oddName);
         }
         // value = null if an odd is locked
-        const is_unlocked = await oddHandle.$eval('div.odds', e => e.textContent.match(/[\d.]+/));
-        const value = is_unlocked ? parseFloat(is_unlocked[0]) : null;
+        const is_unlocked = await oddHandle.$eval('div.odds', e => {
+          e = e.querySelector('label').nextSibling;
+          return e ? parseFloat(e.textContent) : null;
+        });
+        const value = is_unlocked ? parseFloat(is_unlocked) : null;
 //console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
         coef = odd.coefs.findLast(c => c.book === 'Esportsbet');
         if(!coef){
