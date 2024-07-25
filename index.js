@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from 'fs'
 const urls_tp = 
 [
   'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/virtus-pro-vs-liquid/833214',
-  'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/natus-vincere-vs-big/833218',
+  // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/natus-vincere-vs-big/833218',
   // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/g2-vs-ninjas-in-pyjamas/833213',
   // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/faze-vs-cloud9/833212',
 ];
@@ -15,7 +15,7 @@ const urls_tp =
 const urls_ms =
 [
   'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077808',
-  'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077807',
+  // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077807',
   // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077811',
   // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077812',
 ];
@@ -23,7 +23,7 @@ const urls_ms =
 const urls_esb =
 [
   'https://esportsbet.io/de/esportsbull/OddsPage/29762888/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
-  'https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
+  // 'https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
   // 'https://esportsbet.io/de/esportsbull/OddsPage/29762500/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
   // 'https://esportsbet.io/de/esportsbull/OddsPage/29763510/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
 ];
@@ -59,7 +59,7 @@ writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
 import { createWriteStream } from "fs"
 import { calcMarket } from './calculator/calc.js'
 
-function calcData(dataFilePath, logFilePath){
+function calcData(dataFilePath, logFilePath, books){
   const data = JSON.parse(readFileSync(dataFilePath));
   const writeLogStream = createWriteStream(logFilePath);
 
@@ -70,7 +70,7 @@ function calcData(dataFilePath, logFilePath){
       for(const match of tournament.matches){
         writeLogStream.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
         for(const market of match.markets){
-          calcMarket(writeLogStream, market, ['Thunderpick', 'Mystake', 'Esportsbet']);
+          calcMarket(writeLogStream, market, books);
         }
       }
     }
@@ -79,4 +79,5 @@ function calcData(dataFilePath, logFilePath){
 
 const dataFilePath = 'data/data_out.json';
 const logFilePath = 'calculator/log.txt';
-calcData(dataFilePath, logFilePath);
+const availableBooks = ['Thunderpick', 'Mystake', 'Esportsbet'];
+calcData(dataFilePath, logFilePath, availableBooks);

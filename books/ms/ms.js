@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import { readFileSync } from "fs"
+import { createWriteStream, readFileSync } from "fs"
 import { sportNameMap } from "../sportNameMap.js";
 import { tournamentNameMap } from "../tournamentName/CS2/Map.js";
 import { marketNameMap } from "../marketNameMap.js";
@@ -51,6 +51,10 @@ export async function handleURL_ms(data, url){
     console.error(`Failure! Cannot open file ${marketNameMappingPath}`);
   }
 
+  // open a file for logging
+  const logFilePath = `books/${bookAbbrev}/log.txt`
+  const log = createWriteStream(logFilePath);
+
   let browser;
   try{
 //console.log('data: ');
@@ -89,7 +93,7 @@ export async function handleURL_ms(data, url){
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
-      console.error(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}`);
+      log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
@@ -108,7 +112,7 @@ export async function handleURL_ms(data, url){
     if(mapping){
       tournamentName = tournamentNameMap[mapping.globalID];
     } else{
-      console.error(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}`);
+      log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
       return;
     }
 //console.log('>>>>>>>>>>>>>>> scraped tournamentname: ' + tournamentName);
@@ -172,7 +176,7 @@ export async function handleURL_ms(data, url){
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
       } else{
-        console.error(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}`);
+        log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
       }
 //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
@@ -209,11 +213,11 @@ export async function handleURL_ms(data, url){
       }
     }
 
-  console.log(`Success! scraping a match from ${url}`);
-  return;    
+  log.write(`Success! scraping a match from ${url}\n`);
+  return 0;    
 
   } catch (error){
-    console.error(`Failure! scraping a match from ${url}`);
+    log.write(`Critical Failure! scraping a match from ${url}\n`);
     return -1;
   } finally{
     await browser?.close();

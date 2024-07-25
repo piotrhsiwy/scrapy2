@@ -1,0 +1,17 @@
+Warning! marketName Mapping of 'Total maps' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Total rounds' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '1st map - Total rounds' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '2nd map - Total rounds' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '1st map - Rounds handicap' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '2nd map - Rounds handicap' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Race to Rounds (Map 2)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Will there be Overtime? (Map 2)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Race to Rounds (Map 1)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Will there be Overtime? (Map 1)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Rounds handicap 1st Half (Map 1)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Winner 1st Half (Map 2)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Round Advantage 1st Half (Map 2)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of 'Winner 1st Half (Map 1)' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '1st map - Rounds odd/even' does not exist in books/ms/marketNameMapping.json
+Warning! marketName Mapping of '2nd map - Rounds odd/even' does not exist in books/ms/marketNameMapping.json
+Success! scraping a match from https://mystake.com/en/sportsbook/prematch#/prematch?match=35077808
