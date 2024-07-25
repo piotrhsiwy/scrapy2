@@ -33,7 +33,7 @@ function convDatetimeToISO(dateStr){
 
 export async function handleURL_esb(data, url){
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: 'new',
     args: ['--disable-web-security']
   });  
   
@@ -180,6 +180,8 @@ export async function handleURL_esb(data, url){
       // get marketName
       selector = 'div.matchInfoLeft';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
+      const HdpSpecial = marketName.split(' Hdp: ');
+      if(HdpSpecial.length > 1){ marketName = 'Match Handicap' }
       mapping = marketNameMapping.mapping.find( m => m.specificName === marketName);
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
@@ -198,7 +200,8 @@ export async function handleURL_esb(data, url){
       selector = 'div.oddsWrp';
       const oddsHandles = await marketHandle.$$(selector);
 //console.log(`$$${selector} length: ${oddsHandles.length}`);
-      for(const oddHandle of oddsHandles){ 
+      for(let i = 0; i < oddsHandles.length; i++){
+        const oddHandle = oddsHandles[i];
         let oddName;
         const has_label = await oddHandle.$('label');
         if(has_label){
@@ -211,7 +214,29 @@ export async function handleURL_esb(data, url){
         }
         oddName = oddName
           .replace(labelHome, teamHome)
-          .replace(labelAway, teamAway);
+          .replace(labelAway, teamAway)
+          .replace(/\+/g, '');
+        if(HdpSpecial.length > 1){
+          /* Match Handicaps are named like this: "BO3 Hdp: VP -1.5". They have exactly 2 odd entries.
+          Note: The team in the is not always the first one listed */
+          const isFromTitle = HdpSpecial[1].replace(labelHome, teamHome).replace(labelAway, teamAway).includes(oddName);
+          if(isFromTitle){
+            oddName = HdpSpecial[1].replace(labelHome, teamHome).replace(labelAway, teamAway);
+          } else{
+            const hdpValue = -1.0 * parseFloat(HdpSpecial[1].split(' ')[1]);
+            const isHomeinTitle = HdpSpecial[1].includes(labelHome);
+            oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
+          }
+        }
+        /* First to reach Rounds are each a separate market, they have to merged into 1
+        "Game 1 First to Win X Rounds", where X in {5,10} 
+        is included in HdpSpecial[0] even after marketName has been mapped
+        the X has to be appended along with a space to oddName */
+        if(HdpSpecial[0].includes('First to Win 5 Rounds')){
+          oddName = `${oddName} 5`;
+        } else if(HdpSpecial[0].includes('First to Win 10 Rounds')){
+          oddName = `${oddName} 10`;
+        }
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
         odd = market.odds.findLast(o => o.name === oddName);
         if(!odd){
@@ -238,7 +263,7 @@ export async function handleURL_esb(data, url){
   return 0;    
 
   } catch (error){
-    log.write(`Failure! scraping a match from ${url}\n`);
+    log.write(`Critical Failure! scraping a match from ${url}\n`);
     return -1;
   } finally{
     await browser?.close();

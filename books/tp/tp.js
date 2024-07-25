@@ -33,7 +33,7 @@ function convDatetimeToISO(dateStr){
 
 export async function handleURL_tp(data, url){
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: 'new',
     args: ["--disable-web-security"]
   });  
  

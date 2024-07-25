@@ -1,14 +1,6 @@
 Warning! marketName Mapping of 'Game 1 Win (Live Odds)' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'BO3 Hdp: VP -1.5' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'BO3 Hdp: TL -1.5' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 Total Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 Round Handicap' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 First to Win 5 Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 First to Win 10 Rounds' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 First Round Total Kills' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 13th Round Total Kills' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 First Round Win' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 1 13th Round Win' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 First Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 13th Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 Team With Most Kills Player' does not exist in books/esb/marketNameMapping.json
@@ -18,14 +10,8 @@ Warning! marketName Mapping of 'Game 1 Total Rounds Odd Or Even' does not exist 
 Warning! marketName Mapping of 'Game 1 Total Enemy Kills Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 Total Bombs Explode Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 1 Total Bombs Defused Odd Or Even' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 Total Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 Round Handicap' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 First to Win 5 Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 First to Win 10 Rounds' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 First Round Total Kills' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 13th Round Total Kills' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 First Round Win' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 2 13th Round Win' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 First Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 13th Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 Team With Most Kills Player' does not exist in books/esb/marketNameMapping.json
@@ -35,14 +21,8 @@ Warning! marketName Mapping of 'Game 2 Total Rounds Odd Or Even' does not exist 
 Warning! marketName Mapping of 'Game 2 Total Enemy Kills Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 Total Bombs Explode Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 2 Total Bombs Defused Odd Or Even' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 Total Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 Round Handicap' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 First to Win 5 Rounds' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 First to Win 10 Rounds' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 First Round Total Kills' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 13th Round Total Kills' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 First Round Win' does not exist in books/esb/marketNameMapping.json
-Warning! marketName Mapping of 'Game 3 13th Round Win' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 First Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 13th Round First Kill' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 Team With Most Kills Player' does not exist in books/esb/marketNameMapping.json

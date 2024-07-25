@@ -75,6 +75,10 @@
                           "value": 2.8
                         },
                         {
+                          "book": "Esportsbet",
+                          "value": 2.881
+                        },
+                        {
                           "book": "Mystake",
                           "value": 2.9
                         }
@@ -86,6 +90,10 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.38
+                        },
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.412
                         },
                         {
                           "book": "Mystake",
@@ -101,6 +109,10 @@
                           "value": 1.17
                         },
                         {
+                          "book": "Esportsbet",
+                          "value": 1.229
+                        },
+                        {
                           "book": "Mystake",
                           "value": 1.19
                         }
@@ -114,6 +126,10 @@
                           "value": 4.4
                         },
                         {
+                          "book": "Esportsbet",
+                          "value": 4.143
+                        },
+                        {
                           "book": "Mystake",
                           "value": 4.2
                         }
@@ -122,7 +138,7 @@
                   ]
                 },
                 {
-                  "name": "Total Maps Played Over/Under",
+                  "name": "Total Maps",
                   "odds": [
                     {
                       "name": "Over 2.5",
@@ -141,6 +157,24 @@
                           "value": 1.85
                         }
                       ]
+                    },
+                    {
+                      "name": "Over Liquid.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.9
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
                     }
                   ]
                 },
@@ -153,12 +187,7 @@
                         {
                           "book": "Thunderpick",
                           "value": 2.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid:0",
-                      "coefs": [
+                        },
                         {
                           "book": "Mystake",
                           "value": 3
@@ -166,7 +195,7 @@
                       ]
                     },
                     {
-                      "name": "Liquid:1",
+                      "name": "2:1",
                       "coefs": [
                         {
                           "book": "Mystake",
@@ -175,7 +204,7 @@
                       ]
                     },
                     {
-                      "name": "0:Liquid",
+                      "name": "0:2",
                       "coefs": [
                         {
                           "book": "Mystake",
@@ -184,7 +213,7 @@
                       ]
                     },
                     {
-                      "name": "Virtus.pro:2",
+                      "name": "1:2",
                       "coefs": [
                         {
                           "book": "Mystake",
@@ -282,6 +311,29 @@
                   ]
                 },
                 {
+                  "name": "Game 1 Win (Live Odds)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": null
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": null
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Match winner / Map 2 winner",
                   "odds": [
                     {
@@ -323,6 +375,45 @@
                   ]
                 },
                 {
+                  "name": "Map 1 Winner",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.729
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.78
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.76
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.119
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.92
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
                   "name": "Number of maps parity",
                   "odds": [
                     {
@@ -340,6 +431,29 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.85
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Map 121.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.995
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.805
                         }
                       ]
                     }
@@ -378,47 +492,42 @@
                   ]
                 },
                 {
-                  "name": "Map 1 Winner",
+                  "name": "Rounds Handicap Map 1",
                   "odds": [
                     {
-                      "name": "Virtus.pro",
+                      "name": "Virtus.pro -2.5",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.78
+                          "book": "Esportsbet",
+                          "value": 2.016
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 1.729
+                          "book": "Thunderpick",
+                          "value": 2.1
                         },
                         {
                           "book": "Mystake",
-                          "value": 1.76
+                          "value": 2.11
                         }
                       ]
                     },
                     {
-                      "name": "Liquid",
+                      "name": "Liquid 2.5",
                       "coefs": [
                         {
-                          "book": "Thunderpick",
-                          "value": 1.92
+                          "book": "Esportsbet",
+                          "value": 1.789
                         },
                         {
-                          "book": "Esportsbet",
-                          "value": 2.119
+                          "book": "Thunderpick",
+                          "value": 1.65
                         },
                         {
                           "book": "Mystake",
-                          "value": 1.98
+                          "value": 1.62
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round Handicap - Map 1",
-                  "odds": [
+                    },
                     {
                       "name": "Virtus.pro -9.5",
                       "coefs": [
@@ -542,24 +651,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.48
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.65
                         }
                       ]
                     },
@@ -710,260 +801,15 @@
                   ]
                 },
                 {
-                  "name": "Correct Round Score - Map 1",
+                  "name": "First to reach Rounds Map 1",
                   "odds": [
-                    {
-                      "name": "13:00",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 12
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 1 Winner - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Win (Live Odds)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": null
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": null
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 13 Winner - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "BO3 Hdp: VP -1.5",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.881
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.412
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "First Half Winner 1X2 - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Draw",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "BO3 Hdp: TL -1.5",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.229
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 4.143
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Second Half Winner 1X2 - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Draw",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Total Rounds21.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.995
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.805
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 Round Handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.016
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid +2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.789
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "First To Reach Rounds - Map 1",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
                     {
                       "name": "Virtus.pro 5",
                       "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.774
+                        },
                         {
                           "book": "Thunderpick"
                         }
@@ -973,7 +819,53 @@
                       "name": "Liquid 5",
                       "coefs": [
                         {
+                          "book": "Esportsbet",
+                          "value": 1.974
+                        },
+                        {
                           "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.742
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.015
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 3",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     },
@@ -998,6 +890,10 @@
                       "coefs": [
                         {
                           "book": "Thunderpick"
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     },
@@ -1006,65 +902,28 @@
                       "coefs": [
                         {
                           "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 First to Win 5 Rounds",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
+                        },
                         {
-                          "book": "Esportsbet",
-                          "value": 1.774
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     },
                     {
-                      "name": "Liquid",
+                      "name": "Virtus.pro 6",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 1.974
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 First to Win 10 Rounds",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.742
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     },
                     {
-                      "name": "Liquid",
+                      "name": "Liquid 6",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 2.015
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Correct first half round score - map 1",
-                  "odds": [
-                    {
-                      "name": "12:00",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     }
@@ -1094,20 +953,6 @@
                   ]
                 },
                 {
-                  "name": "Correct pistol round score - map 1",
-                  "odds": [
-                    {
-                      "name": "2:0",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Game 1 13th Round Total Kills7.5",
                   "odds": [
                     {
@@ -1131,252 +976,7 @@
                   ]
                 },
                 {
-                  "name": "Counter Terrorist Total Rounds (Excl. Overtime) - Map 1",
-                  "odds": [
-                    {
-                      "name": "Over 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 10.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 10.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 11.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 11.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 12.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 12.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 13.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 13.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 14.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 14.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 15.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 15.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 16.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 16.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 1 First Round Win",
+                  "name": "Round 1 Winner Map 1",
                   "odds": [
                     {
                       "name": "Virtus.pro",
@@ -1384,6 +984,10 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.833
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
                         }
                       ]
                     },
@@ -1393,13 +997,17 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.906
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Game 1 13th Round Win",
+                  "name": "Round 13 Winner Map 1",
                   "odds": [
                     {
                       "name": "Virtus.pro",
@@ -1668,7 +1276,21 @@
                   ]
                 },
                 {
-                  "name": "Game 2 Total Rounds21.5",
+                  "name": "Correct Round Score - Map 1",
+                  "odds": [
+                    {
+                      "name": "13:00",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 12
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Map 221.5",
                   "odds": [
                     {
                       "name": "Over",
@@ -1685,6 +1307,1947 @@
                         {
                           "book": "Esportsbet",
                           "value": 1.805
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Rounds Handicap Map 2",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -2.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.016
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.84
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.85
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 2.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.789
+                        },
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.85
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 10
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.02
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 7
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.06
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 4.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.28
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.38
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.2
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.58
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 2.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.38
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -2.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.26
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.17
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 4.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.12
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.08
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 6.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.04
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.02
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 10
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.01
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 11
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "First to reach Rounds Map 2",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro 5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.774
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.974
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.742
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.015
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.72
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.66
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 6",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.61
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.2
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 7",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 7",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "First Half Winner 1X2 - Map 1",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Draw",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 First Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Second Half Winner 1X2 - Map 1",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Draw",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 13th Round Total Kills7.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.262
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.592
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round 1 Winner Map 2",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.833
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.906
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round 13 Winner Map 2",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.833
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.906
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total rounds",
+                  "odds": [
+                    {
+                      "name": "Over 53.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 53.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 First Round First Kill",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.833
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.906
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Correct first half round score - map 1",
+                  "odds": [
+                    {
+                      "name": "12:00",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 13th Round First Kill",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.833
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.906
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Map 1",
+                  "odds": [
+                    {
+                      "name": "Over Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.91
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.77
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.22
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 19.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.35
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 19.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.9
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 20.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.55
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 20.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 21.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 21.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 22.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 22.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Correct pistol round score - map 1",
+                  "odds": [
+                    {
+                      "name": "2:0",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Kills Player",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.737
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.022
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Map 2",
+                  "odds": [
+                    {
+                      "name": "Over Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.97
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under Liquid1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.72
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.12
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.22
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 19.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.35
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 19.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.9
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 20.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.55
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 20.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 21.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 21.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 22.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 22.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Counter Terrorist Total Rounds (Excl. Overtime) - Map 1",
+                  "odds": [
+                    {
+                      "name": "Over 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 10.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 10.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 11.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 11.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 12.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 12.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 13.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 13.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 14.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 14.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 15.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 15.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 16.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 16.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 17.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Over 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under 18.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Damage Dealt Player",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.742
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.015
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.766
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.984
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Rounds Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.008
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.747
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Enemy Kills Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Bombs Explode Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Overtime Map 2",
+                  "odds": [
+                    {
+                      "name": "No",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.08
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Yes",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 7
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 2 Total Bombs Defused Odd Or Even",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.869
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Map 3 Winner",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.759
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.65
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.075
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.1
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Map 321.5",
+                  "odds": [
+                    {
+                      "name": "Over",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.983
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Under",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.815
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Overtime Map 1",
+                  "odds": [
+                    {
+                      "name": "No",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.1
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Yes",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 6.4
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.8
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Rounds Handicap Map 3",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -2.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 2.064
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.95
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 2.5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.752
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.75
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 10
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.02
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 7.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.05
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 4.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.15
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.25
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.9
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.35
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro -3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.4
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 2.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.48
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -2.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.32
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -3.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.1
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.22
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -4.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 3.8
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.13
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -5.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.08
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -6.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 6.3
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.05
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -7.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 7.5
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.02
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -8.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 10
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.01
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid -9.5",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick",
+                          "value": 11
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Rounds handicap 1st Half (Map 1)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.17
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.59
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Winner 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.61
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 2.2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "First to reach Rounds Map 3",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro 5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.804
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 5",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.938
+                        },
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.77
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 10",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.978
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 3",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 3",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 7",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 7",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Virtus.pro 9",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 9",
+                      "coefs": [
+                        {
+                          "book": "Thunderpick"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round Advantage 1st Half (Map 2)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro -1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid 1.5",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.83
                         }
                       ]
                     }
@@ -1856,37 +3419,14 @@
                   ]
                 },
                 {
-                  "name": "Game 2 Round Handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.016
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid +2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.789
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 First to Win 5 Rounds",
+                  "name": "Winner 1st Half (Map 1)",
                   "odds": [
                     {
                       "name": "Virtus.pro",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 1.774
+                          "book": "Mystake",
+                          "value": 1.86
                         }
                       ]
                     },
@@ -1894,38 +3434,15 @@
                       "name": "Liquid",
                       "coefs": [
                         {
-                          "book": "Esportsbet",
-                          "value": 1.974
+                          "book": "Mystake",
+                          "value": 1.86
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Game 2 First to Win 10 Rounds",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.742
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.015
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 First Round Total Kills7.5",
+                  "name": "Game 3 First Round Total Kills7.5",
                   "odds": [
                     {
                       "name": "Over",
@@ -1948,7 +3465,69 @@
                   ]
                 },
                 {
-                  "name": "Game 2 13th Round Total Kills7.5",
+                  "name": "Total Rounds Odd/Even Map 1",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 2.05
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.68
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Total Rounds Odd/Even Map 2",
+                  "odds": [
+                    {
+                      "name": "Odd",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.98
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 2
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Even",
+                      "coefs": [
+                        {
+                          "book": "Mystake",
+                          "value": 1.71
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.72
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 13th Round Total Kills7.5",
                   "odds": [
                     {
                       "name": "Over",
@@ -1971,14 +3550,18 @@
                   ]
                 },
                 {
-                  "name": "Game 2 First Round Win",
+                  "name": "Round 1 Winner Map 3",
                   "odds": [
                     {
                       "name": "Virtus.pro",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.833
+                          "value": 1.865
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.82
                         }
                       ]
                     },
@@ -1987,7 +3570,80 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.906
+                          "value": 1.873
+                        },
+                        {
+                          "book": "Thunderpick",
+                          "value": 1.88
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Round 13 Winner Map 3",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.865
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.873
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 First Round First Kill",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.865
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.873
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 13th Round First Kill",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.865
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.873
                         }
                       ]
                     }
@@ -2047,14 +3703,14 @@
                   ]
                 },
                 {
-                  "name": "Game 2 13th Round Win",
+                  "name": "Game 3 Team With Most Kills Player",
                   "odds": [
                     {
                       "name": "Virtus.pro",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.833
+                          "value": 1.766
                         }
                       ]
                     },
@@ -2063,21 +3719,21 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.906
+                          "value": 1.985
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Game 2 First Round First Kill",
+                  "name": "Game 3 Team With Most Damage Dealt Player",
                   "odds": [
                     {
                       "name": "Virtus.pro",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.833
+                          "value": 1.77
                         }
                       ]
                     },
@@ -2086,7 +3742,30 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.906
+                          "value": 1.978
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "Game 3 Team With Most Assists Player (Flash Assists Include)",
+                  "odds": [
+                    {
+                      "name": "Virtus.pro",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.795
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Liquid",
+                      "coefs": [
+                        {
+                          "book": "Esportsbet",
+                          "value": 1.948
                         }
                       ]
                     }
@@ -2134,138 +3813,69 @@
                   ]
                 },
                 {
-                  "name": "Total maps",
+                  "name": "Game 3 Total Rounds Odd Or Even",
                   "odds": [
                     {
-                      "name": "Over Liquid.5",
+                      "name": "Odd",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.9
+                          "book": "Esportsbet",
+                          "value": 2.008
                         }
                       ]
                     },
                     {
-                      "name": "Under Liquid.5",
+                      "name": "Even",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Esportsbet",
+                          "value": 1.747
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Game 2 13th Round First Kill",
+                  "name": "Game 3 Total Enemy Kills Odd Or Even",
                   "odds": [
                     {
-                      "name": "Virtus.pro",
+                      "name": "Odd",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.833
+                          "value": 1.869
                         }
                       ]
                     },
                     {
-                      "name": "Liquid",
+                      "name": "Even",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.906
+                          "value": 1.869
                         }
                       ]
                     }
                   ]
                 },
                 {
-                  "name": "Total rounds",
+                  "name": "Game 3 Total Bombs Explode Odd Or Even",
                   "odds": [
                     {
-                      "name": "Over 53.5",
+                      "name": "Odd",
                       "coefs": [
                         {
-                          "book": "Mystake",
-                          "value": 1.83
+                          "book": "Esportsbet",
+                          "value": 1.869
                         }
                       ]
                     },
                     {
-                      "name": "Under 53.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Kills Player",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
+                      "name": "Even",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.737
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.022
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Overtime Yes/No - Map 1",
-                  "odds": [
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Team With Most Damage Dealt Player",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.742
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.015
+                          "value": 1.869
                         }
                       ]
                     }
@@ -2295,60 +3905,14 @@
                   ]
                 },
                 {
-                  "name": "Game 2 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.766
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.984
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.91
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.77
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Rounds Odd Or Even",
+                  "name": "Game 3 Total Bombs Defused Odd Or Even",
                   "odds": [
                     {
                       "name": "Odd",
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 2.008
+                          "value": 1.869
                         }
                       ]
                     },
@@ -2357,7 +3921,7 @@
                       "coefs": [
                         {
                           "book": "Esportsbet",
-                          "value": 1.747
+                          "value": 1.869
                         }
                       ]
                     }
@@ -2381,75 +3945,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.88
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Total rounds",
-                  "odds": [
-                    {
-                      "name": "Over Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.97
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under Liquid1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.72
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.11
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.62
                         }
                       ]
                     }
@@ -2653,408 +4148,6 @@
                   ]
                 },
                 {
-                  "name": "Game 2 Total Bombs Explode Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Rounds handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.84
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 2 Total Bombs Defused Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Race to Rounds (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.72
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.66
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.61
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Map 3 Winner",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.759
-                        },
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.65
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.075
-                        },
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.1
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Rounds21.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.983
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.815
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Will there be Overtime? (Map 2)",
-                  "odds": [
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.08
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 7
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Round Handicap",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.064
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid +2.5",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.752
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Race to Rounds (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First to Win 5 Rounds",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.804
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.938
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First to Win 10 Rounds",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.77
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.978
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Will there be Overtime? (Map 1)",
-                  "odds": [
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 6.4
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Rounds handicap 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.17
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.59
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Winner 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.61
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 2.2
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Team Liquid Total Rounds - Map 1",
                   "odds": [
                     {
@@ -3226,305 +4319,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 1.92
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round Advantage 1st Half (Map 2)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 1.5",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.83
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 13th Round Total Kills7.5",
-                  "odds": [
-                    {
-                      "name": "Over",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.262
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.592
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Winner 1st Half (Map 1)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.86
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.86
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First Round Win",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.865
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.873
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "1st map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 13th Round Win",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.865
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.873
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "2nd map - Rounds odd/even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.98
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Mystake",
-                          "value": 1.71
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 First Round First Kill",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.865
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.873
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 13th Round First Kill",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.865
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.873
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Team With Most Kills Player",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.766
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.985
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Team With Most Damage Dealt Player",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.77
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.978
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Team With Most Assists Player (Flash Assists Include)",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.795
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.948
                         }
                       ]
                     }
@@ -3770,234 +4564,6 @@
                       "coefs": [
                         {
                           "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Rounds Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 2.008
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.747
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Enemy Kills Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Bombs Explode Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Game 3 Total Bombs Defused Odd Or Even",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Esportsbet",
-                          "value": 1.869
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Total Rounds - Map 1",
-                  "odds": [
-                    {
-                      "name": "Over 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.22
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 19.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.35
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 19.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.9
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 20.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.55
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 20.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 21.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 21.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 22.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 22.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.5
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Total Rounds Odd/Even - Map 1",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.05
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.68
                         }
                       ]
                     }
@@ -4485,299 +5051,6 @@
                   ]
                 },
                 {
-                  "name": "Round Handicap - Map 2",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 10
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.02
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 7
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.06
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 4.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.17
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.28
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.38
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.2
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.58
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.85
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.85
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.38
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.26
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.17
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 4.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.12
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.08
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 6.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.04
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.02
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 10
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.01
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 11
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Correct Round Score - Map 2",
                   "odds": [
                     {
@@ -4786,52 +5059,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 12
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 1 Winner - Map 2",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 13 Winner - Map 2",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
                         }
                       ]
                     }
@@ -4887,75 +5114,6 @@
                     },
                     {
                       "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "First To Reach Rounds - Map 2",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 7",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 7",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
                       "coefs": [
                         {
                           "book": "Thunderpick"
@@ -5490,29 +5648,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 4.8
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Overtime Yes/No - Map 2",
-                  "odds": [
-                    {
-                      "name": "Yes",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "No",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.1
                         }
                       ]
                     }
@@ -6184,142 +6319,6 @@
                   ]
                 },
                 {
-                  "name": "Total Rounds - Map 2",
-                  "odds": [
-                    {
-                      "name": "Over 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.12
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 17.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.22
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 18.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 19.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.35
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 19.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.9
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 20.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.55
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 20.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 21.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 21.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Over 22.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Under 22.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.5
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Total Rounds Odd/Even - Map 2",
-                  "odds": [
-                    {
-                      "name": "Odd",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Even",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.72
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Virtus.pro First half Total Rounds - Map 2",
                   "odds": [
                     {
@@ -6801,299 +6800,6 @@
                   ]
                 },
                 {
-                  "name": "Round Handicap - Map 3",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro -9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 10
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.02
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 7.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.05
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 4.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.15
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.25
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.9
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.35
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.4
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro -2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.95
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.75
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.48
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -2.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 2.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.32
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -3.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.1
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.22
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -4.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 3.8
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.13
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -5.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.08
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -6.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 6.3
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.05
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -7.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 7.5
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.02
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -8.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 10
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.01
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid -9.5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 11
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
                   "name": "Correct Round Score - Map 3",
                   "odds": [
                     {
@@ -7102,52 +6808,6 @@
                         {
                           "book": "Thunderpick",
                           "value": 12
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 1 Winner - Map 3",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "Round 13 Winner - Map 3",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.82
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick",
-                          "value": 1.88
                         }
                       ]
                     }
@@ -7203,75 +6863,6 @@
                     },
                     {
                       "name": "Liquid",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "name": "First To Reach Rounds - Map 3",
-                  "odds": [
-                    {
-                      "name": "Virtus.pro 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 3",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 5",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 7",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 7",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Virtus.pro 9",
-                      "coefs": [
-                        {
-                          "book": "Thunderpick"
-                        }
-                      ]
-                    },
-                    {
-                      "name": "Liquid 9",
                       "coefs": [
                         {
                           "book": "Thunderpick"
@@ -7812,7 +7403,7 @@
                   ]
                 },
                 {
-                  "name": "Overtime Yes/No - Map 3",
+                  "name": "Overtime Map 3",
                   "odds": [
                     {
                       "name": "Yes",
@@ -8500,7 +8091,7 @@
                   ]
                 },
                 {
-                  "name": "Total Rounds - Map 3",
+                  "name": "Total Rounds Map 3",
                   "odds": [
                     {
                       "name": "Over 17.5",
@@ -8613,7 +8204,7 @@
                   ]
                 },
                 {
-                  "name": "Total Rounds Odd/Even - Map 3",
+                  "name": "Total Rounds Odd/Even Map 3",
                   "odds": [
                     {
                       "name": "Odd",

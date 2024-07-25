@@ -35,6 +35,7 @@ const urls_esb =
 const data = {sports: []};
 
 const allPromises = [];
+
 for(const url of urls_tp){
   const promise = handleURL_tp(data, url);
   allPromises.push(promise);
@@ -49,6 +50,7 @@ for(const url of urls_esb){
   const promise = handleURL_esb(data, url);
   allPromises.push(promise);
 }
+
 await Promise.allSettled(allPromises);
 console.log(allPromises);
 

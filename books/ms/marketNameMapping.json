@@ -13,18 +13,80 @@
             "globalID":     "CS"
         },
         {
+            "specificName": "Total maps",
+            "globalID":     "TM"
+        },
+        {
             "specificName": "1st map - Winner",
             "globalID":     "M1W"
         },
         {
             "specificName": "2nd map - Winner",
             "globalID":     "M2W"
-        }
-,
+        },
         {
             "specificName": "3rd map - Winner",
             "globalID":     "M3W"
+        },
+        {
+            "specificName": "1st map - Rounds handicap",
+            "globalID":     "RHDPM1"
+        },
+        {
+            "specificName": "2nd map - Rounds handicap",
+            "globalID":     "RHDPM2"
+        },
+        {
+            "specificName": "3rd map - Rounds handicap",
+            "globalID":     "RHDPM3"
+        },
+        {
+            "specificName": "Race to Rounds (Map 1)",
+            "globalID":     "FTRRM1"
+        },
+        {
+            "specificName": "Race to Rounds (Map 2)",
+            "globalID":     "FTRRM2"
+        },
+        {
+            "specificName": "Race to Rounds (Map 3)",
+            "globalID":     "FTRRM3"
+        },
+        {
+            "specificName": "1st map - Total rounds",
+            "globalID":     "TRM1"
+        },
+        {
+            "specificName": "2nd map - Total rounds",
+            "globalID":     "TRM2"
+        },
+        {
+            "specificName": "3rd map - Total rounds",
+            "globalID":     "TRM3"
+        },
+        {
+            "specificName": "1st map - Rounds odd/even",
+            "globalID":     "TROE1"
+        },
+        {
+            "specificName": "2nd map - Rounds odd/even",
+            "globalID":     "TROE2"
+        },
+        {
+            "specificName": "3rd map - Rounds odd/even",
+            "globalID":     "TROE3"
+        },
+        {
+            "specificName": "Will there be Overtime? (Map 1)",
+            "globalID":     "OT1"
+        },
+        {
+            "specificName": "Will there be Overtime? (Map 2)",
+            "globalID":     "OT2"
+        },
+        {
+            "specificName": "Will there be Overtime? (Map 3)",
+            "globalID":     "OT3"
         }
-
     ]
 }

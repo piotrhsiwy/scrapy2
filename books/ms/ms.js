@@ -193,9 +193,11 @@ export async function handleURL_ms(data, url){
       for(const oddHandle of oddsHandles){
         let oddName = await oddHandle.$eval('p.odd-name', e => e.textContent); 
 
-        oddName = oddName
-          .replace(/1|2/, (match) => { return match === '1' ? teamHome : teamAway })
-          .replace(/[()+]/g, '');
+        oddName = market.name.includes('Score') ?
+          oddName
+          : oddName
+            .replace(/1|2/, (match) => { return match === '1' ? teamHome : teamAway })
+            .replace(/[()+]/g, '');
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
         odd = market.odds.findLast(o => o.name === oddName);
         if(!odd){
