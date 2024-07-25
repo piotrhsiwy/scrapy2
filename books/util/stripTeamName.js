@@ -1,3 +1,3 @@
 export function stripTeamName(str){
-    return str.replace(/\bTeam /, '');
+    return str.replace(/\bTeam /, '').toLowerCase();
 }

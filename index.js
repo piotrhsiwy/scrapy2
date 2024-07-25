@@ -1,6 +1,7 @@
 import { handleURL_tp } from './books/tp/tp.js'
 import { handleURL_ms } from './books/ms/ms.js'
 import { handleURL_esb } from './books/esb/esb.js'
+import { handleURL_ls } from './books/ls/ls.js'
 
 import { readFileSync, writeFileSync } from 'fs'
 
@@ -28,34 +29,44 @@ const urls_esb =
   // 'https://esportsbet.io/de/esportsbull/OddsPage/29763510/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
 ];
 
+const urls_ls =
+[
+  'https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5297240',
+];
+
 // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
 // https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
 
 // ### Harvesting the data
-// const data = {sports: []};
+const data = {sports: []};
 
-// const allPromises = [];
+const allPromises = [];
 
-// for(const url of urls_tp){
-//   const promise = handleURL_tp(data, url);
-//   allPromises.push(promise);
-// }
+for(const url of urls_tp){
+  const promise = handleURL_tp(data, url);
+  allPromises.push(promise);
+}
 
-// for(const url of urls_ms){
-//   const promise = handleURL_ms(data, url);
-//   allPromises.push(promise);
-// }
+for(const url of urls_ms){
+  const promise = handleURL_ms(data, url);
+  allPromises.push(promise);
+}
 
-// for(const url of urls_esb){
-//   const promise = handleURL_esb(data, url);
-//   allPromises.push(promise);
-// }
+for(const url of urls_esb){
+  const promise = handleURL_esb(data, url);
+  allPromises.push(promise);
+}
 
-// await Promise.allSettled(allPromises);
-// console.log(allPromises);
+for(const url of urls_ls){
+  const promise = handleURL_ls(data, url);
+  allPromises.push(promise);
+}
 
-// const dataPathOut = 'data/data_out.json';
-// writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+await Promise.allSettled(allPromises);
+console.log(allPromises);
+
+const dataPathOut = 'data/data_out.json';
+writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
 
 // ### Processing the data
 import { createWriteStream } from "fs"
