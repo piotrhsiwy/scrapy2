@@ -32,30 +32,30 @@ const urls_esb =
 // https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
 
 // ### Harvesting the data
-const data = {sports: []};
+// const data = {sports: []};
 
-const allPromises = [];
+// const allPromises = [];
 
-for(const url of urls_tp){
-  const promise = handleURL_tp(data, url);
-  allPromises.push(promise);
-}
+// for(const url of urls_tp){
+//   const promise = handleURL_tp(data, url);
+//   allPromises.push(promise);
+// }
 
-for(const url of urls_ms){
-  const promise = handleURL_ms(data, url);
-  allPromises.push(promise);
-}
+// for(const url of urls_ms){
+//   const promise = handleURL_ms(data, url);
+//   allPromises.push(promise);
+// }
 
-for(const url of urls_esb){
-  const promise = handleURL_esb(data, url);
-  allPromises.push(promise);
-}
+// for(const url of urls_esb){
+//   const promise = handleURL_esb(data, url);
+//   allPromises.push(promise);
+// }
 
-await Promise.allSettled(allPromises);
-console.log(allPromises);
+// await Promise.allSettled(allPromises);
+// console.log(allPromises);
 
-const dataPathOut = 'data/data_out.json';
-writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+// const dataPathOut = 'data/data_out.json';
+// writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
 
 // ### Processing the data
 import { createWriteStream } from "fs"
