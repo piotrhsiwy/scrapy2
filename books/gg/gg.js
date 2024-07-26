@@ -201,9 +201,16 @@ export async function handleURL_gg(data, url){
         selector = 'div[data-test="odd-button   odd-button--is-active"]'
         const oddHandles = await oddColumnHandle.$$(selector);
         for(const oddHandle of oddHandles){
-          let oddName = await oddHandle.evaluate( oh => oh.getAttribute('title'), oddHandle);
+          selector = 'div[data-test=odd-button__title]';
+          let oddName = await oddHandle.$eval(selector, e => e.textContent);
           oddName = stripTeamName(oddName);
-          oddName = oddNamePrefix ? `${oddNamePrefix} ${oddName}` : oddName;
+          oddName = oddName.replace(/[()+]/g, '');
+          if( !oddName.includes(teamHome) && !oddName.includes(teamAway)){
+            oddName = oddNamePrefix ? `${oddNamePrefix} ${oddName}` : oddName;
+          }
+          if(marketName.includes(marketNameMap['CS'])){
+            oddName = oddName.split(' ')[1];
+          }
           //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
           odd = market.odds.findLast(o => o.name === oddName);
           if(!odd){

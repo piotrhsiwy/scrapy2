@@ -192,12 +192,11 @@ export async function handleURL_ms(data, url){
 //      console.log(`$$${selector} length: ${oddsHandles.length}`);
       for(const oddHandle of oddsHandles){
         let oddName = await oddHandle.$eval('p.odd-name', e => e.textContent); 
-
-        oddName = market.name.includes('Score') || market.name.includes('Total Maps') ?
-          stripTeamName(oddName)
-          : oddName
-            .replace(/1|2/, (match) => { return match === '1' ? teamHome : teamAway })
-            .replace(/[()+]/g, '');
+        oddName = stripTeamName(oddName).replace(/[()+]/g, '');
+        if(! marketName.includes('Correct Score') && ! marketName.includes('Total')){
+          oddName = oddName
+            .replace(/1|2/, (match) => { return match === '1' ? teamHome : teamAway });
+        }
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
         odd = market.odds.findLast(o => o.name === oddName);
         if(!odd){
