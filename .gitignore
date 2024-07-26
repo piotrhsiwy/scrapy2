@@ -1,5 +1,14 @@
 node_modules
+
+# scraping data
+books/*/urls.json
+
+# harvested data
 data/data_out.json
+
+# log files
 calculator/log.txt
-bot token.txt
 books/*/log.txt
+
+# login and auth files
+bot token.txt
