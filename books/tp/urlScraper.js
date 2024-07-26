@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 import { createWriteStream, readFileSync } from "fs"
+import { promisify } from "util";
+
 import { sportNameMap } from "../sportNameMap.js";
 import { tournamentNameMap } from "../tournamentName/CS2/Map.js";
 import { marketNameMap } from "../marketNameMap.js";
@@ -31,39 +33,39 @@ function convDatetimeToISO(dateStr){
   
 }
 
-export async function handleURL_tp(data, url){
+export async function scrapeMatchURL_tp(data, url){
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ["--disable-web-security"]
   });  
  
-  // load the book-specific mappings from json files
+  // load the book-specific configuration from json files
   const bookAbbrev = 'tp';
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${sportNameMappingPath}`);
+    console.error(`Failure! cannot open file ${sportNameMappingPath}`);
   }
   const tournamentNameMappingPath = `books/${bookAbbrev}/tournamentNameMapping.json`;
   let tournamentNameMapping;
   try{
     tournamentNameMapping = Object.freeze(JSON.parse(readFileSync(tournamentNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${tournamentNameMappingPath}`);
+    console.error(`Failure! cannot open file ${tournamentNameMappingPath}`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${marketNameMappingPath}`);
+    console.error(`Failure! cannot open file ${marketNameMappingPath}`);
   }
 
   // open a file for logging
-  const logFilePath = `books/${bookAbbrev}/log.txt`
-  const log = createWriteStream(logFilePath);
+  const logFilePath = `./books/${bookAbbrev}/log.txt`
+  const log = createWriteStream(logFilePath, {flags: 'a'});
 
   try{
 //    console.log('data: ');
@@ -282,7 +284,7 @@ export async function handleURL_tp(data, url){
       }
     }
 
-    log.write(`Success! scraping a match from ${url}\n`);
+    log.write(`Success! scraping from ${url} succeeded\n`);
     return 0;    
 
   } catch (error){
@@ -290,7 +292,7 @@ export async function handleURL_tp(data, url){
     return -1;
   } finally{
     await browser?.close();
-    return 0;
+    await promisify(log.end).bind(log);
   }
   
 }
