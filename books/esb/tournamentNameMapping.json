@@ -3,6 +3,10 @@
         {
             "specificName": "BLAST Premier: Fall Groups 2024 : Group D",
             "globalID":     "BPFG2024"
+        },
+        {
+            "specificName": "BLAST Premier: Fall Groups 2024 : Group C",
+            "globalID":     "BPFG2024"
         }
     ]
 }

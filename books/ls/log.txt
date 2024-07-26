@@ -1,3 +1,2 @@
 Warning! marketName Mapping of 'Map 1 1. Pistolenrundensieger - Game' does not exist in books/ls/marketNameMapping.json
-Warning! marketName Mapping of 'Map 1 Gesamtzahl der Runden - Game' does not exist in books/ls/marketNameMapping.json
-Success! scraping a match from https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5297240
+Success! scraping a match from https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5296699

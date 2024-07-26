@@ -1,0 +1,17 @@
+Warning! marketName Mapping of 'Team 1 To Win At Least One Map' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of 'Team 2 To Win At Least One Map' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '1 map Total 1' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '1 map Team 1, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '1 map Win In Round' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '1 map Total 2' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '1 map Team 2, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '2 map Total 1' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '2 map Team 1, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '2 map Win In Round' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '2 map Total 2' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '2 map Team 2, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '3 map Total 2' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '3 map Team 2, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '3 map Total 1' does not exist in books/22/marketNameMapping.json
+Warning! marketName Mapping of '3 map Team 1, Difference In Number Of Rounds Won' does not exist in books/22/marketNameMapping.json
+Success! scraping a match from https://22bets.me/line/esports/2727264-cs-2-blast-premier-fall-groups/220999986-faze-clan-cloud9

@@ -26,7 +26,7 @@ function convDatetimeToISO(dateStr){
 
 export async function handleURL_ls(data, url){
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: 'new',
     args: ['--disable-web-security']
   });  
   
@@ -59,8 +59,8 @@ export async function handleURL_ls(data, url){
   const log = createWriteStream(logFilePath);
 
   try{
-console.log('data: ');
-console.log(JSON.stringify(data, null, 2));
+//console.log('data: ');
+//console.log(JSON.stringify(data, null, 2));
     let page = await browser.newPage();    
     page.setViewport({width:2000, height:1000})
     await page.goto(url);
@@ -78,15 +78,15 @@ console.log(JSON.stringify(data, null, 2));
       log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return;
     }
-console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
+//console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
     if(!sport){
       /* sport is new */
       data.sports.push({ name: sportName, tournaments: [] });
       sport = data.sports.findLast(s => s.name === sportName);
     }
-console.log('sport: ');
-console.log(JSON.stringify(sport, null, 2));
+//console.log('sport: ');
+//console.log(JSON.stringify(sport, null, 2));
 
     // get tournament
     let tournamentName = breadcrumbs[breadcrumbs.length-1].trim();
@@ -97,29 +97,29 @@ console.log(JSON.stringify(sport, null, 2));
       log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
       return;
     }
-console.log('>>>>>>>>>>>>>>> scraped tournamentname: ' + tournamentName);
+//console.log('>>>>>>>>>>>>>>> scraped tournamentname: ' + tournamentName);
     let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
     if(!tournament){
       /* tournament is new */
       sport.tournaments.push({ name: tournamentName, matches: [] });
       tournament = sport.tournaments.findLast(t => t.name === tournamentName);
     }
-console.log('tournament: ');
-console.log(JSON.stringify(tournament, null, 2));
+//console.log('tournament: ');
+//console.log(JSON.stringify(tournament, null, 2));
 
     // get teamHome, teamAway
     selector = 'div.osg-coupon h1';
     const teams = await page.$eval(selector, e => e.textContent.split(' - ') );
     const teamHome = stripTeamName(teams[0]);
     const teamAway = stripTeamName(teams[1]);
-console.log('>>>>>>>>>>>>>>> scraped teamHome: ' + teamHome);
-console.log('>>>>>>>>>>>>>>> scraped teamAway: ' + teamAway);
+//console.log('>>>>>>>>>>>>>>> scraped teamHome: ' + teamHome);
+//console.log('>>>>>>>>>>>>>>> scraped teamAway: ' + teamAway);
     
     // get datetime, mode
     selector = 'div.osg-coupon span';
     el = await page.$eval(selector, e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
     const datetime = convDatetimeToISO(el);
-console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
+//console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
 
     let match = tournament.matches.findLast(m =>
         m.teamHome === teamHome &&
@@ -142,55 +142,54 @@ console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
       );
     }
     match.urls.push({book: 'Lsbet', url: url});
-console.log('match: ');
-console.log(JSON.stringify(match, null, 2));
+//console.log('match: ');
+//console.log(JSON.stringify(match, null, 2));
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     let market, odd, coef;
     selector = 'div.osg-coupon__market';
     let marketHandles = await page.$$(selector);
-console.log(`$$${selector} length: ${marketHandles.length}`);
+//console.log(`$$${selector} length: ${marketHandles.length}`);
     for(const marketHandle of marketHandles){
       // get marketName
       selector = 'h4';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
-      const HdpSpecial = marketName.split(' Hdp: ');
       mapping = marketNameMapping.mapping.find( m => m.specificName === marketName);
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
       }
-console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
+//console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
       if(!market){
         match.markets.push({name: marketName, odds: []});
         market = match.markets.findLast(m => m.name === marketName);
       }
-console.log('market: ');
-console.log(JSON.stringify(market, null, 2));
+//console.log('market: ');
+//console.log(JSON.stringify(market, null, 2));
       // get odds
       selector = 'div.osg-coupon__market-outcomes div[role="button"]';
       const oddHandles = await marketHandle.$$(selector);
-console.log(`$$${selector} length: ${oddHandles.length}`);
+//console.log(`$$${selector} length: ${oddHandles.length}`);
       for(const oddHandle of oddHandles){
         selector = 'span';
         const NameValue = await oddHandle.$$eval(selector, es => es.map(e => e.textContent));
         const oddName = stripTeamName(NameValue[0]);
-console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
+//console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
         odd = market.odds.findLast(o => o.name === oddName);
         if(!odd){
           market.odds.push({name: oddName, coefs: []})
           odd = market.odds.findLast(o => o.name === oddName);
         }
         const value = parseFloat(NameValue[1]);
-console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
+//console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
         coef = odd.coefs.findLast(c => c.book === 'Lsbet');
         if(!coef){
           odd.coefs.push({book: 'Lsbet', value: value});
         }
-console.log('market: ');
-console.log(JSON.stringify(market, null, 2));
+//console.log('market: ');
+//console.log(JSON.stringify(market, null, 2));
       }
     }
 

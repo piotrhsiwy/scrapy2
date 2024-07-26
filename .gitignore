@@ -1,3 +1,5 @@
 node_modules
 data/data_out.json
 calculator/log.txt
+bot token.txt
+books/*/log.txt

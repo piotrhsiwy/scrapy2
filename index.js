@@ -2,36 +2,48 @@ import { handleURL_tp } from './books/tp/tp.js'
 import { handleURL_ms } from './books/ms/ms.js'
 import { handleURL_esb } from './books/esb/esb.js'
 import { handleURL_ls } from './books/ls/ls.js'
+import { handleURL_22 } from './books/22/22.js'
 
 import { readFileSync, writeFileSync } from 'fs'
 
 const urls_tp = 
 [
   'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/virtus-pro-vs-liquid/833214',
-  // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/natus-vincere-vs-big/833218',
-  // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/g2-vs-ninjas-in-pyjamas/833213',
-  // 'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/faze-vs-cloud9/833212',
+  'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/natus-vincere-vs-big/833218',
+  'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/g2-vs-ninjas-in-pyjamas/833213',
+  'https://thunderpick.io/esports/cs2-betting/blast-premier-fall-groups-2024/5497/faze-vs-cloud9/833212',
 ];
 
 const urls_ms =
 [
   'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077808',
-  // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077807',
-  // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077811',
-  // 'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077812',
+  'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077807',
+  'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077811',
+  'https://mystake.com/en/sportsbook/prematch#/prematch?match=35077812',
 ];
 
 const urls_esb =
 [
   'https://esportsbet.io/de/esportsbull/OddsPage/29762888/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
-  // 'https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
-  // 'https://esportsbet.io/de/esportsbull/OddsPage/29762500/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
-  // 'https://esportsbet.io/de/esportsbull/OddsPage/29763510/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
+  'https://esportsbet.io/de/esportsbull/OddsPage/29762308/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
+  'https://esportsbet.io/de/esportsbull/OddsPage/29762500/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
+  'https://esportsbet.io/de/esportsbull/OddsPage/29763510/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1',
 ];
 
 const urls_ls =
 [
   'https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5297240',
+  'https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5297075',
+  'https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5296857',
+  'https://www.lsbet1292.com/sportsbook/6000/1994809/2854015/5296699',
+];
+
+const urls_22 = 
+[
+  'https://22bets.me/line/esports/2727264-cs-2-blast-premier-fall-groups/220999980-virtuspro-team-liquid',
+  'https://22bets.me/line/esports/2727264-cs-2-blast-premier-fall-groups/220999981-natus-vincere-big',
+  'https://22bets.me/line/esports/2727264-cs-2-blast-premier-fall-groups/220999985-g2-esports-ninjas-in-pyjamas',
+  'https://22bets.me/line/esports/2727264-cs-2-blast-premier-fall-groups/220999986-faze-clan-cloud9',
 ];
 
 // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
@@ -40,30 +52,17 @@ const urls_ls =
 // ### Harvesting the data
 const data = {sports: []};
 
-const allPromises = [];
-
-for(const url of urls_tp){
-  const promise = handleURL_tp(data, url);
-  allPromises.push(promise);
+let promise;
+for(let i = 0; i < urls_tp.length; i++){
+  const allPromises = [];
+  // promise = handleURL_tp(data, urls_tp[i]); allPromises.push(promise);
+  promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
+  // promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
+  // promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
+  // promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
+  await Promise.allSettled(allPromises);
+  console.log(allPromises);
 }
-
-for(const url of urls_ms){
-  const promise = handleURL_ms(data, url);
-  allPromises.push(promise);
-}
-
-for(const url of urls_esb){
-  const promise = handleURL_esb(data, url);
-  allPromises.push(promise);
-}
-
-for(const url of urls_ls){
-  const promise = handleURL_ls(data, url);
-  allPromises.push(promise);
-}
-
-await Promise.allSettled(allPromises);
-console.log(allPromises);
 
 const dataPathOut = 'data/data_out.json';
 writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
@@ -92,5 +91,5 @@ function calcData(dataFilePath, logFilePath, books){
 
 const dataFilePath = 'data/data_out.json';
 const logFilePath = 'calculator/log.txt';
-const availableBooks = ['Thunderpick', 'Mystake', 'Esportsbet'];
+const availableBooks = ['Thunderpick', 'Mystake', 'Esportsbet', 'Lsbet', '22bet'];
 calcData(dataFilePath, logFilePath, availableBooks);

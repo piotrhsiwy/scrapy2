@@ -5,6 +5,7 @@ export const marketNameMap = Object.freeze
     MHDP:       'Match Handicap',
     CS:         'Correct Score',
     TM:         'Total Maps',
+    TR:         'Total Rounds',
 
     M1W:        'Map 1 Winner',
     OT1:        'Overtime Map 1',

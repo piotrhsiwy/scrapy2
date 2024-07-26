@@ -193,8 +193,8 @@ export async function handleURL_ms(data, url){
       for(const oddHandle of oddsHandles){
         let oddName = await oddHandle.$eval('p.odd-name', e => e.textContent); 
 
-        oddName = market.name.includes('Score') ?
-          oddName
+        oddName = market.name.includes('Score') || market.name.includes('Total Maps') ?
+          stripTeamName(oddName)
           : oddName
             .replace(/1|2/, (match) => { return match === '1' ? teamHome : teamAway })
             .replace(/[()+]/g, '');

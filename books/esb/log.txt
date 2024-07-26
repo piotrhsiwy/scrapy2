@@ -32,4 +32,4 @@ Warning! marketName Mapping of 'Game 3 Total Rounds Odd Or Even' does not exist 
 Warning! marketName Mapping of 'Game 3 Total Enemy Kills Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 Total Bombs Explode Odd Or Even' does not exist in books/esb/marketNameMapping.json
 Warning! marketName Mapping of 'Game 3 Total Bombs Defused Odd Or Even' does not exist in books/esb/marketNameMapping.json
-Success! scraping a match from https://esportsbet.io/de/esportsbull/OddsPage/29762888/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1
+Success! scraping a match from https://esportsbet.io/de/esportsbull/OddsPage/29763510/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1

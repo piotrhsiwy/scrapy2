@@ -8,9 +8,9 @@ export function calcMarket(stream, market, books){
     let positiveArbCount = 0;
 
     function arb2(oddHome, oddAway){
-        for(const coefHome of oddHome.coefs.filter(c => !books.includes(c.name))){
-            for(const coefAway of oddAway.coefs.filter(c => !books.includes(c.name))){
-                if(coefAway.book === coefHome.book){ break; } // excludes self-arbs from the consideration
+        for(const coefHome of oddHome.coefs.filter(c => books.includes(c.book))){
+            for(const coefAway of oddAway.coefs.filter(c => books.includes(c.book))){
+                if(coefAway.book === coefHome.book){ continue; } // excludes self-arbs from the consideration
                 arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
                 consideredArbCount++;
                 if(arb > 0.0){ positiveArbCount++; }
@@ -24,10 +24,16 @@ export function calcMarket(stream, market, books){
     stream.write(`Processing market: ${market.name}\n`)
     let odds = market.odds;
     if          (odds.length <= 1){
-        marketReport = `calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
+        marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
     } else if   (odds.length == 2){
             /* normal binary market */
-            arb2(market.odds[0], market.odds[1]);
+            let oddHome = market.odds[0];
+            let oddAway = market.odds[1];
+            if(oddHome && oddAway){
+                arb2(oddHome, oddAway);
+            } else{
+                stream.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
+            }
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
@@ -54,7 +60,11 @@ export function calcMarket(stream, market, books){
                         break;
                     }
                 }
-                arb2(oddHome, oddAway);
+                if(oddHome && oddAway){
+                    arb2(oddHome, oddAway);
+                } else{
+                    stream.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                }
                 processed.push(oddHome);
                 processed.push(oddAway);
             }
@@ -83,7 +93,11 @@ export function calcMarket(stream, market, books){
                         break;
                     }
                 }
-                arb2(oddHome, oddAway);
+                if(oddHome && oddAway){
+                    arb2(oddHome, oddAway);
+                } else{
+                    stream.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
+                }
                 processed.push(oddHome);
                 processed.push(oddAway);
             }
@@ -91,7 +105,7 @@ export function calcMarket(stream, market, books){
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
         } else{
-            marketReport = `calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
+            marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
         }
     }
     stream.write(marketReport);

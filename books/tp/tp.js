@@ -252,7 +252,8 @@ export async function handleURL_tp(data, url){
 //          console.log(`$$eval${selector} length: ${buttonHandles.length}`);
           for(let j = 0; j < buttonHandles.length; j++){
             const teamSufix = await buttonHandles[j].$eval('div.odds-button__name', e => e.textContent);
-            const oddName = teamPrefix[j] ? `${teamPrefix[j]} ${teamSufix}` : teamSufix;
+            let oddName = teamPrefix[j] ? `${teamPrefix[j]} ${teamSufix}` : teamSufix;
+            oddName = stripTeamName(oddName);
             odd = market.odds.findLast(o => o.name === oddName);
 //            console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
             if(!odd){
