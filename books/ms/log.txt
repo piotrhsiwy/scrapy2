@@ -1,6 +1,0 @@
-Warning! marketName Mapping of 'Total rounds' does not exist in books/ms/marketNameMapping.json
-Warning! marketName Mapping of 'Rounds handicap 1st Half (Map 1)' does not exist in books/ms/marketNameMapping.json
-Warning! marketName Mapping of 'Winner 1st Half (Map 2)' does not exist in books/ms/marketNameMapping.json
-Warning! marketName Mapping of 'Round Advantage 1st Half (Map 2)' does not exist in books/ms/marketNameMapping.json
-Warning! marketName Mapping of 'Winner 1st Half (Map 1)' does not exist in books/ms/marketNameMapping.json
-Success! scraping a match from https://mystake.com/en/sportsbook/prematch#/prematch?match=35077812
