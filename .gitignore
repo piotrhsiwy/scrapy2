@@ -1,5 +1,7 @@
 node_modules
 
+# DO NOT RUN 'git clean -x -f' under ANY CIRCUMSTANCES
+
 # scraping data
 books/*/urls.json
 
@@ -11,4 +13,4 @@ calculator/log.txt
 books/*/log.txt
 
 # login and auth files
-bot token.txt
+auth/*

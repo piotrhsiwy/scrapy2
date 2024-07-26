@@ -10,6 +10,7 @@ import { readFileSync, writeFileSync } from 'fs'
 // https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
 
 // ### Harvesting the data
+const data = {sports: []};
 
 let urlsFilePath;
 urlsFilePath = './books/tp/urls.json';
@@ -23,19 +24,42 @@ const urls_ls = JSON.parse(readFileSync(urlsFilePath));
 urlsFilePath = './books/22/urls.json';
 const urls_22 = JSON.parse(readFileSync(urlsFilePath));
 
-const data = {sports: []};
-
 let promise;
 for(let i = 0; i < urls_tp.length; i++){
   const allPromises = [];
-  // promise = handleURL_tp(data, urls_tp[i]); allPromises.push(promise);
+  promise = handleURL_tp(data, urls_tp[i]); allPromises.push(promise);
   promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
-  // promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
-  // promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
-  // promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
+  promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
+  promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
+  promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
   await Promise.allSettled(allPromises);
   console.log(allPromises);
 }
+
+// for(const url of urls_tp){
+//   const promise = handleURL_tp(data, url);
+//   allPromises.push(promise);
+// }
+
+// for(const url of urls_ms){
+//   const promise = handleURL_ms(data, url);
+//   allPromises.push(promise);
+// }
+
+// for(const url of urls_esb){
+//   const promise = handleURL_esb(data, url);
+//   allPromises.push(promise);
+// }
+
+// for(const url of urls_ls){
+//   const promise = handleURL_ls(data, url);
+//   allPromises.push(promise);
+// }
+
+// for(const url of urls_22){
+//   const promise = handleURL_22(data, url);
+//   allPromises.push(promise);
+// }
 
 const dataPathOut = 'data/data_out.json';
 writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
