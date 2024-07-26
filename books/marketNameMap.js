@@ -5,9 +5,12 @@ export const marketNameMap = Object.freeze
     MHDP:       'Match Handicap',
     CS:         'Correct Score',
     TM:         'Total Maps',
+    TMOE:       'Total Maps Odd/Even',
     TR:         'Total Rounds',
 
     M1W:        'Map 1 Winner',
+    M1WD:       'Map 1 Winner incl. Draw',
+    CSM1:       'Correct score Map 1',
     OT1:        'Overtime Map 1',
     RHDPM1:     'Rounds Handicap Map 1',
     TRM1:       'Total Rounds Map 1',
@@ -15,8 +18,11 @@ export const marketNameMap = Object.freeze
     FTRRM1:     'First to reach Rounds Map 1',
     R1WM1:      'Round 1 Winner Map 1',
     R13WM1:     'Round 13 Winner Map 1',
+    WMM1:       'Winning Margin Map 1',
 
     M2W:        'Map 2 Winner',
+    M2WD:       'Map 2 Winner incl. Draw',
+    CSM2:       'Correct score Map 2',
     OT2:        'Overtime Map 2',
     RHDPM2:     'Rounds Handicap Map 2',
     TRM2:       'Total Rounds Map 2',
@@ -24,8 +30,11 @@ export const marketNameMap = Object.freeze
     FTRRM2:     'First to reach Rounds Map 2',
     R1WM2:      'Round 1 Winner Map 2',
     R13WM2:     'Round 13 Winner Map 2',
+    WMM2:       'Winning Margin Map 2',
 
     M3W:        'Map 3 Winner',
+    M3WD:       'Map 3 Winner incl. Draw',
+    CSM3:       'Correct score Map 3',
     OT3:        'Overtime Map 3',
     RHDPM3:     'Rounds Handicap Map 3',
     TRM3:       'Total Rounds Map 3',
@@ -33,4 +42,5 @@ export const marketNameMap = Object.freeze
     FTRRM3:     'First to reach Rounds Map 3',
     R1WM3:      'Round 1 Winner Map 3',
     R13WM3:     'Round 13 Winner Map 3',
+    WMM3:       'Winning Margin Map 3',
 });

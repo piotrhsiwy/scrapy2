@@ -17,6 +17,10 @@
             "globalID":     "TM"
         },
         {
+            "specificName": "Number of maps parity",
+            "globalID":     "TMOE"
+        },
+        {
             "specificName": "Map 1 Winner",
             "globalID":     "M1W"
         },
@@ -111,6 +115,30 @@
         {
             "specificName": "Overtime Yes/No - Map 3",
             "globalID":     "OT3"
+        },
+        {
+            "specificName": "Map 1 1X2",
+            "globalID":     "M1WD"
+        },
+        {
+            "specificName": "Map 2 1X2",
+            "globalID":     "M2WD"
+        },
+        {
+            "specificName": "Map 3 1X2",
+            "globalID":     "M3WD"
+        },
+        {
+            "specificName": "Winning margin - map 1",
+            "globalID":     "WMM1"
+        },
+        {
+            "specificName": "Winning margin - map 2",
+            "globalID":     "WMM2"
+        },
+        {
+            "specificName": "Winning margin - map 3",
+            "globalID":     "WMM3"
         }
     ]
 }

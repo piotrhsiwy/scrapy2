@@ -3,6 +3,7 @@ import { handleURL_ms } from './books/ms/ms.js'
 import { handleURL_esb } from './books/esb/esb.js'
 import { handleURL_ls } from './books/ls/ls.js'
 import { handleURL_22 } from './books/22/22.js'
+import { handleURL_gg } from './books/gg/gg.js'
 
 import { readFileSync, writeFileSync } from 'fs'
 
@@ -13,25 +14,22 @@ import { readFileSync, writeFileSync } from 'fs'
 const data = {sports: []};
 
 let urlsFilePath;
-urlsFilePath = './books/tp/urls.json';
-const urls_tp = JSON.parse(readFileSync(urlsFilePath));
-urlsFilePath = './books/ms/urls.json';
-const urls_ms = JSON.parse(readFileSync(urlsFilePath));
-urlsFilePath = './books/esb/urls.json';
-const urls_esb = JSON.parse(readFileSync(urlsFilePath));
-urlsFilePath = './books/ls/urls.json';
-const urls_ls = JSON.parse(readFileSync(urlsFilePath));
-urlsFilePath = './books/22/urls.json';
-const urls_22 = JSON.parse(readFileSync(urlsFilePath));
+urlsFilePath = './books/tp/urls.json';  const urls_tp =   JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/ms/urls.json';  const urls_ms =   JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/esb/urls.json'; const urls_esb =  JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/ls/urls.json';  const urls_ls =   JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/22/urls.json';  const urls_22 =   JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/gg/urls.json';  const urls_gg =   JSON.parse(readFileSync(urlsFilePath)).urls;
 
 let promise;
-for(let i = 0; i < urls_tp.length; i++){
+for(let i = 0; i < 1 ; i++){
   const allPromises = [];
   promise = handleURL_tp(data, urls_tp[i]); allPromises.push(promise);
-  promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
-  promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
-  promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
-  promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
+  // promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
+  // promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
+  // promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
+  // promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
+  promise = handleURL_gg(data, urls_gg[i]); allPromises.push(promise);
   await Promise.allSettled(allPromises);
   console.log(allPromises);
 }

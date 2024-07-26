@@ -1,0 +1,124 @@
+{
+    "mapping": [
+        {
+            "specificName": "Winner",
+            "globalID":     "MW"
+        },
+        {
+            "specificName": "Map handicap",
+            "globalID":     "MHDP"
+        },
+        {
+            "specificName": "Total maps",
+            "globalID":     "TM"
+        },
+        {
+            "specificName": "Odd/Even maps",
+            "globalID":     "TMOE"
+        },
+        {
+            "specificName": "Correct map score",
+            "globalID":     "CS"
+        },
+        {
+            "specificName": "Total Rounds (incl. overtimes)",
+            "globalID":     "TR"
+        },
+        {
+            "specificName": "1st map - winner (incl. overtime)",
+            "globalID":     "M1W"
+        },
+        {
+            "specificName": "2nd map - winner (incl. overtime)",
+            "globalID":     "M2W"
+        },
+        {
+            "specificName": "3rd map - winner (incl. overtime)",
+            "globalID":     "M3W"
+        },
+        {
+            "specificName": "1st map - 1x2(Overtimes not include)",
+            "globalID":     "M1WD"
+        },
+        {
+            "specificName": "2nd map - 1x2(Overtimes not include)",
+            "globalID":     "M2WD"
+        },
+        {
+            "specificName": "3rd map - 1x2(Overtimes not include)",
+            "globalID":     "M3WD"
+        },
+        {
+            "specificName": "1st map - round handicap",
+            "globalID":     "M1RHDP"
+        },
+        {
+            "specificName": "2nd map - round handicap",
+            "globalID":     "M2RHDP"
+        },
+        {
+            "specificName": "3rd map - round handicap",
+            "globalID":     "M3RHDP"
+        },
+        {
+            "specificName": "1st map - total rounds",
+            "globalID":     "TRM1"
+        },
+        {
+            "specificName": "2nd map - total rounds",
+            "globalID":     "TRM2"
+        },
+        {
+            "specificName": "3rd map - total rounds",
+            "globalID":     "TRM3"
+        },
+        {
+            "specificName": "1st map - correct score",
+            "globalID":     "CSM1"
+        },
+        {
+            "specificName": "2nd map - correct score",
+            "globalID":     "CSM2"
+        },
+        {
+            "specificName": "3rd map - correct score",
+            "globalID":     "CSM3"
+        },
+        {
+            "specificName": "1st map - will there be overtime",
+            "globalID":     "OT1"
+        },
+        {
+            "specificName": "2nd map - will there be overtime",
+            "globalID":     "OT2"
+        },
+        {
+            "specificName": "3rd map - will there be overtime",
+            "globalID":     "OT3"
+        },
+        {
+            "specificName": "1st map - odd/even rounds",
+            "globalID":     "TROE1"
+        },
+        {
+            "specificName": "2nd map - odd/even rounds",
+            "globalID":     "TROE2"
+        },
+        {
+            "specificName": "3rd map - odd/even rounds",
+            "globalID":     "TROE3"
+        },
+        {
+            "specificName": "1st map - Winning margin",
+            "globalID":     "WMM1"
+        },
+        {
+            "specificName": "2nd map - Winning margin",
+            "globalID":     "WMM2"
+        },
+        {
+            "specificName": "3rd map - Winning margin",
+            "globalID":     "WMM3"
+        }
+    ]
+}
