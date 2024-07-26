@@ -91,6 +91,18 @@
         {
             "specificName": "Game 3 Total Rounds",
             "globalID":     "TRM3"
+        },
+        {
+            "specificName": "Game 1 Total Rounds Odd Or Even",
+            "globalID":     "TROE1"
+        },
+        {
+            "specificName": "Game 2 Total Rounds Odd Or Even",
+            "globalID":     "TROE2"
+        },
+        {
+            "specificName": "Game 3 Total Rounds Odd Or Even",
+            "globalID":     "TROE3"
         }
     ]
 }

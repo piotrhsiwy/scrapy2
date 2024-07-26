@@ -19,6 +19,8 @@ export const marketNameMap = Object.freeze
     R1WM1:      'Round 1 Winner Map 1',
     R13WM1:     'Round 13 Winner Map 1',
     WMM1:       'Winning Margin Map 1',
+    FHWM1:      'First Half Winner Map 1',
+    FHRHDPM1:   'First Half Round Handicap Map 1',
 
     M2W:        'Map 2 Winner',
     M2WD:       'Map 2 Winner incl. Draw',
@@ -31,6 +33,8 @@ export const marketNameMap = Object.freeze
     R1WM2:      'Round 1 Winner Map 2',
     R13WM2:     'Round 13 Winner Map 2',
     WMM2:       'Winning Margin Map 2',
+    FHWM2:      'First Half Winner Map 2',
+    FHRHDPM2:   'First Half Round Handicap Map 2',
 
     M3W:        'Map 3 Winner',
     M3WD:       'Map 3 Winner incl. Draw',
@@ -43,4 +47,6 @@ export const marketNameMap = Object.freeze
     R1WM3:      'Round 1 Winner Map 3',
     R13WM3:     'Round 13 Winner Map 3',
     WMM3:       'Winning Margin Map 3',
+    FHWM3:      'First Half Winner Map 3',
+    FHRHDPM3:   'First Half Round Handicap Map 3',
 });

@@ -186,11 +186,11 @@ export async function handleURL_22(data, url){
           const nameValue = await oddHandle.$$eval(selector, es => es.map(e => e.textContent));
           let oddName = stripTeamName(nameValue[0]);
 
-          if(market.name.includes('Total Maps')){
+          if(market.name.includes(marketNameMap['TM'])){
             oddName = oddName.replace('total maps ', '');
           } else if(market.name.includes('Handicap')){
             oddName = oddName.replace('\u0441','c').replace('handicap ', '').replace(' maps', '').replace(/[()+]/g, '');
-          } else if(market.name.includes('Correct Score')){
+          } else if(market.name.includes(marketNameMap['CS'])){
             oddName = oddName.replace('correct score ', '').replace(' - yes', '').replace('-',':');
           }
   //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);

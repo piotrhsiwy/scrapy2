@@ -25,10 +25,10 @@ let promise;
 for(let i = 0; i < 1 ; i++){
   const allPromises = [];
   promise = handleURL_tp(data, urls_tp[i]); allPromises.push(promise);
-  // promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
-  // promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
-  // promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
-  // promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
+  promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
+  promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
+  promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
+  promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
   promise = handleURL_gg(data, urls_gg[i]); allPromises.push(promise);
   await Promise.allSettled(allPromises);
   console.log(allPromises);

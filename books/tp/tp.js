@@ -265,7 +265,7 @@ export async function handleURL_tp(data, url){
               value = await buttonHandles[j].$eval('span.odds-button__odds', e => parseFloat(e.textContent));
             } catch(error){
 //              console.log('This odd has no value (the market could be locked)');
-              value = undefined;
+              value = null;
             }
 //            console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
             coef = odd.coefs.findLast(c => c.book === 'Thunderpick');

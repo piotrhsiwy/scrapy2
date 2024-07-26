@@ -17,6 +17,10 @@
             "globalID":     "TM"
         },
         {
+            "specificName": "Total rounds",
+            "globalID":     "TR"
+        },
+        {
             "specificName": "1st map - Winner",
             "globalID":     "M1W"
         },
@@ -87,6 +91,30 @@
         {
             "specificName": "Will there be Overtime? (Map 3)",
             "globalID":     "OT3"
+        },
+        {
+            "specificName": "Winner 1st Half (Map 1)",
+            "globalID":     "FHWM1"
+        },
+        {
+            "specificName": "Winner 1st Half (Map 2)",
+            "globalID":     "FHWM2"
+        },
+        {
+            "specificName": "Winner 1st Half (Map 3)",
+            "globalID":     "FHWM3"
+        },
+        {
+            "specificName": "Rounds handicap 1st Half (Map 1)",
+            "globalID":     "FHRHDPM1"
+        },
+        {
+            "specificName": "Rounds handicap 1st Half (Map 2)",
+            "globalID":     "FHRHDPM2"
+        },
+        {
+            "specificName": "Rounds handicap 1st Half (Map 3)",
+            "globalID":     "FHRHDPM3"
         }
     ]
 }
