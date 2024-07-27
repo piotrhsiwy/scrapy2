@@ -10,8 +10,8 @@ import { scrapeMatchURL_ls } from './books/ls/urlScraper.js'
 import { huntMatchURLs_ls } from './books/ls/urlHunter.js'
 import { scrapeMatchURL_22 } from './books/22/urlScraper.js'
 import { huntMatchURLs_22 } from './books/22/urlHunter.js'
-// import { scrapeMatchURL_gg } from './books/gg/urlScraper.js'
-// import { huntMatchURLs_gg } from './books/gg/urlHunter.js'
+import { scrapeMatchURL_gg } from './books/gg/urlScraper.js'
+import { huntMatchURLs_gg } from './books/gg/urlHunter.js'
 
 
 // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
@@ -31,6 +31,7 @@ tournamentURLsFilePath = './books/ms/tournamentURLs.json';    const tournamentUR
 tournamentURLsFilePath = './books/esb/tournamentURLs.json';   const tournamentURLs_esb = JSON.parse(readFileSync(tournamentURLsFilePath)).urls; console.log(`Loaded tournamentURLs_esb from ${tournamentURLsFilePath}`);
 tournamentURLsFilePath = './books/ls/tournamentURLs.json';    const tournamentURLs_ls = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;  console.log(`Loaded tournamentURLs_ls from ${tournamentURLsFilePath}`);
 tournamentURLsFilePath = './books/22/tournamentURLs.json';    const tournamentURLs_22 = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;  console.log(`Loaded tournamentURLs_22 from ${tournamentURLsFilePath}`);
+tournamentURLsFilePath = './books/gg/tournamentURLs.json';    const tournamentURLs_gg = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;  console.log(`Loaded tournamentURLs_gg from ${tournamentURLsFilePath}`);
 
 const huntBatchSize = 3;
 const tournamentsFromTop = 1;
@@ -43,7 +44,8 @@ for(let i = 0; i < tournamentsFromTop ;){
     // promise = huntMatchURLs_ms (tournamentURLs_ms[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ms[i]}  to hunt`);
     // promise = huntMatchURLs_esb (tournamentURLs_esb[i]);  allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_esb[i]} to hunt`);
     // promise = huntMatchURLs_ls (tournamentURLs_ls[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ls[i]}  to hunt`);
-    promise = huntMatchURLs_22 (tournamentURLs_22[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_22[i]}  to hunt`);
+    // promise = huntMatchURLs_22 (tournamentURLs_22[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_22[i]}  to hunt`);
+    promise = huntMatchURLs_gg (tournamentURLs_gg[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_gg[i]}  to hunt`);
     i++;
   } while(allPromises.length < huntBatchSize && i < tournamentsFromTop);
   console.log(`Deploying hunt batch of ${allPromises.length}...`)
@@ -63,6 +65,7 @@ urlsFilePath = './books/ms/matchURLs.json';  const matchURLs_ms =   JSON.parse(r
 urlsFilePath = './books/esb/matchURLs.json'; const matchURLs_esb =  JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_esb from ${urlsFilePath}`);
 urlsFilePath = './books/ls/matchURLs.json';  const matchURLs_ls =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_ls from  ${urlsFilePath}`);
 urlsFilePath = './books/22/matchURLs.json';  const matchURLs_22 =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_22 from  ${urlsFilePath}`);
+urlsFilePath = './books/gg/matchURLs.json';  const matchURLs_gg =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_gg from  ${urlsFilePath}`);
 
 const scrapeBatchSize = 9;
 const matchesFromTop = 8;
@@ -74,6 +77,7 @@ for(let i = 0; i < matchesFromTop ;){
     promise = scrapeMatchURL_esb (data, matchURLs_esb[i]);  allPromises.push(promise); console.log(`i=${i} Queued ${matchURLs_esb[i]} to scrape`);
     promise = scrapeMatchURL_ls (data, matchURLs_ls[i]);    allPromises.push(promise); console.log(`i=${i} Queued ${matchURLs_ls[i]}  to scrape`);
     promise = scrapeMatchURL_22 (data, matchURLs_22[i]);    allPromises.push(promise); console.log(`i=${i} Queued ${matchURLs_22[i]}  to scrape`);
+    promise = scrapeMatchURL_gg (data, matchURLs_gg[i]);    allPromises.push(promise); console.log(`i=${i} Queued ${matchURLs_gg[i]}  to scrape`);
     i++;
   } while(allPromises.length < scrapeBatchSize && i < matchesFromTop);
   console.log(`Deploying scrape batch of ${allPromises.length}...`)
