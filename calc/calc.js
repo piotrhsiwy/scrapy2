@@ -13,13 +13,13 @@ function arb2(sport, tournament, match, market, oddHome, oddAway, books){
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > 0.0){
                 let newArb = {
-                    "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString());
+                    "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
                     "value":arb,
                     "sport":sport.name,
                     "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
-                    "prettyDatetime":dateISO8601Prettify(match.datetime),
+                    "datetime":dateISO8601Prettify(match.datetime),
                     "market":market.name,
                     "Home":{
                         "oddName:":oddHome.name,
@@ -139,7 +139,7 @@ function calcMarket(sport, tournament, match, market, books){
 
 export function arbSports(books){
 
-    const logFilePath = './calculator/log.txt';
+    const logFilePath = './calc/log.txt';
     try{
         log = createWriteStream(logFilePath, {flags: 'a'});
     } catch(error){

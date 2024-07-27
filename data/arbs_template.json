@@ -1,0 +1,28 @@
+[
+    {
+      "timestamp (calculated)": "July 27, 2024 at 01:59:09 PM GMT+2",
+      "value": 0.008323220436632028,
+      "sport": "Counter-Strike 2",
+      "tournament": "BLAST Premier: Fall Groups 2024",
+      "teamHome": "spirit",
+      "teamAway": "og",
+      "prettyDatetime": "July 29, 2024 at 12:00:00 PM GMT+2",
+      "market": "Rounds Handicap Map 1",
+      "Home": {
+        "oddName:": "spirit -5.5",
+        "book": "Ggbet",
+        "url": {
+          "book": "Ggbet",
+          "url": "https://gg.bet//en/esports/match/team-spirit-vs-og-29-07"
+        }
+      },
+      "Away": {
+        "oddName:": "og 5.5",
+        "book": "Esportsbet",
+        "url": {
+          "book": "Esportsbet",
+          "url": "https://esportsbet.io/de/esportsbull/OddsPage/29762062/47?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+        }
+      }
+    }
+]

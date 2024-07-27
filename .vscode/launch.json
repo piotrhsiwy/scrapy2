@@ -7,12 +7,29 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Debug index.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\index.js"
-            // "program": "${workspaceFolder}\\books\\util\\stripTeamNameTests.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test stripTeamName.js",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\books\\util\\stripTeamNameTests.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Telegram Bot",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\notif\\telegram\\tgBot.js"
         }
     ]
 }
