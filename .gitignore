@@ -2,6 +2,9 @@ node_modules
 
 # DO NOT RUN 'git clean -x -f' under ANY CIRCUMSTANCES
 
+# IDE conf files
+.vscode/*
+
 # scraping data
 books/*/urls.json
 
