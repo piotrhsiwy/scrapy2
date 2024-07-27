@@ -4,8 +4,7 @@ export function tupleFrom(from){
     return `(${from.first_name}, ${from.id}, ${from.is_bot}, ${from.is_premium}, ${from.language_code}, ${from.last_name},${from.username})`;
 }
 
-export function authenticateEmail(email, id){
-    const clientsPath = './auth/clientData/clients.json';
+export function authenticateEmail(clientsPath, email, id){
     const clients = JSON.parse(readFileSync(clientsPath));
     const clientPresent = clients.find( client => client.email === email)
     if(clientPresent){
@@ -22,8 +21,7 @@ export function authenticateEmail(email, id){
     }
 }
 
-export function authorize(command, id){
-    const clientsPath = './auth/clientData/clients.json';
+export function authorize(clientsPath, command, id){
     const clients = JSON.parse(readFileSync(clientsPath));
     const clientLoggedIn = clients.find( client => client.boundToID === id);
     if(clientLoggedIn){
@@ -34,8 +32,7 @@ export function authorize(command, id){
     return false;
 }
 
-export function unbindID(id){
-    const clientsPath = './auth/clientData/clients.json';
+export function unbindID(clientsPath, id){
     const clients = JSON.parse(readFileSync(clientsPath));
     const clientLoggedIn = clients.find( client => client.boundToID === id);
     clientLoggedIn.boundToID = null;

@@ -6,12 +6,34 @@ import { promisify } from "util";
 import { sortArbs, pickArbTop, pickArbRandom } from '../../data/util/pickArb.js'
 import { tupleFrom, authenticateEmail, authorize, unbindID } from './util.js'
 
-const tokenPath = `./auth/tgBotToken.txt`;
-const tokenValue = readFileSync(tokenPath).toString();
-process.env['TOKEN'] = tokenValue;
 
-// open log stream
-const logFilePath = './notif/telegram/log.txt';
+console.log(process.env['TGBOT_LOG_PATH']);
+console.log(process.env['ARBS_PATH']);
+console.log(process.env['CLIENTS_PATH']);
+console.log(process.env['TOKEN']);
+if(process.env['TOKEN']){
+    ;
+} else {
+    const tokenPath = `./auth/tgBotToken.txt`;
+    const tokenValue = readFileSync(tokenPath).toString();
+    process.env['TOKEN'] = tokenValue;
+}
+
+// prepare paths
+let logFilePath = './notif/telegram/log.txt';
+if(process.env['TGBOT_LOG_PATH']){
+    logFilePath = process.env['TGBOT_LOG_PATH'];
+}
+let arbsPath = './data/arbs.json';
+if(process.env['ARBS_PATH']){
+    arbsPath = process.env['ARBS_PATH'];
+}
+let clientsPath = './auth/clientData/clients.json';
+if(process.env['CLIENTS_PATH']){
+    clientsPath = process.env['CLIENTS_PATH'];
+}
+
+// create a stream to log file
 const log = createWriteStream(logFilePath, {flags: 'a'});
 const log2 = async (msg) => {
     const timestamp = Date().toString();
@@ -20,15 +42,15 @@ const log2 = async (msg) => {
 }
 
 // launch the bot
-sortArbs();
+sortArbs(arbsPath);
 const bot = new Telegraf(process.env['TOKEN'])
 bot.launch()
 
 bot.command('arb', async (ctx) => {
     /* do user authentication */
-    const isAuthorized = authorize('arb', ctx.from.id);
+    const isAuthorized = authorize(clientsPath, 'arb', ctx.from.id);
     if(isAuthorized){
-        ctx.reply(pickArbRandom());
+        ctx.reply(pickArbRandom(arbsPath));
         log2(`Sent random arb to ${tupleFrom(ctx.from)}`);
     } else{
         ctx.reply("You don't have permission to use this command.");
@@ -38,9 +60,9 @@ bot.command('arb', async (ctx) => {
 
 bot.command('top', async (ctx) => {
     /* do user authentication */
-    const isAuthorized = authorize('top', ctx.from.id);
+    const isAuthorized = authorize(clientsPath, 'top', ctx.from.id);
     if(isAuthorized){
-        ctx.reply(pickArbTop());
+        ctx.reply(pickArbTop(arbsPath));
         log2(`Sent top arb to ${tupleFrom(ctx.from)}`);
     } else{
         ctx.reply("You don't have permission to use this command.");
@@ -50,9 +72,9 @@ bot.command('top', async (ctx) => {
 
 bot.command('logout', async (ctx) => {
     /* do user authentication */
-    const isAuthorized = authorize('logout', ctx.from.id);
+    const isAuthorized = authorize(clientsPath, 'logout', ctx.from.id);
     if(isAuthorized){
-        unbindID(ctx.from.id);
+        unbindID(clientsPath, ctx.from.id);
         ctx.reply(`Logout successful.`);
         log2(`Logged out ${tupleFrom(ctx.from)}`);
     } else{
@@ -68,7 +90,7 @@ bot.start((ctx) => {
 bot.on(message('text'), (ctx) => {
     const text = ctx.message.text;
     if(text.includes('@')){
-        const client = authenticateEmail(text, ctx.from.id);
+        const client = authenticateEmail(clientsPath, text, ctx.from.id);
         if(client){
             if(client === 'oldClient'){
                 ctx.reply(`This email is already logged in.`);

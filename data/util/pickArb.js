@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs';
 
-export function pickArbRandom(){
-    const arbsFilePath = './data/arbs.json';
+export function pickArbRandom(arbsFilePath){
     const arbs = JSON.parse(readFileSync(arbsFilePath));
 
     const from = 0;
@@ -11,14 +10,12 @@ export function pickArbRandom(){
     return JSON.stringify( arbs[Math.floor(index)], null, 2 );
 }
 
-export function pickArbTop(){
-    const arbsFilePath = './data/arbs.json';
+export function pickArbTop(arbsFilePath){
     const arbs = JSON.parse(readFileSync(arbsFilePath));
     return JSON.stringify( arbs[0], null, 2 );
 }
 
-export function sortArbs(){
-    const arbsFilePath = './data/arbs.json';
+export function sortArbs(arbsFilePath){
     const arbs = JSON.parse(readFileSync(arbsFilePath));
     arbs.sort( (a, b) => b.value - a.value);
     writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
