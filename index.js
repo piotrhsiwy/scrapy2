@@ -33,18 +33,18 @@ tournamentURLsFilePath = './books/ls/tournamentURLs.json';    const tournamentUR
 tournamentURLsFilePath = './books/22/tournamentURLs.json';    const tournamentURLs_22 = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;  console.log(`Loaded tournamentURLs_22 from ${tournamentURLsFilePath}`);
 tournamentURLsFilePath = './books/gg/tournamentURLs.json';    const tournamentURLs_gg = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;  console.log(`Loaded tournamentURLs_gg from ${tournamentURLsFilePath}`);
 
-const huntBatchSize = 3;
+const huntBatchSize = 6;
 const tournamentsFromTop = 1;
 console.log(`Hunting..., batchSize: ${huntBatchSize}, ${tournamentsFromTop} first tournaments from top`);
 let promise;
 for(let i = 0; i < tournamentsFromTop ;){
   const allPromises = [];
   do{
-    // promise = huntMatchURLs_tp (tournamentURLs_tp[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_tp[i]}  to hunt`);
-    // promise = huntMatchURLs_ms (tournamentURLs_ms[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ms[i]}  to hunt`);
-    // promise = huntMatchURLs_esb (tournamentURLs_esb[i]);  allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_esb[i]} to hunt`);
-    // promise = huntMatchURLs_ls (tournamentURLs_ls[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ls[i]}  to hunt`);
-    // promise = huntMatchURLs_22 (tournamentURLs_22[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_22[i]}  to hunt`);
+    promise = huntMatchURLs_tp (tournamentURLs_tp[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_tp[i]}  to hunt`);
+    promise = huntMatchURLs_ms (tournamentURLs_ms[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ms[i]}  to hunt`);
+    promise = huntMatchURLs_esb (tournamentURLs_esb[i]);  allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_esb[i]} to hunt`);
+    promise = huntMatchURLs_ls (tournamentURLs_ls[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ls[i]}  to hunt`);
+    promise = huntMatchURLs_22 (tournamentURLs_22[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_22[i]}  to hunt`);
     promise = huntMatchURLs_gg (tournamentURLs_gg[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_gg[i]}  to hunt`);
     i++;
   } while(allPromises.length < huntBatchSize && i < tournamentsFromTop);
@@ -67,7 +67,7 @@ urlsFilePath = './books/ls/matchURLs.json';  const matchURLs_ls =   JSON.parse(r
 urlsFilePath = './books/22/matchURLs.json';  const matchURLs_22 =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_22 from  ${urlsFilePath}`);
 urlsFilePath = './books/gg/matchURLs.json';  const matchURLs_gg =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_gg from  ${urlsFilePath}`);
 
-const scrapeBatchSize = 9;
+const scrapeBatchSize = 6;
 const matchesFromTop = 8;
 for(let i = 0; i < matchesFromTop ;){
   const allPromises = [];

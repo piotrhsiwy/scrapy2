@@ -16,5 +16,5 @@ data/data_out.json
 calculator/log.txt
 books/*/log.txt
 
-# login and auth files
+# login, auth and client-data files
 auth/*
