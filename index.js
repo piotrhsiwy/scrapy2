@@ -1,47 +1,89 @@
+import { readFileSync, writeFileSync } from 'fs'
+
 import { scrapeMatchURL_tp } from './books/tp/urlScraper.js'
 import { huntMatchURLs_tp } from './books/tp/urlHunter.js'
-import { handleURL_ms } from './books/ms/ms.js'
-import { handleURL_esb } from './books/esb/esb.js'
-import { handleURL_ls } from './books/ls/ls.js'
-import { handleURL_22 } from './books/22/22.js'
-import { handleURL_gg } from './books/gg/gg.js'
+import { scrapeMatchURL_ms } from './books/ms/urlScraper.js'
+import { huntMatchURLs_ms } from './books/ms/urlHunter.js'
+import { scrapeMatchURL_esb } from './books/esb/urlScraper.js'
+import { huntMatchURLs_esb } from './books/esb/urlHunter.js'
 
-import { readFileSync, writeFileSync } from 'fs'
+// import { scrapeMatchURL_ls } from './books/ls/urlScraper.js'
+// import { huntMatchURLs_ls } from './books/ls/urlHunter.js'
+// import { scrapeMatchURL_22 } from './books/22/urlScraper.js'
+// import { huntMatchURLs_22 } from './books/22/urlHunter.js'
+// import { scrapeMatchURL_gg } from './books/gg/urlScraper.js'
+// import { huntMatchURLs_gg } from './books/gg/urlHunter.js'
+
 
 // adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
 // https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
 
+const availableBooks = ['Thunderpick', 'Mystake', 'Esportsbet', 'Lsbet', '22bet', 'Ggbet'];
+const availableBooksShort = ['tp', 'ms', 'esb', 'ls', '22', 'gg'];
+console.log(`availableBooks: ${availableBooks.toString()}`);
+console.log(`availableBooksShort: ${availableBooks.toString()}`);
 // ### Hunting URLs
-const tournamentURLsFilePath = './books/tp/tournamentURLs.json';  const tournamentURLs = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;
-for(const tournamentURL of tournamentURLs){
-  await huntMatchURLs_tp(tournamentURL);
+console.log('### Hunting URLs');
+
+console.log('Opening files...');
+let tournamentURLsFilePath;
+tournamentURLsFilePath = './books/tp/tournamentURLs.json';  const tournamentURLs_tp = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;
+console.log(`Loaded tournamentURLs_tp from ${tournamentURLsFilePath}`);
+tournamentURLsFilePath = './books/ms/tournamentURLs.json';  const tournamentURLs_ms = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;
+console.log(`Loaded tournamentURLs_ms from ${tournamentURLsFilePath}`);
+tournamentURLsFilePath = './books/esb/tournamentURLs.json';  const tournamentURLs_esb = JSON.parse(readFileSync(tournamentURLsFilePath)).urls;
+console.log(`Loaded tournamentURLs_esb from ${tournamentURLsFilePath}`);
+
+const huntBatchSize = 3;
+const tournamentsFromTop = 1;
+console.log(`Hunting..., batchSize: ${huntBatchSize}, ${tournamentsFromTop} first tournaments from top`);
+let promise;
+for(let i = 0; i < tournamentsFromTop ; i++){
+  const allPromises = [];
+  do{
+    promise = huntMatchURLs_tp (tournamentURLs_tp[i]); allPromises.push(promise);
+    console.log(`Queued ${tournamentURLs_tp[i]} to hunt, i=${i}`);
+    promise = huntMatchURLs_ms (tournamentURLs_ms[i]); allPromises.push(promise);
+    console.log(`Queued ${tournamentURLs_ms[i]} to hunt, i=${i}`);
+    promise = huntMatchURLs_esb (tournamentURLs_esb[i]); allPromises.push(promise);
+    console.log(`Queued ${tournamentURLs_esb[i]} to hunt, i=${i}`);
+    i++;
+  } while(allPromises.length < huntBatchSize && i < tournamentsFromTop);
+  console.log(`Deploying hunt batch of ${allPromises.length}...`)
+  await Promise.allSettled(allPromises);
+  console.log('Hunt batch results:')
+  console.log(allPromises);
 }
 
 // ### Scraping the data
+console.log('### Scraping match URLs');
 const data = {sports: []};
 
+console.log('Opening files...');
 let urlsFilePath;
-urlsFilePath = './books/tp/matchURLs.json';  const urls_tp =   JSON.parse(readFileSync(urlsFilePath)).urls;
-// urlsFilePath = './books/ms/urls.json';  const urls_ms =   JSON.parse(readFileSync(urlsFilePath)).urls;
-// urlsFilePath = './books/esb/urls.json'; const urls_esb =  JSON.parse(readFileSync(urlsFilePath)).urls;
-// urlsFilePath = './books/ls/urls.json';  const urls_ls =   JSON.parse(readFileSync(urlsFilePath)).urls;
-// urlsFilePath = './books/22/urls.json';  const urls_22 =   JSON.parse(readFileSync(urlsFilePath)).urls;
-// urlsFilePath = './books/gg/urls.json';  const urls_gg =   JSON.parse(readFileSync(urlsFilePath)).urls;
+urlsFilePath = './books/tp/matchURLs.json';  const matchURLs_tp =   JSON.parse(readFileSync(urlsFilePath)).urls;
+console.log(`Loaded matchURLs_tp from ${urlsFilePath}`);
+urlsFilePath = './books/ms/matchURLs.json';  const matchURLs_ms =   JSON.parse(readFileSync(urlsFilePath)).urls;
+console.log(`Loaded matchURLs_ms from ${urlsFilePath}`);
+urlsFilePath = './books/esb/matchURLs.json';  const matchURLs_esb =   JSON.parse(readFileSync(urlsFilePath)).urls;
+console.log(`Loaded matchURLs_esb from ${urlsFilePath}`);
 
-let promise;
-const batchSize = 4;
-for(let i = 0; i < 4 ; i++){
+const scrapeBatchSize = 9;
+const matchesFromTop = 8;
+for(let i = 0, j = 0; i < matchesFromTop ; i++){
   const allPromises = [];
   do{
-    promise = scrapeMatchURL_tp (data, urls_tp[i]); allPromises.push(promise);
+    promise = scrapeMatchURL_tp (data, matchURLs_tp[i]); allPromises.push(promise);
+    console.log(`Queued ${matchURLs_tp[i]} to scrape, i=${i}`);
+    promise = scrapeMatchURL_ms (data, matchURLs_ms[i]); allPromises.push(promise);
+    console.log(`Queued ${matchURLs_ms[i]} to scrape, i=${i}`);
+    promise = scrapeMatchURL_esb (data, matchURLs_esb[i]); allPromises.push(promise);
+    console.log(`Queued ${matchURLs_esb[i]} to scrape, i=${i}`);
     i++;
-  } while(allPromises.length < batchSize);
-  // promise = handleURL_ms(data, urls_ms[i]); allPromises.push(promise);
-  // promise = handleURL_esb(data, urls_esb[i]); allPromises.push(promise);
-  // promise = handleURL_ls(data, urls_ls[i]); allPromises.push(promise);
-  // promise = handleURL_22(data, urls_22[i]); allPromises.push(promise);
-  // promise = handleURL_gg(data, urls_gg[i]); allPromises.push(promise);
+  } while(allPromises.length < scrapeBatchSize && i < matchesFromTop);
+  console.log(`Deploying scrape batch of ${allPromises.length}...`)
   await Promise.allSettled(allPromises);
+  console.log('Scrape batch results:')
   console.log(allPromises);
 }
 
@@ -49,29 +91,34 @@ const dataPathOut = 'data/data_out.json';
 writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
 
 // ### Processing the data
-// import { createWriteStream } from "fs"
-// import { calcMarket } from './calculator/calc.js'
-// import { huntMatchURLs_tp } from './books/tp/urlHunter.js'
+console.log('### Processing the match data');
+import { createWriteStream } from "fs"
+import { calcMarket } from './calculator/calc.js'
 
-// function calcData(dataFilePath, logFilePath, books){
-//   const data = JSON.parse(readFileSync(dataFilePath));
-//   const writeLogStream = createWriteStream(logFilePath);
+function calcData(dataFilePath, logFilePath, books){
+  console.log('Opening files...');
+  const data = JSON.parse(readFileSync(dataFilePath));
+  console.log(`Loaded data from ${dataFilePath}`);
+  const writeLogStream = createWriteStream(logFilePath);
+  console.log(`Opened log-stream under ${logFilePath}`);
 
-//   for(const sport of data.sports){
-//     writeLogStream.write(`Processing sport: ${sport.name}\n`);
-//     for(const tournament of sport.tournaments){
-//       writeLogStream.write(`Processing tournament: ${tournament.name}\n`);
-//       for(const match of tournament.matches){
-//         writeLogStream.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
-//         for(const market of match.markets){
-//           calcMarket(writeLogStream, market, books);
-//         }
-//       }
-//     }
-//   }
-// }
+  for(const sport of data.sports){
+    writeLogStream.write(`Processing sport: ${sport.name}\n`);
+    for(const tournament of sport.tournaments){
+      writeLogStream.write(`Processing tournament: ${tournament.name}\n`);
+      for(const match of tournament.matches){
+        writeLogStream.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
+        for(const market of match.markets){
+          console.log(`Calling calcMarket() on market: ${sport.name} ${tournament.name} ${match.teamHome} ${match.teamAway} ${match.datetime} ${market.name}`);
+          calcMarket(writeLogStream, market, books);
+        }
+      }
+    }
+  }
+}
 
-// const dataFilePath = 'data/data_out.json';
-// const logFilePath = 'calculator/log.txt';
-// const availableBooks = ['Thunderpick', 'Mystake', 'Esportsbet', 'Lsbet', '22bet'];
-// calcData(dataFilePath, logFilePath, availableBooks);
+const dataFilePath = 'data/data_out.json';
+const logFilePath = 'calculator/log.txt';
+calcData(dataFilePath, logFilePath, availableBooks);
+
+console.log('Finished.');
