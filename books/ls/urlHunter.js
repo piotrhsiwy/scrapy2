@@ -1,0 +1,50 @@
+import puppeteer from "puppeteer";
+import { createWriteStream, writeFileSync } from "fs"
+import { promisify } from "util";
+
+export async function huntMatchURLs_ls(url){
+    // open a file for logging
+    const bookAbbrev = 'ls';
+    const logFilePath = `./books/${bookAbbrev}/log.txt`
+    const log = createWriteStream(logFilePath, {flags: 'a'});
+
+    let browser;
+    let matchURLs = [];
+    const baseURL = 'https://www.lsbet1292.com';
+    try{
+
+        browser = await puppeteer.launch({
+            headless: 'new',
+            args: ["--disable-web-security"]
+        });  
+        
+        const page = await browser.newPage();
+        await page.setViewport({width:1920, height:768})
+        await page.goto(url);
+
+        let selector;
+        selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
+        await page.waitForSelector(selector);
+        matchURLs = await page.$$eval(selector, (items, baseURL) => {
+            const matchURLs = [];
+            for(const href of items.map( item => item.getAttribute('href'))){
+                matchURLs.push(baseURL + href);
+            }
+            return matchURLs;
+        }, baseURL);
+
+        const data = {"urls": matchURLs};
+        const dataPathOut = `./books/${bookAbbrev}/matchURLs.json`;
+        writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8');
+
+
+        log.write(`Success! Hunting for MatchURLs_ls from ${url} succeded. Hunted ${matchURLs.length} entries\n`);
+        return 0;
+    } catch(error){
+        log.write(`Critical Failure! Hunting for MatchURLs_ls from ${url} failed on ${matchURLs.length+1}th entry\n`);
+        return -1;
+    } finally{
+        await browser?.close();
+        await promisify(log.end).bind(log);
+    }
+}

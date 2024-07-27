@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer';
 import { createWriteStream, readFileSync } from "fs"
+import { promisify } from 'util';
+
 import { sportNameMap } from "../sportNameMap.js";
 import { tournamentNameMap } from "../tournamentName/CS2/Map.js";
 import { marketNameMap } from "../marketNameMap.js";
@@ -25,14 +27,17 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
-export async function handleURL_ls(data, url){
+export async function scrapeMatchURL_ls(data, url){
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--disable-web-security']
   });  
   
-  // load the book-specific mappings from json files
   const bookAbbrev = 'ls';
+  // open a file for logging
+  const logFilePath = `books/${bookAbbrev}/log.txt`
+  const log = createWriteStream(logFilePath, {flags: 'a'});
+  // load the book-specific mappings from json files
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
   try{
@@ -55,15 +60,11 @@ export async function handleURL_ls(data, url){
     log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
   }
 
-  // open a file for logging
-  const logFilePath = `books/${bookAbbrev}/log.txt`
-  const log = createWriteStream(logFilePath);
-
   try{
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
     let page = await browser.newPage();    
-    page.setViewport({width:2000, height:1000})
+    await page.setViewport({width:1920, height:768})
     await page.goto(url);
   
     let selector, el, mapping;
@@ -205,6 +206,7 @@ export async function handleURL_ls(data, url){
     return -1;
   } finally{
     await browser?.close();
+    await promisify(log.end).bind(log);
   }
   
 }
