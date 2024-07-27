@@ -3,7 +3,7 @@ node_modules
 # DO NOT RUN 'git clean -x -f' under ANY CIRCUMSTANCES
 
 # IDE conf files
-.vscode/*
+# .vscode/*
 
 # scraping data
 books/*/urls.json
@@ -11,9 +11,10 @@ books/*/urls.json
 # harvested data
 books/*/matchURLs.json
 data/data_out.json
+data/arbs.json
 
 # log files
-calculator/log.txt
+calc/log.txt
 books/*/log.txt
 
 # login, auth and client-data files
