@@ -6,6 +6,7 @@ node_modules
 books/*/urls.json
 
 # harvested data
+books/*/matchURLs.json
 data/data_out.json
 
 # log files

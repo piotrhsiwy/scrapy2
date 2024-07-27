@@ -76,6 +76,7 @@ export async function scrapeMatchURL_esb(data, url){
     let selector, el, mapping;
     // get sport
     selector = 'div.oPInfo';
+    await page.waitForNetworkIdle();
     const infoHandle = await page.waitForSelector(selector);
     let sportName = await infoHandle.$eval('img', e => e.getAttribute('src').split('/').pop().split('.')[0]);
     mapping = sportNameMapping.mapping.find( m => m.specificName === sportName);
