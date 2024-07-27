@@ -1,7 +1,10 @@
+// import puppeteer from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { createWriteStream, writeFileSync, readFileSync } from "fs"
 import { promisify } from "util";
+
+        import { existsSync, mkdirSync } from "fs"
 
 export async function huntMatchURLs_ms(url){
     // open a file for logging
@@ -12,18 +15,21 @@ export async function huntMatchURLs_ms(url){
     const matchURLs = [];
     let browser;
     try{
-
+        
         puppeteer.use(StealthPlugin());
         browser = await puppeteer.launch({
-            headless: 'new',
+            headless: true,
             args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--disable-gpu',
-            '--disable-web-security',
-            ]
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--disable-web-security',
+            ],
+            // executablePath: 'C:\\Program Files\\Mozilla Firefox\\firefox.exe',
+            // executablePath: 'C:\\Program Files\\Google\\Chrome\\Application',
+            userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
         }); 
         let page = await browser.newPage();
         await page.setViewport({width:1920, height:768})
@@ -32,6 +38,7 @@ export async function huntMatchURLs_ms(url){
             'Accept-Language': 'en-US,en;q=0.9'
         });
         await page.goto(url);
+
         let selector;
         selector = 'iframe';
         await page.waitForSelector(selector);
@@ -51,9 +58,11 @@ export async function huntMatchURLs_ms(url){
         selector = 'span[title="Counter-Strike"]';
         const sportTab = await page.$(selector);
         await sportTab.click();
+        await new Promise(resolve => setTimeout(resolve, 100));
         selector = 'span[title="Tournaments"]';
         const tournamentsTab = await page.$(selector);
         await tournamentsTab.click();
+        await new Promise(resolve => setTimeout(resolve, 100));
         const specificTournamentName = tournamentNameMapping.mapping.find( t => t.globalID === 'BPFG2024').specificName;
         selector = `span[title="${specificTournamentName}"]`;
         const targetTab = await page.$(selector);
@@ -72,6 +81,7 @@ export async function huntMatchURLs_ms(url){
                     matchURLs.push(window.location.href);
                     console.log(window.location.href);
                     window.history.back();
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 }
             }
 

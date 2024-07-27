@@ -109,5 +109,5 @@ export function calcMarket(stream, market, books){
         }
     }
     stream.write(marketReport);
-
+    return positiveArbCount;
 }
