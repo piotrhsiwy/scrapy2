@@ -38,40 +38,41 @@ export async function scrapeMatchURL_tp(data, url){
     headless: 'new',
     args: ["--disable-web-security"]
   });  
- 
-  // load the book-specific configuration from json files
+
   const bookAbbrev = 'tp';
+  // open a file for logging
+  const logFilePath = `./books/${bookAbbrev}/log.txt`
+  const log = createWriteStream(logFilePath, {flags: 'a'}); 
+
+  // load the book-specific configuration from json files
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
   } catch (error){
-    console.error(`Failure! cannot open file ${sportNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
   }
   const tournamentNameMappingPath = `books/${bookAbbrev}/tournamentNameMapping.json`;
   let tournamentNameMapping;
   try{
     tournamentNameMapping = Object.freeze(JSON.parse(readFileSync(tournamentNameMappingPath)));
   } catch (error){
-    console.error(`Failure! cannot open file ${tournamentNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${tournamentNameMappingPath}\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
   } catch (error){
-    console.error(`Failure! cannot open file ${marketNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
   }
 
-  // open a file for logging
-  const logFilePath = `./books/${bookAbbrev}/log.txt`
-  const log = createWriteStream(logFilePath, {flags: 'a'});
 
   try{
 //    console.log('data: ');
 //    console.log(JSON.stringify(data, null, 2));
     const page = await browser.newPage();    
-    page.setViewport({width:1000, height:30000})
+    await page.setViewport({width:1920, height:30000})
     await page.goto(url);
   
     let selector, el, mapping;

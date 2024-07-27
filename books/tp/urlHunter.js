@@ -42,7 +42,7 @@ export async function huntMatchURLs_tp(url){
         }
 
         const data = {"urls": matchURLs};
-        const dataPathOut = './books/tp/matchURLs.json';
+        const dataPathOut = `./books/${bookAbbrev}/matchURLs.json`;
         writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8');
 
 

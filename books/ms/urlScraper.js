@@ -1,5 +1,7 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-extra";
 import { createWriteStream, readFileSync } from "fs"
+import { promisify } from "util";
+
 import { sportNameMap } from "../sportNameMap.js";
 import { tournamentNameMap } from "../tournamentName/CS2/Map.js";
 import { marketNameMap } from "../marketNameMap.js";
@@ -25,35 +27,35 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
-export async function handleURL_ms(data, url){
+export async function scrapeMatchURL_ms(data, url){
+
+  const bookAbbrev = 'ms';
+  // open a file for logging
+  const logFilePath = `books/${bookAbbrev}/log.txt`
+  const log = createWriteStream(logFilePath, {flags: 'a'});
 
   // load the book-specific mappings from json files
-  const bookAbbrev = 'ms';
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${sportNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
   }
   const tournamentNameMappingPath = `books/${bookAbbrev}/tournamentNameMapping.json`;
   let tournamentNameMapping;
   try{
     tournamentNameMapping = Object.freeze(JSON.parse(readFileSync(tournamentNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${tournamentNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${tournamentNameMappingPath}\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
   } catch (error){
-    console.error(`Failure! Cannot open file ${marketNameMappingPath}`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
   }
-
-  // open a file for logging
-  const logFilePath = `books/${bookAbbrev}/log.txt`
-  const log = createWriteStream(logFilePath);
 
   let browser;
   try{
@@ -62,31 +64,35 @@ export async function handleURL_ms(data, url){
 // https://www.geeksforgeeks.org/how-to-use-goto-in-javascript/
     let page;
     let selector, el, mapping;
-    cloudflareLoop: while(true){
-      browser = await puppeteer.launch({
-        headless: false,
-        args: ["--disable-web-security"]
-      });  
-  
-      page = await browser.newPage();    
-      page.setViewport({width:1000, height:2000})
-      await page.goto(url);
-    
-      // get sport
-      selector = 'iframe';
-      el = await page.waitForSelector(selector);
-      const iframeHandle = await page.$(selector);
-      page = await iframeHandle.contentFrame();
 
-      selector = 'div.match-title';
-      // TODO makeshift workaround when Cloudflare is not loading the website
-      try{
-        el = await page.waitForSelector(selector, {timeout: 2000});
-        break;
-      } catch(error){
-        browser.close();
-      }
-    }
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--disable-gpu',
+        '--disable-web-security',
+      ]
+    });
+    page = await browser.newPage();    
+    await page.setViewport({width:1920, height:768});
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-US,en;q=0.9'
+    }); 
+    await page.goto(url);
+
+    // selector = 'iframe';
+    // await page.waitForSelector(selector);
+    // const iframeHandle = await page.$(selector);
+    // page = await iframeHandle.contentFrame();
+  
+    // get sport
+    selector = 'div.match-title';
+    el = await page.waitForSelector(selector);
+
     const breadcrumbs = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020').split(' keyboard_arrow_right'), el);
     let sportName = breadcrumbs[0];
     mapping = sportNameMapping.mapping.find( m => m.specificName === sportName);
@@ -94,7 +100,6 @@ export async function handleURL_ms(data, url){
       sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
@@ -113,7 +118,6 @@ export async function handleURL_ms(data, url){
       tournamentName = tournamentNameMap[mapping.globalID];
     } else{
       log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
-      return;
     }
 //console.log('>>>>>>>>>>>>>>> scraped tournamentname: ' + tournamentName);
     let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
@@ -222,6 +226,7 @@ export async function handleURL_ms(data, url){
     return -1;
   } finally{
     await browser?.close();
+    await promisify(log.end).bind(log);
   }
   
 }
