@@ -42,7 +42,6 @@ const log2 = async (msg) => {
 }
 
 // launch the bot
-sortArbs(arbsPath);
 const bot = new Telegraf(process.env['TOKEN'])
 bot.launch()
 
@@ -62,6 +61,7 @@ bot.command('top', async (ctx) => {
     /* do user authentication */
     const isAuthorized = authorize(clientsPath, 'top', ctx.from.id);
     if(isAuthorized){
+        sortArbs(arbsPath);
         ctx.reply(pickArbTop(arbsPath));
         log2(`Sent top arb to ${tupleFrom(ctx.from)}`);
     } else{
