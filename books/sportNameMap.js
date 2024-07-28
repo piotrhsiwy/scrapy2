@@ -18,6 +18,7 @@ export const sportNameMap = Object.freeze
     PUBG_MOBILE:        'PUBG Mobile',
     WILD_RIFT:          'League of Legends: Wild Rift',
     EA_SPORTS_FC:       'EA Sports FC',
+    COD:                'Call of Duty',
     COD_WARZONE:        'Call of Duty: Warzone',
     HEARTSTONE:         'Heartstone',
     NBA2K:              'NBA 2K',
@@ -36,6 +37,8 @@ export const sportNameMap = Object.freeze
     KING_OF_GLORY:      'King of Glory',
     E_BASKETBALL:       'E-Basketball',
     E_SOCCER:           'E-Soccer',
+    FIFA:               'FIFA',
+    OLYMPIC_ESPORT:     'Olympic Esport Games',
 });
 
 /* TEMPLATE TO USE WHEN CREATING SPECIFIC MAPPING .JS files

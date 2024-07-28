@@ -9,8 +9,8 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   // 'ms',
   // 'esb',
   // 'ls',
-  '22', // IP blocked leaving for now, Do not modify website with js too fast. Machine IP blockers in place
-  // 'gg' // only hunter for one sample tournament
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'gg'
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
 
