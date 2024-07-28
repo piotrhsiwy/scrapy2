@@ -7,10 +7,10 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
 [
   // 'tp',
   // 'ms',
-  'esb',
+  // 'esb',
   // 'ls',
-  // '22', 
-  // 'gg'
+  // '22', //leaving for now, IP is blocked. Do not modify website with js too fast
+  'gg'
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
 

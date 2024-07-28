@@ -27,7 +27,7 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
-export async function scrapeMatchURL_ls(data, url){
+export async function scrapeMatchURL(data, url){
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--disable-web-security']

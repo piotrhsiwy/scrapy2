@@ -78,7 +78,7 @@ export async function huntSportURLs(meta){
                             continue;
                         }
                         await item.click();
-                        // this timer can be removed for faster performance, but then it looks less human?
+                        // TODO this timer can be removed for faster performance, but then it looks less human?
                         await new Promise(resolve => setTimeout(resolve, 200));
                         // window.nodeLog(`pushing: ` + window.location.href);
                         matchURLs.push(window.location.href);
@@ -89,7 +89,7 @@ export async function huntSportURLs(meta){
                             return matchURLs;
                         }
                         await clickBack.click();
-                        // this timer can be removed for faster performance, but then it looks less human?
+                        // TODO this timer can be removed for faster performance, but then it looks less human?
                         await new Promise(resolve => setTimeout(resolve, 200));
                     }
 
