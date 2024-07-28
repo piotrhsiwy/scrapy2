@@ -87,9 +87,6 @@ export async function huntSportURLs(meta){
                 await huntMatchURLs(url, meta.baseURL);
             }
         }
-        for(const url of matchURLs){
-            url = meta.baseURL + url;
-        }
 
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
         return 0;
