@@ -62,10 +62,11 @@ async function huntTournamentURLs(url){
                 await huntMatchURLs(tournamentURL);
             }
             log.write(`Done hunting for TournamentURLs from ${url}\n`);
+            return 0;
         } else{
             log.write(`Failure! No tournamentURLs from ${url} failed.\n`);
+            return -1
         }
-        return 0;
     
     } catch(error){
         log.write(`Critical Failure! Hunting for tournamentURLs from ${url} failed.\n`);
@@ -82,21 +83,32 @@ let log;
 const matchURLs = [];
 /**
  * this function only gets one URL and is the only one exposed to the outside
+ * 
+ * @param meta metadata of this book, loaded from ./books/XYZ/meta.json
+ * all the required file locations are built from content of the metadata
  */
-export async function huntSportURLs_tp(url, dataPathOut){
+export async function huntSportURLs(meta){
     // open a file for logging
-    const bookAbbrev = 'tp';
-    const logFilePath = `./books/${bookAbbrev}/log.txt`
+    const logFilePath = `./books/${meta.abbrev}/log.txt`;
     log = createWriteStream(logFilePath, {flags: 'a'});
     // open and empty writing stream
-    if(existsSync(dataPathOut)){
-        truncateSync(dataPathOut, 0);
+    const dataOutPath = `./books/${meta.abbrev}/matchURLs.json`;
+    if(existsSync(dataOutPath)){
+        truncateSync(dataOutPath, 0);
     }
     
     try{
         browser = await puppeteer.launch({
             headless: true,
-            args: ["--disable-web-security"]
+            args: [
+                "--disable-web-security",
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--disable-web-security',
+            ]
         });   
         const page = await browser.newPage();
         await page.setViewport({width:1920, height:30000})
@@ -105,7 +117,7 @@ export async function huntSportURLs_tp(url, dataPathOut){
         let selector = 'div.navigation-element a';
         const sportURLs = await page.$$eval(selector, items => items.map( i => i.getAttribute('href')));
         if(sportURLs.length > 0){
-            log.write(`Success! Hunting for sportURLs from ${url} succedeed. Scraped ${sportURLs.length+1} entries\n`);
+            log.write(`Success! Hunting for sportURLs from ${url} succedeed, ${matchURLs.length} entries hunted\n`);
         } else {
             throw error();
         }
@@ -114,14 +126,14 @@ export async function huntSportURLs_tp(url, dataPathOut){
         for(const sportURL of sportURLs){
             await huntTournamentURLs(sportURL);
         }
-        log.write(`Done hunting for SportsURLs from ${url}\n`);
-        writeFileSync(dataPathOut, JSON.stringify(matchURLs, null, 2));
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed.\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
         return -1;
     } finally{
+        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }
