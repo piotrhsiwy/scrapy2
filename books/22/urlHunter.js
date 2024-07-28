@@ -36,13 +36,26 @@ export async function huntSportURLs(meta){
         'Accept-Language': 'en-US,en;q=0.9'
     });
     await page.goto(meta.baseURL);
-    await page.waitForNetworkIdle();
+    await page.waitForSelector('ul.liga_menu');
 
     let matchURLs = [];
     try{
         
-
-
+        matchURLs = await page.evaluate( async () => {
+            // open up all the tournament tabs to trigger adding event-menus to the dom
+            const tabs = document.querySelectorAll('ul.liga_menu > li > a');
+            for(const tab of tabs){
+                if (tab) {
+                    const tabPosition = tab.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({ top: tabPosition, behavior: 'smooth' });
+                }
+                tab.click();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            // scrape the hrefs of the games
+            const links = document.querySelectorAll('ul.event_menu > li > a.link');
+            return Array.from(links).map( link => link.getAttribute('href')); 
+        });
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
         return 0;
 

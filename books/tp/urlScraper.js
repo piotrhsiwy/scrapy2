@@ -44,7 +44,7 @@ export async function scrapeMatchURL_tp(data, url){
   const logFilePath = `./books/${bookAbbrev}/log.txt`
   const log = createWriteStream(logFilePath, {flags: 'a'}); 
 
-  // load the book-specific configuration from json files
+  // load the book-specific mappings from json files
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
   try{

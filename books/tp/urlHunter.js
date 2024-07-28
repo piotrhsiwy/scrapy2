@@ -112,12 +112,12 @@ export async function huntSportURLs(meta){
         });   
         const page = await browser.newPage();
         await page.setViewport({width:1920, height:30000})
-        await page.goto(url);
+        await page.goto(meta.baseURL);
 
         let selector = 'div.navigation-element a';
         const sportURLs = await page.$$eval(selector, items => items.map( i => i.getAttribute('href')));
         if(sportURLs.length > 0){
-            log.write(`Success! Hunting for sportURLs from ${url} succedeed, ${matchURLs.length} entries hunted\n`);
+            log.write(`Success! Hunting for sportURLs from ${meta.baseURL} succedeed, ${sportURLs.length} entries hunted\n`);
         } else {
             throw error();
         }
@@ -130,7 +130,7 @@ export async function huntSportURLs(meta){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n`);
         return -1;
     } finally{
         writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));

@@ -9,8 +9,8 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   // 'ms',
   // 'esb',
   // 'ls',
-  // '22', //leaving for now, IP is blocked. Do not modify website with js too fast
-  'gg'
+  '22', // IP blocked leaving for now, Do not modify website with js too fast. Machine IP blockers in place
+  // 'gg' // only hunter for one sample tournament
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
 
@@ -39,35 +39,18 @@ for(const book of books){
   });
 }
 
-  // console.log(`i=${i} Queued ${availableBaseURLs[i]}  to hunt`);
-
-  // const huntBatchSize = 1;
-  // console.log(`Hunting..., batchSize: ${huntBatchSize}`);
-  // await (async () => {
-  //     const allPromises = [];
-  //     let i = 0;
-  //     do{
-  //         let promise;
-  //         // promise = huntMatchURLs_ms (tournamentURLs_ms[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ms[i]}  to hunt`);
-  //         // promise = huntMatchURLs_esb (tournamentURLs_esb[i]);  allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_esb[i]} to hunt`);
-  //         // promise = huntMatchURLs_ls (tournamentURLs_ls[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_ls[i]}  to hunt`);
-  //         // promise = huntMatchURLs_22 (tournamentURLs_22[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_22[i]}  to hunt`);
-  //         // promise = huntMatchURLs_gg (tournamentURLs_gg[i]);    allPromises.push(promise);  console.log(`i=${i} Queued ${tournamentURLs_gg[i]}  to hunt`);
-  //         i++;
-  //     } while(allPromises.length < huntBatchSize && i < availableSize);
-  //     console.log(`Deploying hunt batch of ${allPromises.length}...`)
-  //     await Promise.allSettled(allPromises);
-  //     console.log('Hunt batch results:')
-  //     console.log(allPromises);
-  // })();
-
-  // ### Scraping the data
+// ### Scraping the data
 console.log('### Scraping match URLs');
 console.log('Importing modules');
 for(const book of books){
-  import(book.scraperModuleName);
-  console.log(`Imported module ${book.scraperModuleName}`);
+  await import(`./books/${book.abbrev}/urlScraper.js`).then( async (module) => {
+    console.log(`Imported module ./books/${book.abbrev}/urlHunter.js`);
+    await module.scrapeMatchURL(book);
+  }, () => {
+    console.log(`Importing module failed ${book.hunterModuleName}`);
+  });
 }
+
 const data = {sports: []};
 
 console.log('Opening files...');
@@ -76,8 +59,8 @@ urlsFilePath = './books/tp/matchURLs.json';  const matchURLs_tp =   JSON.parse(r
 urlsFilePath = './books/ms/matchURLs.json';  const matchURLs_ms =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_ms from  ${urlsFilePath}`);
 urlsFilePath = './books/esb/matchURLs.json'; const matchURLs_esb =  JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_esb from ${urlsFilePath}`);
 urlsFilePath = './books/ls/matchURLs.json';  const matchURLs_ls =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_ls from  ${urlsFilePath}`);
-urlsFilePath = './books/22/matchURLs.json';  const matchURLs_22 =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_22 from  ${urlsFilePath}`);
-urlsFilePath = './books/gg/matchURLs.json';  const matchURLs_gg =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_gg from  ${urlsFilePath}`);
+// urlsFilePath = './books/22/matchURLs.json';  const matchURLs_22 =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_22 from  ${urlsFilePath}`);
+// urlsFilePath = './books/gg/matchURLs.json';  const matchURLs_gg =   JSON.parse(readFileSync(urlsFilePath)).urls; console.log(`Loaded matchURLs_gg from  ${urlsFilePath}`);
 
 const scrapeBatchSize = 6;
 const matchesFromTop = 8;
