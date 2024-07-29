@@ -84,6 +84,7 @@ export async function huntSportURLs(meta){
         });   
         const page = await browser.newPage();
         await page.setViewport({width:1920, height:768})
+        page.setDefaultTimeout(120000); // 2mins max timeout
         await page.goto(meta.baseURL);
 
         const sportURLs = await page.evaluate(async (baseurl) => {
@@ -102,11 +103,11 @@ export async function huntSportURLs(meta){
             }
         }
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${hrefs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${hrefs.length} entries hunted\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n`);
         return -1;
     } finally{
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));

@@ -5,11 +5,11 @@ import { readFile, readFileSync, writeFileSync } from 'fs'
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'tp',
-  // 'ms',
-  // 'esb',
-  // 'ls',
-  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'tp',
+  'ms',
+  'esb',
+  'ls',
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
   'gg'
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
@@ -41,17 +41,22 @@ for(const book of books){
   });
 }
 
-let allPromises = [];
 for(const book of books){
-  let promise;
-  promise = book.module.huntSportURLs(book);
-  allPromises.push(promise);
+  await book.module.huntSportURLs(book);
   console.log(`Queued hunt from ${book.abbrev} module`);
 }
-console.log(`Deploying hunt batch of size ${allPromises.length}...`)
-await Promise.allSettled(allPromises);
-console.log(`Hunt batch results:`);
-console.log(allPromises);
+
+// let allPromises = [];
+// for(const book of books){
+//   let promise;
+//   promise = book.module.huntSportURLs(book);
+//   allPromises.push(promise);
+//   console.log(`Queued hunt from ${book.abbrev} module`);
+// }
+// console.log(`Deploying hunt batch of size ${allPromises.length}...`)
+// await Promise.allSettled(allPromises);
+// console.log(`Hunt batch results:`);
+// console.log(allPromises);
 
 // ### Scraping the data
 console.log('### Scraping match URLs');

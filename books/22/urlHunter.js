@@ -27,7 +27,7 @@ export async function huntSportURLs(meta){
     }
 
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -44,6 +44,7 @@ export async function huntSportURLs(meta){
         'Accept-Language': 'en-US,en;q=0.9'
     });
     await page.goto(meta.baseURL);
+    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.waitForSelector('ul.liga_menu');
 
     let tuple = {hrefs:[], sports:[], tours:[]};

@@ -43,6 +43,7 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
+    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
@@ -74,7 +75,7 @@ export async function huntSportURLs(meta){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n`);
         return -1;
     } finally{
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));

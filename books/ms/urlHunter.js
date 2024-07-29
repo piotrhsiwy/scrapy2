@@ -47,6 +47,7 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
+    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.goto(meta.baseURL);
 
     let selector = 'iframe';

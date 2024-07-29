@@ -44,6 +44,7 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
+    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
@@ -58,11 +59,11 @@ export async function huntSportURLs(meta){
         // // Expose the log handler to the page
         // await page.exposeFunction('nodeLog', logHandler(log));
         tuple = await page.evaluate(async () => {
-            const matchURLs = [];
+            const hrefs = [];
             let allTours = [];
-            const sportNames = Array.from(document.querySelectorAll('div.lg_itmInfo'))
+            const sports = Array.from(document.querySelectorAll('div.lg_itmInfo'))
                 .map( e => e.textContent);
-            const tourNames = Array.from(document.querySelectorAll('div.lg_infoWrp'))
+            const tours = Array.from(document.querySelectorAll('div.lg_infoWrp'))
                 .map( e => e.textContent);
             allTours = document.querySelectorAll('div.lg_inrInfo');
             // window.nodeLog(`alltours: ${allTours}`);
@@ -92,7 +93,7 @@ export async function huntSportURLs(meta){
                         // TODO this timer can be removed for faster performance, but then it looks less human?
                         await new Promise(resolve => setTimeout(resolve, 200));
                         // window.nodeLog(`pushing: ` + window.location.href);
-                        matchURLs.push(window.location.href);
+                        hrefs.push(window.location.href);
                         // window.nodeLog(`index ${matchURLs.length-1} hunted matchURL: ${window.location.href}\n`);
                         const clickBack = document.querySelector('i.icon-arrow-left');
                         if(!clickBack){
