@@ -1,8 +1,74 @@
-{
-    "mapping": [
-        {
-            "specificName": "CS2 on ggbet",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "Counter-Strike",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "Dota",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "Liga der Legenden",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Fußball Esports",
+        "globalID": "E_SOCCER"
+    },
+    {
+        "specificName": "Esports Basketball",
+        "globalID": "E_BASKETBALL"
+    },
+    {
+        "specificName": "StarCraft 2",
+        "globalID": "SC2"
+    },
+    {
+        "specificName": "PUBG",
+        "globalID": "PUBG"
+    },
+    {
+        "specificName": "Call of Duty",
+        "globalID": "COD"
+    },
+    {
+        "specificName": "Rainbow Six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "King of Glory",
+        "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "Fortnite",
+        "globalID": "FORTNITE"
+    },
+    {
+        "specificName": "Rocket League",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "Overwatch",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "Apex-Legenden",
+        "globalID": "APEX_LEGENDS"
+    },
+    {
+        "specificName": "Crossfire",
+        "globalID": "CROSSFIRE"
+    },
+    {
+        "specificName": "Hearthstone",
+        "globalID": "HEARTHSTONE"
+    }
+]

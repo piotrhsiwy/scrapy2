@@ -1,8 +1,106 @@
-{
-    "mapping": [
-        {
-            "specificName": "cs2",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "CS2",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "LOL",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Mobile MOBA",
+        "globalID": "MOBILE_MOBA"
+    },
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "Mobile Legends",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "specificName": "Rainbow 6",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "Call of Duty",
+        "globalID": "COD"
+    },
+    {
+        "specificName": "StarCraft 2",
+        "globalID": "SC2"
+    },
+    {
+        "specificName": "Rocket League",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "CrossFire",
+        "globalID": "CROSSFIRE"
+    },
+    {
+        "specificName": "Apex Legends",
+        "globalID": "APEX_LEGENDS"
+    },
+    {
+        "specificName": "Wild Rift",
+        "globalID": "WILD_RIFT"
+    },
+    {
+        "specificName": "Overwatch 2",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "EA Sports FC",
+        "globalID": "EA_SPORTS_FC"
+    },
+    {
+        "specificName": "Call of Duty: Warzone",
+        "globalID": "COD_WARZONE"
+    },
+    {
+        "specificName": "Hearthstone",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "specificName": "NBA 2K",
+        "globalID": "NBA2K"
+    },
+    {
+        "specificName": "Warcraft 3",
+        "globalID": "WARCRAFT3"
+    },
+    {
+        "specificName": "PUBG",
+        "globalID": "PUBG"
+    },
+    {
+        "specificName": "PUBG Mobile",
+        "globalID": "PUBG_MOBILE"
+    },
+    {
+        "specificName": "Fortnite",
+        "globalID": "FORTNITE"
+    },
+    {
+        "specificName": "Teamfight Tactics",
+        "globalID": "TFT"
+    },
+    {
+        "specificName": "Free Fire",
+        "globalID": "FREE_FIRE"
+    },
+    {
+        "specificName": "Street Fighter 6",
+        "globalID": "STREET_FIGHTER6"
+    },
+    {
+        "specificName": "Tekken 8",
+        "globalID": "TEKKEN8"
+    },
+    {
+        "specificName": "Rennsport",
+        "globalID": "RENNSPORT"
+    }
+]

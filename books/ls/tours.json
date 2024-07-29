@@ -1,7 +1,4 @@
 [
-  "[VALORANT] VCL North America",
-  "[DOTA] Elite League",
-  "[CS] BB Dacha",
   "[DOTA] Elite League",
   "[VALORANT] VCL North America",
   "[CS] BB Dacha",
@@ -21,6 +18,7 @@
   "[CS] European Pro League: Division 2",
   "[CS] BB Dacha",
   "[LoL] NLC",
+  "[LoL] LFL",
   "[RL] Shift Summer League Europe",
   "[CSGO] ESL Challenger League Europe",
   "[CS] BB Dacha",
@@ -57,5 +55,6 @@
   "[CS] Hellcase Cup",
   "[R6] Esports World Cup",
   "[CS] YaLLa Compass",
-  "[CSGO] B. Premier"
+  "[CSGO] B. Premier",
+  "[LoL] Latin America League"
 ]

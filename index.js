@@ -5,14 +5,14 @@ import { readFile, readFileSync, writeFileSync } from 'fs'
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'tp',
-  // 'ms',
-  // 'esb',
+  'tp',
+  'ms',
+  'esb',
   'ls',
-  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  // 'gg'
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'gg'
 ]
-console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
+console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
 // ### Initializing books metadata
 console.log('### Initializing books metadata');
@@ -28,9 +28,8 @@ for(const abbrev of availableAbbrev){
   }
 };
 
-// ### Hunting URLs
-console.log('### Hunting URLs');
-const modules = [];
+// ### Loading modules
+console.log('### Loading modules');
 for(const book of books){
   const moduleName = `./books/${book.abbrev}/urlHunter.js`;
   await import(moduleName).then( async (module) => {
@@ -41,22 +40,25 @@ for(const book of books){
   });
 }
 
-for(const book of books){
-  await book.module.huntSportURLs(book);
-  console.log(`Queued hunt from ${book.abbrev} module`);
-}
+// ### Hunting URLs
+// console.log('### Hunting URLs');
 
-// let allPromises = [];
+// for(const book of books){
+//   console.log(`Queued hunt from ${book.abbrev} module`);
+//   await book.module.huntSportURLs(book);
+// }
+
+// let allHuntPromises = [];
 // for(const book of books){
 //   let promise;
 //   promise = book.module.huntSportURLs(book);
-//   allPromises.push(promise);
+//   allHuntPromises.push(promise);
 //   console.log(`Queued hunt from ${book.abbrev} module`);
 // }
-// console.log(`Deploying hunt batch of size ${allPromises.length}...`)
-// await Promise.allSettled(allPromises);
+// console.log(`Deploying hunt batch of size ${allHuntPromises.length}...`)
+// await Promise.allSettled(allHuntPromises);
 // console.log(`Hunt batch results:`);
-// console.log(allPromises);
+// console.log(allHuntPromises);
 
 // ### Scraping the data
 console.log('### Scraping match URLs');
@@ -65,24 +67,24 @@ console.log('Loading urls from files...');
 for(const book of books){
   const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
   book.urls = JSON.parse(readFileSync(urlsFilePath));
-  console.log(`Loaded file ${books.urls.length} entries from file ${urlsFilePath}`);
+  console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
 }
 
 const data = {sports: []};
-allPromises = [];
+let allScrapePromises = [];
 let i = 0;
 for(const book of books){
   let promise;
   if( i < book.urls.length){
     promise = book.module.scrapeMatchURL(data, book.urls[i]);
-    allPromises.push(promise);
+    allScrapePromises.push(promise);
     console.log(`Queued scrape from ${book.abbrev} module on ${books.urls[i]}`);
   }
 }
-console.log(`Deploying scrape batch of size ${allPromises.length}...`)
-await Promise.allSettled(allPromises);
+console.log(`Deploying scrape batch of size ${allScrapePromises.length}...`)
+await Promise.allSettled(allScrapePromises);
 console.log(`Scrape batch results:`);
-console.log(allPromises);
+console.log(allScrapePromises);
 
 const dataPathOut = 'data/data_out.json';
 console.log(`Saving the results in ${dataPathOut}`);
