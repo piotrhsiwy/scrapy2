@@ -56,7 +56,9 @@ export async function huntSportURLs(meta){
 
         // get tournament Names
         tuple.tours = await page.evaluate( () => {
-            return Array.from(document.querySelectorAll('h4')).map( e => e.textContent.split('] ')[1].trim() );
+            const arr = Array.from(document.querySelectorAll('h4')).map( e => e.textContent.trim() );
+            arr.pop();
+            return arr;
         });
         
         // get hrefs

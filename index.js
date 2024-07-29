@@ -7,8 +7,8 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
 [
   // 'tp',
   // 'ms',
-  'esb',
-  // 'ls',
+  // 'esb',
+  'ls',
   // '22', // 15min ratelimiter if too many requests -> IP blockers in place
   // 'gg'
 ]
