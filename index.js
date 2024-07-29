@@ -5,12 +5,12 @@ import { readFile, readFileSync, writeFileSync } from 'fs'
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'tp',
-  'ms',
+  // 'tp',
+  // 'ms',
   'esb',
-  'ls',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  'gg'
+  // 'ls',
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  // 'gg'
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
 

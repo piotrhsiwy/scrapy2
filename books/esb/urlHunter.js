@@ -37,6 +37,8 @@ export async function huntSportURLs(meta){
             '--disable-gpu',
             '--disable-web-security',
         ],
+        // devtools: true,
+        // dumpio: true,
     }); 
     let page = await browser.newPage();
     await page.setViewport({width:1920, height:768})
@@ -44,7 +46,18 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    page.setDefaultTimeout(120000); // 2mins max timeout
+    // await page.setRequestInterception(true);
+    
+    // page.on('request', (request) => {
+    //     request.continue();
+    // });
+    // page.on('response', async (response) => {
+    //     if(response.url() === 'https://w2e-api.esportsmatrix.io/api/esbull/api/GetIndexMatchV2'){
+    //         console.log(`Response intercepted`);
+    //         const responseBody = await response.json();
+    //         console.log(responseBody);
+    //     }
+    // });
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
@@ -59,6 +72,7 @@ export async function huntSportURLs(meta){
         // // Expose the log handler to the page
         // await page.exposeFunction('nodeLog', logHandler(log));
         tuple = await page.evaluate(async () => {
+            debugger;
             const hrefs = [];
             let allTours = [];
             const sports = Array.from(document.querySelectorAll('div.lg_itmInfo'))
@@ -86,23 +100,23 @@ export async function huntSportURLs(meta){
                         const item = document.querySelectorAll('div.matchRow')[i];
                         // window.nodeLog('item: inside forloop' + item);
                         if(!item){
-                            // window.nodeLog(`Failure! Item is not clickable ${window.location.href}, entry: ${matchURLs.length}\n`);
+                            // window.nodeLog(`Failure! Item is not clickable ${window.location.href}, entry: ${hrefs.length}\n`);
                             continue;
                         }
                         await item.click();
                         // TODO this timer can be removed for faster performance, but then it looks less human?
-                        await new Promise(resolve => setTimeout(resolve, 200));
+                        // await new Promise(resolve => setTimeout(resolve, 100));
                         // window.nodeLog(`pushing: ` + window.location.href);
                         hrefs.push(window.location.href);
-                        // window.nodeLog(`index ${matchURLs.length-1} hunted matchURL: ${window.location.href}\n`);
+                        // window.nodeLog(`index ${hrefs.length-1} hunted matchURL: ${window.location.href}\n`);
                         const clickBack = document.querySelector('i.icon-arrow-left');
                         if(!clickBack){
-                            // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${window.location.href}, entry: ${matchURLs.length}. Cannot come back.\n`);
-                            return matchURLs;
+                            // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${window.location.href}, entry: ${hrefs.length}. Cannot come back.\n`);
+                            return hrefs;
                         }
                         await clickBack.click();
                         // TODO this timer can be removed for faster performance, but then it looks less human?
-                        await new Promise(resolve => setTimeout(resolve, 200));
+                        // await new Promise(resolve => setTimeout(resolve, 100));
                     }
 
                     // clean the q aka unclick
