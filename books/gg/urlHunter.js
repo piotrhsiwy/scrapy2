@@ -9,9 +9,9 @@ async function huntMatchURLs(url, baseurl){
         await page.setViewport({width:1920, height:768})
         await page.goto(url);
 
-        const tuple = await page.evaluate(async (baseurl) => {
-            const sportName = document.querySelector('a[data-action="Close sport"] div[data-test="categorizer-sport-list-content-title"]').textContent;
-            const tourNames = Array.from(document.querySelectorAll('div[data-test="tournament-list-row-title"]'))
+        const ret = await page.evaluate(async (baseurl) => {
+            const sports = document.querySelector('a[data-action="Close sport"] div[data-test="categorizer-sport-list-content-title"]').textContent;
+            const tours = Array.from(document.querySelectorAll('div[data-test="tournament-list-row-title"]'))
                 .map( e => e.textContent );
             await new Promise(resolve => setTimeout(resolve, 2000));
             let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
@@ -23,13 +23,13 @@ async function huntMatchURLs(url, baseurl){
                 matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
             } while(size !== matches.length);
             const hrefs = Array.from(matches).map( match => baseurl + match.getAttribute('href'));
-            return {hrefs, sportName, tourNames}
+            return {hrefs, sports, tours}
         }, baseurl);
-        hrefs = [...hrefs, ...tuple.hrefs];
-        sportNames.push(tuple.sportName);
-        tourNames = [...tourNames, ...tuple.tourNames];
+        tuple.hrefs = tuple.hrefs.concat(ret.hrefs);
+        tuple.sports.push(ret.sports);
+        tuple.tours = tuple.tours.concat(ret.tours);
         
-        log.write(`Done hunting for hrefs from ${url}\n`);
+        log.write(`Done hunting for hrefs from ${url}. ${tuple.hrefs.length} + ${ret.hrefs.length} new entries\n`);
         return 0;
 
     } catch(error){
@@ -44,9 +44,7 @@ async function huntMatchURLs(url, baseurl){
 // global variables in this module
 let browser;
 let log;
-let hrefs = [];
-let sports = [];
-let tours = [];
+const tuple = {hrefs:[], sports:[], tours:[]};
 /**
  * this function only gets one URL and is the only one exposed to the outside
  * 
@@ -111,9 +109,9 @@ export async function huntSportURLs(meta){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${hrefs.length} entries hunted\n`);
         return -1;
     } finally{
-        writeFileSync(sportsPath, JSON.stringify(sports, null, 2));
-        writeFileSync(toursPath, JSON.stringify(tours, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }

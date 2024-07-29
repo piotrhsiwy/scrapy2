@@ -23,6 +23,10 @@ export async function huntSportURLs(meta){
     if(existsSync(sportsPath)){
         truncateSync(sportsPath, 0);
     }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
+    }
 
     puppeteer.use(StealthPlugin());
     const browser = await puppeteer.launch({
@@ -50,17 +54,9 @@ export async function huntSportURLs(meta){
     const iframeHandle = await page.$(selector);
     page = await iframeHandle.contentFrame();
 
-    const tuple = {};
+    const tuple = {hrefs:[], sports:[], tours:[]};
     try{
 
-        tuple.sportNames = page.evaluate(() => {
-            return Array.from(document.querySelectorAll('div.sportname span[title]')).map( e => e.getAttribute('title'));
-        });
-
-        tuple.tourNames = page.evaluate( () => {
-            return Array.from(document.querySelectorAll('div[country="tournaments"] ~ div.title > span[title]')).map( e => e.textContent );
-        });
-           
         // set checkboxes for all the sports to load all the matches
         const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft'];
         for(const esport of availableEsports){
@@ -75,6 +71,17 @@ export async function huntSportURLs(meta){
             }
         }
 
+        // get sport Names
+        tuple.sports = await page.evaluate(() => {
+            return Array.from(document.querySelectorAll('div.sportname span[title]')).map( e => e.getAttribute('title'));
+        });
+
+        // get tournament Names, after all the boxes have been checked
+        tuple.tours = await page.evaluate( () => {
+            return Array.from(document.querySelectorAll('div[country="tournaments"] ~ div.title > span[title]')).map( e => e.textContent );
+        });
+           
+
         tuple.hrefs = await page.evaluate(async () => {
             const matchURLs = [];
             
@@ -85,20 +92,20 @@ export async function huntSportURLs(meta){
                 do{
                     size = items.length;
                     // debug
-                    console.log(size);
+                    // console.log(size);
                     items[items.length-1].scrollIntoView();
                     await new Promise(resolve => setTimeout(resolve, 100));
                     items = document.querySelectorAll('ul.match-list > li');
                     // debug
-                    console.log(`items.length=${items.length}`);
-                    console.log(`size=${size}`);
+                    // console.log(`items.length=${items.length}`);
+                    // console.log(`size=${size}`);
                 } while( size !== items.length);
 
                 for(const item of items){
                     const clickable = item.querySelector('div[class=market-count] > span');
                     clickable.click();
                     matchURLs.push(window.location.href);
-                    console.log(window.location.href);
+                    // console.log(window.location.href);
                     window.history.back();
                     await new Promise(resolve => setTimeout(resolve, 200));
                 }
@@ -107,15 +114,16 @@ export async function huntSportURLs(meta){
             return matchURLs;
         }) 
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n.`);
         return -1;
     } finally{
-        writeFileSync(sportsPath, JSON.stringify(sportNames, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }

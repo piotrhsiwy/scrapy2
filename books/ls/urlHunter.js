@@ -46,15 +46,19 @@ export async function huntSportURLs(meta){
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
-    const tuple = {};
+    const tuple = {hrefs:[], sports:[], tours:[]};
     try{
+        // get sport Names
         tuple.sports = await page.evaluate( () => {
             return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);
         });
+
+        // get tournament Names
         tuple.tours = await page.evaluate( () => {
             return Array.from(document.querySelectorAll('h4')).map( e => e.textContent.split('] ')[1].trim() );
         });
-
+        
+        // get hrefs
         let selector;
         selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
         await page.waitForSelector(selector);

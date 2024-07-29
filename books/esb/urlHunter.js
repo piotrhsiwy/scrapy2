@@ -47,6 +47,7 @@ export async function huntSportURLs(meta){
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
+    let tuple = {hrefs:[], sports:[], tours:[]};
     try{
         // // Define the function to handle logging inside evaluate call
         // function logHandler(log) {
@@ -56,7 +57,7 @@ export async function huntSportURLs(meta){
         // }
         // // Expose the log handler to the page
         // await page.exposeFunction('nodeLog', logHandler(log));
-        const tuple = await page.evaluate(async () => {
+        tuple = await page.evaluate(async () => {
             const matchURLs = [];
             let allTours = [];
             const sportNames = Array.from(document.querySelectorAll('div.lg_itmInfo'))
@@ -120,7 +121,7 @@ export async function huntSportURLs(meta){
 
                 }
             }
-            return {matchURLs, sportNames, tourNames};
+            return {hrefs, sports, tours};
         })
 
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
@@ -129,8 +130,8 @@ export async function huntSportURLs(meta){
     } catch(error){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted.\n`);
     } finally{
-        writeFileSync(sportsPath, JSON.stringify(tuple.sportNames, null, 2));
-        writeFileSync(toursPath, JSON.stringify(tuple.tourNames, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2), 'utf8');
         await browser?.close();
         await promisify(log.end).bind(log);

@@ -21,8 +21,8 @@ async function huntMatchURLs(url){
                 selector = ':scope > a';
                 const hrefs = await match.$$(selector);
                 if(hrefs.length === 3){
-                    const matchURL = await page.evaluate(e => e.getAttribute('href'), hrefs[2]);
-                    matchURLs.push(matchURL);
+                    const href = await page.evaluate(e => e.getAttribute('href'), hrefs[2]);
+                    tuple.hrefs.push(href);
                 } else {
                     log.write(`Failure! Unexpected number of hrefs in a ${matchURLs.length+1}th match: ${hrefs.length}\n`);
                 }
@@ -44,9 +44,16 @@ async function huntMatchURLs(url){
 async function huntTournamentURLs(url){
     let page;
     try{
+
+        // get the tournamentURLs to pass further down
         page = await browser.newPage();
         await page.setViewport({width:1920, height:30000})
         await page.goto(url);
+
+        // get the tournament Names
+        const newTours = await page.$$eval( `div.competition a > div.navigation-title`, items => items.map( i => i.textContent))
+        tuple.tours = tuple.tours.concat(newTours);
+
         let selector = 'div.navigation-element.navigation-element--selected';
         await page.hover(selector);
         selector = 'div.thp-accordion__content.opened';
@@ -54,10 +61,8 @@ async function huntTournamentURLs(url){
         selector = 'div.competition a'
         const tournamentURLs = await page.$$eval( selector, items => items.map( i => i.getAttribute('href')));
         if(tournamentURLs.length > 0){
-            // const tournamentNames = await page.$$eval( `${selector} > div.navigation-title`, items => items.map( i => i.textContent));
-            // might be useful when automatically creating book-specific tournamentNameMappings
             
-            // TODO test performance
+            // TODO test performance limits when parallelizing
             for(const tournamentURL of tournamentURLs){
                 await huntMatchURLs(tournamentURL);
             }
@@ -80,7 +85,7 @@ async function huntTournamentURLs(url){
 // global variables in this module
 let browser;
 let log;
-const matchURLs = [];
+const tuple = {hrefs:[], sports:[], tours:[]};
 /**
  * this function only gets one URL and is the only one exposed to the outside
  * 
@@ -100,13 +105,16 @@ export async function huntSportURLs(meta){
     if(existsSync(sportsPath)){
         truncateSync(sportsPath, 0);
     }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
+    }
     
-    let sportNames = [];
     try{
         browser = await puppeteer.launch({
             headless: true,
             args: [
-                "--disable-web-security",
+                '--disable-web-security',
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
@@ -119,21 +127,21 @@ export async function huntSportURLs(meta){
         await page.setViewport({width:1920, height:30000})
         await page.goto(meta.baseURL);
 
-        const tuple = await page.evaluate(async () => {
-            const hrefs = Array.from(document.querySelectorAll('div.navigation-element a')).map( i => i.getAttribute('href'));
-            const names = Array.from(document.querySelectorAll('.navigation-element-heading__collapsing-text')).map( i => i.textContent);
-            return {hrefs, names};
+        const ret = await page.evaluate( async () => {
+            const tournamentURLs = Array.from(document.querySelectorAll('div.navigation-element a')).map( i => i.getAttribute('href'));
+            const sports = Array.from(document.querySelectorAll('.navigation-element-heading__collapsing-text')).map( i => i.textContent);
+            return {tournamentURLs, sports};
         });
-        sportNames = tuple.names;
+        tuple.sports = ret.sports;
 
-        if(tuple.hrefs.length > 0){
+        if(ret.tournamentURLs.length > 0){
             log.write(`Success! Hunting for sportURLs from ${meta.baseURL} succedeed, ${tuple.hrefs.length} entries hunted\n`);
         } else {
             throw error();
         }
 
         // handle them synchronously to avoid overload (we are multiple tabs in the same browser) <-- TODO test limitation
-        for(const url of tuple.hrefs){
+        for(const url of ret.tournamentURLs){
             await huntTournamentURLs(url);
         }
 
@@ -144,8 +152,9 @@ export async function huntSportURLs(meta){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n`);
         return -1;
     } finally{
-        writeFileSync(sportsPath, JSON.stringify(sportNames, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }
