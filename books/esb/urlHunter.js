@@ -1,7 +1,6 @@
 import puppeteer from "puppeteer";
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
-import { escape } from "querystring";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -18,6 +17,14 @@ export async function huntSportURLs(meta){
     const dataOutPath = `./books/${meta.abbrev}/matchURLs.json`;
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
+    }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
     }
 
     const browser = await puppeteer.launch({
@@ -40,7 +47,6 @@ export async function huntSportURLs(meta){
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
-    let matchURLs = [];
     try{
         // // Define the function to handle logging inside evaluate call
         // function logHandler(log) {
@@ -50,9 +56,13 @@ export async function huntSportURLs(meta){
         // }
         // // Expose the log handler to the page
         // await page.exposeFunction('nodeLog', logHandler(log));
-        matchURLs = await page.evaluate(async () => {
+        const tuple = await page.evaluate(async () => {
             const matchURLs = [];
             let allTours = [];
+            const sportNames = Array.from(document.querySelectorAll('div.lg_itmInfo'))
+                .map( e => e.textContent);
+            const tourNames = Array.from(document.querySelectorAll('div.lg_infoWrp'))
+                .map( e => e.textContent);
             allTours = document.querySelectorAll('div.lg_inrInfo');
             // window.nodeLog(`alltours: ${allTours}`);
             // window.nodeLog(`alltoursSize: ${allTours.length}`);
@@ -110,16 +120,18 @@ export async function huntSportURLs(meta){
 
                 }
             }
-            return matchURLs;
+            return {matchURLs, sportNames, tourNames};
         })
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted.\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted.\n`);
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2), 'utf8');
+        writeFileSync(sportsPath, JSON.stringify(tuple.sportNames, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tourNames, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2), 'utf8');
         await browser?.close();
         await promisify(log.end).bind(log);
     }

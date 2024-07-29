@@ -17,6 +17,14 @@ export async function huntSportURLs(meta){
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
+    }
 
     const browser = await puppeteer.launch({
         headless: true,
@@ -38,13 +46,19 @@ export async function huntSportURLs(meta){
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
-    let matchURLs = [];
+    const tuple = {};
     try{
-        
+        tuple.sports = await page.evaluate( () => {
+            return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);
+        });
+        tuple.tours = await page.evaluate( () => {
+            return Array.from(document.querySelectorAll('h4')).map( e => e.textContent.split('] ')[1].trim() );
+        });
+
         let selector;
         selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
         await page.waitForSelector(selector);
-        matchURLs = await page.$$eval(selector, (items, url) => {
+        tuple.hrefs = await page.$$eval(selector, (items, url) => {
             const matchURLs = [];
             for(const href of items.map( item => item.getAttribute('href'))){
                 matchURLs.push(url + href);
@@ -52,14 +66,16 @@ export async function huntSportURLs(meta){
             return matchURLs;
         }, meta.baseURL);
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n.`);
         return -1;
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }

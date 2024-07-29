@@ -9,7 +9,10 @@ async function huntMatchURLs(url, baseurl){
         await page.setViewport({width:1920, height:768})
         await page.goto(url);
 
-        matchURLs = matchURLs.concat(await page.evaluate(async (baseurl) => {
+        const tuple = await page.evaluate(async (baseurl) => {
+            const sportName = document.querySelector('a[data-action="Close sport"] div[data-test="categorizer-sport-list-content-title"]').textContent;
+            const tourNames = Array.from(document.querySelectorAll('div[data-test="tournament-list-row-title"]'))
+                .map( e => e.textContent );
             await new Promise(resolve => setTimeout(resolve, 2000));
             let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
             let size;
@@ -19,15 +22,18 @@ async function huntMatchURLs(url, baseurl){
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
             } while(size !== matches.length);
-
-            return Array.from(matches).map( match => baseurl + match.getAttribute('href'));
-        }, baseurl));
+            const hrefs = Array.from(matches).map( match => baseurl + match.getAttribute('href'));
+            return {hrefs, sportName, tourNames}
+        }, baseurl);
+        hrefs = [...hrefs, ...tuple.hrefs];
+        sportNames.push(tuple.sportName);
+        tourNames = [...tourNames, ...tuple.tourNames];
         
-        log.write(`Done hunting for matchURLs from ${url}\n`);
+        log.write(`Done hunting for hrefs from ${url}\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for matchURLs from ${url} failed.\n`);
+        log.write(`Critical Failure! Hunting for hrefs from ${url} failed.\n`);
         return -1;
     } finally{
         try{ await page.close(); }
@@ -38,7 +44,9 @@ async function huntMatchURLs(url, baseurl){
 // global variables in this module
 let browser;
 let log;
-let matchURLs = [];
+let hrefs = [];
+let sports = [];
+let tours = [];
 /**
  * this function only gets one URL and is the only one exposed to the outside
  * 
@@ -53,6 +61,14 @@ export async function huntSportURLs(meta){
     const dataOutPath = `./books/${meta.abbrev}/matchURLs.json`;
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
+    }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
     }
     
     try{
@@ -88,14 +104,16 @@ export async function huntSportURLs(meta){
             }
         }
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${hrefs.length} entries hunted\n`);
         return -1;
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(sports, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tours, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }

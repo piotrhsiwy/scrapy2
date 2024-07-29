@@ -96,7 +96,12 @@ export async function huntSportURLs(meta){
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
     
+    let sportNames = [];
     try{
         browser = await puppeteer.launch({
             headless: true,
@@ -114,18 +119,24 @@ export async function huntSportURLs(meta){
         await page.setViewport({width:1920, height:30000})
         await page.goto(meta.baseURL);
 
-        let selector = 'div.navigation-element a';
-        const sportURLs = await page.$$eval(selector, items => items.map( i => i.getAttribute('href')));
-        if(sportURLs.length > 0){
-            log.write(`Success! Hunting for sportURLs from ${meta.baseURL} succedeed, ${sportURLs.length} entries hunted\n`);
+        const tuple = await page.evaluate(async () => {
+            const hrefs = Array.from(document.querySelectorAll('div.navigation-element a')).map( i => i.getAttribute('href'));
+            const names = Array.from(document.querySelectorAll('.navigation-element-heading__collapsing-text')).map( i => i.textContent);
+            return {hrefs, names};
+        });
+        sportNames = tuple.names;
+
+        if(tuple.hrefs.length > 0){
+            log.write(`Success! Hunting for sportURLs from ${meta.baseURL} succedeed, ${tuple.hrefs.length} entries hunted\n`);
         } else {
             throw error();
         }
 
         // handle them synchronously to avoid overload (we are multiple tabs in the same browser) <-- TODO test limitation
-        for(const sportURL of sportURLs){
-            await huntTournamentURLs(sportURL);
+        for(const url of tuple.hrefs){
+            await huntTournamentURLs(url);
         }
+
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
         return 0;
 
@@ -133,6 +144,7 @@ export async function huntSportURLs(meta){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n`);
         return -1;
     } finally{
+        writeFileSync(sportsPath, JSON.stringify(sportNames, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);

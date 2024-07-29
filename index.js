@@ -5,12 +5,12 @@ import { readFileSync, writeFileSync } from 'fs'
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'tp',
-  // 'ms',
-  // 'esb',
+  'tp',
+  'ms',
+  'esb',
   // 'ls',
-  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  'gg'
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  // 'gg'
 ]
 console.log(`availableAbbrev: ${availableAbbrev.toString()}`);
 
@@ -30,21 +30,35 @@ for(const abbrev of availableAbbrev){
 
 // ### Hunting URLs
 console.log('### Hunting URLs');
+const modules = [];
 for(const book of books){
-  await import(`./books/${book.abbrev}/urlHunter.js`).then( async (module) => {
-    console.log(`Imported module ./books/${book.abbrev}/urlHunter.js`);
-    await module.huntSportURLs(book);
+  const moduleName = `./books/${book.abbrev}/urlHunter.js`;
+  await import(moduleName).then( async (module) => {
+    book.module = module; 
+    console.log(`Imported module ${moduleName}`);
   }, () => {
-    console.log(`Importing module failed ${book.hunterModuleName}`);
+    console.log(`Importing module failed ${moduleName}`);
   });
 }
+
+const allPromises = [];
+for(const book of books){
+  let promise;
+  promise = book.module.huntSportURLs(book);
+  allPromises.push(promise);
+  console.log(`Queued hunt from ${book.abbrev} module`);
+}
+console.log(`Deploying hunt batch of size ${allPromises.length}...`)
+await Promise.allSettled(allPromises);
+console.log(`Scrape batch results: ${allPromises.toString}`);
 
 // ### Scraping the data
 console.log('### Scraping match URLs');
 console.log('Importing modules');
 for(const book of books){
-  await import(`./books/${book.abbrev}/urlScraper.js`).then( async (module) => {
-    console.log(`Imported module ./books/${book.abbrev}/urlHunter.js`);
+  const moduleName = `./books/${book.abbrev}/urlScraper.js`;
+  await import(moduleName).then( async (module) => {
+    console.log(`Imported module ${moduleName}`);
     await module.scrapeMatchURL(book);
   }, () => {
     console.log(`Importing module failed ${book.hunterModuleName}`);
@@ -89,6 +103,7 @@ writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
 // ### Processing the data
 console.log('### Processing the match data');
 import { arbSports } from './calc/calc.js'
+import { huntSportURLs } from './books/tp/urlHunter.js';
 
 const arbs = arbSports(availableBooks);
 

@@ -19,6 +19,10 @@ export async function huntSportURLs(meta){
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
 
     puppeteer.use(StealthPlugin());
     const browser = await puppeteer.launch({
@@ -46,8 +50,17 @@ export async function huntSportURLs(meta){
     const iframeHandle = await page.$(selector);
     page = await iframeHandle.contentFrame();
 
-    let matchURLs = [];
+    const tuple = {};
     try{
+
+        tuple.sportNames = page.evaluate(() => {
+            return Array.from(document.querySelectorAll('div.sportname span[title]')).map( e => e.getAttribute('title'));
+        });
+
+        tuple.tourNames = page.evaluate( () => {
+            return Array.from(document.querySelectorAll('div[country="tournaments"] ~ div.title > span[title]')).map( e => e.textContent );
+        });
+           
         // set checkboxes for all the sports to load all the matches
         const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft'];
         for(const esport of availableEsports){
@@ -62,7 +75,7 @@ export async function huntSportURLs(meta){
             }
         }
 
-        matchURLs = await page.evaluate(async () => {
+        tuple.hrefs = await page.evaluate(async () => {
             const matchURLs = [];
             
             async function processItems(){
@@ -101,6 +114,7 @@ export async function huntSportURLs(meta){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
         return -1;
     } finally{
+        writeFileSync(sportsPath, JSON.stringify(sportNames, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);

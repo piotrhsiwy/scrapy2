@@ -17,6 +17,14 @@ export async function huntSportURLs(meta){
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
+    const sportsPath = `./books/${meta.abbrev}/sports.json`;
+    if(existsSync(sportsPath)){
+        truncateSync(sportsPath, 0);
+    }
+    const toursPath = `./books/${meta.abbrev}/tours.json`;
+    if(existsSync(toursPath)){
+        truncateSync(toursPath, 0);
+    }
 
     const browser = await puppeteer.launch({
         headless: true,
@@ -38,10 +46,10 @@ export async function huntSportURLs(meta){
     await page.goto(meta.baseURL);
     await page.waitForSelector('ul.liga_menu');
 
-    let matchURLs = [];
+    let tuple = {hrefs: [], sportNames: [], tourNames:[]};
     try{
         
-        matchURLs = await page.evaluate( async () => {
+        tuple = await page.evaluate( async () => {
             // open up all the tournament tabs to trigger adding event-menus to the dom
             const tabs = document.querySelectorAll('ul.liga_menu > li > a');
             for(const tab of tabs){
@@ -54,16 +62,36 @@ export async function huntSportURLs(meta){
             }
             // scrape the hrefs of the games
             const links = document.querySelectorAll('ul.event_menu > li > a.link');
-            return Array.from(links).map( link => link.getAttribute('href')); 
+            // get sport and tournament names
+            const anchors = Array.from(document.querySelectorAll('a[title="Esports"] ~ ul.liga_menu > li > a.link'));
+            const text = anchors.map( a => textContent);
+            const sport_tour = anchors.map( (anchor, index) =>
+                text[index]
+                    .replace(anchor.children[1].textContent, '')
+                    .replace(/\u000a/g, '\u0020')
+                    .trim());
+            const tourNames = [], sportNames = [];
+            for(const str of sport_tour){
+                const newSport = str.split('. ')[0];
+                if(!sportNames.some( s => s === newSport)){
+                    sportNames.push(newSport);
+                }
+                tourNames.push(str.split('. ')[1]);
+            }
+            const hrefs = Array.from(links).map( link => link.getAttribute('href'));
+            return {hrefs, tourNames, sportNames};
         });
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${matchURLs.length} entries hunted\n`);
+
+        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${matchURLs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n.`);
         return -1;
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(matchURLs, null, 2));
+        writeFileSync(sportsPath, JSON.stringify(tuple.sportNames, null, 2));
+        writeFileSync(toursPath, JSON.stringify(tuple.tourNames, null, 2));
+        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
         await browser?.close();
         await promisify(log.end).bind(log);
     }
