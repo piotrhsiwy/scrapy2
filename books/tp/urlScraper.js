@@ -33,7 +33,7 @@ function convDatetimeToISO(dateStr){
   
 }
 
-export async function scrapeMatchURL_tp(data, url){
+export async function scrapeMatchURL(data, url){
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ["--disable-web-security"]
@@ -51,13 +51,6 @@ export async function scrapeMatchURL_tp(data, url){
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
-  }
-  const tournamentNameMappingPath = `books/${bookAbbrev}/tournamentNameMapping.json`;
-  let tournamentNameMapping;
-  try{
-    tournamentNameMapping = Object.freeze(JSON.parse(readFileSync(tournamentNameMappingPath)));
-  } catch (error){
-    log.write(`Failure! Cannot open file ${tournamentNameMappingPath}\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
