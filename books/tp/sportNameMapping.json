@@ -1,8 +1,98 @@
-{
-    "mapping": [
-        {
-            "specificName": "CS2",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "CS2",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Dota 2",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "Rainbow Six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "StarCraft II",
+        "globalID": "SC2"
+    },
+    {
+        "specificName": "Rocket League",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "King of Glory",
+        "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "E-Soccer",
+        "globalID": "E_SOCCER"
+    },
+    {
+        "specificName": "E-Basketball",
+        "globalID": "E_BASKETBALL"
+    },
+    {
+        "specificName": "Other",
+        "globalID": "OTHER"
+    },
+    {
+        "specificName": "Call of Duty",
+        "globalID": "COD"
+    },
+    {
+        "specificName": "Overwatch",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "Heroes of the Storm",
+        "globalID": "HEROES_OF_THE_STORM"
+    },
+    {
+        "specificName": "Hearthstone",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "specificName": "Fortnite",
+        "globalID": "FORTNITE"
+    },
+    {
+        "specificName": "League of Legends: Wild Rift",
+        "globalID": "WILD_RIFT"
+    },
+    {
+        "specificName": "Age Of Empires",
+        "globalID": "AGE_OF_EMPIRES"
+    },
+    {
+        "specificName": "Arena Of Valor",
+        "globalID": "ARENA_OF_VALOR"
+    },
+    {
+        "specificName": "Warcraft 3",
+        "globalID": "WARCRAFT3"
+    },
+    {
+        "specificName": "Mobile Legends: Bang Bang",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "specificName": "CSGO",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "Halo",
+        "globalID": "HALO"
+    },
+    {
+        "specificName": "E-Cricket",
+        "globalID": "E_CRICKET"
+    }
+]

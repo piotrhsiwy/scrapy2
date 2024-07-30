@@ -3,7 +3,6 @@ import { createWriteStream, readFileSync } from "fs"
 import { promisify } from 'util';
 
 import { sportNameMap } from "../sportNameMap.js";
-import { tournamentNameMap } from "../tournamentName/CS2/Map.js";
 import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
 import { translateKeywords } from '../util/translateKeywords.js';
@@ -12,13 +11,32 @@ import { translateKeywords } from '../util/translateKeywords.js';
 function convDatetimeToISO(dateStr){
   
   const parseDateStr = (dateStr) => {
-    const [day, month, time] = dateStr.match(/(\d+)\s+(\w+)\s+(\d{2}:\d{2})/).slice(1);
-    const [hours, minutes] = time.split(':');
+    let date;
+    const [dayOrKeyword, rest] = dateStr.split(' ', 2);
+    
+    if (dayOrKeyword.toLowerCase() === "today") {
+      date = new Date();
+    } else if (dayOrKeyword.toLowerCase() === "tomorrow") {
+      date = new Date();
+      date.setDate(date.getDate() + 1);
+    } else {
+      // Split the string further for day, month, and time
+      const [day, month, time] = dateStr.split(/[\s:]+/);
+      const [hours, minutes] = rest.split(':');
   
-    const currentYear = new Date().getFullYear();
-    const monthIndex = new Date(`${month} 1, ${currentYear}`).getMonth(); // Get the month index
+      const currentYear = new Date().getFullYear();
+      const monthIndex = new Date(`${month} 1, ${currentYear}`).getMonth();
   
-    const date = new Date(currentYear, monthIndex, day, hours, minutes, 0, 0);
+      date = new Date(currentYear, monthIndex, parseInt(day), parseInt(hours), parseInt(minutes), 0, 0);
+      return date;
+    }
+  
+    const [hours, minutes] = rest.split(':');
+    date.setHours(parseInt(hours));
+    date.setMinutes(parseInt(minutes));
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+  
     return date;
   };
   
@@ -29,9 +47,22 @@ function convDatetimeToISO(dateStr){
 
 export async function scrapeMatchURL(data, url){
   const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--disable-web-security']
-  });  
+      headless: true,
+      args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--disable-gpu',
+          '--disable-web-security',
+      ],
+  }); 
+  let page = await browser.newPage();
+  await page.setViewport({width:1920, height:768})
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+  await page.setExtraHTTPHeaders({
+      'Accept-Language': 'en-US,en;q=0.9'
+  });
   
   const bookAbbrev = 'ls';
   // open a file for logging
@@ -45,13 +76,6 @@ export async function scrapeMatchURL(data, url){
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
   }
-  const tournamentNameMappingPath = `books/${bookAbbrev}/tournamentNameMapping.json`;
-  let tournamentNameMapping;
-  try{
-    tournamentNameMapping = Object.freeze(JSON.parse(readFileSync(tournamentNameMappingPath)));
-  } catch (error){
-    log.write(`Failure! Cannot open file ${tournamentNameMappingPath}\n`);
-  }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
@@ -63,49 +87,58 @@ export async function scrapeMatchURL(data, url){
   try{
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
-    let page = await browser.newPage();    
-    await page.setViewport({width:1920, height:768})
     await page.goto(url);
+    // disabling execution of the translationsLoader.js is not neccessary, because it evaluates my language to en anyway
+    await page.evaluate(() => {
+      const scriptTags = document.querySelectorAll('script[src="/static/translationsLoader.js"]');
+      scriptTags.forEach(tag => tag.remove());
+    });
+    await page.waitForNetworkIdle();
   
+    const valid = await page.$('div.sport-6000');
+    if(!valid){
+      log.write(`Critical Failure! No element with clas div.sport-6000. Probably invalid url ${url}\n`);
+      return -1;
+    }
     let selector, el, mapping;
     // get sport
     selector = 'div.osg-coupon__breadcrumbs a';
     await page.waitForSelector(selector);
     const breadcrumbs = await page.$$eval(selector, els => els.map(e => e.textContent));
     let sportName = breadcrumbs[breadcrumbs.length-2].trim();
-    mapping = sportNameMapping.mapping.find( m => m.specificName === sportName);
+    mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
-      log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return;
+      log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
+      return -1;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
     if(!sport){
       /* sport is new */
-      data.sports.push({ name: sportName, tournaments: [] });
+      data.sports.push({ name: sportName, matches: [] });
       sport = data.sports.findLast(s => s.name === sportName);
     }
 //console.log('sport: ');
 //console.log(JSON.stringify(sport, null, 2));
 
     // get tournament
-    let tournamentName = breadcrumbs[breadcrumbs.length-1].trim();
-    mapping = tournamentNameMapping.mapping.find( m => m.specificName === tournamentName);
-    if(mapping){
-      tournamentName = tournamentNameMap[mapping.globalID];;
-    } else{
-      log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
-      return;
-    }
+    // let tournamentName = breadcrumbs[breadcrumbs.length-1].trim();
+    // mapping = tournamentNameMapping.find( m => m.specificName === tournamentName);
+    // if(mapping){
+    //   tournamentName = tournamentNameMap[mapping.globalID];;
+    // } else{
+    //   log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
+    //   return;
+    // }
 //console.log('>>>>>>>>>>>>>>> scraped tournamentname: ' + tournamentName);
-    let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
-    if(!tournament){
-      /* tournament is new */
-      sport.tournaments.push({ name: tournamentName, matches: [] });
-      tournament = sport.tournaments.findLast(t => t.name === tournamentName);
-    }
+    // let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
+    // if(!tournament){
+    //   /* tournament is new */
+    //   sport.tournaments.push({ name: tournamentName, matches: [] });
+    //   tournament = sport.tournaments.findLast(t => t.name === tournamentName);
+    // }
 //console.log('tournament: ');
 //console.log(JSON.stringify(tournament, null, 2));
 
@@ -123,21 +156,21 @@ export async function scrapeMatchURL(data, url){
     const datetime = convDatetimeToISO(el);
 //console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
 
-    let match = tournament.matches.findLast(m =>
+    let match = sport.matches.findLast(m =>
         m.teamHome === teamHome &&
         m.teamAway === teamAway &&
         m.datetime === datetime
     )
     if(!match){
-      /* tournament is new */
-      tournament.matches.push({ 
+      /* match is new */
+      sport.matches.push({ 
         teamHome: teamHome,
         teamAway: teamAway,
         datetime: datetime,
         urls: [],
         markets: []
       });
-      match = tournament.matches.findLast(m =>
+      match = sport.matches.findLast(m =>
           m.teamHome === teamHome &&
           m.teamAway === teamAway &&
           m.datetime === datetime
@@ -156,7 +189,7 @@ export async function scrapeMatchURL(data, url){
       // get marketName
       selector = 'h4';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
-      mapping = marketNameMapping.mapping.find( m => m.specificName === marketName);
+      mapping = marketNameMapping.find( m => m.specificName === marketName);
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
       } else{
@@ -205,7 +238,7 @@ export async function scrapeMatchURL(data, url){
     log.write(`Critical Failure! scraping a match from ${url}\n`);
     return -1;
   } finally{
-    await browser?.close();
+    await browser.close();
     await promisify(log.end).bind(log);
   }
   

@@ -89,7 +89,7 @@ export async function huntSportURLs(meta){
 
         const sportURLs = await page.evaluate(async (baseurl) => {
             return Array.from(document.querySelectorAll('a[data-action="Open sport"]')).map(item => baseurl + item.getAttribute('href'));
-        }, meta.baseURL)
+        }, meta.baseURLBuilder)
         if(sportURLs.length > 0){
             log.write(`Success! Hunting for sportURLs from ${meta.baseURL} succedeed, ${sportURLs.length} entries hunted\n`);
         } else {
@@ -99,7 +99,7 @@ export async function huntSportURLs(meta){
         // handle them synchronously to avoid overload (we are multiple tabs in the same browser) <-- TODO test limitation
         for(const url of sportURLs){
             if(url.includes('esports')){
-                await huntMatchURLs(url, meta.baseURL);
+                await huntMatchURLs(url, meta.baseURLBuilder);
             }
         }
 
@@ -113,7 +113,7 @@ export async function huntSportURLs(meta){
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser?.close();
+        await browser.close();
         await promisify(log.end).bind(log);
     }
 }

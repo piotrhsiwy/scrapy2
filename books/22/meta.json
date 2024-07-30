@@ -1,4 +1,5 @@
 {
     "abbrev":"22",
-    "baseURL":"https://22bets.me/line/esports"
+    "baseURL":"https://22bets.me/line/esports/",
+    "baseURLBuilder":"https://22bets.me/"
 }

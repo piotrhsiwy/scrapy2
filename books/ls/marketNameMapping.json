@@ -1,16 +1,10 @@
-{
-    "mapping": [
-        {
-            "specificName": "Match Up Winner - Game",
-            "globalID":     "MW"
-        },
-        {
-            "specificName": "Match up-Gewinner - Game",
-            "globalID":     "MW"
-        },
-        {
-            "specificName": "Map 1 Gesamtzahl der Runden - Game",
-            "globalID":     "TR"
-        }
-    ]
-}
+[
+    {
+        "specificName": "Match Up Winner - Game",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Map 1 Total Number of Rounds - Game",
+        "globalID":     "TRM1"
+    }
+]

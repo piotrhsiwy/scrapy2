@@ -1,14 +1,14 @@
 import { createWriteStream, readFileSync, writeFileSync } from "fs"
+import { promisify } from "util";
 import { dateISO8601Prettify } from "../books/util/datetimeISO8601Prettify.js";
 
 let log;
 let consideredArbCount = 0;
 let positiveArbCount = 0;
-let arbs = [];
 
-function arb2(sport, tournament, match, market, oddHome, oddAway, books){
-    for(const coefHome of oddHome.coefs.filter(c => books.includes(c.book))){
-        for(const coefAway of oddAway.coefs.filter(c => books.includes(c.book))){
+function arb2(arbs, sport, match, market, oddHome, oddAway){
+    for(const coefHome of oddHome.coefs){
+        for(const coefAway of oddAway.coefs){
             if(coefAway.book === coefHome.book){ continue; } // excludes self-arbs from the consideration
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > 0.0){
@@ -16,7 +16,7 @@ function arb2(sport, tournament, match, market, oddHome, oddAway, books){
                     "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
                     "value":arb,
                     "sport":sport.name,
-                    "tournament":tournament.name,
+                    // "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
                     "datetime":dateISO8601Prettify(match.datetime),
@@ -43,7 +43,7 @@ function arb2(sport, tournament, match, market, oddHome, oddAway, books){
     }
 }
 
-function calcMarket(sport, tournament, match, market, books){
+function calcMarket(arbs, sport, match, market){
 
     let marketReport;
 
@@ -56,9 +56,9 @@ function calcMarket(sport, tournament, match, market, books){
         let oddHome = market.odds[0];
         let oddAway = market.odds[1];
         if(oddHome && oddAway){
-            arb2(sport, tournament, match, market, oddHome, oddAway, books);
+            arb2(arbs, sport, match, market, oddHome, oddAway);
         } else{
-            log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
+            // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
         marketReport = positiveArbCount > 0 ?
             `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
@@ -87,9 +87,9 @@ function calcMarket(sport, tournament, match, market, books){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(sport, tournament, match, market, oddHome, oddAway, books);
+                    arb2(arbs, sport, match, market, oddHome, oddAway);
                 } else{
-                    log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
                 processed.push(oddHome);
                 processed.push(oddAway);
@@ -120,9 +120,9 @@ function calcMarket(sport, tournament, match, market, books){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(sport, tournament, match, market, oddHome, oddAway, books);
+                    arb2(arbs, sport, match, market, oddHome, oddAway);
                 } else{
-                    log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
                 }
                 processed.push(oddHome);
                 processed.push(oddAway);
@@ -134,10 +134,10 @@ function calcMarket(sport, tournament, match, market, books){
             marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
         }
     }
-    log.write(marketReport);
+    // log.write(marketReport);
 }
 
-export function arbSports(books){
+export async function arbSports(){
 
     const logFilePath = './calc/log.txt';
     try{
@@ -151,25 +151,22 @@ export function arbSports(books){
     const data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
 
+    
+    const arbs =[];
     for(const sport of data.sports){
         log.write(`Processing sport: ${sport.name}\n`);
-        for(const tournament of sport.tournaments){
-            log.write(`Processing tournament: ${tournament.name}\n`);
-                for(const match of tournament.matches){
-                    log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
-                    for(const market of match.markets){
-                        calcMarket(sport, tournament, match, market, books);
-                    }
-                    log.write(`Done processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
+            for(const match of sport.matches){
+                log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
+                for(const market of match.markets){
+                    calcMarket(arbs, sport, match, market);
                 }
-            log.write(`Done processing tournament: ${tournament.name}\n`);
+            }
         }
-        log.write(`Done processing sport: ${sport.name}\n`);
-    }
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
 
     const arbFilePath = './data/arbs.json';
     log.write(`Writing the results to ${arbFilePath}\n`);
     writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
+    await promisify(log.end).bind(log);
     return arbs;
 }

@@ -1,108 +1,106 @@
-{
-    "mapping": [
-        {
-            "specificName": "BO3 Series Win",
-            "globalID":     "MW"
-        },
-        {
-            "specificName": "Match Handicap",
-            "globalID":     "MHDP"
-        },
-        {
-            "specificName": "Game 1 Win",
-            "globalID":     "M1W"
-        },
-        {
-            "specificName": "Game 2 Win",
-            "globalID":     "M2W"
-        },
-        {
-            "specificName": "Game 3 Win",
-            "globalID":     "M3W"
-        },
-        {
-            "specificName": "Game 1 Round Handicap",
-            "globalID":     "RHDPM1"
-        },
-        {
-            "specificName": "Game 2 Round Handicap",
-            "globalID":     "RHDPM2"
-        },
-        {
-            "specificName": "Game 3 Round Handicap",
-            "globalID":     "RHDPM3"
-        },
-        {
-            "specificName": "Game 1 First to Win 5 Rounds",
-            "globalID":     "FTRRM1"
-        },
-        {
-            "specificName": "Game 1 First to Win 10 Rounds",
-            "globalID":     "FTRRM1"
-        },
-        {
-            "specificName": "Game 2 First to Win 5 Rounds",
-            "globalID":     "FTRRM2"
-        },
-        {
-            "specificName": "Game 2 First to Win 10 Rounds",
-            "globalID":     "FTRRM2"
-        },
-        {
-            "specificName": "Game 3 First to Win 5 Rounds",
-            "globalID":     "FTRRM3"
-        },
-        {
-            "specificName": "Game 3 First to Win 10 Rounds",
-            "globalID":     "FTRRM3"
-        },
-        {
-            "specificName": "Game 1 First Round Win",
-            "globalID":     "R1WM1"
-        },
-        {
-            "specificName": "Game 2 First Round Win",
-            "globalID":     "R1WM2"
-        },
-        {
-            "specificName": "Game 3 First Round Win",
-            "globalID":     "R1WM3"
-        },
-        {
-            "specificName": "Game 1 13th Round Win",
-            "globalID":     "R13WM1"
-        },
-        {
-            "specificName": "Game 2 13th Round Win",
-            "globalID":     "R13WM2"
-        },
-        {
-            "specificName": "Game 3 13th Round Win",
-            "globalID":     "R13WM3"
-        },
-        {
-            "specificName": "Game 1 Total Rounds",
-            "globalID":     "TRM1"
-        },
-        {
-            "specificName": "Game 2 Total Rounds",
-            "globalID":     "TRM2"
-        },
-        {
-            "specificName": "Game 3 Total Rounds",
-            "globalID":     "TRM3"
-        },
-        {
-            "specificName": "Game 1 Total Rounds Odd Or Even",
-            "globalID":     "TROE1"
-        },
-        {
-            "specificName": "Game 2 Total Rounds Odd Or Even",
-            "globalID":     "TROE2"
-        },
-        {
-            "specificName": "Game 3 Total Rounds Odd Or Even",
-            "globalID":     "TROE3"
-        }
-    ]
-}
+[
+    {
+        "specificName": "BO3 Series Win",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Match Handicap",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Game 1 Win",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Game 2 Win",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Game 3 Win",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "Game 1 Round Handicap",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "Game 2 Round Handicap",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "Game 3 Round Handicap",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Game 1 First to Win 5 Rounds",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Game 1 First to Win 10 Rounds",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Game 2 First to Win 5 Rounds",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Game 2 First to Win 10 Rounds",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Game 3 First to Win 5 Rounds",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Game 3 First to Win 10 Rounds",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Game 1 First Round Win",
+        "globalID":     "R1WM1"
+    },
+    {
+        "specificName": "Game 2 First Round Win",
+        "globalID":     "R1WM2"
+    },
+    {
+        "specificName": "Game 3 First Round Win",
+        "globalID":     "R1WM3"
+    },
+    {
+        "specificName": "Game 1 13th Round Win",
+        "globalID":     "R13WM1"
+    },
+    {
+        "specificName": "Game 2 13th Round Win",
+        "globalID":     "R13WM2"
+    },
+    {
+        "specificName": "Game 3 13th Round Win",
+        "globalID":     "R13WM3"
+    },
+    {
+        "specificName": "Game 1 Total Rounds",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "Game 2 Total Rounds",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Game 3 Total Rounds",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Game 1 Total Rounds Odd Or Even",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "Game 2 Total Rounds Odd Or Even",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Game 3 Total Rounds Odd Or Even",
+        "globalID":     "TROE3"
+    }
+]

@@ -158,7 +158,7 @@ export async function huntSportURLs(meta){
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser?.close();
+        await browser.close();
         await promisify(log.end).bind(log);
     }
 }

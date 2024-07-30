@@ -50,7 +50,7 @@ export async function huntSportURLs(meta){
     let tuple = {hrefs:[], sports:[], tours:[]};
     try{
         
-        tuple = await page.evaluate( async () => {
+        tuple = await page.evaluate( async (baseurl) => {
             // open up all the tournament tabs to trigger adding event-menus to the dom
             const tabs = document.querySelectorAll('ul.liga_menu > li > a');
             for(const tab of tabs){
@@ -64,7 +64,7 @@ export async function huntSportURLs(meta){
 
             // scrape the hrefs of the games
             const links = document.querySelectorAll('ul.event_menu > li > a.link');
-            const hrefs = Array.from(links).map( link => link.getAttribute('href'));
+            const hrefs = Array.from(links).map( link => baseurl + link.getAttribute('href'));
 
             // get sport and tournament names
             const anchors = Array.from(document.querySelectorAll('a[title="Esports"] ~ ul.liga_menu > li > a.link'));
@@ -83,7 +83,7 @@ export async function huntSportURLs(meta){
                 tours.push(str.split('. ')[1]);
             }
             return {hrefs, sports, tours};
-        });
+        }, meta.baseURLBuilder);
 
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
@@ -95,7 +95,7 @@ export async function huntSportURLs(meta){
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser?.close();
+        await browser.close();
         await promisify(log.end).bind(log);
     }
 }

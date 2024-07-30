@@ -1,8 +1,66 @@
-{
-    "mapping": [
-        {
-            "specificName": "CS 2",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "CS 2",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "Dota 2",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "StarCraft II",
+        "globalID": "SC2"
+    },
+    {
+        "specificName": "Rainbow Six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "King Of Glory",
+        "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "Call of Duty: Mobile",
+        "globalID": "COD_MOBILE"
+    },
+    {
+        "specificName": "PUBG",
+        "globalID": "PUBG"
+    },
+    {
+        "specificName": "Rocket League",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "Mobile Legends",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "specificName": "Olympic Esports Games",
+        "globalID": "OLYMPIC_ESPORT"
+    },
+    {
+        "specificName": "World of Warcraft",
+        "globalID": "WORLD_OF_WARCRAFT"
+    },
+    {
+        "specificName": "Apex Legends",
+        "globalID": "APEX_LEGENDS"
+    },
+    {
+        "specificName": "CrossFire Mobile",
+        "globalID": "CROSSFIRE_MOBILE"
+    },
+    {
+        "specificName": "Crossfire",
+        "globalID": "CROSSFIRE"
+    }
+]

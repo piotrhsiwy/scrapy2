@@ -1,8 +1,146 @@
-{
-    "mapping": [
-        {
-            "specificName": "Counter-Strike",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "Olympic Games",
+        "globalID": "OLYMPIC_ESPORT"
+    },
+    {
+        "specificName": "Soccer",
+        "globalID": "E_SOCCER"
+    },
+    {
+        "specificName": "Basketball",
+        "globalID": "E_BASKETBALL"
+    },
+    {
+        "specificName": "Tennis",
+        "globalID": "TENNIS"
+    },
+    {
+        "specificName": "Baseball",
+        "globalID": "BASEBALL"
+    },
+    {
+        "specificName": "Ice Hockey",
+        "globalID": "ICE_HOCKEY"
+    },
+    {
+        "specificName": "Formula 1",
+        "globalID": "FORMULA1"
+    },
+    {
+        "specificName": "Volleyball",
+        "globalID": "VOLLEYBALL"
+    },
+    {
+        "specificName": "Futsal",
+        "globalID": "FUTSAL"
+    },
+    {
+        "specificName": "Rugby",
+        "globalID": "RUGBY"
+    },
+    {
+        "specificName": "American Football",
+        "globalID": "AMERICAN_FOOTBALL"
+    },
+    {
+        "specificName": "Snooker",
+        "globalID": "SNOOKER"
+    },
+    {
+        "specificName": "Boxing",
+        "globalID": "BOXING"
+    },
+    {
+        "specificName": "Specials",
+        "globalID": "SPECIALS"
+    },
+    {
+        "specificName": "MMA",
+        "globalID": "MMA"
+    },
+    {
+        "specificName": "Table Tennis",
+        "globalID": "TABLE_TENNIS"
+    },
+    {
+        "specificName": "Aussie Rules",
+        "globalID": "AUSSIE_RULES"
+    },
+    {
+        "specificName": "Golf",
+        "globalID": "GOLF"
+    },
+    {
+        "specificName": "Stock Car Racing",
+        "globalID": "STOCK_CAR_RACING"
+    },
+    {
+        "specificName": "Cycling",
+        "globalID": "CYCLING"
+    },
+    {
+        "specificName": "Indy Racing",
+        "globalID": "INDY_RACING"
+    },
+    {
+        "specificName": "Cricket",
+        "globalID": "CRICKET"
+    },
+    {
+        "specificName": "Speedway",
+        "globalID": "SPEEDWAY"
+    },
+    {
+        "specificName": "Motorcycle Racing",
+        "globalID": "MOTORCYCLE_RACING"
+    },
+    {
+        "specificName": "Darts",
+        "globalID": "DARTS"
+    },
+    {
+        "specificName": "Cross Country",
+        "globalID": "CROSS_COUNTRY"
+    },
+    {
+        "specificName": "Biathlon",
+        "globalID": "BIATHLON"
+    },
+    {
+        "specificName": "Alpine Skiing",
+        "globalID": "ALPINE_SKIING"
+    },
+    {
+        "specificName": "Counter-Strike",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "Dota 2",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "Call of Duty",
+        "globalID": "COD"
+    },
+    {
+        "specificName": "Rainbow Six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "Rocket League",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "Starcraft",
+        "globalID": "SC2"
+    }
+]
