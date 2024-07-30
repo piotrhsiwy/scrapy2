@@ -1,12 +1,12 @@
 import { createWriteStream, readFileSync, writeFileSync } from "fs"
+import { promisify } from "util";
 import { dateISO8601Prettify } from "../books/util/datetimeISO8601Prettify.js";
 
 let log;
 let consideredArbCount = 0;
 let positiveArbCount = 0;
-let arbs = [];
 
-function arb2(sport, match, market, oddHome, oddAway){
+function arb2(arbs, sport, match, market, oddHome, oddAway){
     for(const coefHome of oddHome.coefs){
         for(const coefAway of oddAway.coefs){
             if(coefAway.book === coefHome.book){ continue; } // excludes self-arbs from the consideration
@@ -43,7 +43,7 @@ function arb2(sport, match, market, oddHome, oddAway){
     }
 }
 
-function calcMarket(sport, match, market){
+function calcMarket(arbs, sport, match, market){
 
     let marketReport;
 
@@ -56,9 +56,9 @@ function calcMarket(sport, match, market){
         let oddHome = market.odds[0];
         let oddAway = market.odds[1];
         if(oddHome && oddAway){
-            arb2(sport, match, market, oddHome, oddAway);
+            arb2(arbs, sport, match, market, oddHome, oddAway);
         } else{
-            log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
+            // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
         marketReport = positiveArbCount > 0 ?
             `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
@@ -87,9 +87,9 @@ function calcMarket(sport, match, market){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(sport, match, market, oddHome, oddAway);
+                    arb2(arbs, sport, match, market, oddHome, oddAway);
                 } else{
-                    log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
                 processed.push(oddHome);
                 processed.push(oddAway);
@@ -120,9 +120,9 @@ function calcMarket(sport, match, market){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(sport, match, market, oddHome, oddAway);
+                    arb2(arbs, sport, match, market, oddHome, oddAway);
                 } else{
-                    log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
                 }
                 processed.push(oddHome);
                 processed.push(oddAway);
@@ -134,10 +134,10 @@ function calcMarket(sport, match, market){
             marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
         }
     }
-    log.write(marketReport);
+    // log.write(marketReport);
 }
 
-export function arbSports(){
+export async function arbSports(){
 
     const logFilePath = './calc/log.txt';
     try{
@@ -151,21 +151,22 @@ export function arbSports(){
     const data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
 
+    
+    const arbs =[];
     for(const sport of data.sports){
         log.write(`Processing sport: ${sport.name}\n`);
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    calcMarket(sport, match, market);
+                    calcMarket(arbs, sport, match, market);
                 }
-                log.write(`Done processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
             }
-        log.write(`Done processing sport: ${sport.name}\n`);
         }
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
 
     const arbFilePath = './data/arbs.json';
     log.write(`Writing the results to ${arbFilePath}\n`);
     writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
+    await promisify(log.end).bind(log);
     return arbs;
 }

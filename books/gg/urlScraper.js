@@ -12,7 +12,15 @@ function convDatetimeToISO(dateStr){
   const parseDateStr = (dateStr) => {
     let date;
   
-    if (dateStr.includes('Today')) {
+    if (dateStr.includes('Tomorrow')) {
+      // Handle "17:00Tomorrow"
+      const [time, tomorrow] = dateStr.split('Tommorow');
+      const [hours, minutes] = time.split(':');
+      date = new Date();
+      date.setDate(date.getDate() + 1);
+      const now = new Date();
+      date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours), parseInt(minutes), 0, 0);
+    } if (dateStr.includes('Today')) {
       // Handle "17:00Today"
       const [time, today] = dateStr.split('Today');
       const [hours, minutes] = time.split(':');

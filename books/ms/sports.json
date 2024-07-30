@@ -2,9 +2,11 @@
   "Olympic Games",
   "Soccer",
   "Basketball",
+  "3x3 Basketball",
   "Tennis",
   "Baseball",
   "Ice Hockey",
+  "Handball",
   "Formula 1",
   "Volleyball",
   "Futsal",
@@ -14,7 +16,10 @@
   "Boxing",
   "Specials",
   "MMA",
+  "Badminton",
+  "Lacrosse",
   "Table Tennis",
+  "Rally",
   "Aussie Rules",
   "Golf",
   "Stock Car Racing",
@@ -24,6 +29,7 @@
   "Speedway",
   "Motorcycle Racing",
   "Darts",
+  "Ski Jumping",
   "Cross Country",
   "Biathlon",
   "Alpine Skiing",
@@ -34,5 +40,6 @@
   "Call of Duty",
   "Rainbow Six",
   "Rocket League",
-  "Starcraft"
+  "Starcraft",
+  "StarCraft BroodWar"
 ]
