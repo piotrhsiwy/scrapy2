@@ -1,8 +1,107 @@
-{
-    "mapping": [
-        {
-            "specificName": "cs2",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "cs2",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "lol",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "kog",
+        "globalID": "MOBILE_MOBA"
+    },
+    {
+        "specificName": "val",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "ml",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "specificName": "rb6",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "cod",
+        "globalID": "COD"
+    },
+    {
+        "specificName": "sc2",
+        "globalID": "SC2"
+    },
+    {
+        "specificName": "rl",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "cf",
+        "globalID": "CROSSFIRE"
+    },
+    {
+        "specificName": "al",
+        "globalID": "APEX_LEGENDS"
+    },
+    {
+        "specificName": "wr",
+        "globalID": "WILD_RIFT"
+    },
+    {
+        "specificName": "ow",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "eafc",
+        "globalID": "EA_SPORTS_FC"
+    },
+    {
+        "specificName": "codwz",
+        "globalID": "COD_WARZONE"
+    },
+    {
+        "specificName": "hs",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "specificName": "nba2k",
+        "globalID": "NBA2K"
+    },
+    {
+        "specificName": "war3",
+        "globalID": "WARCRAFT3"
+    },
+    {
+        "specificName": "pubg",
+        "globalID": "PUBG"
+    },
+    {
+        "specificName": "pubgm",
+        "globalID": "PUBG_MOBILE"
+    },
+    {
+        "specificName": "fn",
+        "globalID": "FORTNITE"
+    },
+    {
+        "specificName": "tft",
+        "globalID": "TFT"
+    },
+    {
+        "specificName": "ff",
+        "globalID": "FREE_FIRE"
+    },
+    {
+        "specificName": "sf6",
+        "globalID": "STREET_FIGHTER6"
+    },
+    {
+        "specificName": "tk8",
+        "globalID": "TEKKEN8"
+    },
+    {
+        "specificName": "rs",
+        "globalID": "RENNSPORT"
+    }
+
+]

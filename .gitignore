@@ -10,6 +10,8 @@ books/*/urls.json
 
 # harvested data
 books/*/matchURLs.json
+books/*/sports.json
+books/*/tours.json
 data/data_out.json
 data/arbs.json
 
