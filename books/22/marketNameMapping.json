@@ -1,80 +1,78 @@
-{
-    "mapping": [
-        {
-            "specificName": "1x2",
-            "globalID":     "MW"
-        },
-        {
-            "specificName": "Total Maps Handicap",
-            "globalID":     "MHDP"
-        },
-        {
-            "specificName": "Correct Score",
-            "globalID":     "CS"
-        },
-        {
-            "specificName": "Total Maps",
-            "globalID":     "TM"
-        },
-        {
-            "specificName": "1 map 1x2",
-            "globalID":     "M1W"
-        },
-        {
-            "specificName": "2 map 1x2",
-            "globalID":     "M2W"
-        },
-        {
-            "specificName": "3 map 1x2",
-            "globalID":     "M3W"
-        },
-        {
-            "specificName": "1 map Total",
-            "globalID":     "TRM1"
-        },
-        {
-            "specificName": "2 map Total",
-            "globalID":     "TRM2"
-        },
-        {
-            "specificName": "3 map Total",
-            "globalID":     "TRM3"
-        },
-        {
-            "specificName": "1 map Handicap",
-            "globalID":     "RHDPM1"
-        },
-        {
-            "specificName": "2 map Handicap",
-            "globalID":     "RHDPM2"
-        },
-        {
-            "specificName": "3 map Handicap",
-            "globalID":     "RHDPM3"
-        },
-        {
-            "specificName": "1 map Will There Be Overtime? - Yes/No",
-            "globalID":     "OT1"
-        },
-        {
-            "specificName": "2 map Will There Be Overtime? - Yes/No",
-            "globalID":     "OT2"
-        },
-        {
-            "specificName": "3 map Will There Be Overtime? - Yes/No",
-            "globalID":     "OT3"
-        },
-        {
-            "specificName": "1 map Total Rounds Even / Odd",
-            "globalID":     "TROE1"
-        },
-        {
-            "specificName": "2 map Total Rounds Even / Odd",
-            "globalID":     "TROE2"
-        },
-        {
-            "specificName": "3 map Total Rounds Even / Odd",
-            "globalID":     "TROE3"
-        }
-    ]
-}
+[
+    {
+        "specificName": "1x2",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Total Maps Handicap",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Correct Score",
+        "globalID":     "CS"
+    },
+    {
+        "specificName": "Total Maps",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "1 map 1x2",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "2 map 1x2",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "3 map 1x2",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "1 map Total",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "2 map Total",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "3 map Total",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "1 map Handicap",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "2 map Handicap",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "3 map Handicap",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "1 map Will There Be Overtime? - Yes/No",
+        "globalID":     "OT1"
+    },
+    {
+        "specificName": "2 map Will There Be Overtime? - Yes/No",
+        "globalID":     "OT2"
+    },
+    {
+        "specificName": "3 map Will There Be Overtime? - Yes/No",
+        "globalID":     "OT3"
+    },
+    {
+        "specificName": "1 map Total Rounds Even / Odd",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "2 map Total Rounds Even / Odd",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "3 map Total Rounds Even / Odd",
+        "globalID":     "TROE3"
+    }
+]

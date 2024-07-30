@@ -1,8 +1,34 @@
-{
-    "mapping": [
-        {
-            "specificName": "CSGO",
-            "globalID":     "CS2"
-        }
-    ]
-}
+[
+    {
+        "specificName": "CSGO",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "RL",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "specificName": "DOTA",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "CS",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "LoL",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Rainbow Six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "VALORANT",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "CODM",
+        "globalID": "CROSSFIRE_MOBILE"
+    }
+]
