@@ -81,12 +81,15 @@ async function singleHunt(){
 }
 
 async function hunt(){
-  await new Promise(resolve => setTimeout(resolve, 3600000)) // 1h
-  console.log('Hunting...')
   while(true){
+    await new Promise(resolve => setTimeout(resolve, 3600000)) // 1h
+    console.log('Hunting...')
     for(const book of books){
       console.log(`Queued hunt from ${book.abbrev} module`);
       await book.module.huntSportURLs(book);
+      const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+      book.urls = JSON.parse(readFileSync(urlsFilePath));
+      console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
     }
   }
 }
