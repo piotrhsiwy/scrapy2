@@ -28,20 +28,21 @@ for(const abbrev of availableAbbrev){
   }
 };
 
-// ### Loading modules
-console.log('### Loading modules');
+// ### Hunting URLs
+console.log('### Hunting URLs');
+
+console.log('Loading modules');
 for(const book of books){
   const moduleName = `./books/${book.abbrev}/urlHunter.js`;
   await import(moduleName).then( async (module) => {
-    book.module = module; 
-    console.log(`Imported module ${moduleName}`);
-  }, () => {
-    console.log(`Importing module failed ${moduleName}`);
-  });
+      book.hunterModule = module; 
+      console.log(`Imported module ${moduleName}`);
+    }, () => {
+      console.log(`Importing module failed ${moduleName}`);
+    });
 }
 
-// ### Hunting URLs
-// console.log('### Hunting URLs');
+// await books[3].hunterModule.huntSportURLs(books[3]);
 
 // for(const book of books){
 //   console.log(`Queued hunt from ${book.abbrev} module`);
@@ -50,10 +51,14 @@ for(const book of books){
 
 // let allHuntPromises = [];
 // for(const book of books){
-//   let promise;
-//   promise = book.module.huntSportURLs(book);
-//   allHuntPromises.push(promise);
-//   console.log(`Queued hunt from ${book.abbrev} module`);
+//   if(book.hunterModule){
+//     let promise;
+//     promise = book.hunterModule.huntSportURLs(book);
+//     allHuntPromises.push(promise);
+//     console.log(`Queued hunt from ${book.abbrev} module`);
+//   } else{
+//     console.log(`No hunter module in ${book.abbrev}`);
+//   }
 // }
 // console.log(`Deploying hunt batch of size ${allHuntPromises.length}...`)
 // await Promise.allSettled(allHuntPromises);
@@ -63,6 +68,17 @@ for(const book of books){
 // ### Scraping the data
 console.log('### Scraping match URLs');
 
+console.log('Loading modules');
+for(const book of books){
+  const moduleName = `./books/${book.abbrev}/urlScraper.js`;
+  await import(moduleName).then( async (module) => {
+      book.scraperModule = module; 
+      console.log(`Imported module ${moduleName}`);
+    }, () => {
+      console.log(`Importing module failed ${moduleName}`);
+    });
+}
+
 console.log('Loading urls from files...');
 for(const book of books){
   const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -71,27 +87,52 @@ for(const book of books){
 }
 
 const data = {sports: []};
-let allScrapePromises = [];
-let i = 0;
-for(const book of books){
-  let promise;
-  if( i < book.urls.length){
-    promise = book.module.scrapeMatchURL(data, book.urls[i]);
-    allScrapePromises.push(promise);
-    console.log(`Queued scrape from ${book.abbrev} module on ${books.urls[i]}`);
+
+// let bookFrom = 0;
+// let bookTo = 5;
+// let urlFrom = 0;
+// let urlTo = 3;
+// for(let ui = urlFrom; ui <= urlTo; ui++){
+  //   for(let bi = bookFrom; bi <= bookTo; bi++){
+  //     console.log(books[bi].urls[ui])
+  //     await books[bi].scraperModule.scrapeMatchURL(data, books[bi].urls[ui]);
+      // const dataPathOut = 'data/data_out.json';
+  //     console.log(`Saving the results in ${dataPathOut}`);
+  //     writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+  //   }
+// }
+
+for(let i = 50; ; i++){
+  for(const book of books){
+    console.log(`Queued scrape from ${book.abbrev} module from ${book.urls[i]}`);
+    console.log( await book.scraperModule.scrapeMatchURL(data, book.urls[i]));
   }
 }
-console.log(`Deploying scrape batch of size ${allScrapePromises.length}...`)
-await Promise.allSettled(allScrapePromises);
-console.log(`Scrape batch results:`);
-console.log(allScrapePromises);
 
-const dataPathOut = 'data/data_out.json';
-console.log(`Saving the results in ${dataPathOut}`);
-writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+// let allScrapePromises = [];
+// let i = 0;
+// for(const book of books){
+//   if( i < book.urls.length){
+//     if(book.scraperModule){
+//       let promise;
+//       promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
+//       allScrapePromises.push(promise);
+//       console.log(`Queued scrape from ${book.abbrev} module on ${i}:${book.urls[i]}`);
+//     } else{
+//       console.log(`Not scraper module for ${book.abbrev}`)
+//     }
+//     const dataPathOut = 'data/data_out.json';
+//     console.log(`Saving the results in ${dataPathOut}`);
+//     writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+//   }
+// }
+// console.log(`Deploying scrape batch of size ${allScrapePromises.length}...`)
+// await Promise.allSettled(allScrapePromises);
+// console.log(`Scrape batch results:`);
+// console.log(allScrapePromises);
 
 // ### Processing the data
 console.log('### Processing the match data');
 import { arbSports } from './calc/calc.js'
-const arbs = arbSports(availableBooks);
+const arbs = arbSports(availableAbbrev);
 console.log(`Finished. ${arbs.length} positive arbs.`);

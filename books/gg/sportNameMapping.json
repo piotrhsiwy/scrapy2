@@ -1,34 +1,30 @@
 [
     {
-        "specificName": "Counter-Strike",
+        "specificName": "counter-strike",
         "globalID": "CS2"
     },
     {
-        "specificName": "Dota",
+        "specificName": "dota-2",
         "globalID": "DOTA2"
     },
     {
-        "specificName": "Valorant",
+        "specificName": "valorant",
         "globalID": "VALORANT"
     },
     {
-        "specificName": "Liga der Legenden",
+        "specificName": "league-of-legends",
         "globalID": "LOL"
     },
     {
-        "specificName": "League of Legends",
-        "globalID": "LOL"
-    },
-    {
-        "specificName": "Fußball Esports",
-        "globalID": "E_SOCCER"
-    },
-    {
-        "specificName": "Esports Basketball",
+        "specificName": "basketball esports",
         "globalID": "E_BASKETBALL"
     },
     {
-        "specificName": "StarCraft 2",
+        "specificName": "football esports",
+        "globalID": "E_SOCCER"
+    },
+    {
+        "specificName": "starcraft-ii",
         "globalID": "SC2"
     },
     {
@@ -36,15 +32,15 @@
         "globalID": "PUBG"
     },
     {
-        "specificName": "Call of Duty",
+        "specificName": "call-of-duty",
         "globalID": "COD"
     },
     {
-        "specificName": "Rainbow Six",
+        "specificName": "rainbox-six",
         "globalID": "RAINBOW6"
     },
     {
-        "specificName": "King of Glory",
+        "specificName": "king-of-glory",
         "globalID": "KING_OF_GLORY"
     },
     {
@@ -60,15 +56,31 @@
         "globalID": "OVERWATCH2"
     },
     {
-        "specificName": "Apex-Legenden",
+        "specificName": "apex-legends",
         "globalID": "APEX_LEGENDS"
     },
     {
-        "specificName": "Crossfire",
+        "specificName": "age-of-empires",
+        "globalID": "AGE_OF_EMPIRES"
+    },
+    {
+        "specificName": "startcraft-i",
+        "globalID": "SC_BROODWAR"
+    },
+    {
+        "specificName": "crossfire",
         "globalID": "CROSSFIRE"
     },
     {
-        "specificName": "Hearthstone",
+        "specificName": "hearthstone",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "specificName": "mortal-combat",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "specificName": "hearthstone",
         "globalID": "HEARTHSTONE"
     }
 ]

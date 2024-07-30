@@ -40,6 +40,7 @@ export async function huntSportURLs(meta){
             '--disable-web-security',
         ],
         userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+        executablePath: 'C:\\Users\\User\\AppData\\Local\\Chromium\\Application\\chrome.exe',
     }); 
     let page = await browser.newPage();
     await page.setViewport({width:1920, height:768})
@@ -47,7 +48,6 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.goto(meta.baseURL);
 
     let selector = 'iframe';
@@ -125,7 +125,7 @@ export async function huntSportURLs(meta){
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser?.close();
+        await browser.close();
         await promisify(log.end).bind(log);
     }
 }

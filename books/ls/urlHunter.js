@@ -43,7 +43,6 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    page.setDefaultTimeout(120000); // 2mins max timeout
     await page.goto(meta.baseURL);
     await page.waitForNetworkIdle();
 
@@ -71,7 +70,7 @@ export async function huntSportURLs(meta){
                 matchURLs.push(url + href);
             }
             return matchURLs;
-        }, meta.baseURL);
+        }, meta.baseURLBuilder);
 
         log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
         return 0;
@@ -83,7 +82,7 @@ export async function huntSportURLs(meta){
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser?.close();
+        await browser.close();
         await promisify(log.end).bind(log);
     }
 }
