@@ -24,8 +24,7 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                 for(const D of oddD.coefs){
                     // TODO checking it h ere is not efficient. You can check it on the way when entering loops
                     consideredArbCount++;
-                    if( isMultiSelfArb([A, B, C, D]) ){
-                        log.write('This is self-arb\n')
+                    if( isMultiSelfArb([A, B, C, D]) ){ // exclude self-arb from the consideration
                         continue;
                     }
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
@@ -79,7 +78,6 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
     for(const coefHome of oddHome.coefs){
         for(const coefAway of oddAway.coefs){
             if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
-                log.write(`This is self-arb\n`)
                 continue;
             }
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
