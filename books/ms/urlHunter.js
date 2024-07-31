@@ -58,22 +58,25 @@ export async function huntSportURLs(meta){
         page = await iframeHandle.contentFrame();
 
         // set checkboxes for all the sports to load all the matches
-        // all available esports ever on this book
-        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'Starcraft', 'Starcraft Broodwar'];
-        for(const esport of availableEsports){
-            selector = `span[title="${esport}"] ~ div.chbx`;
-            const available = await page.$(selector);
-            if(available){
-                await page.$eval(selector, (el) => { el.classList.add('checked'); });
+        const ids = await page.evaluate(() => {
+            return Array.from( document.querySelectorAll('li[sport]')).map( item => parseInt(item.getAttribute('sport')));
+        });
+        const esportids = [];
+        for(const id of ids){
+            if(id >= 51 && id <= 97){
+                esportids.push(id);
+            }
+        }
+        for(const id of esportids){
+            selector = `'li[sport="${id}"] div.chbx'`;
+            const checkbox = await page.$(selector);
+            if(checkbox){
+                await checkbox.evaluate((el) => { el.classList.add('checked'); });
                 const sportCheckbox = await page.$(selector);
-                if(sportCheckbox){
-                    await sportCheckbox.click();
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                } else{
-                    log.write(`Warning! No sportTab checkbox for ${esport} on ${meta.baseURL}.\n`);
-                }
+                await sportCheckbox.click();
+                await new Promise(resolve => setTimeout(resolve, 100));
             } else{
-                log.write(`Warning! No sportTab for ${esport} on ${meta.baseURL}.\n`);
+                log.write(`Warning! No checkbox for li[sport=${id}"] on ${meta.baseURL}.\n`);
             }
         }
 
