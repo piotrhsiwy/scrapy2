@@ -40,7 +40,6 @@ export async function huntSportURLs(meta){
             '--disable-web-security',
         ],
         userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
-        executablePath: 'C:\\Users\\User\\AppData\\Local\\Chromium\\Application\\chrome.exe',
     }); 
     let page = await browser.newPage();
     await page.setViewport({width:1920, height:768})
@@ -48,25 +47,31 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    await page.goto(meta.baseURL);
-
-    let selector = 'iframe';
-    await page.waitForSelector(selector);
-    const iframeHandle = await page.$(selector);
-    page = await iframeHandle.contentFrame();
 
     const tuple = {hrefs:[], sports:[], tours:[]};
     try{
+        await page.goto(meta.baseURL);
+
+        let selector = 'iframe';
+        await page.waitForSelector(selector);
+        const iframeHandle = await page.$(selector);
+        page = await iframeHandle.contentFrame();
 
         // set checkboxes for all the sports to load all the matches
-        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft'];
+        // all available esports ever on this book
+        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'Starcraft', 'StarCraft BroodWar'];
         for(const esport of availableEsports){
             selector = `span[title="${esport}"] ~ div.chbx`;
-            await page.$eval(selector, (el) => { el.classList.add('checked'); });
-            const sportCheckbox = await page.$(selector);
-            if(sportCheckbox){
-                await sportCheckbox.click();
-                await new Promise(resolve => setTimeout(resolve, 100));
+            const available = await page.$(selector);
+            if(available){
+                await page.$eval(selector, (el) => { el.classList.add('checked'); });
+                const sportCheckbox = await page.$(selector);
+                if(sportCheckbox){
+                    await sportCheckbox.click();
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } else{
+                    log.write(`Warning! No sportTab checkbox for ${esport} on ${meta.baseURL}.\n`);
+                }
             } else{
                 log.write(`Warning! No sportTab for ${esport} on ${meta.baseURL}.\n`);
             }
@@ -119,7 +124,7 @@ export async function huntSportURLs(meta){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n.`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n`);
         return -1;
     } finally{
         writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));

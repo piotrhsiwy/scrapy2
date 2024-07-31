@@ -43,15 +43,17 @@ export async function scrapeMatchURL(data, url){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+    if(!sportNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
+    if(!marketNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
   }
 
   let browser;
@@ -84,7 +86,7 @@ export async function scrapeMatchURL(data, url){
     let infoHandle;
     try{
       selector = 'div.oPInfo';
-      infoHandle = await page.waitForSelector(selector, {timeout:3000});
+      infoHandle = await page.waitForSelector(selector, {timeout:5000});
     } catch{
       log.write(`Critical Failure! No infoHandle present! Probably invalid url ${url}\n`);
       return -1;
@@ -145,12 +147,23 @@ export async function scrapeMatchURL(data, url){
 //console.log('>>>>>>>>>>>>>>> scraped mode: ' + mode);
 
     let match = sport.matches.findLast(m =>
-        m.teamHome === teamHome &&
-        m.teamAway === teamAway &&
-        m.datetime === datetime
+        (
+          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
+        )
+        &&
+        (
+          m.teamHome === teamHome &&
+          m.teamAway === teamAway
+        )
+        ||
+        ( 
+          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
+          m.teamAway === teamHome
+        )
     )
     if(!match){
       /* match is new */
+      log.write(`Warning! This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}\n`);
       sport.matches.push({ 
         teamHome: teamHome,
         teamAway: teamAway,
@@ -200,6 +213,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
 //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
@@ -215,20 +229,21 @@ export async function scrapeMatchURL(data, url){
 //console.log(`$$${selector} length: ${oddsHandles.length}`);
       for(let i = 0; i < oddsHandles.length; i++){
         const oddHandle = oddsHandles[i];
-        let oddName;
-        const has_label = await oddHandle.$('label');
-        if(has_label){
-          oddName = await page.evaluate(e => e.textContent ,has_label);
-        } else{
-          // if no_label that means append its content at the end of oddName
-          const sufix = await oddHandle.$eval('div.odds', e => e.textContent.trim())
-          market.name = market.name + sufix;
+        let handle = await oddHandle.$('label');
+        if(!handle){
+          // if !oddName that means that ths div.oddWrp is indeed one of three and holds an oddName suffix like '23.5' , for Over/Under Market and so on...
           continue;
         }
+        let oddName = await oddHandle.$eval('label', (e) => e.textContent);
+        oddName.replace()
+        let sufix = '';
+        if(oddsHandles.length === 3){
+          sufix = await page.evaluate(e => e.parentNode.childNodes[1].textContent, oddHandle);
+        }
         oddName = oddName
-          .replace(labelHome, teamHome)
-          .replace(labelAway, teamAway)
-          .replace(/\+/g, '');
+        .replace(labelHome, teamHome)
+        .replace(labelAway, teamAway)
+        .replace(/\+/g, '');
         if(HdpSpecial.length > 1){
           /* Match Handicaps are named like this: "BO3 Hdp: VP -1.5". They have exactly 2 odd entries.
           Note: The team in the is not always the first one listed */
@@ -241,23 +256,39 @@ export async function scrapeMatchURL(data, url){
             oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
           }
         }
-        /* First to reach Rounds are each a separate market, they have to merged into 1
-        "Game 1 First to Win X Rounds", where X in {5,10} 
-        is included in HdpSpecial[0] even after marketName has been mapped
-        the X has to be appended along with a space to oddName */
-        if(HdpSpecial[0].includes('First to Win 5 Rounds')){
-          oddName = `${oddName} 5`;
-        } else if(HdpSpecial[0].includes('First to Win 10 Rounds')){
-          oddName = `${oddName} 10`;
+        /* Additionally remove spaces is the namse of all odds for a handicap market. This is separate from the previous
+        block, because non-map handicap markets do not fulfil the test in if */
+        if(marketName.includes('Handicap')){
+          oddName = oddName.replace(/\s+/g, '');
+        }
+        /* first to reach kill
+        Explanation: the first-to-reach have been mapped to a single market name.
+        hence oddNames have to be adjusted for esb. I append the no kills/rounds
+        at the end of the oddName */
+        let regex = /Game (\d) First to (\d+) Kills/;
+        let match = HdpSpecial[0].match(regex);
+        if(match) {
+          oddName = `${oddName}${match[2]}`;
+        }
+        /* first to reach rounds */
+        regex = /Game (\d) First to Win (\d+) Rounds/;
+        match = HdpSpecial[0].match(regex);
+        if(match) {
+          oddName = `${oddName}${match[2]}`;
+        }
+        oddName = oddName + sufix;
+        oddName = oddName.toLowerCase();
+        if(marketName.includes('Margin')){
+          oddName = oddName.replace('/', '');
         }
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
-        odd = market.odds.findLast(o => o.name === oddName);
-        if(!odd){
-          market.odds.push({name: oddName, coefs: []})
-          odd = market.odds.findLast(o => o.name === oddName);
-        }
-        // value = null if an odd is locked
-        const is_locked = await oddHandle.evaluate( e =>
+odd = market.odds.findLast(o => o.name === oddName);
+if(!odd){
+  market.odds.push({name: oddName, coefs: []})
+  odd = market.odds.findLast(o => o.name === oddName);
+}
+// value = null if an odd is locked
+const is_locked = await oddHandle.evaluate( e =>
           e.classList.contains('locked')
         );
         const value = is_locked ? null : 

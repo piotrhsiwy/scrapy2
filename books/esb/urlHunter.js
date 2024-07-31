@@ -58,11 +58,11 @@ export async function huntSportURLs(meta){
     //         console.log(responseBody);
     //     }
     // });
-    await page.goto(meta.baseURL);
-    await page.waitForNetworkIdle();
 
     let tuple = {hrefs:[], sports:[], tours:[]};
     try{
+        await page.goto(meta.baseURL);
+        await page.waitForNetworkIdle();
         // // Define the function to handle logging inside evaluate call
         // function logHandler(log) {
         //     return (msg) => {
@@ -145,8 +145,8 @@ export async function huntSportURLs(meta){
     } catch(error){
         log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted.\n`);
     } finally{
-        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2), 'utf8');
         await browser.close();
         await promisify(log.end).bind(log);

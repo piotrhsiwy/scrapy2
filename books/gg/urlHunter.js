@@ -29,7 +29,7 @@ async function huntMatchURLs(url, baseurl){
         tuple.sports.push(ret.sports);
         tuple.tours = tuple.tours.concat(ret.tours);
         
-        log.write(`Done hunting for hrefs from ${url}. ${tuple.hrefs.length} + ${ret.hrefs.length} new entries\n`);
+        log.write(`Done hunting for hrefs from ${url}. ${tuple.hrefs.length - ret.hrefs.length} + ${ret.hrefs.length} new entries\n`);
         return 0;
 
     } catch(error){

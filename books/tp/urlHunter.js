@@ -8,7 +8,6 @@ async function huntMatchURLs(url){
     try{
         page = await browser.newPage();
         await page.setViewport({width:1920, height:30000})
-        page.setDefaultTimeout(120000); // 2mins max timeout
         await page.goto(url);
 
         let selector;

@@ -71,15 +71,17 @@ export async function scrapeMatchURL(data, url){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+    if(!sportNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
+    if(!marketNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
   }
 
   try{
@@ -116,7 +118,7 @@ export async function scrapeMatchURL(data, url){
       sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return;
+      return -1;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
@@ -171,11 +173,22 @@ export async function scrapeMatchURL(data, url){
 //console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
 
     let match = sport.matches.findLast(m =>
-        m.teamHome === teamHome &&
-        m.teamAway === teamAway &&
-        m.datetime === datetime
+        (
+          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
+        )
+        &&
+        (
+          m.teamHome === teamHome &&
+          m.teamAway === teamAway
+        )
+        ||
+        ( 
+          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
+          m.teamAway === teamHome
+        )
     )
     if(!match){
+      log.write(`Warning! This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}\n`);
       /* match is new */
       sport.matches.push({ 
         teamHome: teamHome,
@@ -224,6 +237,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
       //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
@@ -257,7 +271,10 @@ export async function scrapeMatchURL(data, url){
           }
           if(marketName.includes(marketNameMap['CS'])){
             oddName = oddName.split(' ')[1];
+          } else if(marketName.includes('Duration')){
+            oddName = oddName.replace('minutes', '');
           }
+          oddName = oddName.replace(/\s+/g, '');
           //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
           odd = market.odds.findLast(o => o.name === oddName);
           if(!odd){

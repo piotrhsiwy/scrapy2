@@ -17,3 +17,7 @@ export function dateISO8601Prettify(isoDatetime){
     
     return prettyDate;
 }
+
+export function arbPrettifyToPercent(f){
+    return (f*100.0).toFixed(2);
+}

@@ -20,5 +20,5 @@ calc/log.txt
 books/*/log.txt
 notif/*/log.txt
 
-# login, auth and client-data files
+# login, auth, client-data, tokens, keys and archive of communication with clients
 auth/*

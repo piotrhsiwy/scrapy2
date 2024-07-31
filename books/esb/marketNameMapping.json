@@ -4,6 +4,10 @@
         "globalID":     "MW"
     },
     {
+        "specificName": "BO5 Series Win",
+        "globalID":     "MW"
+    },
+    {
         "specificName": "Match Handicap",
         "globalID":     "MHDP"
     },
@@ -18,6 +22,14 @@
     {
         "specificName": "Game 3 Win",
         "globalID":     "M3W"
+    },
+    {
+        "specificName": "Game 4 Win",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Game 5 Win",
+        "globalID":     "M5W"
     },
     {
         "specificName": "Game 1 Round Handicap",
@@ -102,5 +114,185 @@
     {
         "specificName": "Game 3 Total Rounds Odd Or Even",
         "globalID":     "TROE3"
+    },
+    {
+        "specificName": "Game 1 First Blood",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "Game 2 First Blood",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "Game 3 First Blood",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "Game 1 First Dragon",
+        "globalID":     "FDM1"
+    },
+    {
+        "specificName": "Game 1 First Turret",
+        "globalID":     "FTM1"
+    },
+    {
+        "specificName": "Game 2 First Turret",
+        "globalID":     "FTM2"
+    },
+    {
+        "specificName": "Game 3 First Turret",
+        "globalID":     "FTM3"
+    },
+    {
+        "specificName": "Game 2 First Dragon",
+        "globalID":     "FDM2"
+    },
+    {
+        "specificName": "Game 3 First Dragon",
+        "globalID":     "FDM3"
+    },
+    {
+        "specificName": "Game 1 Total Kills",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Game 2 Total Kills",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Game 3 Total Kills",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Game 1 First to 5 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First to 5 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First to 5 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 1 First to 10 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First to 10 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First to 10 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 1 First to 15 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First to 15 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First to 15 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 1 First to 20 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First to 20 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First to 20 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 1 Kills Handicap",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "Game 2 Kills Handicap",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "Game 3 Kills Handicap",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Game 1 Duration Minutes",
+        "globalID":     "DURM1"
+    },
+    {
+        "specificName": "Game 2 Duration Minutes",
+        "globalID":     "DURM2"
+    },
+    {
+        "specificName": "Game 3 Duration Minutes",
+        "globalID":     "DURM3"
+    },
+    {
+        "specificName": "Game 1 First Baron",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Game 2 First Baron",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Game 3 First Baron",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "Game 1 First To Take Inhibitor",
+        "globalID":     "FINHIBM1"
+    },
+    {
+        "specificName": "Game 2 First To Take Inhibitor",
+        "globalID":     "FINHIBM2"
+    },
+    {
+        "specificName": "Game 3 First To Take Inhibitor",
+        "globalID":     "FINHIBM3"
+    },
+    {
+        "specificName": "Game 1 Total Barons",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "Game 2 Total Barons",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "Game 3 Total Barons",
+        "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "Game 1 First Roshan",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "Game 2 First Roshan",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "Game 3 First Roshan",
+        "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "Game 1 First To Take Melee Barrack",
+        "globalID":     "FBRCKSM1"
+    },
+    {
+        "specificName": "Game 2 First To Take Melee Barrack",
+        "globalID":     "FBRCKSM2"
+    },
+    {
+        "specificName": "Game 3 First To Take Melee Barrack",
+        "globalID":     "FBRCKSM3"
     }
 ]
