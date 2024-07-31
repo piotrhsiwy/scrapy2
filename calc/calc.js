@@ -1,15 +1,87 @@
 import { createWriteStream, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { dateISO8601Prettify } from "../books/util/datetimeISO8601Prettify.js";
+import { arbPrettifyToPercent, dateISO8601Prettify } from "../data/util/prettify.js";
 
 let log;
 let consideredArbCount = 0;
 let positiveArbCount = 0;
 
+function isMultiSelfArb(arr){
+    const books = [arr[0]];
+    for(let i = 1; i < arr.length; i++){
+        if(books.some( b => b.book === arr[i].book )){
+            return true;
+        }
+        books.push(arr[i]);
+    }
+    return false;
+}
+
+function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
+    for(const A of oddA.coefs){
+        for(const B of oddB.coefs){
+            for(const C of oddC.coefs){
+                for(const D of oddD.coefs){
+                    // TODO checking it h ere is not efficient. You can check it on the way when entering loops
+                    consideredArbCount++;
+                    if( isMultiSelfArb([A, B, C, D]) ){
+                        log.write('This is self-arb\n')
+                        continue;
+                    }
+                    const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
+                    if(arb > 0.0){
+                        positiveArbCount++;
+                        let newArb = {
+                            "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
+                            "value":arb,
+                            "sport":sport.name,
+                            // "tournament":tournament.name,
+                            "teamHome":match.teamHome,
+                            "teamAway":match.teamAway,
+                            "datetime":dateISO8601Prettify(match.datetime),
+                            "market":market.name,
+                            "oddA":{
+                                "oddName:":oddA.name,
+                                "oddValue:":A.value,
+                                "book":A.book,
+                                "url":match.urls.find( item => item.book === A.book ),
+                            },
+                            "oddB":{
+                                "oddName:":oddB.name,
+                                "oddValue:":B.value,
+                                "book":B.book,
+                                "url":match.urls.find( item => item.book === B.book ),
+                            },
+                            "oddC":{
+                                "oddName:":oddC.name,
+                                "oddValue:":C.value,
+                                "book":C.book,
+                                "url":match.urls.find( item => item.book === C.book ),
+                            },
+                            "oddD":{
+                                "oddName:":oddD.name,
+                                "oddValue:":D.value,
+                                "book":D.book,
+                                "url":match.urls.find( item => item.book === D.book ),
+                            },
+                        };
+                        positiveArbCount++;
+                        arbs.push(newArb);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
 function arb2(arbs, sport, match, market, oddHome, oddAway){
     for(const coefHome of oddHome.coefs){
         for(const coefAway of oddAway.coefs){
-            if(coefAway.book === coefHome.book){ continue; } // excludes self-arbs from the consideration
+            if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
+                log.write(`This is self-arb\n`)
+                continue;
+            }
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > 0.0){
                 let newArb = {
@@ -23,11 +95,13 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                     "market":market.name,
                     "Home":{
                         "oddName:":oddHome.name,
+                        "oddValue:":coefHome.value,
                         "book":coefHome.book,
                         "url":match.urls.find( item => item.book === coefHome.book ),
                     },
                     "Away":{
                         "oddName:":oddAway.name,
+                        "oddValue:":coefAway.value,
                         "book":coefAway.book,
                         "url":match.urls.find( item => item.book === coefAway.book ),
                     }
@@ -46,6 +120,8 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
 function calcMarket(arbs, sport, match, market){
 
     let marketReport;
+    const teamHome = match.teamHome;
+    const teamAway = match.teamAway;
 
     log.write(`Processing market: ${market.name}\n`)
     let odds = market.odds;
@@ -65,7 +141,7 @@ function calcMarket(arbs, sport, match, market){
             : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
     } else{//    odds.length >= 3
         if(market.name.includes('Handicap')){
-            /* handicap market with oddNames of the format: "Virtus.pro -2.5" */
+            /* handicap market with oddNames of the format: "Virtus.pro-2.5" */
             let processed = [];
             while(odds.length !== processed.length){
                 let oddHome;
@@ -77,13 +153,24 @@ function calcMarket(arbs, sport, match, market){
                     }
                 }
                 for(let i = 1; i < odds.length; i++){
-                    if(
-                        oddHome.name.split(' ')[0] !== odds[i].name.split(' ')[0] &&
-                        parseFloat(oddHome.name.split(' ')[1]) === -1.0 * parseFloat(odds[i].name.split(' ')[1]) &&
-                        !processed.includes(odds[i])
-                    ){
-                        oddAway = odds[i];
-                        break;
+                    if(oddHome.name.includes(teamHome)){
+                        const h1 = parseFloat(oddHome.name.replace(teamHome, '')); // the left handicap value h1
+                        if(odds[i].name.includes(teamAway) && ( parseFloat(odds[i].name.replace(teamAway, '')) === -h1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else if(oddHome.name.includes(teamAway) ){
+                        const h1 = parseFloat(oddHome.name.replace(teamAway, '')); // the left handicap value h1
+                        if(odds[i].name.includes(teamHome) && ( parseFloat(odds[i].name.replace(teamHome, '')) === -h1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else{
+                        /* invalid odd name */
                     }
                 }
                 if(oddHome && oddAway){
@@ -97,7 +184,7 @@ function calcMarket(arbs, sport, match, market){
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
-        } else if(market.name.includes('First to reach')){
+        } else if(market.name.includes('First to Reach')){
             /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
             let processed = [];
             while(odds.length !== processed.length){
@@ -110,27 +197,103 @@ function calcMarket(arbs, sport, match, market){
                     }
                 }
                 for(let i = 1; i < odds.length; i++){
-                    if(
-                        oddHome.name.split(' ')[0] !== odds[i].name.split(' ')[0] &&
-                        parseInt(oddHome.name.split(' ')[1]) === parseInt(odds[i].name.split(' ')[1]) &&
-                        !processed.includes(odds[i])
-                    ){
-                        oddAway = odds[i];
-                        break;
+                    if(oddHome.name.includes(teamHome)){
+                        const r1 = parseFloat(oddHome.name.replace(teamHome, '')); // the left ftr value r1
+                        if(odds[i].name.includes(teamAway) && ( parseFloat(odds[i].name.replace(teamAway, '')) === r1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else if(oddHome.name.includes(teamAway) ){
+                        const r1 = parseFloat(oddHome.name.replace(teamAway, '')); // the left ftr value r1
+                        if(odds[i].name.includes(teamHome) && ( parseFloat(odds[i].name.replace(teamHome, '')) === r1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else{
+                        /* invalid odd name */
                     }
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, sport, match, market, oddHome, oddAway);
                 } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a first-to-reach market.`);
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
-                processed.push(oddHome);
-                processed.push(oddAway);
+                if(oddHome){ processed.push(oddHome); }
+                if(oddAway){ processed.push(oddAway); }
             }
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+        } else if(market.name.includes('Total') || market.name.includes('Map Duration')){
+            /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
+            /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
+            let processed = [];
+            while(odds.length !== processed.length){
+                let oddHome;
+                let oddAway;
+                for(let i = 0; i < odds.length; i++){
+                    if( !processed.includes(odds[i])){
+                        oddHome = odds[i];
+                        break;
+                    }
+                }
+                for(let i = 1; i < odds.length; i++){
+                    if(oddHome.name.includes('over')){
+                        const t1 = parseFloat(oddHome.name.replace('over', '')); // the left total value t1
+                        if(odds[i].name.includes('under') && ( parseFloat(odds[i].name.replace('under', '')) === t1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else if(oddHome.name.includes('under') ){
+                        const t1 = parseFloat(oddHome.name.replace('under', '')); // the left total value t1
+                        if(odds[i].name.includes('over') && ( parseFloat(odds[i].name.replace('over', '')) === t1 )){
+                            oddAway = odds[i];
+                            break;
+                        } else{
+                            continue;
+                        }
+                    } else{
+                        /* invalid odd name */
+                    }
+                }
+                if(oddHome && oddAway){
+                    arb2(arbs, sport, match, market, oddHome, oddAway);
+                } else{
+                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                }
+                if(oddHome){ processed.push(oddHome); }
+                if(oddAway){ processed.push(oddAway); }
+            }
+            marketReport = positiveArbCount > 0 ?
+                `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
+                : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+        } else if(market.name.includes('Correct Score')){
+            /* correct-score market can be a
+            for a BO1 2-way(synonymous with Match Winner), 
+            for a BO3 4-way
+            for a BO5 6-way 
+            ...
+            however for now I assume that this market will only appear in a BO3 games
+            TODO expand for different modes. It should not crash regardless of if other modes are supported yet.
+            ...
+            oddNames are of the following format: '2:0', '1:2', etc.
+            */
+            if(odds.length == 4){ // BO3 4-way marketa
+                arb4(arbs, sport, match, market, odds[0], odds[1], odds[2], odds[3]);
+            } else{ // B05+ not supported yet
+                marketReport = `Failure! calcMarket cannot handle this Correct Score market: '${market.name}'. Incorrect number of odds: ${odds.length}.
+                Expected: supported={4}, not supported={6,8,10...}\n`;
+            }
         } else{
+            /* currently not supported/not-arbable market types include:
+            - Kill Maker:   not-arbable
+             */
             marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
         }
     }

@@ -236,6 +236,10 @@ export async function scrapeMatchURL(data, url){
             oddName = oddName.replace(/-yes|-no/, m => m === '-yes' ? 'even' : 'odd');
           } else if(market.name.includes('Overtime')){
             oddName = oddName.replace('re?-', '');
+          } else if(market.name.includes('First Dragon')){ // special case, because 22bet has odds for 2nd dragon in here as well
+            if(oddName.match(/\d/)){
+              continue;
+            }
           }
           oddName = oddName.replace(/\s+/g, '');
   //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);

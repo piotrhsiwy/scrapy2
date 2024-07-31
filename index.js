@@ -45,7 +45,7 @@ async function clean(){
     if(existsSync(path)){ truncateSync(path, 0); }
     console.log(`Cleared file ${path}`);
   }
-  const path = '/calc/log.txt';
+  const path = './calc/log.txt';
   if(existsSync(path)){ truncateSync(path, 0); }
   console.log(`Cleared file ${path}`);
 }
@@ -163,7 +163,8 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  // await singleHunt();
+  await singleHunt();
+
   const Pscrape = scrape();
   const Phunt = hunt();
   const Pcalc = calc();
@@ -174,25 +175,3 @@ for(const abbrev of availableAbbrev){
 // ##############################################################################################################
 // ##############################################################################################################
 // ##############################################################################################################
-
-// let allScrapePromises = [];
-// let i = 0;
-// for(const book of books){
-//   if( i < book.urls.length){
-//     if(book.scraperModule){
-//       let promise;
-//       promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
-//       allScrapePromises.push(promise);
-//       console.log(`Queued scrape from ${book.abbrev} module on ${i}:${book.urls[i]}`);
-//     } else{
-//       console.log(`Not scraper module for ${book.abbrev}`)
-//     }
-//     const dataPathOut = 'data/data_out.json';
-//     console.log(`Saving the results in ${dataPathOut}`);
-//     writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
-//   }
-// }
-// console.log(`Deploying scrape batch of size ${allScrapePromises.length}...`)
-// await Promise.allSettled(allScrapePromises);
-// console.log(`Scrape batch results:`);
-// console.log(allScrapePromises);
