@@ -106,11 +106,11 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                 };
                 positiveArbCount++;
                 arbs.push(newArb);
+                const arbReport =  
+                    `${oddHome.name.padEnd(20,' ')}@${coefHome.value} on ${coefHome.book.padEnd(20,' ')} - ${oddAway.name.padEnd(20,' ')}@${coefAway.value} on ${coefAway.book.padEnd(20,' ')}, ${arb} arb.\n`;
+                log.write(arbReport);
             }
             consideredArbCount++;
-            const arbReport =  
-                `${oddHome.name.padEnd(20,' ')}@${coefHome.value} on ${coefHome.book.padEnd(20,' ')} - ${oddAway.name.padEnd(20,' ')}@${coefAway.value} on ${coefAway.book.padEnd(20,' ')}, ${arb} arb.\n`;
-            log.write(arbReport);
         }
     }
 }
