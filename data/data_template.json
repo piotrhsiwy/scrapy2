@@ -1,12 +1,12 @@
 {
     "sports":[
         {
-            "name":"CS2",
+            "name":"Counter-Strike",
             "matches":
             [
                 {
-                    "teamHome":"Virtus.pro",
-                    "teamAway":"Liquid",
+                    "teamHome":"virtus.pro",
+                    "teamAway":"liquid",
                     "datetime":"July 31, 19:30",
                     "urls": [],
                     "markets":
@@ -16,7 +16,7 @@
                             "odds":
                             [
                                 {
-                                    "name":"home",
+                                    "name":"liquid",
                                     "coefs":
                                     [
                                         {
@@ -26,7 +26,7 @@
                                     ]
                                 },
                                 {
-                                    "name":"away",
+                                    "name":"virtus.pro",
                                     "coefs":
                                     [
                                         {
