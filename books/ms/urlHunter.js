@@ -59,7 +59,7 @@ export async function huntSportURLs(meta){
 
         // set checkboxes for all the sports to load all the matches
         // all available esports ever on this book
-        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'Starcraft', 'Starcraft Broodwar'];
+        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'Starcraft', 'StarCraft BroodWar'];
         for(const esport of availableEsports){
             selector = `span[title="${esport}"] ~ div.chbx`;
             const available = await page.$(selector);

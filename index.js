@@ -1,43 +1,3 @@
-
-// adapted from https://stackoverflow.com/questions/46293216/crawling-multiple-urls-in-a-loop-using-puppeteer/65000065#65000065 
-// https://levelup.gitconnected.com/changing-async-await-to-promises-all-to-speed-up-api-calls-in-node-js-348ea70592fd
-
-// ### Hunting URLs
-
-// await books[3].hunterModule.huntSportURLs(books[3]);
-
-
-// let allHuntPromises = [];
-// for(const book of books){
-//   if(book.hunterModule){
-//     let promise;
-//     promise = book.hunterModule.huntSportURLs(book);
-//     allHuntPromises.push(promise);
-//     console.log(`Queued hunt from ${book.abbrev} module`);
-//   } else{
-//     console.log(`No hunter module in ${book.abbrev}`);
-//   }
-// }
-// console.log(`Deploying hunt batch of size ${allHuntPromises.length}...`)
-// await Promise.allSettled(allHuntPromises);
-// console.log(`Hunt batch results:`);
-// console.log(allHuntPromises);
-
-
-// let bookFrom = 0;
-// let bookTo = 5;
-// let urlFrom = 0;
-// let urlTo = 3;
-// for(let ui = urlFrom; ui <= urlTo; ui++){
-  //   for(let bi = bookFrom; bi <= bookTo; bi++){
-  //     console.log(books[bi].urls[ui])
-  //     await books[bi].scraperModule.scrapeMatchURL(data, books[bi].urls[ui]);
-      // const dataPathOut = 'data/data_out.json';
-  //     console.log(`Saving the results in ${dataPathOut}`);
-  //     writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
-  //   }
-// }
-
 async function clean(){
   console.log(`Cleaning...`);
   for(const book of books){
@@ -106,12 +66,16 @@ async function scrape(){
   while(true){
     let i = 0;
     for(i = 0; ; i++){
+      const promises = [];
       for(const book of books){
         if(i < book.urls.length){
+          const promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
+          promises.push(promise);
           console.log(`Queued scrape from ${book.abbrev} module from ${book.urls[i]}`);
-          console.log( await book.scraperModule.scrapeMatchURL(data, book.urls[i]));
         }
       }
+      console.log(`Running a batch of ${promises.length} scrapers`);
+      console.log( (await Promise.allSettled(promises)).map(e => e.value === 0 ? 'success' : 'failure') );
       const dataPathOut = 'data/data_out.json';
       console.log(`Saving the results in ${dataPathOut}`);
       writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
@@ -164,7 +128,6 @@ for(const abbrev of availableAbbrev){
   await load();
   await clean();
   await singleHunt();
-
   const Pscrape = scrape();
   const Phunt = hunt();
   const Pcalc = calc();
