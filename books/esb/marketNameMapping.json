@@ -289,10 +289,10 @@
     },
     {
         "specificName": "Game 2 First To Take Melee Barrack",
-        "globalID":     "FBARM2"
+        "globalID":     "FBRCKSM2"
     },
     {
         "specificName": "Game 3 First To Take Melee Barrack",
-        "globalID":     "FBARM3"
+        "globalID":     "FBRCKSM3"
     }
 ]

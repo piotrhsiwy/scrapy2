@@ -160,7 +160,6 @@ for(const abbrev of availableAbbrev){
 };
 
 // ### Running
-
 (async function main(){
   await load();
   await clean();

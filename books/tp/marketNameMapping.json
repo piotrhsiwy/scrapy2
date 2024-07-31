@@ -301,10 +301,10 @@
     },
     {
         "specificName": "Team to destroy the first barracks - Map 2",
-        "globalID":     "FBARM2"
+        "globalID":     "FBRCKSM2"
     },
     {
         "specificName": "Team to destroy the first barracks - Map 3",
-        "globalID":     "FBARM3"
+        "globalID":     "FBRCKSM3"
     }
 ]

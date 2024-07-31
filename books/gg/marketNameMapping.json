@@ -40,6 +40,18 @@
         "globalID":     "M3W"
     },
     {
+        "specificName": "Map 1 - Winner",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Map 2 - Winner",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Map 3 - Winner",
+        "globalID":     "M3W"
+    },
+    {
         "specificName": "1st map - winner (incl. overtime)",
         "globalID":     "M1W"
     },
@@ -273,10 +285,10 @@
     },
     {
         "specificName": "Map 2 - First Barrack",
-        "globalID":     "FBARM2"
+        "globalID":     "FBRCKSM2"
     },
     {
         "specificName": "Map 3 - First Barrack",
-        "globalID":     "FBARM3"
+        "globalID":     "FBRCKSM3"
     }
 ]

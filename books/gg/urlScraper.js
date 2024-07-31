@@ -268,6 +268,8 @@ export async function scrapeMatchURL(data, url){
           }
           if(marketName.includes(marketNameMap['CS'])){
             oddName = oddName.split(' ')[1];
+          } else if(marketName.includes('Duration')){
+            oddName = oddName.replace('minutes', '');
           }
           oddName = oddName.replace(/\s+/g, '');
           //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);

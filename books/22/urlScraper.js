@@ -212,15 +212,26 @@ export async function scrapeMatchURL(data, url){
             oddName = oddName.replace(word, '');
           }
           // additional special case removals
-          if(market.name.includes('Total')){
+          if(market.name.includes('First Blood')){
+            oddName = oddName.replace('-', '');
+          }else if(market.name.includes('Total')){
             oddName = oddName.replace(/tu|to/, (m) => m == 'tu' ? 'under' : 'over');
-          }
-          else if(market.name.includes('Handicap')){
+          } else if(market.name.includes('Handicap')){
             oddName = oddName.replace(/[()+]/g, '').replace(/maps|frags|rounds/g, '');
           } else if(market.name.includes('Correct Score')){
             oddName = oddName.replace('-yes', '').replace('-', ':');
+          } else if(market.name.includes('First Tower')){
+            oddName = replaceNumericTeamName(oddName, teamHome, teamAway);
+            oddName = oddName.replace('to1', '');
+          } else if(market.name.includes('First to Reach')){
+            const [count, team] = oddName.split('-w');
+            oddName = `${team}${count}`;
+          } else if(market.name.includes('First Inhibitor')){
+            oddName = oddName.replace('inhibirtobeed-w', '');
+          } else if(market.name.includes('Yes/No')){
+            oddName = oddName.replace('-', '');
           }
-          oddName = oddName.trim();
+          oddName = oddName.replace(/\s+/g, '');
   //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
           odd = market.odds.findLast(o => o.name === oddName);
           if(!odd){

@@ -265,11 +265,11 @@
     },
     {
         "specificName": "2 map Team To Destroy Next Barracks",
-        "globalID":     "FBARM2"
+        "globalID":     "FBRCKSM2"
     },
     {
         "specificName": "3 map Team To Destroy Next Barracks",
-        "globalID":     "FBARM3"
+        "globalID":     "FBRCKSM3"
     },
     {
         "specificName": "1 map Total Inhibitors Destroyed",

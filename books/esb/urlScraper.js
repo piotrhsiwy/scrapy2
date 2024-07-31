@@ -226,20 +226,21 @@ export async function scrapeMatchURL(data, url){
 //console.log(`$$${selector} length: ${oddsHandles.length}`);
       for(let i = 0; i < oddsHandles.length; i++){
         const oddHandle = oddsHandles[i];
-        let oddName;
-        const has_label = await oddHandle.$('label');
-        if(has_label){
-          oddName = await page.evaluate(e => e.textContent ,has_label);
-        } else{
-          // if no_label that means append its content at the end of oddName
-          const sufix = await oddHandle.$eval('div.odds', e => e.textContent.trim())
-          market.name = market.name + sufix;
+        let handle = await oddHandle.$('label');
+        if(!handle){
+          // if !oddName that means that ths div.oddWrp is indeed one of three and holds an oddName suffix like '23.5' , for Over/Under Market and so on...
           continue;
         }
+        let oddName = await oddHandle.$eval('label', (e) => e.textContent);
+        oddName.replace()
+        let sufix = '';
+        if(oddsHandles.length === 3){
+          sufix = await page.evaluate(e => e.parentNode.childNodes[1].textContent, oddHandle);
+        }
         oddName = oddName
-          .replace(labelHome, teamHome)
-          .replace(labelAway, teamAway)
-          .replace(/\+/g, '');
+        .replace(labelHome, teamHome)
+        .replace(labelAway, teamAway)
+        .replace(/\+/g, '');
         if(HdpSpecial.length > 1){
           /* Match Handicaps are named like this: "BO3 Hdp: VP -1.5". They have exactly 2 odd entries.
           Note: The team in the is not always the first one listed */
@@ -251,25 +252,30 @@ export async function scrapeMatchURL(data, url){
             const isHomeinTitle = HdpSpecial[1].includes(labelHome);
             oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
           }
-          oddName = oddName.replace('/\s+/g', '');
+        }
+        /* Additionally remove spaces is the namse of all odds for a handicap market. This is separate from the previous
+        block, because non-map handicap markets do not fulfil the test in if */
+        if(marketName.includes('Handicap')){
+          oddName = oddName.replace(/\s+/g, '');
         }
         /* First to reach Rounds are each a separate market, they have to merged into 1
-        "Game 1 First to Win X Rounds", where X in {5,10} 
         is included in HdpSpecial[0] even after marketName has been mapped
         the X has to be appended along with a space to oddName */
-        if(HdpSpecial[0].includes('First to Win 5 Rounds')){
-          oddName = `${oddName} 5`;
-        } else if(HdpSpecial[0].includes('First to Win 10 Rounds')){
-          oddName = `${oddName} 10`;
+        const regex = /Game (\d) First to (\d+) Kills/;
+        const match = HdpSpecial[0].match(regex);
+        if(match) {
+          oddName = `${oddName}${match[2]}`;
         }
+        oddName = oddName + sufix;
+        oddName = oddName.toLowerCase();
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
-        odd = market.odds.findLast(o => o.name === oddName);
-        if(!odd){
-          market.odds.push({name: oddName, coefs: []})
-          odd = market.odds.findLast(o => o.name === oddName);
-        }
-        // value = null if an odd is locked
-        const is_locked = await oddHandle.evaluate( e =>
+odd = market.odds.findLast(o => o.name === oddName);
+if(!odd){
+  market.odds.push({name: oddName, coefs: []})
+  odd = market.odds.findLast(o => o.name === oddName);
+}
+// value = null if an odd is locked
+const is_locked = await oddHandle.evaluate( e =>
           e.classList.contains('locked')
         );
         const value = is_locked ? null : 
