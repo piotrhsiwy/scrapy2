@@ -261,11 +261,18 @@ export async function scrapeMatchURL(data, url){
         if(marketName.includes('Handicap')){
           oddName = oddName.replace(/\s+/g, '');
         }
-        /* First to reach Rounds are each a separate market, they have to merged into 1
-        is included in HdpSpecial[0] even after marketName has been mapped
-        the X has to be appended along with a space to oddName */
-        const regex = /Game (\d) First to (\d+) Kills/;
-        const match = HdpSpecial[0].match(regex);
+        /* first to reach kill
+        Explanation: the first-to-reach have been mapped to a single market name.
+        hence oddNames have to be adjusted for esb. I append the no kills/rounds
+        at the end of the oddName */
+        let regex = /Game (\d) First to (\d+) Kills/;
+        let match = HdpSpecial[0].match(regex);
+        if(match) {
+          oddName = `${oddName}${match[2]}`;
+        }
+        /* first to reach rounds */
+        regex = /Game (\d) First to Win (\d+) Rounds/;
+        match = HdpSpecial[0].match(regex);
         if(match) {
           oddName = `${oddName}${match[2]}`;
         }
