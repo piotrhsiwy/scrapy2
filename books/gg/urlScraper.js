@@ -176,6 +176,7 @@ export async function scrapeMatchURL(data, url){
         m.datetime === datetime
     )
     if(!match){
+      log.write(`This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}`);
       /* match is new */
       sport.matches.push({ 
         teamHome: teamHome,

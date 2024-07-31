@@ -82,7 +82,7 @@ async function singleHunt(){
 
 async function hunt(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 3600000)) // 1h
+    await new Promise(resolve => setTimeout(resolve, 5*3600000)) // 5h
     console.log('Hunting...')
     for(const book of books){
       console.log(`Queued hunt from ${book.abbrev} module`);
@@ -122,7 +122,7 @@ async function scrape(){
 import { arbSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 300000)); // 5min
+    await new Promise(resolve => setTimeout(resolve, 15*60000)); // 15min
     console.log(`Calculating...`);
     const arbs = await arbSports(availableAbbrev);
     console.log(`Finished calculations. ${arbs.length} positive arbs.`);
@@ -136,9 +136,9 @@ async function calc(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'tp',
   'ms',
   'esb',
+  'tp',
   'ls',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
   'gg'

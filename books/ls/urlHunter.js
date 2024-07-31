@@ -43,11 +43,11 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    await page.goto(meta.baseURL);
-    await page.waitForNetworkIdle();
-
+    
     const tuple = {hrefs:[], sports:[], tours:[]};
     try{
+        await page.goto(meta.baseURL);
+        await page.waitForNetworkIdle();
         // get sport Names
         tuple.sports = await page.evaluate( () => {
             return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);

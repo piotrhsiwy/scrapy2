@@ -43,12 +43,11 @@ export async function huntSportURLs(meta){
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'en-US,en;q=0.9'
     });
-    await page.goto(meta.baseURL);
-    page.setDefaultTimeout(120000); // 2mins max timeout
-    await page.waitForSelector('ul.liga_menu');
-
+    
     let tuple = {hrefs:[], sports:[], tours:[]};
     try{
+        await page.goto(meta.baseURL);
+        await page.waitForSelector('ul.liga_menu');
         
         tuple = await page.evaluate( async (baseurl) => {
             // open up all the tournament tabs to trigger adding event-menus to the dom
