@@ -71,15 +71,17 @@ export async function scrapeMatchURL(data, url){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+    if(!sportNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
+    if(!marketNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
   }
 
   try{
@@ -171,9 +173,16 @@ export async function scrapeMatchURL(data, url){
 //console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
 
     let match = sport.matches.findLast(m =>
-        m.teamHome === teamHome &&
-        m.teamAway === teamAway &&
-        m.datetime === datetime
+        m.datetime === datetime &&
+        (
+          m.teamHome === teamHome &&
+          m.teamAway === teamAway
+        )
+        ||
+        ( 
+          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
+          m.teamAway === teamHome
+        )
     )
     if(!match){
       log.write(`Warning! This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}\n`);

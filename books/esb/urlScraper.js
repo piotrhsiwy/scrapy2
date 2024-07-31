@@ -43,15 +43,17 @@ export async function scrapeMatchURL(data, url){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+    if(!sportNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${sportNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
+    if(!marketNameMapping){ throw error(); }
   } catch (error){
-    log.write(`Failure! Cannot open file ${marketNameMappingPath}\n`);
+    log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
   }
 
   let browser;
@@ -84,7 +86,7 @@ export async function scrapeMatchURL(data, url){
     let infoHandle;
     try{
       selector = 'div.oPInfo';
-      infoHandle = await page.waitForSelector(selector, {timeout:3000});
+      infoHandle = await page.waitForSelector(selector, {timeout:5000});
     } catch{
       log.write(`Critical Failure! No infoHandle present! Probably invalid url ${url}\n`);
       return -1;
@@ -145,9 +147,16 @@ export async function scrapeMatchURL(data, url){
 //console.log('>>>>>>>>>>>>>>> scraped mode: ' + mode);
 
     let match = sport.matches.findLast(m =>
-        m.teamHome === teamHome &&
-        m.teamAway === teamAway &&
-        m.datetime === datetime
+        m.datetime === datetime &&
+        (
+          m.teamHome === teamHome &&
+          m.teamAway === teamAway
+        )
+        ||
+        ( 
+          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
+          m.teamAway === teamHome
+        )
     )
     if(!match){
       /* match is new */
@@ -241,6 +250,7 @@ export async function scrapeMatchURL(data, url){
             const isHomeinTitle = HdpSpecial[1].includes(labelHome);
             oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
           }
+          HdpSpecial[1].replace('/\s+/g', '');
         }
         /* First to reach Rounds are each a separate market, they have to merged into 1
         "Game 1 First to Win X Rounds", where X in {5,10} 

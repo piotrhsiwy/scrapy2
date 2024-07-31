@@ -45,7 +45,7 @@ export const marketNameMap = Object.freeze
     FHRHDPM1:   'First Half Round Handicap Map 1',
     // DOTA2
     FROSHM1:    'First to Kill Roshan Map 1',
-    FBARM1:     'First to Destroy Baracks Map 1',
+    FBRCKSM1:     'First to Destroy Barracks Map 1',
 
     M2W:        'Map 2 Winner',
     M2WD:       'Map 2 Winner incl. Draw',
@@ -83,7 +83,7 @@ export const marketNameMap = Object.freeze
     FHRHDPM2:   'First Half Round Handicap Map 2',
     // DOTA2
     FROSHM2:    'First to Kill Roshan Map 2',
-    FBARM2:     'First to Destroy Baracks Map 2',
+    FBARM2:     'First to Destroy Barracks Map 2',
 
     M3W:        'Map 3 Winner',
     M3WD:       'Map 3 Winner incl. Draw',
@@ -115,5 +115,5 @@ export const marketNameMap = Object.freeze
     FHRHDPM3:   'First Half Round Handicap Map 3',
     // DOTA2
     FROSHM3:    'First to Kill Roshan Map 3',
-    FBARM3:     'First to Destroy Baracks Map 3',
+    FBRCKSM3:     'First to Destroy Barracks Map 3',
 });

@@ -122,7 +122,7 @@ async function scrape(){
 import { arbSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 1*60000)); // 5min
+    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
     console.log(`Calculating...`);
     const arbs = await arbSports(availableAbbrev);
     console.log(`Finished calculations. ${arbs.length} positive arbs.`);
@@ -136,9 +136,9 @@ async function calc(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+  'esb',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
   'ms',
-  'esb',
   'tp',
   'ls',
   'gg'
