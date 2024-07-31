@@ -210,6 +210,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
 //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
@@ -250,7 +251,7 @@ export async function scrapeMatchURL(data, url){
             const isHomeinTitle = HdpSpecial[1].includes(labelHome);
             oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
           }
-          HdpSpecial[1].replace('/\s+/g', '');
+          oddName = oddName.replace('/\s+/g', '');
         }
         /* First to reach Rounds are each a separate market, they have to merged into 1
         "Game 1 First to Win X Rounds", where X in {5,10} 

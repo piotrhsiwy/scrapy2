@@ -199,11 +199,6 @@ export async function scrapeMatchURL(data, url){
         // get the coefHome
     let marketName = 'Match Winner';
     mapping = marketNameMapping.find( m => m.specificName === marketName);
-    if(mapping){
-      marketName = marketNameMap[mapping.globalID];
-    } else{
-      log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
-    }
     selector = 'button.main-market__left-odds > span';
     el = await page.waitForSelector(selector);
     const coefHome = await page.evaluate(e => parseFloat(e.textContent), el);
@@ -263,6 +258,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
 //      console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);

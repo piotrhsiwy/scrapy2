@@ -204,6 +204,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
 //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);

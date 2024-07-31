@@ -118,7 +118,7 @@ export async function scrapeMatchURL(data, url){
       sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return;
+      return -1;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
@@ -234,6 +234,7 @@ export async function scrapeMatchURL(data, url){
         marketName = marketNameMap[mapping.globalID];
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+        continue;
       }
       //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
       market = match.markets.findLast(m => m.name === marketName);
@@ -268,6 +269,7 @@ export async function scrapeMatchURL(data, url){
           if(marketName.includes(marketNameMap['CS'])){
             oddName = oddName.split(' ')[1];
           }
+          oddName = oddName.replace(/\s+/g, '');
           //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
           odd = market.odds.findLast(o => o.name === oddName);
           if(!odd){

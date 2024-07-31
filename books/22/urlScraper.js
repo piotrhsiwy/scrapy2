@@ -84,8 +84,8 @@ export async function scrapeMatchURL(data, url){
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
-      log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return;
+      log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
+      return -1;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
@@ -183,6 +183,7 @@ export async function scrapeMatchURL(data, url){
           marketName = marketNameMap[mapping.globalID];
         } else{
           log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+          continue;
         }
   //console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
         market = match.markets.findLast(m => m.name === marketName);
