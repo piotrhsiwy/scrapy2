@@ -124,6 +124,18 @@
         "globalID":     "FBM3"
     },
     {
+        "specificName": "Race to Kills (Map 1)",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to Kills (Map 2)",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to Kills (Map 3)",
+        "globalID":     "FTRKM3"
+    },
+    {
         "specificName": "1st map - Total kills",
         "globalID":     "TKM1"
     },
@@ -194,5 +206,17 @@
     {
         "specificName": "3rd map - First to kill Roshan",
         "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "1st map - Total destroyed inhibitors",
+        "globalID":     "TINHIBM1"
+    },
+    {
+        "specificName": "2th map - Total destroyed inhibitors",
+        "globalID":     "TINHIBM2"
+    },
+    {
+        "specificName": "3rd map - Total destroyed inhibitors",
+        "globalID":     "TINHIBM3"
     }
 ]

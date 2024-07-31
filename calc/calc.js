@@ -91,8 +91,8 @@ function calcMarket(arbs, sport, match, market){
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
-                processed.push(oddHome);
-                processed.push(oddAway);
+                if(oddHome){ processed.push(oddHome); }
+                if(oddAway){ processed.push(oddAway); }
             }
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`

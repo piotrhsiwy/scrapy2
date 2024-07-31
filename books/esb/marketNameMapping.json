@@ -132,6 +132,18 @@
         "globalID":     "FDM1"
     },
     {
+        "specificName": "Game 1 First Turret",
+        "globalID":     "FTM1"
+    },
+    {
+        "specificName": "Game 2 First Turret",
+        "globalID":     "FTM2"
+    },
+    {
+        "specificName": "Game 3 First Turret",
+        "globalID":     "FTM3"
+    },
+    {
         "specificName": "Game 2 First Dragon",
         "globalID":     "FDM2"
     },

@@ -12,6 +12,10 @@
         "globalID":     "TM"
     },
     {
+        "specificName": "Match total kills",
+        "globalID":     "TK"
+    },
+    {
         "specificName": "Odd/Even maps",
         "globalID":     "TMOE"
     },
@@ -22,6 +26,18 @@
     {
         "specificName": "Total Rounds (incl. overtimes)",
         "globalID":     "TR"
+    },
+    {
+        "specificName": "1st map - winner",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "2nd map - winner",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "3rd map - winner",
+        "globalID":     "M3W"
     },
     {
         "specificName": "1st map - winner (incl. overtime)",
@@ -132,39 +148,39 @@
         "globalID":     "FBM3"
     },
     {
-        "specificName": "Map 1 - Total kills",
+        "specificName": "Map 1  - Total kills",
         "globalID":     "TKM1"
     },
     {
-        "specificName": "Map 2 - Total kills",
+        "specificName": "Map 2  - Total kills",
         "globalID":     "TKM2"
     },
     {
-        "specificName": "Map 3 - Total kills",
+        "specificName": "Map 3  - Total kills",
         "globalID":     "TKM3"
     },
     {
-        "specificName": "Map 1 - Race to kills",
+        "specificName": "Map 1 - Race  to kills",
         "globalID":     "TKM1"
     },
     {
-        "specificName": "Map 2 - Race to kills",
+        "specificName": "Map 2 - Race  to kills",
         "globalID":     "TKM2"
     },
     {
-        "specificName": "Map 3 - Race to kills",
+        "specificName": "Map 3 - Race  to kills",
         "globalID":     "TKM3"
     },
     {
-        "specificName": "Map 1 - Kills handicap",
+        "specificName": "Map 1 -  Kills handicap",
         "globalID":     "KHDPM1"
     },
     {
-        "specificName": "Map 2 - Kills handicap",
+        "specificName": "Map 2 -  Kills handicap",
         "globalID":     "KHDPM2"
     },
     {
-        "specificName": "Map 3 - Kills handicap",
+        "specificName": "Map 3 -  Kills handicap",
         "globalID":     "KHDPM3"
     },
     {
@@ -182,6 +198,18 @@
     {
         "specificName": "Map 1 - Total towers",
         "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Map 1 - Total barons slain",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "Map 2 - Total barons slain",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "Map 3 - Total barons slain",
+        "globalID":     "TBARM3"
     },
     {
         "specificName": "Map 2 - Total towers",
