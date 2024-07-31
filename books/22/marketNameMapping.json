@@ -74,5 +74,185 @@
     {
         "specificName": "3 map Total Rounds Even / Odd",
         "globalID":     "TROE3"
-    }
+    },
+    {
+        "specificName": "1 Map Who Will Beat Dragon",
+        "globalID":     "FDM1"
+    },
+    {
+        "specificName": "2 Map Who Will Beat Dragon",
+        "globalID":     "FDM2"
+    },
+    {
+        "specificName": "3 Map Who Will Beat Dragon",
+        "globalID":     "FDM3"
+    },
+    {
+        "specificName": "1 Map First Blood",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "2 Map First Blood",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "3 Map First Blood",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "1 Map Frags, Total",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "2 Map Frags, Total",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "3 Map Frags, Total",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "1 Map Who Will Destroy Tower",
+        "globalID":     "FTM1"
+    },
+    {
+        "specificName": "2 Map Who Will Destroy Tower",
+        "globalID":     "FTM2"
+    },
+    {
+        "specificName": "3 Map Who Will Destroy Tower",
+        "globalID":     "FTM3"
+    },
+    {
+        "specificName": "1 Map Frags, Race To",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "2 Map Frags, Race To",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "3 Map Frags, Race To",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "1 Map Frags, Handicap",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "2 Map Frags, Handicap",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "3 Map Frags, Handicap",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "1 Map Duration Of The Map",
+        "globalID":     "DURM1"
+    },
+    {
+        "specificName": "2 Map Duration Of The Map",
+        "globalID":     "DURM2"
+    },
+    {
+        "specificName": "3 Map Duration Of The Map",
+        "globalID":     "DURM3"
+    },
+    {
+        "specificName": "1 Map Total Towers Destroyed",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "2 Map Total Towers Destroyed",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "3 Map Total Towers Destroyed",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "1 Map Who Will Beat Nashor",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "2 Map Who Will Beat Nashor",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "3 Map Who Will Beat Nashor",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "1 Map Quadra Kill",
+        "globalID":     "QUADM1"
+    },
+    {
+        "specificName": "2 Map Quadra Kill",
+        "globalID":     "QUADM2"
+    },
+    {
+        "specificName": "3 Map Quadra Kill",
+        "globalID":     "QUADM3"
+    },
+    {
+        "specificName": "1 Map Penta Kill",
+        "globalID":     "PENTM1"
+    },
+    {
+        "specificName": "2 Map Penta Kill",
+        "globalID":     "PENTM2"
+    },
+    {
+        "specificName": "3 Map Penta Kill",
+        "globalID":     "PENTM3"
+    },
+    {
+        "specificName": "1 Map First To Destroy Inhibitor",
+        "globalID":     "FINHIBM1"
+    },
+    {
+        "specificName": "2 Map First To Destroy Inhibitor",
+        "globalID":     "FINHIBM2"
+    },
+    {
+        "specificName": "3 Map First To Destroy Inhibitor",
+        "globalID":     "FINHIBM3"
+    },
+    {
+        "specificName": "1 Map Total Nashors Beaten",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "2 Map Total Nashors Beaten",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "3 Map Total Nashors Beaten",
+        "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "1 Map Total Dragons Beaten",
+        "globalID":     "TDRGM1"
+    },
+    {
+        "specificName": "2 Map Total Dragons Beaten",
+        "globalID":     "TDRGM2"
+    },
+    {
+        "specificName": "3 Map Total Dragons Beaten",
+        "globalID":     "TDRGM3"
+    },
+    {
+        "specificName": "Map 1 Team To Destroy Next Barracks",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Map 2 Team To Destroy Next Barracks",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Map 3 Team To Destroy Next Barracks",
+        "globalID":     "FBARM3"
+    },
 ]

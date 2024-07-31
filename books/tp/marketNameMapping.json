@@ -138,5 +138,173 @@
     {
         "specificName": "Winning margin - map 3",
         "globalID":     "WMM3"
+    },
+    {
+        "specificName": "Total Kills Over/Under - Map 1",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Total Kills Over/Under - Map 2",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Total Kills Over/Under - Map 3",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Team to Draw First Blood - Map 1",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "Team to Draw First Blood - Map 2",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "Team to Draw First Blood - Map 3",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "First to Reach Kills - Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "First to Reach Kills - Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "First to Reach Kills - Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Map Kills Handicap - Map 1",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "Map Kills Handicap - Map 2",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "Map Kills Handicap - Map 3",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Map Duration Over/Under - Map 1",
+        "globalID":     "DURM1"
+    },
+    {
+        "specificName": "Map Duration Over/Under - Map 2",
+        "globalID":     "DURM2"
+    },
+    {
+        "specificName": "Map Duration Over/Under - Map 3",
+        "globalID":     "DURM3"
+    },
+    {
+        "specificName": "Total Towers Destroyed Over/Under - Map 1",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Total Towers Destroyed Over/Under - Map 2",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "Total Towers Destroyed Over/Under - Map 3",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Kill Maker - Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill Maker - Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill Maker - Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Team to Slay the First Baron - Map 1",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Team to Slay the First Baron - Map 2",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Team to Slay the First Baron - Map 3",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "Quadrakill Yes/No - Map 1",
+        "globalID":     "QUADM1"
+    },
+    {
+        "specificName": "Quadrakill Yes/No - Map 2",
+        "globalID":     "QUADM2"
+    },
+    {
+        "specificName": "Quadrakill Yes/No - Map 3",
+        "globalID":     "QUADM3"
+    },
+    {
+        "specificName": "Pentakill Yes/No - Map 1",
+        "globalID":     "PENTM1"
+    },
+    {
+        "specificName": "Pentakill Yes/No - Map 2",
+        "globalID":     "PENTM2"
+    },
+    {
+        "specificName": "Pentakill Yes/No - Map 3",
+        "globalID":     "PENTM3"
+    },
+    {
+        "specificName": "Team to Destroy the 1st Inhibitor - Map 1",
+        "globalID":     "FINHIBM1"
+    },
+    {
+        "specificName": "Team to Destroy the 1st Inhibitor - Map 2",
+        "globalID":     "FINHIBM2"
+    },
+    {
+        "specificName": "Team to Destroy the 1st Inhibitor - Map 3",
+        "globalID":     "FINHIBM3"
+    },
+    {
+        "specificName": "Total barons - Map 1",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "Total barons - Map 2",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "Total barons - Map 3",
+        "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "Total elemental dragons - Map 1",
+        "globalID":     "TDRGM1"
+    },
+    {
+        "specificName": "Total elemental dragons - Map 2",
+        "globalID":     "TDRGM2"
+    },
+    {
+        "specificName": "Total elemental dragons - Map 3",
+        "globalID":     "TDRGM3"
+    },
+    {
+        "specificName": "Team to destroy the first barracks - Map 1",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Team to destroy the first barracks - Map 2",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Team to destroy the first barracks - Map 3",
+        "globalID":     "FBARM3"
     }
 ]

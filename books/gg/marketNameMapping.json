@@ -118,5 +118,137 @@
     {
         "specificName": "3rd map - Winning margin",
         "globalID":     "WMM3"
+    },
+    {
+        "specificName": "Map 1 - First Blood",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "Map 2 - First Blood",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "Map 3 - First Blood",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "Map 1 - Total kills",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Map 2 - Total kills",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Map 3 - Total kills",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Map 1 - Race to kills",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Map 2 - Race to kills",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Map 3 - Race to kills",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Map 1 - Kills handicap",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "Map 2 - Kills handicap",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "Map 3 - Kills handicap",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Map 1 - Map duration",
+        "globalID":     "DURM1"
+    },
+    {
+        "specificName": "Map 2 - Map duration",
+        "globalID":     "DURM2"
+    },
+    {
+        "specificName": "Map 3 - Map duration",
+        "globalID":     "DURM3"
+    },
+    {
+        "specificName": "Map 1 - Total towers",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Map 2 - Total towers",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "Map 3 - Total towers",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Kill Maker - Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill Maker - Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill Maker - Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Map 1 - First baron",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Map 2 - First baron",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Map 3 - First baron",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "Map 1 - Total dragons slain",
+        "globalID":     "TDRGM1"
+    },
+    {
+        "specificName": "Map 2 - Total dragons slain",
+        "globalID":     "TDRGM2"
+    },
+    {
+        "specificName": "Map 3 - Total dragons slain",
+        "globalID":     "TDRGM3"
+    },
+    {
+        "specificName": "Map 1 - Kill First Roshan",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "Map 2 - Kill First Roshan",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "Map 3 - Kill First Roshan",
+        "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "Map 1 - First Barrack",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "Map 2 - First Barrack",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "Map 3 - First Barrack",
+        "globalID":     "FBARM3"
     }
 ]

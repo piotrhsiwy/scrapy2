@@ -122,7 +122,7 @@ async function scrape(){
 import { arbSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 15*60000)); // 15min
+    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
     console.log(`Calculating...`);
     const arbs = await arbSports(availableAbbrev);
     console.log(`Finished calculations. ${arbs.length} positive arbs.`);

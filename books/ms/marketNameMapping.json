@@ -112,7 +112,87 @@
         "globalID":     "FHRHDPM2"
     },
     {
-        "specificName": "Rounds handicap 1st Half (Map 3)",
-        "globalID":     "FHRHDPM3"
+        "specificName": "1st map - 1st blood",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "2nd map - 1st blood",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "3rd map - 1st blood",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "1st map - Total kills",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "2nd map - Total kills",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "3rd map - Total kills",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "1st map - Kill first Baron",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "2nd map - Kill first Baron",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "3rd map - Kill first Baron",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "1st map - Destroy first Inhibitor",
+        "globalID":     "FINHIBM1"
+    },
+    {
+        "specificName": "2nd map - Destroy first Inhibitor",
+        "globalID":     "FINHIBM2"
+    },
+    {
+        "specificName": "3rd map - Destroy first Inhibitor",
+        "globalID":     "FINHIBM3"
+    },
+    {
+        "specificName": "1st map - Total Barons slain",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "2nd map - Total Barons slain",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "3rd map - Total Barons slain",
+        "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "1st map - Total Elemental Dragons slain",
+        "globalID":     "TDRGM1"
+    },
+    {
+        "specificName": "2nd map - Total Elemental Dragons slain",
+        "globalID":     "TDRGM2"
+    },
+    {
+        "specificName": "3rd map - Total Elemental Dragons slain",
+        "globalID":     "TDRGM3"
+    },
+    {
+        "specificName": "1st map - First to kill Roshan",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "2nd map - First to kill Roshan",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "3rd map - First to kill Roshan",
+        "globalID":     "FROSHM3"
     }
 ]

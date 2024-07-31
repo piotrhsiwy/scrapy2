@@ -10,6 +10,21 @@ export const marketNameMap = Object.freeze
 
     M1W:        'Map 1 Winner',
     M1WD:       'Map 1 Winner incl. Draw',
+    // LOL
+    FBM1:       'First Blood Map 1',
+    TKM1:       'Total Kills Map 1',
+    FDM1:       'First Dragon Map 1',
+    FTM1:       'First Tower Map 1',
+    FBARM1:     'First Baron Map 1',
+    FINHIBM1:   'First inhibitor Map 1',
+    FTRKM1:     'First to Reach Kills Map 1',
+    KHDPM1:     'Kills Handicap Map 1',
+    DURM1:      'Map Duration Map 1',
+    TTM1:       'Total Towers Map 1',
+    KMM1:       'Kill Maker Map 1',
+    QUADM1:     'Quadrakill Map 1 Yes/No',
+    PENTM1:     'Pentakill Map 1 Yes/No',
+    // CS2
     CSM1:       'Correct score Map 1',
     OT1:        'Overtime Map 1',
     RHDPM1:     'Rounds Handicap Map 1',
@@ -21,9 +36,27 @@ export const marketNameMap = Object.freeze
     WMM1:       'Winning Margin Map 1',
     FHWM1:      'First Half Winner Map 1',
     FHRHDPM1:   'First Half Round Handicap Map 1',
+    // DOTA2
+    FROSHM1:    'First to Kill Roshan Map 1',
+    FBARM1:     'First to Destroy Baracks Map 1',
 
     M2W:        'Map 2 Winner',
     M2WD:       'Map 2 Winner incl. Draw',
+    // LOL
+    FBM2:       'First Blood Map 2',
+    TKM2:       'Total Kills Map 2',
+    FDM2:       'First Dragon Map 2',
+    FTM2:       'First Tower Map 2',
+    FBARM2:     'First Baron Map 2',
+    FINHIBM2:   'First inhibitor Map 2',
+    FTRKM2:     'First to Reach Kills Map 2',
+    KHDPM2:     'Kills Handicap Map 2',
+    DURM2:      'Map Duration Map 2',
+    TTM2:       'Total Towers Map 2',
+    KMM2:       'Kill Maker Map 2',
+    QUADM2:     'Quadrakill Map 2 Yes/No',
+    PENTM2:     'Pentakill Map 2 Yes/No',
+    // CS2
     CSM2:       'Correct score Map 2',
     OT2:        'Overtime Map 2',
     RHDPM2:     'Rounds Handicap Map 2',
@@ -35,9 +68,27 @@ export const marketNameMap = Object.freeze
     WMM2:       'Winning Margin Map 2',
     FHWM2:      'First Half Winner Map 2',
     FHRHDPM2:   'First Half Round Handicap Map 2',
+    // DOTA2
+    FROSHM2:    'First to Kill Roshan Map 2',
+    FBARM2:     'First to Destroy Baracks Map 2',
 
     M3W:        'Map 3 Winner',
     M3WD:       'Map 3 Winner incl. Draw',
+    // LOL
+    FBM3:       'First Blood Map 3',
+    TKM3:       'Total Kills Map 3',
+    FDM3:       'First Dragon Map 3',
+    FTM3:       'First Tower Map 3',
+    FBARM3:     'First Baron Map 3',
+    FINHIBM3:   'First inhibitor Map 3',
+    FTRKM3:     'First to Reach Kills Map 3',
+    KHDPM3:     'Kills Handicap Map 3',
+    DURM3:      'Map Duration Map 3',
+    TTM3:       'Total Towers Map 3',
+    KMM3:       'Kill Maker Map 3',
+    QUADM3:     'Quadrakill Map 3 Yes/No',
+    PENTM3:     'Pentakill Map 3 Yes/No',
+    // CS2
     CSM3:       'Correct score Map 3',
     OT3:        'Overtime Map 3',
     RHDPM3:     'Rounds Handicap Map 3',
@@ -49,4 +100,7 @@ export const marketNameMap = Object.freeze
     WMM3:       'Winning Margin Map 3',
     FHWM3:      'First Half Winner Map 3',
     FHRHDPM3:   'First Half Round Handicap Map 3',
+    // DOTA2
+    FROSHM3:    'First to Kill Roshan Map 3',
+    FBARM3:     'First to Destroy Baracks Map 3',
 });
