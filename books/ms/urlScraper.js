@@ -147,7 +147,10 @@ export async function scrapeMatchURL(data, url){
 //// console.log('>>>>>>>>>>>>>>> scraped mode: ' + mode);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     let match = sport.matches.findLast(m =>
-        m.datetime === datetime &&
+        (
+          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
+        )
+        &&
         (
           m.teamHome === teamHome &&
           m.teamAway === teamAway

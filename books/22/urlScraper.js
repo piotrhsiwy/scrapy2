@@ -127,9 +127,11 @@ export async function scrapeMatchURL(data, url){
     // get datetime, mode
     const datetime = convDatetimeToISO( teamsDatetime[1].trim() );
 //console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
-
     let match = sport.matches.findLast(m =>
-        m.datetime === datetime &&
+        (
+          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
+        )
+        &&
         (
           m.teamHome === teamHome &&
           m.teamAway === teamAway
@@ -217,7 +219,7 @@ export async function scrapeMatchURL(data, url){
           }else if(market.name.includes('Total')){
             oddName = oddName.replace(/tu|to/, (m) => m == 'tu' ? 'under' : 'over');
           } else if(market.name.includes('Handicap')){
-            oddName = oddName.replace(/[()+]/g, '').replace(/maps|frags|rounds/g, '');
+            oddName = oddName.replace(/[()+]/g, '').replace(/maps|frags|rounds/g, '').replace('handiсap', '');
           } else if(market.name.includes('Correct Score')){
             oddName = oddName.replace('-yes', '').replace('-', ':');
           } else if(market.name.includes('First Tower')){
@@ -230,6 +232,10 @@ export async function scrapeMatchURL(data, url){
             oddName = oddName.replace('inhibirtobeed-w', '');
           } else if(market.name.includes('Yes/No')){
             oddName = oddName.replace('-', '');
+          } else if(market.name.includes('Even/Odd')){
+            oddName = oddName.replace(/-yes|-no/, m => m === '-yes' ? 'even' : 'odd');
+          } else if(market.name.includes('Overtime')){
+            oddName = oddName.replace('re?-', '');
           }
           oddName = oddName.replace(/\s+/g, '');
   //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
