@@ -120,7 +120,7 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                     a.Away.oddValue === newArb.Away.oddValue&&
                     a.Away.book     === newArb.Away.book    &&
                     a.Away.url      === newArb.Away.url
-                )){
+                ) && newArb.datetime.includes('live')){ // arbs.push() only prematch arbs
                     /* only if the arb is fresh, to give meaning to timestamps */
                     arbs.push(newArb);
                 }
