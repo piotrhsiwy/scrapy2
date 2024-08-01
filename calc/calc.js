@@ -120,11 +120,11 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                     a.Away.oddValue === newArb.Away.oddValue&&
                     a.Away.book     === newArb.Away.book    &&
                     a.Away.url      === newArb.Away.url
-                ) && newArb.datetime.includes('live')){ // arbs.push() only prematch arbs
+                ) && !newArb.datetime.includes('live')){ // arbs.push() only prematch arbs
                     /* only if the arb is fresh, to give meaning to timestamps */
                     arbs.push(newArb);
+                    positiveArbCount++;
                 }
-                positiveArbCount++;
                 const arbReport =  
                     `${oddHome.name.padEnd(20,' ')}@${coefHome.value} on ${coefHome.book.padEnd(20,' ')} - ${oddAway.name.padEnd(20,' ')}@${coefAway.value} on ${coefAway.book.padEnd(20,' ')}, ${arb} arb.\n`;
                 log.write(arbReport);
@@ -220,8 +220,8 @@ function ev2(evs, sport, match, market, odd){
                 ) && !newEv.datetime.includes('live')){
                     /* ev is fresh */
                     evs.push(newEv);
+                    positiveEvCount++;
                 }
-                positiveEvCount++;
             }
             consideredEvCount++;
             return strength;

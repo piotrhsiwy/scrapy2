@@ -37,9 +37,6 @@ async function singleHunt(){
   for(const book of books){
     console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}`);
     await book.hunterModule.huntSportURLs(book);
-    const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-    book.urls = JSON.parse(readFileSync(urlsFilePath));
-    console.log(`Loaded ${book.urls.length} entries from file ${urlsFilePath}`);
   }
 }
 
@@ -62,12 +59,12 @@ async function hunt(){
 }
 
 async function scrape(){ 
-  // console.log('Loading urls from files...');
-  // for(const book of books){
-  //   const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-  //   book.urls = JSON.parse(readFileSync(urlsFilePath));
-  //   console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
-  // }
+  console.log('Loading urls from files...');
+  for(const book of books){
+    const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+    book.urls = JSON.parse(readFileSync(urlsFilePath));
+    console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
+  }
   const data = {sports: []};
   let i = 0;
   while(true){
@@ -78,14 +75,6 @@ async function scrape(){
     }
     mutex = true;
     const promises = [];
-    for(const book of books){
-      if(i < book.urls.length){
-        let promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
-        promises.push(promise);
-        console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
-      }
-    }
-    i++;
     for(const book of books){
       if(i < book.urls.length){
         let promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
@@ -107,11 +96,14 @@ async function scrape(){
 import { calcSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 60000)); // 1min
-    console.log(`Calculating...`);
+    await new Promise(resolve => setTimeout(resolve, 60000)); // 5min
+    console.log('Calculator retrieving lock...')
+    while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
+    mutex = true;
     const calcReport = await calcSports(availableAbbrev);
     console.log(`Finished calculations.`);
     console.log(calcReport);
+    mutex = false;
   }
 }
 
