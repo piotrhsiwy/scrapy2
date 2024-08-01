@@ -83,13 +83,14 @@ async function scrape(){
   }
 }
 
-import { arbSports } from './calc/calc.js'
+import { calcSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
     console.log(`Calculating...`);
-    const arbs = await arbSports(availableAbbrev);
-    console.log(`Finished calculations. ${arbs.length} positive arbs.`);
+    const calcReport = await calcSports(availableAbbrev);
+    console.log(`Finished calculations.`);
+    console.log(calcReport);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 5min
   }
 }
 
@@ -127,12 +128,13 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  await singleHunt();
-  const Pscrape = scrape();
-  const Phunt = hunt();
-  const Pcalc = calc();
-  const promises = [ Pscrape, Phunt, Pcalc ];
-  await Promise.allSettled(promises);
+  await calc();
+  // await singleHunt();
+  // const Pscrape = scrape();
+  // const Phunt = hunt();
+  // const Pcalc = calc();
+  // const promises = [ Pscrape, Phunt, Pcalc ];
+  // await Promise.allSettled(promises);
 })()
 
 // ##############################################################################################################
