@@ -1,6 +1,7 @@
-import { createWriteStream, readFileSync, writeFileSync } from "fs"
+import { accessSync, createWriteStream, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { arbPrettifyToPercent, dateISO8601Prettify } from "../data/util/prettify.js";
+import { match } from "assert";
 
 let log;
 let consideredArbCount = 0;
@@ -115,7 +116,84 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
     }
 }
 
-function calcMarket(arbs, sport, match, market){
+function meanArray(arr){
+    let acc = 0.0;
+    arr.forEach( v => { acc+=v; });
+    return acc/arr.length;
+}
+
+function meanArrayExcluding(arr, value){
+    let acc = 0.0;
+    arr.forEach( v => { acc+=v; });
+    return (acc-value)/(arr.length-1);
+}
+
+function stdDevArray(values){
+    const mean = meanArray(values);
+    const dev = values.map( v => Math.pow(v-mean, 2));
+    let devSum = 0.0;
+    dev.map( d => devSum += d );
+    const stdDev = Math.sqrt( ( 1/( values.length-1 ) ) * devSum );
+    return stdDev;
+}
+
+function evStrength(a, b){
+    return (1/a - 1/b);
+}
+
+let consideredEvCount = 0;
+let positiveEvCount = 0;
+
+function ev2(evs, sport, match, market, odd){
+    const valuesNoNull = [];
+    odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
+    // log.write(`values: ${values}\n`);
+    /* evStrength only meaningful when more than 3 coefs are available */
+    if(valuesNoNull.length >= 3){
+        for(const v of valuesNoNull){
+            const mean = meanArrayExcluding(valuesNoNull, v);
+            /* note that cutoff is negative, f.e. -0.1
+            cutoff corresponds to how much commision is place on the odds:
+            -0.1 cutoff corresponds to 10%. If strength is below cutoff (stronger)
+            then v could potentially be an arb aginast the mean_Excluded(v).
+            I define this as a potential positive EV bet. */
+            const strength = evStrength(v, mean);
+            const cutoff = -0.07;
+            if(strength < cutoff){
+                const book = odd.coefs.find(c => c.value = v).book;
+                const url = match.urls.find( u => u.book === book ).url;
+                let newEv = {
+                    "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
+                    "value":v,
+                    "values":valuesNoNull,
+                    "mean":mean,
+                    "stdDev":stdDevArray(valuesNoNull),
+                    "deviationInTermsOfStdDev":Math.abs((v-mean)/stdDevArray(valuesNoNull)),
+                    "strength":strength,
+                    "sport":sport.name,
+                    // "tournament":tournament.name,
+                    "teamHome":match.teamHome,
+                    "teamAway":match.teamAway,
+                    "datetime":dateISO8601Prettify(match.datetime),
+                    "market":market.name,
+                    "Odd":{
+                        "oddName:":odd.name,
+                        "oddValue:":v,
+                        "book":book,
+                        "url":url,
+                    },
+                };
+                positiveEvCount++;
+                evs.push(newEv);
+            }
+            consideredEvCount++;
+            return strength;
+        }
+    }
+    // log.write(`potentialArbWithMean: ${potentialArbWithMean}\n`);
+}
+
+function calcMarket(arbs, evs, sport, match, market){
 
     let marketReport;
     const teamHome = match.teamHome;
@@ -131,6 +209,8 @@ function calcMarket(arbs, sport, match, market){
         let oddAway = market.odds[1];
         if(oddHome && oddAway){
             arb2(arbs, sport, match, market, oddHome, oddAway);
+            ev2(evs, sport, match, market, oddHome);
+            ev2(evs, sport, match, market, oddAway);
         } else{
             // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
@@ -298,7 +378,7 @@ function calcMarket(arbs, sport, match, market){
     // log.write(marketReport);
 }
 
-export async function arbSports(){
+export async function calcSports(){
 
     const logFilePath = './calc/log.txt';
     try{
@@ -313,21 +393,32 @@ export async function arbSports(){
     log.write(`Loaded data from ${dataFilePath}\n`);
 
     
-    const arbs =[];
+    const arbs = [];
+    consideredArbCount = 0;
+    positiveArbCount = 0;
+    const evs = [];
+    consideredEvCount = 0;
+    positiveEvCount = 0;
     for(const sport of data.sports){
         log.write(`Processing sport: ${sport.name}\n`);
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    calcMarket(arbs, sport, match, market);
+                    calcMarket(arbs, evs, sport, match, market);
                 }
             }
         }
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
+    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} stronger than cutoff.\n`)
 
     const arbFilePath = './data/arbs.json';
     log.write(`Writing the results to ${arbFilePath}\n`);
     writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
+
+    const evsFilePath = './data/evs.json';
+    log.write(`Writing the results to ${evsFilePath}\n`);
+    writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
+
     await promisify(log.end).bind(log);
-    return arbs;
+    return `consideredArbs=${consideredArbCount}, positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, positiveEvs=${positiveEvCount}\n`;
 }
