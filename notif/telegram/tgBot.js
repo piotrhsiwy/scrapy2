@@ -4,11 +4,14 @@ import { readFileSync, createWriteStream} from 'fs'
 import { promisify } from "util";
 
 import { sortArbs, pickArbTop, pickArbRandom } from '../../data/util/pickArb.js'
+import { pickEvRandom } from '../../data/util/pickEv.js';
+
 import { tupleFrom, authenticateEmail, authorize, unbindID } from './util.js'
 
 
 console.log(process.env['TGBOT_LOG_PATH']);
 console.log(process.env['ARBS_PATH']);
+console.log(process.env['EVS_PATH']);
 console.log(process.env['CLIENTS_PATH']);
 console.log(process.env['TOKEN']);
 if(process.env['TOKEN']){
@@ -28,6 +31,10 @@ let arbsPath = './data/arbs.json';
 if(process.env['ARBS_PATH']){
     arbsPath = process.env['ARBS_PATH'];
 }
+let evsPath = './data/evs.json';
+if(process.env['EVS_PATH']){
+    evsPath = process.env['EVS_PATH'];
+}
 let clientsPath = './auth/clientData/clients.json';
 if(process.env['CLIENTS_PATH']){
     clientsPath = process.env['CLIENTS_PATH'];
@@ -44,6 +51,18 @@ const log2 = async (msg) => {
 // launch the bot
 const bot = new Telegraf(process.env['TOKEN'])
 bot.launch()
+
+bot.command('ev', async (ctx) => {
+    /* do user authentication */
+    const isAuthorized = authorize(clientsPath, 'ev', ctx.from.id);
+    if(isAuthorized){
+        ctx.reply(pickEvRandom(evsPath));
+        log2(`Sent random ev to ${tupleFrom(ctx.from)}`);
+    } else{
+        ctx.reply("You don't have permission to use this command.");
+        log2(`Rejected random ev request from ${tupleFrom(ctx.from)}`)
+    }
+})
 
 bot.command('arb', async (ctx) => {
     /* do user authentication */
