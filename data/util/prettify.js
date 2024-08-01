@@ -1,4 +1,8 @@
 export function dateISO8601Prettify(isoDatetime){
+    if(isoDatetime.includes('live')){
+        return 'live';
+    }
+
     const date = new Date(isoDatetime);
     
     // Define options for formatting
