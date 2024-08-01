@@ -93,20 +93,38 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                     "datetime":dateISO8601Prettify(match.datetime),
                     "market":market.name,
                     "Home":{
-                        "oddName:":oddHome.name,
-                        "oddValue:":coefHome.value,
+                        "oddName":oddHome.name,
+                        "oddValue":coefHome.value,
                         "book":coefHome.book,
                         "url":match.urls.find( item => item.book === coefHome.book ),
                     },
                     "Away":{
-                        "oddName:":oddAway.name,
-                        "oddValue:":coefAway.value,
+                        "oddName":oddAway.name,
+                        "oddValue":coefAway.value,
                         "book":coefAway.book,
                         "url":match.urls.find( item => item.book === coefAway.book ),
                     }
                 };
+                if(!arbs.some( a => 
+                    a.value         === newArb.value        &&
+                    a.sport         === newArb.name         &&
+                    a.teamHome      === newArb.teamHome     &&
+                    a.teamAway      === newArb.teamAway     &&
+                    a.datetime      === newArb.datetime     &&
+                    a.market        === newArb.name         &&
+                    a.Home.oddName  === newArb.Home.oddName &&
+                    a.Home.oddValue === newArb.Home.oddValue&&
+                    a.Home.book     === newArb.Home.book    &&
+                    a.Home.url      === newArb.Home.url     &&
+                    a.Away.oddName  === newArb.Away.oddName &&
+                    a.Away.oddValue === newArb.Away.oddValue&&
+                    a.Away.book     === newArb.Away.book    &&
+                    a.Away.url      === newArb.Away.url
+                )){
+                    /* only if the arb is fresh, to give meaning to timestamps */
+                    arbs.push(newArb);
+                }
                 positiveArbCount++;
-                arbs.push(newArb);
                 const arbReport =  
                     `${oddHome.name.padEnd(20,' ')}@${coefHome.value} on ${coefHome.book.padEnd(20,' ')} - ${oddAway.name.padEnd(20,' ')}@${coefAway.value} on ${coefAway.book.padEnd(20,' ')}, ${arb} arb.\n`;
                 log.write(arbReport);
