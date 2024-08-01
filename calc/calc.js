@@ -41,26 +41,26 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                             "datetime":dateISO8601Prettify(match.datetime),
                             "market":market.name,
                             "oddA":{
-                                "oddName:":oddA.name,
-                                "oddValue:":A.value,
+                                "oddName":oddA.name,
+                                "oddValue":A.value,
                                 "book":A.book,
                                 "url":match.urls.find( item => item.book === A.book ),
                             },
                             "oddB":{
-                                "oddName:":oddB.name,
-                                "oddValue:":B.value,
+                                "oddName":oddB.name,
+                                "oddValue":B.value,
                                 "book":B.book,
                                 "url":match.urls.find( item => item.book === B.book ),
                             },
                             "oddC":{
-                                "oddName:":oddC.name,
-                                "oddValue:":C.value,
+                                "oddName":oddC.name,
+                                "oddValue":C.value,
                                 "book":C.book,
                                 "url":match.urls.find( item => item.book === C.book ),
                             },
                             "oddD":{
-                                "oddName:":oddD.name,
-                                "oddValue:":D.value,
+                                "oddName":oddD.name,
+                                "oddValue":D.value,
                                 "book":D.book,
                                 "url":match.urls.find( item => item.book === D.book ),
                             },
@@ -194,15 +194,34 @@ function ev2(evs, sport, match, market, odd){
                     "teamAway":match.teamAway,
                     "datetime":dateISO8601Prettify(match.datetime),
                     "market":market.name,
-                    "Odd":{
-                        "oddName:":odd.name,
-                        "oddValue:":v,
+                    "odd":{
+                        "oddName":odd.name,
+                        "oddValue":v,
                         "book":book,
                         "url":url,
                     },
                 };
+                if(evs.some( e => 
+                    e.value                     === newEv.value                    && 
+                    e.values                    === newEv.values                   && 
+                    e.mean                      === newEv.mean                     && 
+                    e.stdDev                    === newEv.stdDev                   && 
+                    e.deviationInTermsOfStdDev  === newEv.deviationInTermsOfStdDev && 
+                    e.strength                  === newEv.strength                 && 
+                    e.sport                     === newEv.sport                    && 
+                    e.teamHome                  === newEv.teamHome                 && 
+                    e.teamAway                  === newEv.teamAway                 && 
+                    e.datetime                  === newEv.datetime                 && 
+                    e.market                    === newEv.market                   && 
+                    e.odd.oddName               === newEv.odd.oddName              && 
+                    e.odd.oddValue              === newEv.odd.oddValue             && 
+                    e.odd.book                  === newEv.odd.book                 && 
+                    e.odd.url                   === newEv.odd.url
+                ) && !newEv.datetime.includes('live')){
+                    /* ev is fresh */
+                    evs.push(newEv);
+                }
                 positiveEvCount++;
-                evs.push(newEv);
             }
             consideredEvCount++;
             return strength;
