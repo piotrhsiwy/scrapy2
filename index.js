@@ -37,56 +37,77 @@ async function singleHunt(){
   for(const book of books){
     console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}`);
     await book.hunterModule.huntSportURLs(book);
+    const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+    book.urls = JSON.parse(readFileSync(urlsFilePath));
+    console.log(`Loaded ${book.urls.length} entries from file ${urlsFilePath}`);
   }
 }
 
+let mutex = false;
 async function hunt(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 5*3600000)) // 5h
-    console.log('Hunting...')
+    await new Promise(resolve => setTimeout(resolve, 3600000)) // 1h
+    console.log('Hunter retrieving lock...')
+    while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
+    mutex = true;
     for(const book of books){
       console.log(`Queued hunt from ${book.abbrev} module`);
-      await book.module.huntSportURLs(book);
+      await book.hunterModule.huntSportURLs(book);
       const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
       book.urls = JSON.parse(readFileSync(urlsFilePath));
-      console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
+      console.log(`Reloaded ${book.urls.length} entries from file ${urlsFilePath}`);
     }
+    mutex = false;
   }
 }
 
 async function scrape(){ 
-  console.log('Loading urls from files...');
-  for(const book of books){
-    const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-    book.urls = JSON.parse(readFileSync(urlsFilePath));
-    console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
-  }
-  console.log('Scraping...')
+  // console.log('Loading urls from files...');
+  // for(const book of books){
+  //   const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+  //   book.urls = JSON.parse(readFileSync(urlsFilePath));
+  //   console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
+  // }
   const data = {sports: []};
+  let i = 0;
   while(true){
-    let i = 0;
-    for(i = 0; ; i++){
-      const promises = [];
-      for(const book of books){
-        if(i < book.urls.length){
-          const promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
-          promises.push(promise);
-          console.log(`Queued scrape from ${book.abbrev} module from ${book.urls[i]}`);
-        }
-      }
-      console.log(`Running a batch of ${promises.length} scrapers`);
-      console.log( (await Promise.allSettled(promises)).map(e => e.value === 0 ? 'success' : 'failure') );
-      const dataPathOut = 'data/data_out.json';
-      console.log(`Saving the results in ${dataPathOut}`);
-      writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+    console.log('Scraper retrieving lock...')
+    if(mutex){
+      i = 0;
+      while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
     }
+    mutex = true;
+    const promises = [];
+    for(const book of books){
+      if(i < book.urls.length){
+        let promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
+        promises.push(promise);
+        console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+      }
+    }
+    i++;
+    for(const book of books){
+      if(i < book.urls.length){
+        let promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
+        promises.push(promise);
+        console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+      }
+    }
+    i++;
+    console.log(`Running a batch of ${promises.length} scrapers`);
+    console.log( (await Promise.allSettled(promises)).map(e => e.value === 0 ? 'success' : 'failure') );
+    const dataPathOut = 'data/data_out.json';
+    console.log(`Saving the results in ${dataPathOut}`);
+    writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+    mutex = false;
+    await new Promise(resolve => setTimeout(resolve, 1)) // this timeout is needed to provide some space so that other concurrent tasks currently waiting for a lock can get it, f.e. a hunter
   }
 }
 
 import { calcSports } from './calc/calc.js'
 async function calc(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
+    await new Promise(resolve => setTimeout(resolve, 60000)); // 1min
     console.log(`Calculating...`);
     const calcReport = await calcSports(availableAbbrev);
     console.log(`Finished calculations.`);

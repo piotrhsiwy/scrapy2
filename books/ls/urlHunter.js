@@ -46,8 +46,7 @@ export async function huntSportURLs(meta){
     
     const tuple = {hrefs:[], sports:[], tours:[]};
     try{
-        await page.goto(meta.baseURL);
-        await page.waitForNetworkIdle();
+        await page.goto(meta.baseURL, {waitUntil: 'networkidle2'});
         // get sport Names
         tuple.sports = await page.evaluate( () => {
             return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);
