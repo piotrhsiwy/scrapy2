@@ -290,6 +290,8 @@ function calcMarket(arbs, evs, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, sport, match, market, oddHome, oddAway);
+                    ev2(evs, sport, match, market, oddHome);
+                    ev2(evs, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -334,6 +336,8 @@ function calcMarket(arbs, evs, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, sport, match, market, oddHome, oddAway);
+                    ev2(evs, sport, match, market, oddHome);
+                    ev2(evs, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -379,6 +383,8 @@ function calcMarket(arbs, evs, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, sport, match, market, oddHome, oddAway);
+                    ev2(evs, sport, match, market, oddHome);
+                    ev2(evs, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
