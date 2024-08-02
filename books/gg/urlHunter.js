@@ -44,7 +44,7 @@ async function huntMatchURLs(url, baseurl){
 // global variables in this module
 let browser;
 let log;
-const tuple = {hrefs:[], sports:[], tours:[]};
+let tuple = {hrefs:[], sports:[], tours:[]};
 /**
  * this function only gets one URL and is the only one exposed to the outside
  * 
@@ -86,6 +86,8 @@ export async function huntSportURLs(meta){
         await page.setViewport({width:1920, height:768})
         page.setDefaultTimeout(120000); // 2mins max timeout
         await page.goto(meta.baseURL);
+
+        tuple = {hrefs:[], sports:[], tours:[]};
 
         const sportURLs = await page.evaluate(async (baseurl) => {
             return Array.from(document.querySelectorAll('a[data-action="Open sport"]')).map(item => baseurl + item.getAttribute('href'));

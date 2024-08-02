@@ -43,7 +43,7 @@ async function singleHunt(){
 let mutex = false;
 async function hunt(){
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 3600000)) // 1h
+    await new Promise(resolve => setTimeout(resolve, 3*3600000)) // 1h
     console.log('Hunter retrieving lock...')
     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
     mutex = true;
@@ -95,8 +95,10 @@ async function scrape(){
 
 import { calcSports } from './calc/calc.js'
 async function calc(){
+  const arbs = [];
+  const evs = [];
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 60000)); // 5min
+    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
     console.log('Calculator retrieving lock...')
     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
     mutex = true;

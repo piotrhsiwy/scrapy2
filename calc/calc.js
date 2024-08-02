@@ -1,7 +1,6 @@
-import { accessSync, createWriteStream, readFileSync, writeFileSync } from "fs"
+import { createWriteStream, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { arbPrettifyToPercent, dateISO8601Prettify } from "../data/util/prettify.js";
-import { match } from "assert";
+import { dateISO8601Prettify } from "../data/util/prettify.js";
 
 let log;
 let consideredArbCount = 0;
@@ -421,25 +420,23 @@ function calcMarket(arbs, evs, sport, match, market){
     // log.write(marketReport);
 }
 
-export async function calcSports(){
-
+export async function calcSports(arbs, evs){
+    
     const logFilePath = './calc/log.txt';
     try{
         log = createWriteStream(logFilePath, {flags: 'a'});
     } catch(error){
         console.error(`Failure! Cannot open file under ${logFilePath}`);
     }
-
+    
     log.write('Opening files...\n');
     const dataFilePath = './data/data_out.json'
     const data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
-
     
-    const arbs = [];
+    
     consideredArbCount = 0;
     positiveArbCount = 0;
-    const evs = [];
     consideredEvCount = 0;
     positiveEvCount = 0;
     for(const sport of data.sports){
