@@ -95,22 +95,22 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                         "oddName":oddHome.name,
                         "oddValue":coefHome.value,
                         "book":coefHome.book,
-                        "url":match.urls.find( item => item.book === coefHome.book ),
+                        "url":match.urls.find( item => item.book === coefHome.book ).url,
                     },
                     "Away":{
                         "oddName":oddAway.name,
                         "oddValue":coefAway.value,
                         "book":coefAway.book,
-                        "url":match.urls.find( item => item.book === coefAway.book ),
+                        "url":match.urls.find( item => item.book === coefAway.book ).url,
                     }
                 };
                 if(!arbs.some( a => 
                     a.value         === newArb.value        &&
-                    a.sport         === newArb.name         &&
+                    a.sport         === newArb.sport        &&
                     a.teamHome      === newArb.teamHome     &&
                     a.teamAway      === newArb.teamAway     &&
                     a.datetime      === newArb.datetime     &&
-                    a.market        === newArb.name         &&
+                    a.market        === newArb.market       &&
                     a.Home.oddName  === newArb.Home.oddName &&
                     a.Home.oddValue === newArb.Home.oddValue&&
                     a.Home.book     === newArb.Home.book    &&
@@ -200,9 +200,8 @@ function ev2(evs, sport, match, market, odd){
                         "url":url,
                     },
                 };
-                if(evs.some( e => 
+                if(!evs.some( e => 
                     e.value                     === newEv.value                    && 
-                    e.values                    === newEv.values                   && 
                     e.mean                      === newEv.mean                     && 
                     e.stdDev                    === newEv.stdDev                   && 
                     e.deviationInTermsOfStdDev  === newEv.deviationInTermsOfStdDev && 
@@ -223,7 +222,6 @@ function ev2(evs, sport, match, market, odd){
                 }
             }
             consideredEvCount++;
-            return strength;
         }
     }
     // log.write(`potentialArbWithMean: ${potentialArbWithMean}\n`);
@@ -451,14 +449,16 @@ export async function calcSports(arbs, evs){
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
     log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} stronger than cutoff.\n`)
 
+    arbs.sort((a, b) => b.value - a.value);
+    evs.sort((a, b) => a.strength - b.strength);
+
     const arbFilePath = './data/arbs.json';
     log.write(`Writing the results to ${arbFilePath}\n`);
     writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
-
     const evsFilePath = './data/evs.json';
     log.write(`Writing the results to ${evsFilePath}\n`);
     writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
 
     await promisify(log.end).bind(log);
-    return `consideredArbs=${consideredArbCount}, positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, positiveEvs=${positiveEvCount}\n`;
+    return `consideredArbs=${consideredArbCount}, *new*positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, *new*positiveEvs=${positiveEvCount}`;
 }

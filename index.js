@@ -98,11 +98,11 @@ async function calc(){
   const arbs = [];
   const evs = [];
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 5*60000)); // 5min
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 5min
     console.log('Calculator retrieving lock...')
     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
     mutex = true;
-    const calcReport = await calcSports(availableAbbrev);
+    const calcReport = await calcSports(arbs, evs);
     console.log(`Finished calculations.`);
     console.log(calcReport);
     mutex = false;
