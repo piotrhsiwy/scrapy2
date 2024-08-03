@@ -4,6 +4,7 @@ node_modules
 
 # IDE conf files
 # .vscode/*
+tags
 
 # scraping data
 books/*/urls.json
