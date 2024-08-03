@@ -62,7 +62,6 @@ export async function huntSportURLs(meta){
     let tuple = {hrefs:[], sports:[], tours:[]};
     try{
         await page.goto(meta.baseURL);
-        await page.waitForNetworkIdle();
         // // Define the function to handle logging inside evaluate call
         // function logHandler(log) {
         //     return (msg) => {
@@ -100,18 +99,18 @@ export async function huntSportURLs(meta){
                         const item = document.querySelectorAll('div.matchRow')[i];
                         // window.nodeLog('item: inside forloop' + item);
                         if(!item){
-                            // window.nodeLog(`Failure! Item is not clickable ${window.location.href}, entry: ${hrefs.length}\n`);
+                            // window.nodeLog(`Failure! Item is not clickable ${page.url}, entry: ${hrefs.length}\n`);
                             continue;
                         }
                         await item.click();
                         // TODO this timer can be removed for faster performance, but then it looks less human?
                         // await new Promise(resolve => setTimeout(resolve, 100));
-                        // window.nodeLog(`pushing: ` + window.location.href);
+                        // window.nodeLog(`pushing: ` + page.url);
                         hrefs.push(window.location.href);
-                        // window.nodeLog(`index ${hrefs.length-1} hunted matchURL: ${window.location.href}\n`);
+                        // window.nodeLog(`index ${hrefs.length-1} hunted matchURL: ${page.url}\n`);
                         const clickBack = document.querySelector('i.icon-arrow-left');
                         if(!clickBack){
-                            // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${window.location.href}, entry: ${hrefs.length}. Cannot come back.\n`);
+                            // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${page.url}, entry: ${hrefs.length}. Cannot come back.\n`);
                             return hrefs;
                         }
                         await clickBack.click();

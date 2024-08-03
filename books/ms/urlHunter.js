@@ -40,6 +40,7 @@ export async function huntSportURLs(meta){
             '--disable-web-security',
         ],
         userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+        devtools:false,
     }); 
     let page = await browser.newPage();
     await page.setViewport({width:1920, height:768})
@@ -59,7 +60,7 @@ export async function huntSportURLs(meta){
 
         // set checkboxes for all the sports to load all the matches
         // all available esports ever on this book
-        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'Starcraft', 'StarCraft BroodWar'];
+        const availableEsports = ['Counter-Strike', 'Dota 2', 'League of Legends', 'Valorant', 'Rainbow Six', 'Rocket League', 'Starcraft', 'Call of Duty', 'StarCraft BroodWar'];
         for(const esport of availableEsports){
             selector = `span[title="${esport}"] ~ div.chbx`;
             const available = await page.$(selector);
@@ -111,7 +112,7 @@ export async function huntSportURLs(meta){
                     const clickable = item.querySelector('div[class=market-count] > span');
                     clickable.click();
                     matchURLs.push(window.location.href);
-                    // console.log(window.location.href);
+                    // console.log(page.url);
                     window.history.back();
                     await new Promise(resolve => setTimeout(resolve, 200));
                 }

@@ -1,4 +1,5 @@
 {
     "abbrev":"tp",
-    "baseURL":"https://thunderpick.io/esports"
+    "baseURL":"https://thunderpick.io/esports",
+    "viewport":{"width":1920, "height":30000}
 }

@@ -1,4 +1,3 @@
-import puppeteer from 'puppeteer';
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from 'util';
 
@@ -45,26 +44,14 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
-export async function scrapeMatchURL(data, url){
-  const browser = await puppeteer.launch({
-      headless: true,
-      args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--disable-gpu',
-          '--disable-web-security',
-      ],
-  }); 
-  let page = await browser.newPage();
-  await page.setViewport({width:1920, height:768})
-  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-  await page.setExtraHTTPHeaders({
-      'Accept-Language': 'en-US,en;q=0.9'
-  });
+export async function scrapeMatchURL(data, browser, book, i){
   
-  const bookAbbrev = 'ls';
+  let page = await browser.newPage();
+  await page.setViewport(book.viewport);
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
+  const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
   const log = createWriteStream(logFilePath, {flags: 'a'});
@@ -89,17 +76,10 @@ export async function scrapeMatchURL(data, url){
   try{
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
-    await page.goto(url);
-    // disabling execution of the translationsLoader.js is not neccessary, because it evaluates my language to en anyway
-    await page.evaluate(() => {
-      const scriptTags = document.querySelectorAll('script[src="/static/translationsLoader.js"]');
-      scriptTags.forEach(tag => tag.remove());
-    });
-    await page.waitForNetworkIdle();
-  
+
     const valid = await page.$('div.sport-6000');
     if(!valid){
-      log.write(`Critical Failure! No element with clas div.sport-6000. Probably invalid url ${url}\n`);
+      log.write(`Critical Failure! No element with clas div.sport-6000. Probably invalid url ${await page.url()}\n`);
       return -1;
     }
     let selector, el, mapping;
@@ -189,7 +169,7 @@ export async function scrapeMatchURL(data, url){
           m.datetime === datetime
       );
     }
-    match.urls.push({book: 'Lsbet', url: url});
+    match.urls.push({book: 'Lsbet', url: await page.url()});
 //console.log('match: ');
 //console.log(JSON.stringify(match, null, 2));
 
@@ -215,7 +195,7 @@ export async function scrapeMatchURL(data, url){
         match.markets.push({name: marketName, odds: []});
         market = match.markets.findLast(m => m.name === marketName);
       }
-//console.log('market: ');
+//console.log('market: '
 //console.log(JSON.stringify(market, null, 2));
       // get odds
       selector = 'div.osg-coupon__market-outcomes div[role="button"]';
@@ -227,6 +207,10 @@ export async function scrapeMatchURL(data, url){
         let oddName = stripTeamName(NameValue[0]);
         if(marketName.includes(marketNameMap['TR'])){
           oddName = translateKeywords(oddName);
+        }
+        if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
+          const [left, right] = oddName.split(':');
+          oddName = `${right}:${left}`;
         }
 //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
         odd = market.odds.findLast(o => o.name === oddName);
@@ -245,14 +229,16 @@ export async function scrapeMatchURL(data, url){
       }
     }
 
-  log.write(`Success! scraping a match from ${url}\n`);
+  log.write(`Success! scraping a match from ${await page.url()}\n`);
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${url}\n`);
+    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
     return -1;
   } finally{
-    await browser.close();
+    try{
+      await page?.close()
+    } catch{}
     await promisify(log.end).bind(log);
   }
   

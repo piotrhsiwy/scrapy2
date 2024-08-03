@@ -40,57 +40,82 @@ async function singleHunt(){
   }
 }
 
-let mutex = false;
-async function hunt(){
-  while(true){
-    await new Promise(resolve => setTimeout(resolve, 3*3600000)) // 1h
-    console.log('Hunter retrieving lock...')
-    while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
-    mutex = true;
-    for(const book of books){
-      console.log(`Queued hunt from ${book.abbrev} module`);
-      await book.hunterModule.huntSportURLs(book);
-      const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-      book.urls = JSON.parse(readFileSync(urlsFilePath));
-      console.log(`Reloaded ${book.urls.length} entries from file ${urlsFilePath}`);
-    }
-    mutex = false;
-  }
-}
+// let mutex = false;
+// async function hunt(){
+//   while(true){
+//     await new Promise(resolve => setTimeout(resolve, 3*3600000)) // 1h
+//     console.log('Hunter retrieving lock...')
+//     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
+//     mutex = true;
+//     for(const book of books){
+//       console.log(`Queued hunt from ${book.abbrev} module`);
+//       await book.hunterModule.huntSportURLs(book);
+//       const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+//       book.urls = JSON.parse(readFileSync(urlsFilePath));
+//       console.log(`Reloaded ${book.urls.length} entries from file ${urlsFilePath}`);
+//     }
+//     mutex = false;
+//   }
+// }
 
+import { Queue } from "async-await-queue";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth"
 async function scrape(){ 
   console.log('Loading urls from files...');
   for(const book of books){
     const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-    book.urls = JSON.parse(readFileSync(urlsFilePath));
+    try{
+      book.urls = JSON.parse(readFileSync(urlsFilePath));
+    } catch(error){
+      console.log(`Loading file ${urlsFilePath} failed.`)
+    }
     console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
-  }
+  } 
+  console.log('Preparing browser and pages...');
+  puppeteer.use(StealthPlugin());
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--disable-web-security',
+      '--proxy-server="direct://"',
+      '--proxy-bypass-list=*',
+    ],
+    userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+    devtools: false,
+  }); 
   const data = {sports: []};
   let i = 0;
   while(true){
-    console.log('Scraper retrieving lock...')
-    if(mutex){
-      i = 0;
-      while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
-    }
-    mutex = true;
-    const promises = [];
-    for(const book of books){
-      if(i < book.urls.length){
-        let promise = book.scraperModule.scrapeMatchURL(data, book.urls[i]);
-        promises.push(promise);
-        console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+    const myq = new Queue(10, 1000);
+    const q = [];
+    for(let i = 0; ; i++){
+      let anyUrlUnderI = false;
+      for(const book of books){
+        if(i < book.urls.length){
+          console.log(`Preparing page for: ${book.urls[i]}`)
+          q.push(myq.run(() => book.scraperModule.scrapeMatchURL(data, browser, book, i)
+            .catch((e) => console.error(e))));
+          console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+          anyUrlUnderI = true;
+        }
+      }
+      if(!anyUrlUnderI){
+        break;
       }
     }
-    i++;
-    console.log(`Running a batch of ${promises.length} scrapers`);
-    console.log( (await Promise.allSettled(promises)).map(e => e.value === 0 ? 'success' : 'failure') );
+    await Promise.all(q);
+    await new Promise(resolve => setTimeout(resolve, 1)) // this timeout is needed to provide some space so that other concurrent tasks currently waiting for a lock can get it, f.e. a hunter
     const dataPathOut = 'data/data_out.json';
     console.log(`Saving the results in ${dataPathOut}`);
     writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
-    mutex = false;
-    await new Promise(resolve => setTimeout(resolve, 1)) // this timeout is needed to provide some space so that other concurrent tasks currently waiting for a lock can get it, f.e. a hunter
-  }
+    await singleHunt(); 
+  } 
 }
 
 import { calcSports } from './calc/calc.js'
@@ -98,14 +123,12 @@ async function calc(){
   const arbs = [];
   const evs = [];
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 5min
-    console.log('Calculator retrieving lock...')
+    await new Promise(resolve => setTimeout(resolve, 60000)); // 5min
+    console.log('Calculating...')
     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
-    mutex = true;
     const calcReport = await calcSports(arbs, evs);
     console.log(`Finished calculations.`);
     console.log(calcReport);
-    mutex = false;
   }
 }
 
@@ -116,12 +139,12 @@ async function calc(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+ 'tp',
+  'ms',
+  'gg',
+  'ls',
   'esb',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  'ms',
-  'tp',
-  'ls',
-  'gg'
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
@@ -145,9 +168,8 @@ for(const abbrev of availableAbbrev){
   await clean();
   await singleHunt();
   const Pscrape = scrape();
-  const Phunt = hunt();
   const Pcalc = calc();
-  const promises = [ Pscrape, Phunt, Pcalc ];
+  const promises = [ Pscrape, Pcalc ];
   await Promise.allSettled(promises);
 })()
 

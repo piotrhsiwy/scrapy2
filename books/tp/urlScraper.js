@@ -1,4 +1,3 @@
-import puppeteer from "puppeteer";
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 
@@ -32,23 +31,14 @@ function convDatetimeToISO(dateStr){
   
 }
 
-export async function scrapeMatchURL(data, url){
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-        '--disable-web-security',
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--disable-gpu',
-        '--disable-web-security',
-    ]
-  });   
+export async function scrapeMatchURL(data, browser, book, i){
+  
   const page = await browser.newPage();
-  await page.setViewport({width:1920, height:30000})
-
-  const bookAbbrev = 'tp';
+  await page.setViewport(book.viewport);
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
+  const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
   const log = createWriteStream(logFilePath, {flags: 'a'});
@@ -73,14 +63,13 @@ export async function scrapeMatchURL(data, url){
   try{
 //    console.log('data: ');
 //    console.log(JSON.stringify(data, null, 2));
-    await page.goto(url);
-  
+
     // check if the match still exists (url is valid)
     let selector, el, mapping;
     try{
       el = await page.waitForSelector('a.main-market__competition-link', {timeout: 10000});
     } catch{
-      log.write(`Critical Failure! No initial selector: url is not valid or the page didn't load. ${url}\n`);
+      log.write(`Critical Failure! No initial selector: url is not valid or the page didn't load. ${await page.url()}\n`);
       return -1;
     }
     // get sport
@@ -147,7 +136,7 @@ export async function scrapeMatchURL(data, url){
     })
     if(!dateString){
       try{
-        log.write(`Match is live ${url}\n`)
+        log.write(`Match is live ${await page.url()}\n`)
         await page.waitForSelector('div.match-header__live-timer');
         datetime = 'live';
       } catch{
@@ -193,7 +182,7 @@ export async function scrapeMatchURL(data, url){
           m.datetime === datetime
       );
     }
-    match.urls.push({book: 'Thunderpick', url: url});
+    match.urls.push({book: 'Thunderpick', url: await page.url()});
 //    console.log('match: ');
 //    console.log(JSON.stringify(match, null, 2));
 
@@ -250,7 +239,7 @@ export async function scrapeMatchURL(data, url){
 //    console.log(JSON.stringify(coef, null, 2));
       // get all the other markets
     selector = 'div.market-accordion';
-    await page.waitForSelector(selector);
+    await page.waitForSelector(selector, {timeout:3000});
     const marketHandles = await page.$$(selector);
     for(const marketHandle of marketHandles){
 
@@ -290,6 +279,10 @@ export async function scrapeMatchURL(data, url){
             let oddName = teamPrefix[j] ? `${teamPrefix[j]} ${teamSufix}` : teamSufix;
             oddName = stripTeamName(oddName);
             odd = market.odds.findLast(o => o.name === oddName);
+            if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
+              const [left, right] = oddName.split(':');
+              oddName = `${right}:${left}`;
+            }
 //            console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
             if(!odd){
               market.odds.push({name: oddName, coefs: []})
@@ -317,14 +310,16 @@ export async function scrapeMatchURL(data, url){
       }
     }
 
-    log.write(`Success! scraping from ${url} succeeded\n`);
+    log.write(`Success! scraping from ${await page.url()} succeeded\n`);
     return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${url}\n`);
+    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
     return -1;
   } finally{
-    await browser.close();
+    try{
+      await page?.close()
+    } catch{}
     await promisify(log.end).bind(log);
   } 
 

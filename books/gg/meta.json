@@ -1,5 +1,6 @@
 {
     "abbrev":"gg",
     "baseURL":"https://gg.bet/en",
-    "baseURLBuilder":"https://gg.bet"
+    "baseURLBuilder":"https://gg.bet",
+    "viewport":{"width":1921, "height":768}
 }

@@ -1,4 +1,3 @@
-import puppeteer from 'puppeteer';
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 
@@ -28,26 +27,14 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
-export async function scrapeMatchURL(data, url){
-  const browser = await puppeteer.launch({
-      headless: true,
-      args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-accelerated-2d-canvas',
-          '--disable-gpu',
-          '--disable-web-security',
-      ],
-  }); 
-  let page = await browser.newPage();
-  await page.setViewport({width:1920, height:768})
-  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-  await page.setExtraHTTPHeaders({
-      'Accept-Language': 'en-US,en;q=0.9'
-  });
+export async function scrapeMatchURL(data, browser, book, i){
   
-  const bookAbbrev = '22';
+  const page = await browser.newPage();
+  await page.setViewport(book.viewport);
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
+  const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
   const log = createWriteStream(logFilePath, {flags: 'a'});
@@ -72,8 +59,6 @@ export async function scrapeMatchURL(data, url){
   try{
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
-    await page.goto(url);
-  
     let selector, el, mapping;
     // get sport
     selector = 'ul.liga_menu > li.open > a.link';
@@ -158,7 +143,7 @@ export async function scrapeMatchURL(data, url){
           m.datetime === datetime
       );
     }
-    match.urls.push({book: '22bet', url: url});
+    match.urls.push({book: '22bet', url: await page.url()});
 //console.log('match: ');
 //console.log(JSON.stringify(match, null, 2));
 
@@ -169,7 +154,6 @@ export async function scrapeMatchURL(data, url){
     for(let i = 0; i < options.length; i++){
       selector = '#game-filters';
       await page.select(selector, options[i]);
-      await page.waitForNetworkIdle();
       let market, odd, coef;
       selector = 'div.bet_group';
       let marketHandles = await page.$$(selector);
@@ -222,6 +206,10 @@ export async function scrapeMatchURL(data, url){
             oddName = oddName.replace(/[()+]/g, '').replace(/maps|frags|rounds/g, '').replace('handiсap', '');
           } else if(market.name.includes('Correct Score')){
             oddName = oddName.replace('-yes', '').replace('-', ':');
+            if (market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
+              const [left, right] = oddName.split(':');
+              oddName = `${right}:${left}`;
+            }
           } else if(market.name.includes('First Tower')){
             oddName = replaceNumericTeamName(oddName, teamHome, teamAway);
             oddName = oddName.replace('to1', '');
@@ -260,15 +248,16 @@ export async function scrapeMatchURL(data, url){
       }
     }
 
-  log.write(`Success! scraping a match from ${url}\n`);
-  return 0;    
+  log.write(`Success! scraping a match from ${await page.url()}\n`);
+  return page;
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${url}\n`);
-    return -1;
+    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
+    return page;
   } finally{
-    await browser.close();
+    try{
+      await page?.close()
+    } catch{}
     await promisify(log.end).bind(log);
   }
-  
 }

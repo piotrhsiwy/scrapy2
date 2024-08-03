@@ -3,8 +3,10 @@ import { promisify } from "util";
 import { dateISO8601Prettify } from "../data/util/prettify.js";
 
 let log;
-let consideredArbCount = 0;
-let positiveArbCount = 0;
+let consideredArbCount;
+let positiveArbCount;
+let consideredEvCount;
+let positiveEvCount;
 
 function isMultiSelfArb(arr){
     const books = [arr[0]];
@@ -41,25 +43,25 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                                 "oddName":oddA.name,
                                 "oddValue":A.value,
                                 "book":A.book,
-                                "url":match.urls.find( item => item.book === A.book ),
+                                "url":match.urls.find( item => item.book === A.book ).url,
                             },
                             "oddB":{
                                 "oddName":oddB.name,
                                 "oddValue":B.value,
                                 "book":B.book,
-                                "url":match.urls.find( item => item.book === B.book ),
+                                "url":match.urls.find( item => item.book === B.book ).url,
                             },
                             "oddC":{
                                 "oddName":oddC.name,
                                 "oddValue":C.value,
                                 "book":C.book,
-                                "url":match.urls.find( item => item.book === C.book ),
+                                "url":match.urls.find( item => item.book === C.book ).url,
                             },
                             "oddD":{
                                 "oddName":oddD.name,
                                 "oddValue":D.value,
                                 "book":D.book,
-                                "url":match.urls.find( item => item.book === D.book ),
+                                "url":match.urls.find( item => item.book === D.book ).url,
                             },
                         };
                         if(!arbs.some( a => 
@@ -184,9 +186,6 @@ function stdDevArray(values){
 function evStrength(a, b){
     return (1/a - 1/b);
 }
-
-let consideredEvCount = 0;
-let positiveEvCount = 0;
 
 function ev2(evs, sport, match, market, odd){
     const valuesNoNull = [];
