@@ -13,8 +13,8 @@ books/*/matchURLs.json
 books/*/sports.json
 books/*/tours.json
 data/data_out.json
-data/arbs.json
-data/evs.json
+# data/arbs.json
+# data/evs.json
 
 # log files
 calc/log.txt

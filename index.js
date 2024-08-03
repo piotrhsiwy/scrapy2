@@ -105,6 +105,8 @@ async function scrape(){
           anyUrlUnderI = true;
         }
       }
+      q.push(myq.run(() => calc()).catch((e) => console.error(e)));
+      console.log(`Queued calc()`);
       if(!anyUrlUnderI){
         break;
       }
@@ -123,9 +125,8 @@ async function calc(){
   const arbs = [];
   const evs = [];
   while(true){
-    await new Promise(resolve => setTimeout(resolve, 60000)); // 5min
+    // awai t new Promise(resolve => setTimeout(resolve, 60000)); // 5min
     console.log('Calculating...')
-    while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
     const calcReport = await calcSports(arbs, evs);
     console.log(`Finished calculations.`);
     console.log(calcReport);
@@ -139,7 +140,7 @@ async function calc(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
- 'tp',
+  'tp',
   'ms',
   'gg',
   'ls',
@@ -166,7 +167,7 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  await singleHunt();
+  // await singleHunt();
   const Pscrape = scrape();
   const Pcalc = calc();
   const promises = [ Pscrape, Pcalc ];
