@@ -23,13 +23,11 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
             for(const C of oddC.coefs){
                 for(const D of oddD.coefs){
                     // TODO checking it h ere is not efficient. You can check it on the way when entering loops
-                    consideredArbCount++;
                     if( isMultiSelfArb([A, B, C, D]) ){ // exclude self-arb from the consideration
                         continue;
                     }
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
                     if(arb > 0.0){
-                        positiveArbCount++;
                         let newArb = {
                             "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
                             "value":arb,
@@ -64,14 +62,43 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                                 "url":match.urls.find( item => item.book === D.book ),
                             },
                         };
-                        positiveArbCount++;
-                        arbs.push(newArb);
+                        if(!arbs.some( a => 
+                           a.value         === newArb.value         &&
+                           a.sport         === newArb.sport         &&
+                           a.teamHome      === newArb.teamHome      &&
+                           a.teamAway      === newArb.teamAway      &&
+                           a.datetime      === newArb.datetime      &&
+                           a.market        === newArb.market        &&
+                           a.oddA.oddName  === newArb.oddA.oddName  &&
+                           a.oddA.oddValue === newArb.oddA.oddValue &&
+                           a.oddA.book     === newArb.oddA.book     &&
+                           a.oddA.url      === newArb.oddA.url      &&
+                           a.oddB.oddName  === newArb.oddB.oddName  &&
+                           a.oddB.oddValue === newArb.oddB.oddValue &&
+                           a.oddB.book     === newArb.oddB.book     &&
+                           a.oddB.url      === newArb.oddB.url      &&
+                           a.oddC.oddName  === newArb.oddC.oddName  &&
+                           a.oddC.oddValue === newArb.oddC.oddValue &&
+                           a.oddC.book     === newArb.oddC.book     &&
+                           a.oddC.url      === newArb.oddC.url      &&
+                           a.oddD.oddName  === newArb.oddD.oddName  &&
+                           a.oddD.oddValue === newArb.oddD.oddValue &&
+                           a.oddD.book     === newArb.oddD.book     &&
+                           a.oddD.url      === newArb.oddD.url
+                        ) && !newArb.datetime.includes('live')){
+                        /* only if the arb is fresh, to give meaning to timestamps */
+                            positiveArbCount++;
+                            arbs.push(newArb);
+                        }
+                        const arbReport =  
+                            `${oddA.name.padEnd(20,' ')}@${A.value} on ${A.book.padEnd(20,' ')} - ${oddB.name.padEnd(20,' ')}@${B.value} on ${B.book.padEnd(20,' ')} - ${oddC.name.padEnd(20,' ')}@${C.value} on ${C.book.padEnd(20,' ')} -  ${oddD.name.padEnd(20,' ')}@${D.value} on ${D.book.padEnd(20,' ')}, ${arb} arb.\n`;
+                        log.write(arbReport);
                     }
+                    consideredArbCount++;
                 }
             }
         }
     }
-
 }
 
 function arb2(arbs, sport, match, market, oddHome, oddAway){
