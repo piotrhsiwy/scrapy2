@@ -66,10 +66,8 @@ async function save(data){
 
 import { calcSports } from './calc/calc.js'
 async function calc(){
-  const arbs = [];
-  const evs = [];
   console.log('Calculating...')
-  const calcReport = await calcSports(arbs, evs);
+  const calcReport = await calcSports();
   console.log(`Finished calculations.`);
   console.log(calcReport);
 }
@@ -91,6 +89,7 @@ async function scrape(){
       book.urls = JSON.parse(readFileSync(urlsFilePath));
     } catch(error){
       console.log(`Loading file ${urlsFilePath} failed.`)
+      return -1;
     }
     console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
   } 
@@ -156,8 +155,8 @@ async function scrape(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'tp',
   'ms',
+  'tp',
   'gg',
   'ls',
   'esb',
@@ -183,8 +182,11 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  await singleHunt();
-  await scrape();
+  await calc();
+  await calc();
+  await calc();
+  // await singleHunt();
+  // await scrape();
 })()
 
 // ##############################################################################################################

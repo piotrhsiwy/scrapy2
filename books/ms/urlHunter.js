@@ -39,7 +39,7 @@ export async function huntSportURLs(meta){
             '--disable-gpu',
             '--disable-web-security',
         ],
-        userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+        userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp_hunter',
         devtools:false,
     }); 
     let page = await browser.newPage();

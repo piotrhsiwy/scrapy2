@@ -17,25 +17,25 @@ console.log(process.env['TOKEN']);
 if(process.env['TOKEN']){
     ;
 } else {
-    const tokenPath = `./auth/tgBotToken.txt`;
+    const tokenPath = `../../auth/tgBotToken.txt`;
     const tokenValue = readFileSync(tokenPath).toString();
     process.env['TOKEN'] = tokenValue;
 }
 
 // prepare paths
-let logFilePath = './notif/telegram/log.txt';
+let logFilePath = './log.txt';
 if(process.env['TGBOT_LOG_PATH']){
     logFilePath = process.env['TGBOT_LOG_PATH'];
 }
-let arbsPath = './data/arbs.json';
+let arbsPath = '../../data/arbs.json';
 if(process.env['ARBS_PATH']){
     arbsPath = process.env['ARBS_PATH'];
 }
-let evsPath = './data/evs.json';
+let evsPath = '../../data/evs.json';
 if(process.env['EVS_PATH']){
     evsPath = process.env['EVS_PATH'];
 }
-let clientsPath = './auth/clientData/clients.json';
+let clientsPath = '../../auth/clientData/clients.json';
 if(process.env['CLIENTS_PATH']){
     clientsPath = process.env['CLIENTS_PATH'];
 }

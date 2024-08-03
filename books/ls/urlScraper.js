@@ -222,7 +222,7 @@ export async function scrapeMatchURL(data, browser, book, i){
 //console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
         coef = odd.coefs.findLast(c => c.book === 'Lsbet');
         if(!coef){
-          odd.coefs.push({book: 'Lsbet', value: value});
+          odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Lsbet', value: value});
         }
 //console.log('market: ');
 //console.log(JSON.stringify(market, null, 2));

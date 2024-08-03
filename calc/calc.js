@@ -1,6 +1,6 @@
 import { createWriteStream, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { dateISO8601Prettify } from "../data/util/prettify.js";
+import { ISO8601Prettify, unprettifyISO8601 } from "../data/util/prettify.js";
 
 let log;
 let consideredArbCount;
@@ -31,13 +31,13 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
                     if(arb > 0.0){
                         let newArb = {
-                            "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
+                            "timestamp(calculated)":ISO8601Prettify(new Date().toISOString()),
                             "value":arb,
                             "sport":sport.name,
                             // "tournament":tournament.name,
                             "teamHome":match.teamHome,
                             "teamAway":match.teamAway,
-                            "datetime":dateISO8601Prettify(match.datetime),
+                            "datetime":ISO8601Prettify(match.datetime),
                             "market":market.name,
                             "oddA":{
                                 "oddName":oddA.name,
@@ -112,13 +112,13 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > 0.0){
                 let newArb = {
-                    "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
+                    "timestamp(calculated)":ISO8601Prettify(new Date().toISOString()),
                     "value":arb,
                     "sport":sport.name,
                     // "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
-                    "datetime":dateISO8601Prettify(match.datetime),
+                    "datetime":ISO8601Prettify(match.datetime),
                     "market":market.name,
                     "Home":{
                         "oddName":oddHome.name,
@@ -206,7 +206,7 @@ function ev2(evs, sport, match, market, odd){
                 const book = odd.coefs.find(c => c.value = v).book;
                 const url = match.urls.find( u => u.book === book ).url;
                 let newEv = {
-                    "timestamp (calculated)":dateISO8601Prettify(new Date().toISOString()),
+                    "timestamp(calculated)":ISO8601Prettify(new Date().toISOString()),
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
@@ -217,7 +217,7 @@ function ev2(evs, sport, match, market, odd){
                     // "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
-                    "datetime":dateISO8601Prettify(match.datetime),
+                    "datetime":ISO8601Prettify(match.datetime),
                     "market":market.name,
                     "odd":{
                         "oddName":odd.name,
@@ -444,7 +444,21 @@ function calcMarket(arbs, evs, sport, match, market){
     // log.write(marketReport);
 }
 
-export async function calcSports(arbs, evs){
+function cleanupOld(items){
+    const now = new Date();
+    for(let i = 0; i < items.length; i++){
+        const date = unprettifyISO8601(items[i]["datetime"]);
+        const dategT = date.getTime();
+        const nowgT = now.getTime();
+        if( dategT < nowgT ){
+            /* is outdated */
+            items.splice(i, i+1);
+            i--;
+        }
+    }
+}
+
+export async function calcSports(){
     
     const logFilePath = './calc/log.txt';
     try{
@@ -457,7 +471,15 @@ export async function calcSports(arbs, evs){
     const dataFilePath = './data/data_out.json'
     const data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
-    
+    const arbFilePath = './data/arbs.json';
+    const arbs = JSON.parse(readFileSync(arbFilePath));
+    log.write(`Loaded data from ${arbFilePath}\n`);
+    const evsFilePath = './data/evs.json';
+    const evs = JSON.parse(readFileSync(evsFilePath));
+    log.write(`Loaded data from ${evsFilePath}\n`);
+
+    cleanupOld(arbs);    
+    cleanupOld(evs);    
     
     consideredArbCount = 0;
     positiveArbCount = 0;
@@ -478,10 +500,8 @@ export async function calcSports(arbs, evs){
     arbs.sort((a, b) => b.value - a.value);
     evs.sort((a, b) => a.strength - b.strength);
 
-    const arbFilePath = './data/arbs.json';
     log.write(`Writing the results to ${arbFilePath}\n`);
     writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
-    const evsFilePath = './data/evs.json';
     log.write(`Writing the results to ${evsFilePath}\n`);
     writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
 

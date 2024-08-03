@@ -240,7 +240,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   //console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
           coef = odd.coefs.findLast(c => c.book === '22bet');
           if(!coef){
-            odd.coefs.push({book: '22bet', value: value});
+            odd.coefs.push({"timestamp(scraped)":new Date(), book: '22bet', value: value});
           }
   //console.log('market: ');
   //console.log(JSON.stringify(market, null, 2));
@@ -249,11 +249,11 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
 
   log.write(`Success! scraping a match from ${await page.url()}\n`);
-  return page;
+  return 0;
 
   } catch (error){
     log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
-    return page;
+    return -1;
   } finally{
     try{
       await page?.close()

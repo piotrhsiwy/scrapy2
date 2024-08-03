@@ -288,7 +288,7 @@ const is_locked = await oddHandle.evaluate( e =>
 //console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
         coef = odd.coefs.findLast(c => c.book === 'Esportsbet');
         if(!coef){
-          odd.coefs.push({book: 'Esportsbet', value: value});
+          odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Esportsbet', value: value});
         }
 //console.log('market: ');
 //console.log(JSON.stringify(market, null, 2));

@@ -1,6 +1,804 @@
 [
   {
-    "timestamp (calculated)": "August 3, 2024 at 09:53:35 PM GMT+2",
+    "timestamp(calculated)": "August 4, 2024 at 01:26:25 AM GMT+2",
+    "value": 0.37054173896279163,
+    "sport": "Counter-Strike 2",
+    "teamHome": "alliance",
+    "teamAway": "sampi",
+    "datetime": "August 5, 2024 at 12:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "alliance1.5",
+      "oddValue": 2.73,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30125477/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "sampi-1.5",
+      "oddValue": 3.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/yalla-compass-2024/5271/alliance-vs-team-sampi/842724"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:26:25 AM GMT+2",
+    "value": 0.24196059483545396,
+    "sport": "League of Legends",
+    "teamHome": "painacademy",
+    "teamAway": "furiaacademy",
+    "datetime": "August 19, 2024 at 09:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "painacademy-1.5",
+      "oddValue": 3.548,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30094227/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "furiaacademy1.5",
+      "oddValue": 2.1,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/league-of-legends/cblol-academy-2024-split-2-playoffs/5484/pain-academy-vs-furia-academy/842831"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.07220156269585931,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "ence-1.5",
+      "oddValue": 2.6,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35406271"
+    },
+    "Away": {
+      "oddName": "9ine1.5",
+      "oddValue": 1.841,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.06905736373676352,
+    "sport": "Counter-Strike 2",
+    "teamHome": "nitro.gg",
+    "teamAway": "mibracademy",
+    "datetime": "August 5, 2024 at 09:00:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "nitro.gg",
+      "oddValue": 2.199,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30124495/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "mibracademy",
+      "oddValue": 2.1,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/redzone-pro-league/1502/nitro-gg-vs-mibr-academy/842741"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.06688090570042893,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.54,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35406271"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 3.524,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.060891884032317156,
+    "sport": "Counter-Strike 2",
+    "teamHome": "1win",
+    "teamAway": "nexus",
+    "datetime": "August 6, 2024 at 12:00:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "1win",
+      "oddValue": 1.39,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2653584-cs-2-yalla-compass/223126096-1win-nexus-gaming"
+    },
+    "Away": {
+      "oddName": "nexus",
+      "oddValue": 4.552,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30126054/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.05681694731124387,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "ence-1.5",
+      "oddValue": 2.5,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/cct-season-2-european-series-7-play-in/5477/ence-vs-9ine/842188"
+    },
+    "Away": {
+      "oddName": "9ine1.5",
+      "oddValue": 1.841,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.050440081245768376,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Map 3 Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.688,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 2.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/parivision-vs-betera/836688"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.04769724773847739,
+    "sport": "Counter-Strike 2",
+    "teamHome": "complexity",
+    "teamAway": "alternateattax",
+    "datetime": "August 7, 2024 at 04:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "complexity-1.5",
+      "oddValue": 1.42,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/complexity-vs-alternate-attax/836763"
+    },
+    "Away": {
+      "oddName": "alternateattax1.5",
+      "oddValue": 4.031,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941338/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.04602643733078515,
+    "sport": "Counter-Strike 2",
+    "teamHome": "nitro.gg",
+    "teamAway": "mibracademy",
+    "datetime": "August 5, 2024 at 09:00:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "nitro.gg",
+      "oddValue": 2.093,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30124495/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "mibracademy",
+      "oddValue": 2.1,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/redzone-pro-league/1502/nitro-gg-vs-mibr-academy/842741"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.04585499486349354,
+    "sport": "Counter-Strike 2",
+    "teamHome": "heroic",
+    "teamAway": "mibr",
+    "datetime": "August 7, 2024 at 01:30:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "heroic",
+      "oddValue": 1.82,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/heroic-vs-mibr/836769"
+    },
+    "Away": {
+      "oddName": "mibr",
+      "oddValue": 2.471,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941913/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.04129887174276581,
+    "sport": "Counter-Strike 2",
+    "teamHome": "heroic",
+    "teamAway": "mibr",
+    "datetime": "August 7, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "heroic-1.5",
+      "oddValue": 2.9,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/heroic-vs-mibr/836769"
+    },
+    "Away": {
+      "oddName": "mibr1.5",
+      "oddValue": 1.629,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941913/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.040555879375402615,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.48,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/cct-season-2-european-series-7-play-in/5477/ence-vs-9ine/842188"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 3.524,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03840573385746604,
+    "sport": "CrossFire",
+    "teamHome": "allgamers",
+    "teamAway": "baisha",
+    "datetime": "August 10, 2024 at 10:00:00 AM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "allgamers",
+      "oddValue": 2.614,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30009530/63/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "baisha",
+      "oddValue": 1.727,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2200261-crossfire-pro-league/222516904-all-gamers-baisha-gaming"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.037541405962458585,
+    "sport": "League of Legends",
+    "teamHome": "dragonsteel",
+    "teamAway": "disguised",
+    "datetime": "August 4, 2024 at 02:00:00 AM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "dragonsteel",
+      "oddValue": 1.43,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30019145/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "disguised",
+      "oddValue": 3.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/league-of-legends/nacl-2024-summer/4593/dragonsteel-vs-disguised/839229"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03716362377779703,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Map 2 Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.651,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 2.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/parivision-vs-betera/836688"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03660797034291008,
+    "sport": "Counter-Strike 2",
+    "teamHome": "3dmax",
+    "teamAway": "gun5",
+    "datetime": "August 7, 2024 at 06:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "3dmax-1.5",
+      "oddValue": 2,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/3dmax-vs-gun5-esports/842117"
+    },
+    "Away": {
+      "oddName": "gun51.5",
+      "oddValue": 2.158,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30121410/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03604918061956186,
+    "sport": "CrossFire",
+    "teamHome": "allgamers",
+    "teamAway": "baisha",
+    "datetime": "August 10, 2024 at 10:00:00 AM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "allgamers",
+      "oddValue": 2.614,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30009530/63/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "baisha",
+      "oddValue": 1.72,
+      "book": "Ggbet",
+      "url": "https://gg.bet/en/esports/match/5:be3d178c-7a47-4628-86c8-53be1ae664c7"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.035510639284224155,
+    "sport": "League of Legends",
+    "teamHome": "groundzero",
+    "teamAway": "j",
+    "datetime": "August 6, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "groundzero1.5",
+      "oddValue": 1.961,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30000788/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "j-1.5",
+      "oddValue": 2.2,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35242550"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.035510639284224155,
+    "sport": "League of Legends",
+    "teamHome": "groundzero",
+    "teamAway": "j",
+    "datetime": "August 6, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "groundzero1.5",
+      "oddValue": 1.961,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30000788/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "j-1.5",
+      "oddValue": 2.2,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2105201-league-of-legends-pcs-summer/222399166-ground-zero-gaming-j-team"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03452663434093339,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.62,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35406271"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 2.872,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03452663434093339,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Map 2 Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.62,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35406271"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 2.872,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.030810969466678273,
+    "sport": "Counter-Strike 2",
+    "teamHome": "3dmax",
+    "teamAway": "gun5",
+    "datetime": "August 7, 2024 at 06:00:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "3dmax",
+      "oddValue": 1.48,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/3dmax-vs-gun5-esports/842117"
+    },
+    "Away": {
+      "oddName": "gun5",
+      "oddValue": 3.407,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30121410/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.030810969466678273,
+    "sport": "Counter-Strike 2",
+    "teamHome": "3dmax",
+    "teamAway": "gun5",
+    "datetime": "August 7, 2024 at 06:00:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "3dmax",
+      "oddValue": 1.48,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35382849"
+    },
+    "Away": {
+      "oddName": "gun5",
+      "oddValue": 3.407,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30121410/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.03024052185385906,
+    "sport": "League of Legends",
+    "teamHome": "detonationfm",
+    "teamAway": "westpoint",
+    "datetime": "August 5, 2024 at 11:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "detonationfm-1.5",
+      "oddValue": 1.444,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2105201-league-of-legends-pcs-summer/222399234-detonation-focusme-west-point-ph"
+    },
+    "Away": {
+      "oddName": "westpoint1.5",
+      "oddValue": 3.607,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29998122/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.028316853032683387,
+    "sport": "League of Legends",
+    "teamHome": "detonationfm",
+    "teamAway": "westpoint",
+    "datetime": "August 5, 2024 at 11:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "detonationfm-1.5",
+      "oddValue": 1.44,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35242661"
+    },
+    "Away": {
+      "oddName": "westpoint1.5",
+      "oddValue": 3.607,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29998122/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.026765215289805466,
+    "sport": "Counter-Strike 2",
+    "teamHome": "complexity",
+    "teamAway": "alternateattax",
+    "datetime": "August 7, 2024 at 04:30:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "complexity",
+      "oddValue": 1.22,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/complexity-vs-alternate-attax/836763"
+    },
+    "Away": {
+      "oddName": "alternateattax",
+      "oddValue": 6.512,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941338/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.026236721947526576,
+    "sport": "Counter-Strike 2",
+    "teamHome": "heroic",
+    "teamAway": "mibr",
+    "datetime": "August 7, 2024 at 01:30:00 PM GMT+2",
+    "market": "Rounds Handicap Map 1",
+    "Home": {
+      "oddName": "heroic-2.5",
+      "oddValue": 2.15,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/heroic-vs-mibr/836769"
+    },
+    "Away": {
+      "oddName": "mibr2.5",
+      "oddValue": 1.966,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941913/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.026034402603440254,
+    "sport": "Counter-Strike 2",
+    "teamHome": "enterprise",
+    "teamAway": "preasy",
+    "datetime": "August 4, 2024 at 10:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "enterprise-1.5",
+      "oddValue": 1.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/european-pro-league-season-19-division-2/5510/enterprise-vs-preasy-esport/841081"
+    },
+    "Away": {
+      "oddName": "preasy1.5",
+      "oddValue": 2.39,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30074442/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.025147158931646096,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.469,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 3.4,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/parivision-vs-betera/836688"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.023936110550283773,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.651,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 2.7,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/esl-challenger-league-season-48-europe/5470/parivision-vs-betera/836688"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.022930740281900897,
+    "sport": "Counter-Strike 2",
+    "teamHome": "enterprise",
+    "teamAway": "preasy",
+    "datetime": "August 4, 2024 at 10:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "enterprise-1.5",
+      "oddValue": 1.79,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35407120"
+    },
+    "Away": {
+      "oddName": "preasy1.5",
+      "oddValue": 2.39,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30074442/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.021872446659528588,
+    "sport": "League of Legends",
+    "teamHome": "frank",
+    "teamAway": "bliss",
+    "datetime": "August 5, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "frank-1.5",
+      "oddValue": 1.37,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35242538"
+    },
+    "Away": {
+      "oddName": "bliss1.5",
+      "oddValue": 4.029,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29998922/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.020805065581185,
+    "sport": "Counter-Strike 2",
+    "teamHome": "heroic",
+    "teamAway": "mibr",
+    "datetime": "August 7, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "heroic",
+      "oddValue": 1.65,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/heroic-vs-mibr/836769"
+    },
+    "Away": {
+      "oddName": "mibr",
+      "oddValue": 2.68,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941913/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.020757343303902553,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.469,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 3.35,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35375405"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.020555081936156072,
+    "sport": "League of Legends",
+    "teamHome": "kwangdongfreecs",
+    "teamAway": "nsredforce",
+    "datetime": "August 4, 2024 at 10:30:00 AM GMT+2",
+    "market": "Total Kills Map 1",
+    "Home": {
+      "oddName": "over26.5",
+      "oddValue": 2.3,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/league-of-legends/lck-2024-summer/5294/nongshim-redforce-vs-kwangdong-freecs/838528"
+    },
+    "Away": {
+      "oddName": "under26.5",
+      "oddValue": 1.836,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29979019/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.018661624046775405,
+    "sport": "League of Legends",
+    "teamHome": "frank",
+    "teamAway": "bliss",
+    "datetime": "August 5, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "frank-1.5",
+      "oddValue": 1.364,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2105201-league-of-legends-pcs-summer/222399181-frank-esports-team-bliss"
+    },
+    "Away": {
+      "oddName": "bliss1.5",
+      "oddValue": 4.029,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29998922/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.01865646792438469,
+    "sport": "League of Legends",
+    "teamHome": "kwangdongfreecs",
+    "teamAway": "nsredforce",
+    "datetime": "August 4, 2024 at 10:30:00 AM GMT+2",
+    "market": "Total Kills Map 1",
+    "Home": {
+      "oddName": "over26.5",
+      "oddValue": 2.29,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35239591"
+    },
+    "Away": {
+      "oddName": "under26.5",
+      "oddValue": 1.836,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29979019/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
     "value": 0.0174176448315031,
     "sport": "Counter-Strike 2",
     "teamHome": "1win",
@@ -21,7 +819,112 @@
     }
   },
   {
-    "timestamp (calculated)": "August 3, 2024 at 09:53:35 PM GMT+2",
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.01679841897233192,
+    "sport": "League of Legends",
+    "teamHome": "redcanids",
+    "teamAway": "fluxo",
+    "datetime": "August 4, 2024 at 06:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "redcanids1.5",
+      "oddValue": 1.15,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30030259/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "fluxo-1.5",
+      "oddValue": 8.8,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35277457"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.013605442176870763,
+    "sport": "Counter-Strike 2",
+    "teamHome": "tyloo",
+    "teamAway": "gaimingladiators",
+    "datetime": "August 4, 2024 at 02:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "tyloo1.5",
+      "oddValue": 1.96,
+      "book": "Ggbet",
+      "url": "https://gg.bet/en/esports/match/tyloo-vs-gaimin-gladiators-04-08"
+    },
+    "Away": {
+      "oddName": "gaimingladiators-1.5",
+      "oddValue": 2.1,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/xse-pro-league/3281/tyloo-vs-gaimin-gladiators/838829"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.013454408436952892,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.469,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 3.27,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2610814-cs-2-esl-challenger-league-europe/223003855-parivision-betera"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.012570492867780558,
+    "sport": "Counter-Strike 2",
+    "teamHome": "aurora",
+    "teamAway": "nemiga",
+    "datetime": "August 4, 2024 at 04:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "aurora-1.5",
+      "oddValue": 2.49,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35370491"
+    },
+    "Away": {
+      "oddName": "nemiga1.5",
+      "oddValue": 1.707,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30084751/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.011884313634464516,
+    "sport": "Counter-Strike 2",
+    "teamHome": "mongolz",
+    "teamAway": "saw",
+    "datetime": "August 7, 2024 at 10:30:00 AM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "mongolz",
+      "oddValue": 1.657,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941148/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "saw",
+      "oddValue": 2.6,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/mongolz-vs-saw/836766"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
     "value": 0.011837364899639713,
     "sport": "League of Legends",
     "teamHome": "brion",
@@ -42,7 +945,28 @@
     }
   },
   {
-    "timestamp (calculated)": "August 3, 2024 at 09:53:35 PM GMT+2",
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.011480214948705436,
+    "sport": "Counter-Strike 2",
+    "teamHome": "nitro.gg",
+    "teamAway": "mibracademy",
+    "datetime": "August 5, 2024 at 09:00:00 PM GMT+2",
+    "market": "Map 3 Winner",
+    "Home": {
+      "oddName": "nitro.gg",
+      "oddValue": 2.047,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30124495/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "mibracademy",
+      "oddValue": 2,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/redzone-pro-league/1502/nitro-gg-vs-mibr-academy/842741"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
     "value": 0.011437908496731986,
     "sport": "League of Legends",
     "teamHome": "nip",
@@ -63,7 +987,364 @@
     }
   },
   {
-    "timestamp (calculated)": "August 3, 2024 at 09:53:35 PM GMT+2",
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.010687993738841106,
+    "sport": "League of Legends",
+    "teamHome": "fnatic",
+    "teamAway": "bds",
+    "datetime": "August 10, 2024 at 05:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "fnatic-1.5",
+      "oddValue": 1.98,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35340271"
+    },
+    "Away": {
+      "oddName": "bds1.5",
+      "oddValue": 2.065,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30003055/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.009691096305269542,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.651,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 2.6,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35375405"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.009691096305269542,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Map 2 Winner",
+    "Home": {
+      "oddName": "parivision",
+      "oddValue": 1.651,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera",
+      "oddValue": 2.6,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35375405"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.00965037177661765,
+    "sport": "King of Glory",
+    "teamHome": "tcgrouping",
+    "teamAway": "weibo",
+    "datetime": "August 10, 2024 at 11:00:00 AM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "tcgrouping",
+      "oddValue": 3.225,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2427451-king-of-glory-kpl-summer/222422646-tc-grouping-weibo-gaming"
+    },
+    "Away": {
+      "oddName": "weibo",
+      "oddValue": 1.47,
+      "book": "Ggbet",
+      "url": "https://gg.bet/en/esports/match/5:7224575b-90a0-4a70-ae0e-de7f2f13f859"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.009569377990430672,
+    "sport": "League of Legends",
+    "teamHome": "flyquestnzxt",
+    "teamAway": "aoe",
+    "datetime": "August 4, 2024 at 04:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "flyquestnzxt-1.5",
+      "oddValue": 1.375,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30019545/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "aoe1.5",
+      "oddValue": 3.8,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/league-of-legends/nacl-2024-summer/4593/flyquest-nzxt-vs-aoe-esports/839231"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.009504987765857287,
+    "sport": "Counter-Strike 2",
+    "teamHome": "tyloo",
+    "teamAway": "gaimingladiators",
+    "datetime": "August 4, 2024 at 02:00:00 PM GMT+2",
+    "market": "Total Maps",
+    "Home": {
+      "oddName": "over2.5",
+      "oddValue": 2.53,
+      "book": "Ggbet",
+      "url": "https://gg.bet/en/esports/match/tyloo-vs-gaimin-gladiators-04-08"
+    },
+    "Away": {
+      "oddName": "under2.5",
+      "oddValue": 1.68,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/xse-pro-league/3281/tyloo-vs-gaimin-gladiators/838829"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.007651756699116441,
+    "sport": "Counter-Strike 2",
+    "teamHome": "parivision",
+    "teamAway": "betera",
+    "datetime": "August 4, 2024 at 07:45:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "parivision-1.5",
+      "oddValue": 2.541,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29926865/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "betera1.5",
+      "oddValue": 1.67,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35375405"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.007625523621444641,
+    "sport": "League of Legends",
+    "teamHome": "groundzero",
+    "teamAway": "j",
+    "datetime": "August 6, 2024 at 01:30:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "groundzero",
+      "oddValue": 3.113,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30000788/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "j",
+      "oddValue": 1.49,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35242550"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.006649294635636682,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Map 1 Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.55,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/cct-season-2-european-series-7-play-in/5477/ence-vs-9ine/842188"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 2.872,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.006649294635636682,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Map 2 Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.55,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/cct-season-2-european-series-7-play-in/5477/ence-vs-9ine/842188"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 2.872,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.0060606060606061,
+    "sport": "League of Legends",
+    "teamHome": "flyquestnzxt",
+    "teamAway": "aoe",
+    "datetime": "August 4, 2024 at 04:00:00 AM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "flyquestnzxt-1.5",
+      "oddValue": 1.375,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30019545/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "aoe1.5",
+      "oddValue": 3.75,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2557556-league-of-legends-nacl-summer/222514841-flyquest-nzxt-aoe-esports"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.005674808783617036,
+    "sport": "Counter-Strike 2",
+    "teamHome": "complexity",
+    "teamAway": "alternateattax",
+    "datetime": "August 7, 2024 at 04:30:00 PM GMT+2",
+    "market": "Rounds Handicap Map 1",
+    "Home": {
+      "oddName": "complexity-5.5",
+      "oddValue": 2.1,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/cs2-betting/intel-extreme-masters-cologne-2024/5518/complexity-vs-alternate-attax/836763"
+    },
+    "Away": {
+      "oddName": "alternateattax5.5",
+      "oddValue": 1.93,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29941338/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.0053541007544415375,
+    "sport": "League of Legends",
+    "teamHome": "movistarr7",
+    "teamAway": "isurus",
+    "datetime": "August 6, 2024 at 11:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "movistarr71.5",
+      "oddValue": 1.174,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30086761/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "isurus-1.5",
+      "oddValue": 7,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35350514"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.0053541007544415375,
+    "sport": "League of Legends",
+    "teamHome": "movistarr7",
+    "teamAway": "isurus",
+    "datetime": "August 6, 2024 at 11:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "movistarr71.5",
+      "oddValue": 1.174,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30086761/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "isurus-1.5",
+      "oddValue": 7,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/1940546-league-of-legends-lla/222887575-movistar-r7-isurus"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.0053541007544415375,
+    "sport": "League of Legends",
+    "teamHome": "movistarr7",
+    "teamAway": "isurus",
+    "datetime": "August 6, 2024 at 11:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "movistarr71.5",
+      "oddValue": 1.174,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30086761/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "isurus-1.5",
+      "oddValue": 7,
+      "book": "Thunderpick",
+      "url": "https://thunderpick.io/esports/league-of-legends/lla-2024-closing/5320/movistar-r7-vs-isurus-gaming/841775"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.004990973770840013,
+    "sport": "League of Legends",
+    "teamHome": "brion",
+    "teamAway": "ktrolster",
+    "datetime": "August 4, 2024 at 08:00:00 AM GMT+2",
+    "market": "First to Reach Kills Map 1",
+    "Home": {
+      "oddName": "ktrolster5",
+      "oddValue": 1.46,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35239592"
+    },
+    "Away": {
+      "oddName": "brion5",
+      "oddValue": 3.225,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29978619/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.004843517138599096,
+    "sport": "League of Legends",
+    "teamHome": "fnatic",
+    "teamAway": "bds",
+    "datetime": "August 10, 2024 at 05:00:00 PM GMT+2",
+    "market": "Match Handicap",
+    "Home": {
+      "oddName": "fnatic-2.5",
+      "oddValue": 4,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2581740-league-of-legends-lec-season-finals/222422668-fnatic-bds-esport"
+    },
+    "Away": {
+      "oddName": "bds2.5",
+      "oddValue": 1.342,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30003055/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
     "value": 0.002525252525252597,
     "sport": "League of Legends",
     "teamHome": "nip",
@@ -81,6 +1362,69 @@
       "oddValue": 3.3,
       "book": "Thunderpick",
       "url": "https://thunderpick.io/esports/league-of-legends/lpl-2024-summer-playoffs/5577/ninjas-in-pyjamas-vs-rare-atom/841202"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.002219560426432343,
+    "sport": "League of Legends",
+    "teamHome": "groundzero",
+    "teamAway": "j",
+    "datetime": "August 6, 2024 at 01:30:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "groundzero",
+      "oddValue": 3.704,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30000788/45/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "j",
+      "oddValue": 1.374,
+      "book": "22bet",
+      "url": "https://22bets.me/line/esports/2105201-league-of-legends-pcs-summer/222399166-ground-zero-gaming-j-team"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.001945840765364082,
+    "sport": "Counter-Strike 2",
+    "teamHome": "ence",
+    "teamAway": "9ine",
+    "datetime": "August 4, 2024 at 08:30:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "ence",
+      "oddValue": 1.4,
+      "book": "Lsbet",
+      "url": "https://www.lsbet1292.com/sportsbook/6000/3474343/3614716/5308686"
+    },
+    "Away": {
+      "oddName": "9ine",
+      "oddValue": 3.524,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/30109687/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    }
+  },
+  {
+    "timestamp(calculated)": "August 4, 2024 at 01:22:04 AM GMT+2",
+    "value": 0.0008697542944118286,
+    "sport": "Counter-Strike 2",
+    "teamHome": "1win",
+    "teamAway": "youngninjas",
+    "datetime": "August 4, 2024 at 12:00:00 PM GMT+2",
+    "market": "Match Winner",
+    "Home": {
+      "oddName": "1win",
+      "oddValue": 1.314,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/de/esportsbull/OddsPage/29972010/47/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1"
+    },
+    "Away": {
+      "oddName": "youngninjas",
+      "oddValue": 4.2,
+      "book": "Mystake",
+      "url": "https://mystake.com/sportwide/index.html?lang=en&brand=28#/prematch?match=35231355"
     }
   }
 ]
