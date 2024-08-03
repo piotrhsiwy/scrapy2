@@ -58,6 +58,28 @@ async function singleHunt(){
 //   }
 // }
 
+async function save(data){
+  const dataPathOut = 'data/data_out.json';
+  console.log(`Saving the results in ${dataPathOut}`);
+  writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+}
+
+import { calcSports } from './calc/calc.js'
+async function calc(){
+  const arbs = [];
+  const evs = [];
+  console.log('Calculating...')
+  const calcReport = await calcSports(arbs, evs);
+  console.log(`Finished calculations.`);
+  console.log(calcReport);
+}
+
+async function savecalc(data){
+  await save(data);
+  await calc();
+}
+
+
 import { Queue } from "async-await-queue";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth"
@@ -99,39 +121,33 @@ async function scrape(){
       for(const book of books){
         if(i < book.urls.length){
           console.log(`Preparing page for: ${book.urls[i]}`)
-          q.push(myq.run(() => book.scraperModule.scrapeMatchURL(data, browser, book, i)
+          async function wrapper(data, browser, book, i){
+            let ret;
+            try{
+              ret = await book.scraperModule.scrapeMatchURL(data, browser, book, i);
+            } catch(e){
+              throw e;
+            }
+            console.log(`Completed scrape with result: ${ret} from ${book.urls[i]}`);
+          }
+          q.push(myq.run(() => wrapper(data, browser, book, i)
             .catch((e) => console.error(e))));
           console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
           anyUrlUnderI = true;
         }
       }
-      q.push(myq.run(() => calc()).catch((e) => console.error(e)));
-      console.log(`Queued calc()`);
+      if(i%10 === 0){
+        q.push(myq.run(() => savecalc(data)).catch((e) => console.error(e)));
+        console.log(`Queued savecalc()`);
+      }
       if(!anyUrlUnderI){
         break;
       }
     }
     await Promise.all(q);
-    await new Promise(resolve => setTimeout(resolve, 1)) // this timeout is needed to provide some space so that other concurrent tasks currently waiting for a lock can get it, f.e. a hunter
-    const dataPathOut = 'data/data_out.json';
-    console.log(`Saving the results in ${dataPathOut}`);
-    writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
-    await singleHunt(); 
-  } 
+    await singleHunt(); } 
 }
 
-import { calcSports } from './calc/calc.js'
-async function calc(){
-  const arbs = [];
-  const evs = [];
-  while(true){
-    // awai t new Promise(resolve => setTimeout(resolve, 60000)); // 5min
-    console.log('Calculating...')
-    const calcReport = await calcSports(arbs, evs);
-    console.log(`Finished calculations.`);
-    console.log(calcReport);
-  }
-}
 
 // ##############################################################################################################
 // ##############################################################################################################
@@ -167,11 +183,8 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  // await singleHunt();
-  const Pscrape = scrape();
-  const Pcalc = calc();
-  const promises = [ Pscrape, Pcalc ];
-  await Promise.allSettled(promises);
+  await singleHunt();
+  await scrape();
 })()
 
 // ##############################################################################################################
