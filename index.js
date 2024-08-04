@@ -64,7 +64,7 @@ async function openBrowser(){
       '--disable-features=NetworkService,NetworkServiceInProcess',
     ],
     userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
-    devtools: false,
+    devtools: true,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -168,7 +168,7 @@ async function run(browser){
       }
     }
     await Promise.all(q);
-    await singleHunt(browser);
+    // await singleHunt(browser);
   } 
 }
 
@@ -208,7 +208,7 @@ for(const abbrev of availableAbbrev){
   await load();
   await clean();
   const browser = await openBrowser();
-  await singleHunt(browser);
+  // await singleHunt(browser);
   try{
     return await run(browser);
   } finally{

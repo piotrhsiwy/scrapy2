@@ -18,9 +18,9 @@ function filterReq(request, blockRequestURLs){
         // console.log(url);
         request.abort();
     } else {
-        console.log(`Allowing`);
-        console.log(type);
-        console.log(url);
+        // console.log(`Allowing`);
+        // console.log(type);
+        // console.log(url);
         request.continue();
     }
 }
