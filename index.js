@@ -40,7 +40,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser =  await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -64,7 +64,7 @@ async function openBrowser(){
       '--disable-features=NetworkService,NetworkServiceInProcess',
     ],
     userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -168,7 +168,7 @@ async function run(browser){
       }
     }
     await Promise.all(q);
-    // await singleHunt(browser);
+    await singleHunt(browser);
   } 
 }
 
@@ -180,12 +180,12 @@ async function run(browser){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+  'esb',
+  'tp',
   'gg',
-  // 'ls',
-  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  // 'ms',
-  // 'esb',
-  // 'tp',
+  'ls',
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'ms',
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
@@ -208,7 +208,7 @@ for(const abbrev of availableAbbrev){
   await load();
   await clean();
   const browser = await openBrowser();
-  // await singleHunt(browser);
+  await singleHunt(browser);
   try{
     return await run(browser);
   } finally{
