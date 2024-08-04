@@ -222,7 +222,6 @@ export async function scrapeMatchURL(data, browser, book, i){
 
   log.write(`Success! scraping a match from ${await page.url()}\n`);
   return 0;    
-"timestamp(scraped)":new Date(), 
   } catch (error){
     log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
     return -1;

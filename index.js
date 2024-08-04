@@ -119,7 +119,6 @@ async function scrape(){
       let anyUrlUnderI = false;
       for(const book of books){
         if(i < book.urls.length){
-          console.log(`Preparing page for: ${book.urls[i]}`)
           async function wrapper(data, browser, book, i){
             let ret;
             try{
@@ -131,13 +130,13 @@ async function scrape(){
           }
           q.push(myq.run(() => wrapper(data, browser, book, i)
             .catch((e) => console.error(e))));
-          console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+          // console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
           anyUrlUnderI = true;
         }
       }
       if(i%10 === 0){
         q.push(myq.run(() => savecalc(data)).catch((e) => console.error(e)));
-        console.log(`Queued savecalc()`);
+        // console.log(`Queued savecalc()`);
       }
       if(!anyUrlUnderI){
         break;
@@ -155,11 +154,11 @@ async function scrape(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+  'esb',
   'ms',
   'tp',
   'gg',
   'ls',
-  'esb',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
@@ -182,11 +181,8 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  await calc();
-  await calc();
-  await calc();
   // await singleHunt();
-  // await scrape();
+  await scrape();
 })()
 
 // ##############################################################################################################

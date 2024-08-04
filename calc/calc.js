@@ -1,4 +1,4 @@
-import { createWriteStream, readFileSync, writeFileSync } from "fs"
+import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { ISO8601Prettify, unprettifyISO8601 } from "../data/util/prettify.js";
 
@@ -471,12 +471,24 @@ export async function calcSports(){
     const dataFilePath = './data/data_out.json'
     const data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
-    const arbFilePath = './data/arbs.json';
-    const arbs = JSON.parse(readFileSync(arbFilePath));
-    log.write(`Loaded data from ${arbFilePath}\n`);
+
+    const arbsFilePath = './data/arbs.json';
+    let arbs = [];
+    if(existsSync(arbsFilePath)) {
+        arbs = JSON.parse(readFileSync(arbsFilePath));
+        log.write(`Loaded data from ${arbsFilePath}\n`);
+    } else {
+        log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
+    }
+
     const evsFilePath = './data/evs.json';
-    const evs = JSON.parse(readFileSync(evsFilePath));
-    log.write(`Loaded data from ${evsFilePath}\n`);
+    let evs = [];
+    if(existsSync(evsFilePath)) {
+        evs = JSON.parse(readFileSync(evsFilePath));
+        log.write(`Loaded data from ${evsFilePath}\n`);
+    } else {
+        log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
+    }
 
     cleanupOld(arbs);    
     cleanupOld(evs);    
@@ -500,8 +512,8 @@ export async function calcSports(){
     arbs.sort((a, b) => b.value - a.value);
     evs.sort((a, b) => a.strength - b.strength);
 
-    log.write(`Writing the results to ${arbFilePath}\n`);
-    writeFileSync(arbFilePath, JSON.stringify(arbs, null, 2));
+    log.write(`Writing the results to ${arbsFilePath}\n`);
+    writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
     log.write(`Writing the results to ${evsFilePath}\n`);
     writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
 
