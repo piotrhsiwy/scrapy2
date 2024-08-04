@@ -245,6 +245,9 @@ function ev2(evs, sport, match, market, odd){
                     /* ev is fresh */
                     evs.push(newEv);
                     positiveEvCount++;
+                    const arbReport =  
+                        `${oddA.name.padEnd(20,' ')}@${A.value} on ${A.book.padEnd(20,' ')} - ${oddB.name.padEnd(20,' ')}@${B.value} on ${B.book.padEnd(20,' ')} - ${oddC.name.padEnd(20,' ')}@${C.value} on ${C.book.padEnd(20,' ')} -  ${oddD.name.padEnd(20,' ')}@${D.value} on ${D.book.padEnd(20,' ')}, ${arb} arb.\n`;
+                    log.write(arbReport);
                 }
             }
             consideredEvCount++;

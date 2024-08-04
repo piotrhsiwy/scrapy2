@@ -2,5 +2,6 @@
     "abbrev":"ls",
     "baseURL":"https://www.lsbet1292.com/sportsbook/6000",
     "baseURLBuilder":"https://www.lsbet1292.com",
-    "viewport":{"width":1921, "height":768}
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|chat|googletagmanager"
 }

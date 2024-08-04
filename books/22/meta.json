@@ -2,5 +2,6 @@
     "abbrev":"22",
     "baseURL":"https://22bets.me/line/esports/",
     "baseURLBuilder":"https://22bets.me/",
-    "viewport":{"width":1921, "height":768}
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|chat|googletagmanager|adform|rtmark|snapchat"
 }

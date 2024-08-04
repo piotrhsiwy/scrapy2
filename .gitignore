@@ -5,6 +5,7 @@ node_modules
 # IDE conf files
 # .vscode/*
 tags
+eslint*
 
 # scraping data
 books/*/urls.json

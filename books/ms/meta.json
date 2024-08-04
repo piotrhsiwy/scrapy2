@@ -1,5 +1,6 @@
 {
     "abbrev":"ms",
     "baseURL":"https://mystake.com/en/sportsbook/prematch",
-    "viewport":{"width":1920, "height":768}
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "hotjar|piwik|clarity|ip-geo|chat|googletagmanager|widget"
 }

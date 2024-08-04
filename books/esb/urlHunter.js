@@ -1,6 +1,6 @@
-import puppeteer from "puppeteer";
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
+import { prepPage } from "../page.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -8,83 +8,41 @@ import { promisify } from "util";
  * @param meta metadata of this book, loaded from ./books/XYZ/meta.json
  * all the required file locations are built from content of the metadata
  */
-export async function huntSportURLs(meta){
+export async function huntSportURLs(browser, book){
+    const bookAbbrev = book.abbrev;
+    const url = book.baseURL;
+
     // open a file for logging
-    const bookAbbrev = 'esb';
     const logFilePath = `./books/${bookAbbrev}/log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
     // open and empty file for data
-    const dataOutPath = `./books/${meta.abbrev}/matchURLs.json`;
+    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
-    const sportsPath = `./books/${meta.abbrev}/sports.json`;
-    if(existsSync(sportsPath)){
-        truncateSync(sportsPath, 0);
-    }
-    const toursPath = `./books/${meta.abbrev}/tours.json`;
-    if(existsSync(toursPath)){
-        truncateSync(toursPath, 0);
-    }
+    // const sportsPath = `./books/${book.abbrev}/sports.json`;
+    // if(existsSync(sportsPath)){
+    //     truncateSync(sportsPath, 0);
+    // }
+    // const toursPath = `./books/${book.abbrev}/tours.json`;
+    // if(existsSync(toursPath)){
+    //     truncateSync(toursPath, 0);
+    // }
 
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--disable-gpu',
-            '--disable-web-security',
-        ],
-        // devtools: true,
-        // dumpio: true,
-    }); 
-    let page = await browser.newPage();
-    await page.setViewport({width:1920, height:768})
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-    await page.setExtraHTTPHeaders({
-        'Accept-Language': 'en-US,en;q=0.9'
-    });
-    // await page.setRequestInterception(true);
-    
-    // page.on('request', (request) => {
-    //     request.continue();
-    // });
-    // page.on('response', async (response) => {
-    //     if(response.url() === 'https://w2e-api.esportsmatrix.io/api/esbull/api/GetIndexMatchV2'){
-    //         console.log(`Response intercepted`);
-    //         const responseBody = await response.json();
-    //         console.log(responseBody);
-    //     }
-    // });
-
-    let tuple = {hrefs:[], sports:[], tours:[]};
+    const page = await prepPage(browser, book);
+    let hrefs = [];
     try{
-        await page.goto(meta.baseURL);
-        // // Define the function to handle logging inside evaluate call
-        // function logHandler(log) {
-        //     return (msg) => {
-        //         console.log(msg);
-        //     };
-        // }
-        // // Expose the log handler to the page
-        // await page.exposeFunction('nodeLog', logHandler(log));
-        tuple = await page.evaluate(async () => {
-            debugger;
-            const hrefs = [];
-            let allTours = [];
-            const sports = Array.from(document.querySelectorAll('div.lg_itmInfo'))
-                .map( e => e.textContent);
-            const tours = Array.from(document.querySelectorAll('div.lg_infoWrp'))
-                .map( e => e.textContent);
-            allTours = document.querySelectorAll('div.lg_inrInfo');
-            // window.nodeLog(`alltours: ${allTours}`);
-            // window.nodeLog(`alltoursSize: ${allTours.length}`);
+        await page.goto(url);
+        await page.waitForSelector('div.lg_inrInfo');
+        hrefs = await page.evaluate(async () => {
+            //debugger;
+            const ret = [];
+            let allTours = document.querySelectorAll('div.lg_inrInfo');
             let curDispMatchrows = 0;
             let indicesOfVisible = [];
             for(let i = 0; i < allTours.length || curDispMatchrows !== 0; i++){
 
+                let matchesInNextTour;
                 if(i < allTours.length){
                     matchesInNextTour = parseInt(allTours[i].children[1].textContent);
                 }
@@ -103,18 +61,18 @@ export async function huntSportURLs(meta){
                             continue;
                         }
                         await item.click();
-                        // TODO this timer can be removed for faster performance, but then it looks less human?
+                        // OPT this timer can be removed for faster performance, but then it looks less human?
                         // await new Promise(resolve => setTimeout(resolve, 100));
                         // window.nodeLog(`pushing: ` + page.url);
-                        hrefs.push(window.location.href);
+                        ret.push(window.location.href);
                         // window.nodeLog(`index ${hrefs.length-1} hunted matchURL: ${page.url}\n`);
                         const clickBack = document.querySelector('i.icon-arrow-left');
                         if(!clickBack){
                             // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${page.url}, entry: ${hrefs.length}. Cannot come back.\n`);
-                            return hrefs;
+                            return ret;
                         }
                         await clickBack.click();
-                        // TODO this timer can be removed for faster performance, but then it looks less human?
+                        // OPT this timer can be removed for faster performance, but then it looks less human?
                         // await new Promise(resolve => setTimeout(resolve, 100));
                     }
 
@@ -135,19 +93,21 @@ export async function huntSportURLs(meta){
 
                 }
             }
-            return {hrefs, sports, tours};
+            return ret;
         })
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
+        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted.\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
+        log.write(error.message);
+        return -1;
     } finally{
         // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2), 'utf8');
-        await browser.close();
+        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');
+        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
         await promisify(log.end).bind(log);
     }
 }

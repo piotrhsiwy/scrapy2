@@ -279,7 +279,7 @@ const is_locked = await oddHandle.evaluate( e =>
         );
         const value = is_locked ? null : 
           await oddHandle.evaluate( (odd) => {
-            // debugger;
+            // //debugger;
             const label = odd.querySelector('label');
             let labelText = label ? label.textContent : '';
             let value = odd ? parseFloat(odd.textContent.replace(labelText, '').trim()) : null;

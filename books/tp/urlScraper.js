@@ -211,7 +211,7 @@ export async function scrapeMatchURL(data, browser, book, i){
 //    console.log(JSON.stringify(odd, null, 2));
     let coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
     if(!coef){
-      odd.coefs.push({book: 'Thunderpick', value: coefHome});
+      odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Thunderpick', value: coefHome});
     } else{
       coef.coef = coefHome;
     }
@@ -299,8 +299,7 @@ export async function scrapeMatchURL(data, browser, book, i){
             coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
             if(!coef){
               odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Thunderpick', value: value});
-            }
-//            console.log('market: ');
+            } //            console.log('market: ');
 //            console.log(JSON.stringify(market, null, 2));
           }
         }
@@ -317,9 +316,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
     return -1;
   } finally{
-    try{
-      await page?.close()
-    } catch{}
+    try{ await page?.close() } catch{ log.write(`Error thrown when closing page`); }
     await promisify(log.end).bind(log);
   } 
 

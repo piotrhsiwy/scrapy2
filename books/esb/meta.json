@@ -1,5 +1,6 @@
 {
     "abbrev":"esb",
-    "baseURL":"https://esportsbet.io/de/esportsbull/?version=2&liveStream=1&streamer=1&streamerLiveStream=1&isSingleProduct=1&gameCategory=1",
-    "viewport":{"width":1920, "height":768}
+    "baseURL":"https://esportsbet.io/esportsbull/?version=2",
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|translations|chat|googletagmanager"
 }

@@ -12,31 +12,71 @@ async function clean(){
 
 async function load(){
   console.log(`Loading modules...`);
-  for(const book of books){
-    const moduleName = `./books/${book.abbrev}/urlHunter.js`;
-    await import(moduleName).then( async (module) => {
-      book.hunterModule = module; 
-      console.log(`Imported module ${moduleName}`);
+  for(let i = 0; i < books.length; i++){
+    const hunterModuleName = `./books/${books[i].abbrev}/urlHunter.js`;
+    const scraperModuleName = `./books/${books[i].abbrev}/urlScraper.js`;
+    await import(hunterModuleName).then( async (module) => {
+      books[i].hunterModule = module; 
+      console.log(`Imported module ${hunterModuleName}`);
     }, () => {
-      console.log(`Importing module failed ${moduleName}`);
+      console.log(`Importing module failed ${hunterModuleName}`);
     });
-  }
-  for(const book of books){
-    const moduleName = `./books/${book.abbrev}/urlScraper.js`;
-    await import(moduleName).then( async (module) => {
-        book.scraperModule = module; 
-        console.log(`Imported module ${moduleName}`);
-      }, () => {
-        console.log(`Importing module failed ${moduleName}`);
-      });
+    await import(scraperModuleName).then( async (module) => {
+      books[i].scraperModule = module; 
+      console.log(`Imported module ${scraperModuleName}`);
+    }, () => {
+      console.log(`Importing module failed ${scraperModuleName}`);
+    });
+    if( ! books[i].hunterModule || ! books[i].scraperModule ){
+      books.splice(i, 1);
+      i--;
+    }
   }
 }
 
-async function singleHunt(){
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+async function openBrowser(){
+  console.log('Preparing browser and pages...');
+  puppeteer.use(StealthPlugin());
+  const browser =  await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--disable-web-security',
+      '--proxy-server="direct://"',
+      '--proxy-bypass-list=*',
+      '-no-startup-window',
+      '--disk-cache-dir=./NUL',
+      ' --disk-cache-size=1',
+      '--aggressive-cache-discard',
+      '--disable-notifications',
+      '--disable-remote-fonts',
+      // '--disable-reading-from-canvas', // causes 22bet to not load elements
+      '--disable-remote-playback-api',
+      '--disable-shared-workers --disable-voice-input',
+      '--enable-aggressive-domstorage-flushing',
+      '--disable-site-isolation-trials',
+      '--disable-features=NetworkService,NetworkServiceInProcess',
+    ],
+    userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+    devtools: false,
+    waitForInitialPage: false, 
+    slowMo:false,
+    dumpio:false,
+  }); 
+  return browser;
+}
+  
+async function singleHunt(browser){
   console.log('Hunting...')
-  for(const book of books){
+  for(const book of books){ 
     console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}`);
-    await book.hunterModule.huntSportURLs(book);
+    await book.hunterModule.huntSportURLs(browser, book);
   }
 }
 
@@ -79,10 +119,12 @@ async function savecalc(data){
 
 
 import { Queue } from "async-await-queue";
-import puppeteer from "puppeteer-extra";
-import StealthPlugin from "puppeteer-extra-plugin-stealth"
-async function scrape(){ 
+async function run(browser){ 
   console.log('Loading urls from files...');
+  if(books.length === 0){
+    console.log(`No books available.`);
+    return -1;
+  }
   for(const book of books){
     const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
     try{
@@ -93,26 +135,9 @@ async function scrape(){
     }
     console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
   } 
-  console.log('Preparing browser and pages...');
-  puppeteer.use(StealthPlugin());
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--disable-gpu',
-      '--disable-web-security',
-      '--proxy-server="direct://"',
-      '--proxy-bypass-list=*',
-    ],
-    userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
-    devtools: false,
-  }); 
   const data = {sports: []};
-  let i = 0;
-  while(true){
+  let i = 0;;
+  while(true){;
     const myq = new Queue(10, 1000);
     const q = [];
     for(let i = 0; ; i++){
@@ -143,7 +168,8 @@ async function scrape(){
       }
     }
     await Promise.all(q);
-    await singleHunt(); } 
+    await singleHunt(browser);
+  } 
 }
 
 
@@ -154,12 +180,12 @@ async function scrape(){
 import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'esb',
-  'ms',
-  'tp',
   'gg',
   'ls',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'ms',
+  'esb',
+  'tp',
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
@@ -181,8 +207,13 @@ for(const abbrev of availableAbbrev){
 (async function main(){
   await load();
   await clean();
-  // await singleHunt();
-  await scrape();
+  const browser = await openBrowser();
+  await singleHunt(browser);
+  try{
+    return await run(browser);
+  } finally{
+    browser.close();
+  }
 })()
 
 // ##############################################################################################################
