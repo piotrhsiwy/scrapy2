@@ -40,7 +40,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser =  await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -181,11 +181,11 @@ import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
   'gg',
-  'ls',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  'ms',
-  'esb',
-  'tp',
+  // 'ls',
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  // 'ms',
+  // 'esb',
+  // 'tp',
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
