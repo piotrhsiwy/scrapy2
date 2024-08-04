@@ -1,6 +1,7 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { ISO8601Prettify, unprettifyISO8601 } from "../data/util/prettify.js";
+import { kMaxLength } from "buffer";
 
 let log;
 let consideredArbCount;
@@ -245,9 +246,9 @@ function ev2(evs, sport, match, market, odd){
                     /* ev is fresh */
                     evs.push(newEv);
                     positiveEvCount++;
-                    const arbReport =  
-                        `${A.name.padEnd(20,' ')}@${A.value} on ${A.book.padEnd(20,' ')} - ${B.name.padEnd(20,' ')}@${B.value} on ${B.book.padEnd(20,' ')} - ${C.name.padEnd(20,' ')}@${C.value} on ${C.book.padEnd(20,' ')} -  ${D.name.padEnd(20,' ')}@${D.value} on ${D.book.padEnd(20,' ')}, ${arb} arb.\n`;
-                    log.write(arbReport);
+                    const evReport =  
+                        `${newEv.odd.oddName.padEnd(20,' ')}@${newEv.odd.oddValue} \tstrength ${newEv.strength} \tamong ${newEv.values} \ton ${newEv.odd.book.padEnd(20,' ')}\n`;
+                    log.write(evReport);
                 }
             }
             consideredEvCount++;
@@ -512,8 +513,21 @@ export async function calcSports(){
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
     log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} stronger than cutoff.\n`)
 
-    arbs.sort((a, b) => b.value - a.value);
-    evs.sort((a, b) => a.strength - b.strength);
+    if(arbs.length > 0){
+        arbs.sort((a, b) => {
+            const agT = unprettifyISO8601(a["timestamp (calculated)"]).getTime();
+            const bgT = unprettifyISO8601(b["timestamp (calculated)"]).getTime();
+            return agT - bgT;
+        });
+    }
+
+    if(evs.length > 0){
+        evs.sort( (a, b) => {
+            const agT = unprettifyISO8601(a["timestamp (calculated)"]).getTime();
+            const bgT = unprettifyISO8601(b["timestamp (calculated)"]).getTime();
+            return agT - bgT;
+        });
+    }
 
     log.write(`Writing the results to ${arbsFilePath}\n`);
     writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));

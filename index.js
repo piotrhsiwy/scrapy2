@@ -208,7 +208,7 @@ for(const abbrev of availableAbbrev){
   await load();
   await clean();
   const browser = await openBrowser();
-  await singleHunt(browser);
+  // await singleHunt(browser);
   try{
     return await run(browser);
   } finally{
