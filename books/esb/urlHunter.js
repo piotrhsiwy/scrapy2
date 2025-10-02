@@ -1,4 +1,4 @@
-import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
+import { createWriteStream, writeFileSync, existsSync, truncateSync, readFileSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
 
@@ -29,13 +29,23 @@ export async function huntSportURLs(browser, book){
     //     truncateSync(toursPath, 0);
     // }
 
+    // load the book-specific mappings from json files
+    const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
+    let sportNameMapping;
+    try{
+        sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+        if(!sportNameMapping){ throw error(); }
+    } catch (error){
+        log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
+    }
+
     const page = await prepPage(browser, book);
     let hrefs = [];
     try{
         await page.goto(url);
         await page.waitForSelector('div.lg_inrInfo');
         hrefs = await page.evaluate(async () => {
-            //debugger;
+            debugger;
             const ret = [];
             let allTours = document.querySelectorAll('div.lg_inrInfo');
             let curDispMatchrows = 0;
@@ -47,54 +57,78 @@ export async function huntSportURLs(browser, book){
                     matchesInNextTour = parseInt(allTours[i].children[1].textContent);
                 }
 
-                if(curDispMatchrows + matchesInNextTour > 50 || i === allTours.length){
+                if( (curDispMatchrows !== 0 && curDispMatchrows + matchesInNextTour > 50) || i === allTours.length){
 
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    // await new Promise(resolve => setTimeout(resolve, 2000));
                     // scrape
-                    const items = document.querySelectorAll('div.matchRow');
+                    let items = [];
+                    while( items.length !== curDispMatchrows){
+                        items = document.querySelectorAll('[data-parentmatchid]');
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    for(let j = 0; j < items.length; j++){
+                        // the matchURL is built as follows: baseURL + ID + '/' + specificID (of the sport)
+                        const sportName = items[j].classList[1];
+                        const matchID = items[j].getAttribute('data-parentmatchid')
+                        ret.push({matchID, sportName});
+                    }
                     // window.nodeLog('size of items:' + items.length);
-                    for(let i = 0; i < items.length; i++){
-                        const item = document.querySelectorAll('div.matchRow')[i];
-                        // window.nodeLog('item: inside forloop' + item);
-                        if(!item){
-                            // window.nodeLog(`Failure! Item is not clickable ${page.url}, entry: ${hrefs.length}\n`);
-                            continue;
-                        }
-                        await item.click();
-                        // OPT this timer can be removed for faster performance, but then it looks less human?
-                        // await new Promise(resolve => setTimeout(resolve, 100));
-                        // window.nodeLog(`pushing: ` + page.url);
-                        ret.push(window.location.href);
-                        // window.nodeLog(`index ${hrefs.length-1} hunted matchURL: ${page.url}\n`);
-                        const clickBack = document.querySelector('i.icon-arrow-left');
-                        if(!clickBack){
-                            // window.nodeLog(`Critical Failure! No clickable icon-arrow-left ${page.url}, entry: ${hrefs.length}. Cannot come back.\n`);
-                            return ret;
-                        }
-                        await clickBack.click();
-                        // OPT this timer can be removed for faster performance, but then it looks less human?
-                        // await new Promise(resolve => setTimeout(resolve, 100));
-                    }
 
-                    // clean the q aka unclick
-                    allTours = document.querySelectorAll('div.lg_inrInfo');
-                    while(indicesOfVisible.length !== 0){
-                        allTours[indicesOfVisible.pop()].click();
+                    // do this sequence to reset all the visible tournaments
+                    let temp = undefined;
+                    while(temp === undefined){
+                        temp = document.querySelector('div.leagueName')
+                        await new Promise(resolve => setTimeout(resolve, 100));
                     }
-                    curDispMatchrows = 0;
+                    await temp.click();
+                    temp = undefined;
+                    while(temp === undefined){
+                        temp = document.querySelector('i.icon-arrow-left')
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    await temp.click();
+
+                    // continue where you left off
+                    const tempLen = allTours.length;
+                    allTours = [];
+                    while( allTours.length !== tempLen ){
+                        allTours = document.querySelectorAll('div.lg_inrInfo');
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    curDispMatchrows = 0; 
+                    // decrease i to not skip any tournament (offset the one run of the i-loop used to scrape)
+                    i--;
 
                 } else{
 
                     // enq aka click
                     allTours[i].click();
+                    while(!allTours[i].classList.contains('inrActive')){
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
                     indicesOfVisible.push(i);
                     curDispMatchrows += matchesInNextTour;
+                    if(curDispMatchrows > 50){
+                        curDispMatchrows = 50;
+                    }
                     continue;
 
                 }
             }
             return ret;
         })
+        hrefs = hrefs.map( ({matchID, sportName}) => {
+            let sportID = 0;
+            const mapping = sportNameMapping.find( m => m.specificName === sportName )
+            if(mapping){
+                sportID = mapping.specificID;
+            } else{
+                log.write(`Critical Failure! sportName Mapping of '${sportName}' to specificID does not exist in ${sportNameMappingPath}. Cannot build matchURL.\n`);
+                return -1;
+            }
+            const matchURL = url + 'OddsPage/' + matchID + '/' + sportID;
+            return matchURL;
+        } )
 
         log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
         return 0;

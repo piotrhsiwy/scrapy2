@@ -1,6 +1,6 @@
 {
     "abbrev":"esb",
-    "baseURL":"https://esportsbet.io/esportsbull/?version=2",
+    "baseURL":"https://esportsbet.io/esportsbull/",
     "viewport":{"width":1920, "height":768},
     "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|translations|chat|googletagmanager"
 }
