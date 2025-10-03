@@ -67,15 +67,14 @@ export async function scrapeMatchURL(data, browser, book, i){
     // check if the match still exists (url is valid)
     let selector, el, mapping;
     try{
-      el = await page.waitForSelector('a.main-market__competition-link', {timeout: 10000});
+      el = await page.waitForSelector('#markets-list', {timeout: 10000});
     } catch{
       log.write(`Critical Failure! No initial selector: url is not valid or the page didn't load. ${await page.url()}\n`);
       return -1;
     }
     // get sport
-    selector = "#breadcrumbs > div:nth-child(2) > a";
-    el = await page.waitForSelector(selector);
-    let sportName = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
+    selector = "#breadcrumbs a";
+    let sportName = await page.$$eval(selector, els => els[1].textContent/*.trim().replace(/\u00a0/g, '\u0020')*/);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
@@ -116,35 +115,33 @@ export async function scrapeMatchURL(data, browser, book, i){
 //    console.log('tournament: ');
 //    console.log(JSON.stringify(tournament, null, 2));
 
+
+// Array.from(document.querySelectorAll('#markets-list [data-state="open"]')).filter( e => e.id.includes('market-collapsible'))
+
     // get teamHome, teamAway, datetime, mode
-    selector = "div.main-market__home-team > div";
-    el = await page.waitForSelector(selector);
-    const teamHome = stripTeamName(await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el));
+    const teams = await page.evaluate( () => {
+      return Array.from(document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[1].querySelectorAll('.text-gray-light')).map( e => e.textContent)
+    });
+    const teamHome = teams[0];
+    const teamAway = teams[1];
 //    console.log('>>>>>>>>>>>>>>> scraped teamHome: ' + teamHome);
-    selector = "div.main-market__away-team > div";
-    el = await page.waitForSelector(selector);
-    const teamAway = stripTeamName(await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el));
 //    console.log('>>>>>>>>>>>>>>> scraped teamAway: ' + teamAway);
     let datetime;
     let dateString = await page.evaluate( () => {
-      const ret = document.querySelector('div.match-header__date');
+      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[0].childNodes[0].childNodes[0].childNodes[4];
       if(ret){
         return ret.textContent;
       } else{
         return null;
       }
     })
-    if(!dateString){
-      try{
-        log.write(`Match is live ${await page.url()}\n`)
-        await page.waitForSelector('div.match-header__live-timer');
-        datetime = 'live';
-      } catch{
-        log.write(`Critical Failure! No element of class match__live-timer present`);
-        return -1;
-      }
+    const isLive = await page.evaluate( () => {
+      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].querySelector('[data-testid="live-tag-red"]');
+    })
+    if(isLive){
+      datetime = 'live';
     } else{
-      datetime = convDatetimeToISO( dateString.replace(/\u00a0/g, '\u0020').trim(), el);
+      datetime = convDatetimeToISO( dateString/*.replace(/\u00a0/g, '\u0020').trim()*/);
     }
 //    console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);
     // selector = "div.match-header__bo";
