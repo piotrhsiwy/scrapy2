@@ -45,7 +45,7 @@ export async function huntSportURLs(browser, book){
         await page.goto(url);
         await page.waitForSelector('div.lg_inrInfo');
         hrefs = await page.evaluate(async () => {
-            debugger;
+            // debugger;
             const ret = [];
             let allTours = document.querySelectorAll('div.lg_inrInfo');
             let curDispMatchrows = 0;

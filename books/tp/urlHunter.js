@@ -1,4 +1,3 @@
-import { Queue } from "async-await-queue";
 import { writeFileSync, truncateSync, existsSync, createWriteStream } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
@@ -36,38 +35,33 @@ export async function huntSportURLs(browser, book){
 
         await page.waitForSelector('div.infinite-scroll-list');
         hrefs = await page.evaluate( async () => {
-            //debugger;
-            const ret = [];
-            const sports = document.querySelectorAll('div.navigation-element a');
-            for(const sport of sports){
-                const elSizeGames = sport.querySelector('div.navigation-element-heading__side');
-                const sizeGames = elSizeGames ? parseInt(elSizeGames.textContent) : 0;
-                if(sizeGames){
-                    await sport.click();
-                    let matchGroups = document.querySelectorAll('div.infinite-scroll-list');
-                    while( matchGroups.length === 0 ){
+            debugger;
+            let ret = [];
+            const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
+                e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2')
+            );
+            for(let i = 0; i < sports.length; i++){
+                const matchCount = parseInt(sports[i].textContent);
+                if(matchCount > 0){
+                    await sports[i].click();
+                    while(document.querySelector('[data-testid="match-details-link"') === null){
                         await new Promise(resolve => setTimeout(resolve, 100));
-                        matchGroups = document.querySelectorAll('div.infinite-scroll-list');
                     }
-                    let newHrefs = 0;
-                    let size;
+                    // let list = document.querySelectorAll('[data-testid="match-details-link"]');
+                    // let add = list[0].href;
+                    let hrefs = Array.from(document.querySelectorAll('[data-testid="match-details-link"]')).map( e => e.href);
+                    let newHrefs = [];
+                    let expectedMatchCount;
                     do{
-                        size = matchGroups.length;
                         window.scrollTo(0, document.body.scrollHeight);
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        matchGroups = document.querySelectorAll('div.infinite-scroll-list');
-                    } while( size != matchGroups.length);
-                    for(const matchGroup of matchGroups){
-                        const matches = matchGroup.querySelectorAll(':scope > *');
-                        for(const match of matches){
-                            const hrefsLocal = match.querySelectorAll(':scope > a');
-                            if(hrefsLocal.length === 3){
-                                const href = hrefsLocal[2].getAttribute('href');
-                                ret.push(href);
-                                newHrefs++;
-                            }
-                        }
-                    }
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        newHrefs = Array.from(document.querySelectorAll('[data-testid="match-details-link"]')).map( e => e.href);
+                        newHrefs = newHrefs.filter(e => !hrefs.includes(e));
+                        hrefs = hrefs.concat(newHrefs);
+                        expectedMatchCount = parseInt(document.querySelector('[data-testid="AllTab"] span')?.textContent);
+                        expectedMatchCount = expectedMatchCount ? expectedMatchCount : 0;
+                    }while(hrefs.length !== expectedMatchCount);
+                    ret = ret.concat(hrefs);
                 }
             }
             return ret;
