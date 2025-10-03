@@ -116,7 +116,6 @@ export async function scrapeMatchURL(data, browser, book, i){
 //    console.log(JSON.stringify(tournament, null, 2));
 
 
-// Array.from(document.querySelectorAll('#markets-list [data-state="open"]')).filter( e => e.id.includes('market-collapsible'))
 
     // get teamHome, teamAway, datetime, mode
     const teams = await page.evaluate( () => {
@@ -149,161 +148,112 @@ export async function scrapeMatchURL(data, browser, book, i){
     // const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
 //    console.log('>>>>>>>>>>>>>>> scraped mode: ' + mode);
     let match = sport.matches.findLast(m =>
-        (
-          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
-        )
-        &&
-        (
-          m.teamHome === teamHome &&
-          m.teamAway === teamAway
-        )
-        ||
-        ( 
-          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
-          m.teamAway === teamHome
-        )
-    )
-    if(!match){
-      /* match is new */
-      log.write(`Warning! This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}\n`);
-      sport.matches.push({ 
-        teamHome: teamHome,
-        teamAway: teamAway,
-        datetime: datetime,
-        urls: [],
-        markets: []
-      });
-      match = sport.matches.findLast(m =>
-          m.teamHome === teamHome &&
-          m.teamAway === teamAway &&
-          m.datetime === datetime
-      );
-    }
-    match.urls.push({book: 'Thunderpick', url: await page.url()});
+      (
+        m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) // maximum of 3h difference is allowed
+      )
+      &&
+      (
+        m.teamHome === teamHome &&
+        m.teamAway === teamAway
+      )
+      ||
+      ( 
+        m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
+        m.teamAway === teamHome
+      )
+  )
+  if(!match){
+    /* match is new */
+    log.write(`Warning! This match could not yet find a match in data_out.json: ${teamHome}, ${teamAway}, ${datetime}\n`);
+    sport.matches.push({ 
+      teamHome: teamHome,
+      teamAway: teamAway,
+      datetime: datetime,
+      urls: [],
+      markets: []
+    });
+    match = sport.matches.findLast(m =>
+        m.teamHome === teamHome &&
+        m.teamAway === teamAway &&
+        m.datetime === datetime
+    );
+  }
+  match.urls.push({book: 'Thunderpick', url: await page.url()});
 //    console.log('match: ');
 //    console.log(JSON.stringify(match, null, 2));
 
-    // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-      // get the Match Winner market
-        // get the coefHome
-    let marketName = 'Match Winner';
+  // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
+  const allHandles = await page.$$('#markets-list [data-state="open"]');
+  let marketHandles = [];
+  for(const h of allHandles){
+    const id = await h.evaluate( h => h.id );
+    if(id.includes("market-collapsible")){
+      marketHandles.push(h);
+    }
+  }
+  // for all the markets
+  let marketName;
+  for(let i = 0; i < marketHandles.length; i++){
+    // get marketName - no need scroll because of long viewport
+    marketName = await marketHandles[i].evaluate( async (e) => {
+      return e.childNodes[0]?.textContent;
+    });
     mapping = marketNameMapping.find( m => m.specificName === marketName);
-    selector = 'button.main-market__left-odds > span';
-    el = await page.waitForSelector(selector);
-    const coefHome = await page.evaluate(e => parseFloat(e.textContent), el);
-//    console.log('>>>>>>>>>>>>>>> scraped coefHome: ' + coefHome);
+    if(mapping){
+      marketName = marketNameMap[mapping.globalID];;
+    } else{
+      log.write(`Critical Failure! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+      return -1;
+    }
+    // write (marketName)
     let market = match.markets.findLast(m => m.name === marketName);
     if(!market){
       match.markets.push({name: marketName, odds: []});
       market = match.markets.findLast(m => m.name === marketName);
     }
-//    console.log('market: ');
-//    console.log(JSON.stringify(market, null, 2));
-    let odd = market.odds.findLast(o => o.name === teamHome);
-    if(!odd){
-      market.odds.push({name: teamHome, coefs: []});
-      odd = market.odds.findLast(o => o.name === teamHome);
+    // skip the slider-markets
+    if(await marketHandles[i].$('.range-slider')){
+      continue;
     }
-//    console.log('odd: ');
-//    console.log(JSON.stringify(odd, null, 2));
-    let coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
-    if(!coef){
-      odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Thunderpick', value: coefHome});
-    } else{
-      coef.coef = coefHome;
-    }
-//    console.log('coef: ');
-//    console.log(JSON.stringify(coef, null, 2));
-        // get the coefAway
-    selector = 'button.main-market__right-odds > span';
-    el = await page.waitForSelector(selector);
-    const coefAway = await page.evaluate(e => parseFloat(e.textContent), el);
-//    console.log('>>>>>>>>>>>>>>> scraped coefAway: ' + coefAway);
-    odd = market.odds.findLast(o => o.name === teamAway);
-    if(!odd){
-      market.odds.push({name: teamAway, coefs: []});
-      odd = market.odds.findLast(o => o.name === teamAway);
-    }
-//    console.log('odd: ');
-//    console.log(JSON.stringify(odd, null, 2));
-    coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
-    if(!coef){
-      odd.coefs.push({book: 'Thunderpick', value: coefAway});
-    } else{
-      coef.coef = coefAway;
-    }
-//    console.log('coef: ');
-//    console.log(JSON.stringify(coef, null, 2));
-      // get all the other markets
-    selector = 'div.market-accordion';
-    await page.waitForSelector(selector, {timeout:3000});
-    const marketHandles = await page.$$(selector);
-    for(const marketHandle of marketHandles){
 
-      selector = 'div.market-accordion__market-name';
-      marketName = await marketHandle.$eval(selector, e => e.textContent);
-      mapping = marketNameMapping.find( m => m.specificName === marketName);
-      if(mapping){
-        marketName = marketNameMap[mapping.globalID];
-      } else{
-        log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
-        continue;
-      }
-//      console.log('>>>>>>>>>>>>>>> scraped marketName: ' + marketName);
-      market = match.markets.findLast(m => m.name === marketName);
-      if(!market){
-        match.markets.push({name: marketName, odds: []});
-        market = match.markets.findLast(m => m.name === marketName);
-      }
-//      console.log('market: ');
-//      console.log(JSON.stringify(market, null, 2));
-
-      selector = 'div.market-row';
-      const oddHandles = await marketHandle.$$(selector);
-//      console.log(`$$${selector} length: ${oddHandles.length}`);
-      if(oddHandles.length >= 2){
-        selector = 'div.market-row__team-name';
-        const teamPrefix = await oddHandles[0].$$eval(selector, es => (es.map(e => e.textContent)));
-//        console.log(`$$eval${selector} length: ${teamPrefix.length}`);
-//        console.log('>>>>>>>>>>>>>>> scraped teamPrefix[0]: ' + teamPrefix[0]);
-//        console.log('>>>>>>>>>>>>>>> scraped teamPrefix[1]: ' + teamPrefix[1]);
-        selector = 'button.odds-button';
-        for(let i = 1; i < oddHandles.length; i++){
-          const buttonHandles = await oddHandles[i].$$(selector);
-//          console.log(`$$eval${selector} length: ${buttonHandles.length}`);
-          for(let j = 0; j < buttonHandles.length; j++){
-            const teamSufix = await buttonHandles[j].$eval('div.odds-button__name', e => e.textContent);
-            let oddName = teamPrefix[j] ? `${teamPrefix[j]} ${teamSufix}` : teamSufix;
-            oddName = stripTeamName(oddName);
-            odd = market.odds.findLast(o => o.name === oddName);
-            if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
-              const [left, right] = oddName.split(':');
-              oddName = `${right}:${left}`;
-            }
-//            console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
-            if(!odd){
-              market.odds.push({name: oddName, coefs: []})
-              odd = market.odds.findLast(o => o.name === oddName);
-            }
-            let value;
-            try{
-              value = await buttonHandles[j].$eval('span.odds-button__odds', e => parseFloat(e.textContent));
-            } catch(error){
-//              console.log('This odd has no value (the market could be locked)');
-              value = null;
-            }
-//            console.log('>>>>>>>>>>>>>>> scraped value: ' + value);
-            coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
-            if(!coef){
-              odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Thunderpick', value: value});
-            } //            console.log('market: ');
-//            console.log(JSON.stringify(market, null, 2));
-          }
+    // get odds and vals
+    let {odds, vals} = await marketHandles[i].evaluate( async (e) => {
+      debugger;
+      let oddPrefixH = e.childNodes[1].querySelectorAll('.grid span.text-center')[0]?.textContent
+      oddPrefixH = oddPrefixH ? oddPrefixH : "";
+      let oddPrefixA = e.childNodes[1].querySelectorAll('.grid span.text-center')[1]?.textContent
+      oddPrefixA = oddPrefixA ? oddPrefixA : "";
+      let odds = [],  vals= [];
+      let odd = true, val;
+      for( let j = 0; e.childNodes[1].querySelectorAll('button div')[j]; j++ ){
+        odd = e.childNodes[1].querySelectorAll('button div')[j].textContent
+        val = e.childNodes[1].querySelectorAll('button span')[j].textContent
+        // entries for an even value of j are on the left (home)
+        // entries for an odd value of j are on the right (away)
+        if(j % 2 === 0){
+          odds.push(oddPrefixH + odd);
+        } else{
+          odds.push(oddPrefixA + odd);
         }
-      } else{
-        log.write(`Critical Failure! I have less than 2 odds for market ${marketName}\n`);
-        return -1;
+        val = parseFloat(val);
+        vals.push(val);
       }
+      return {odds, vals};
+    })
+    // write (odds and vals)
+    let odd;
+    for(let j = 0; j < odds.length; j++){
+      odd = market.odds.findLast(o => o.name === odds[j]);
+      if(!odd){
+        market.odds.push({name: odds[j], coefs: []})
+        odd = market.odds.findLast(o => o.name === odds[j]);
+      }
+      let coef = odd.coefs.findLast(c => c.book === 'Thunderpick');
+      if(!coef){
+        odd.coefs.push({"timestamp(scraped)":new Date(), book: 'Thunderpick', value: vals[j]});
+      }
+    }
+
     }
 
     log.write(`Success! scraping from ${await page.url()} succeeded\n`);

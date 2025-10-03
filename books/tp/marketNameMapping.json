@@ -12,6 +12,10 @@
         "globalID":     "CS"
     },
     {
+        "specificName": "Best of 5 Correct Match Score",
+        "globalID":     "CS"
+    },
+    {
         "specificName": "Total Maps Played Over/Under",
         "globalID":     "TM"
     },
