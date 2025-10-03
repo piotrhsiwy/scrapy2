@@ -171,9 +171,10 @@ export async function scrapeMatchURL(data, browser, book, i){
     // scroll until no more elements are loaded
     let old_size, new_size;
     do{
-      await page.waitForNetworkIdle({idleTime: 500});
+      // await new Promise(resolve => setTimeout(resolve, 1000));
       old_size =  marketHandles.length;
       await marketHandles[marketHandles.length-1].scrollIntoView();
+      await page.waitForNetworkIdle({idleTime: 100});
       marketHandles = await page.$$(selector);
 //      console.log(`$$${selector} length: ${marketHandles.length}`);
       new_size =  marketHandles.length;
@@ -188,11 +189,18 @@ export async function scrapeMatchURL(data, browser, book, i){
       // get marketName
       selector = 'div.matchInfoLeft';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
+      const SplitOnSpaces = marketName.split(' ');
       const HdpSpecial = marketName.split(' Hdp: ');
       if(HdpSpecial.length > 1){ marketName = 'Match Handicap' }
       mapping = marketNameMapping.find( m => m.specificName === marketName);
       if(mapping){
-        marketName = marketNameMap[mapping.globalID];
+        const globalName = marketNameMap[mapping.globalID];
+        if(globalName){
+          marketName = globalName;
+        } else{
+          log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMap}\n`);
+          continue;
+        }
       } else{
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
         continue;
@@ -213,14 +221,19 @@ export async function scrapeMatchURL(data, browser, book, i){
         const oddHandle = oddsHandles[i];
         let handle = await oddHandle.$('label');
         if(!handle){
-          // if !oddName that means that ths div.oddWrp is indeed one of three and holds an oddName suffix like '23.5' , for Over/Under Market and so on...
           continue;
         }
         let oddName = await oddHandle.$eval('label', (e) => e.textContent);
-        oddName.replace()
+        // oddName.replace()
+        // if !oddName that means that ths div.oddWrp is indeed one of three and holds an oddName suffix like '23.5' , for Over/Under Market and so on...
+        // for Over/Under Total Maps markets, the sufix is the last bit, split on spaces, from the marketName. 
         let sufix = '';
         if(oddsHandles.length === 3){
-          sufix = await page.evaluate(e => e.parentNode.childNodes[1].textContent, oddHandle);
+          if(oddName === 'Over' || oddName === 'Under'){
+            sufix = SplitOnSpaces[SplitOnSpaces.length-1];
+          } else{
+            sufix = await page.evaluate(e => e.parentNode.childNodes[1].textContent, oddHandle);
+          }
         }
         oddName = oddName
         .replace(labelHome, teamHome)
@@ -267,14 +280,14 @@ export async function scrapeMatchURL(data, browser, book, i){
           const [left, right] = oddName.split(':');
           oddName = `${right}:${left}`;
         }
-//console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
-odd = market.odds.findLast(o => o.name === oddName);
-if(!odd){
-  market.odds.push({name: oddName, coefs: []})
-  odd = market.odds.findLast(o => o.name === oddName);
-}
-// value = null if an odd is locked
-const is_locked = await oddHandle.evaluate( e =>
+        //console.log('>>>>>>>>>>>>>>> scraped oddName: ' + oddName);
+        odd = market.odds.findLast(o => o.name === oddName);
+        if(!odd){
+          market.odds.push({name: oddName, coefs: []})
+          odd = market.odds.findLast(o => o.name === oddName);
+        }
+        // value = null if an odd is locked
+        const is_locked = await oddHandle.evaluate( e =>
           e.classList.contains('locked')
         );
         const value = is_locked ? null : 
