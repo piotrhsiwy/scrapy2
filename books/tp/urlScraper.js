@@ -198,12 +198,17 @@ export async function scrapeMatchURL(data, browser, book, i){
     marketName = await marketHandles[i].evaluate( async (e) => {
       return e.childNodes[0]?.textContent;
     });
+    // if it's a slider market, switch to "All" View
+    if(marketName.includes('Slider')){
+      await marketHandles[i].$eval( ('[data-testid="allTab"]'),  async (e) => await e?.click() );
+    }
+    marketName = marketName.split('Slider')[0];
     mapping = marketNameMapping.find( m => m.specificName === marketName);
     if(mapping){
       marketName = marketNameMap[mapping.globalID];;
     } else{
-      log.write(`Critical Failure! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
-      return -1;
+      log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+      continue;
     }
     // write (marketName)
     let market = match.markets.findLast(m => m.name === marketName);
@@ -211,14 +216,10 @@ export async function scrapeMatchURL(data, browser, book, i){
       match.markets.push({name: marketName, odds: []});
       market = match.markets.findLast(m => m.name === marketName);
     }
-    // skip the slider-markets
-    if(await marketHandles[i].$('.range-slider')){
-      continue;
-    }
 
     // get odds and vals
     let {odds, vals} = await marketHandles[i].evaluate( async (e) => {
-      debugger;
+      // debugger;
       let oddPrefixH = e.childNodes[1].querySelectorAll('.grid span.text-center')[0]?.textContent
       oddPrefixH = oddPrefixH ? oddPrefixH : "";
       let oddPrefixA = e.childNodes[1].querySelectorAll('.grid span.text-center')[1]?.textContent
@@ -226,8 +227,8 @@ export async function scrapeMatchURL(data, browser, book, i){
       let odds = [],  vals= [];
       let odd = true, val;
       for( let j = 0; e.childNodes[1].querySelectorAll('button div')[j]; j++ ){
-        odd = e.childNodes[1].querySelectorAll('button div')[j].textContent
-        val = e.childNodes[1].querySelectorAll('button span')[j].textContent
+        odd = e.childNodes[1].querySelectorAll('button div')[j]?.textContent
+        val = e.childNodes[1].querySelectorAll('button span')[j]?.textContent
         // entries for an even value of j are on the left (home)
         // entries for an odd value of j are on the right (away)
         if(j % 2 === 0){
@@ -235,7 +236,7 @@ export async function scrapeMatchURL(data, browser, book, i){
         } else{
           odds.push(oddPrefixA + odd);
         }
-        val = parseFloat(val);
+        val = val ? parseFloat(val) : 0.0;
         vals.push(val);
       }
       return {odds, vals};
