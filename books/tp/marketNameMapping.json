@@ -36,6 +36,14 @@
         "globalID":     "M3W"
     },
     {
+        "specificName": "Map 4 Winner",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Map 5 Winner",
+        "globalID":     "M5W"
+    },
+    {
         "specificName": "Round Handicap - Map 1",
         "globalID":     "RHDPM1"
     },
@@ -46,6 +54,14 @@
     {
         "specificName": "Round Handicap - Map 3",
         "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Round Handicap - Map 4",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Round Handicap - Map 5",
+        "globalID":     "RHDPM5"
     },
     {
         "specificName": "First To Reach Rounds - Map 1",
@@ -60,6 +76,14 @@
         "globalID":     "FTRRM3"
     },
     {
+        "specificName": "First To Reach Rounds - Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "First To Reach Rounds - Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
         "specificName": "Round 1 Winner - Map 1",
         "globalID":     "R1WM1"
     },
@@ -70,6 +94,14 @@
     {
         "specificName": "Round 1 Winner - Map 3",
         "globalID":     "R1WM3"
+    },
+    {
+        "specificName": "Round 1 Winner - Map 4",
+        "globalID":     "R1WM4"
+    },
+    {
+        "specificName": "Round 1 Winner - Map 5",
+        "globalID":     "R1WM5"
     },
     {
         "specificName": "Round 13 Winner - Map 1",
@@ -84,6 +116,14 @@
         "globalID":     "R1WM3"
     },
     {
+        "specificName": "Round 14 Winner - Map 3",
+        "globalID":     "R1WM4"
+    },
+    {
+        "specificName": "Round 15 Winner - Map 3",
+        "globalID":     "R1WM5"
+    },
+    {
         "specificName": "Total Rounds - Map 1",
         "globalID":     "TRM1"
     },
@@ -94,6 +134,14 @@
     {
         "specificName": "Total Rounds - Map 3",
         "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Total Rounds - Map 4",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Total Rounds - Map 5",
+        "globalID":     "TRM5"
     },
     {
         "specificName": "Total Rounds Odd/Even - Map 1",
@@ -108,6 +156,14 @@
         "globalID":     "TROE3"
     },
     {
+        "specificName": "Total Rounds Odd/Even - Map 4",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Total Rounds Odd/Even - Map 5",
+        "globalID":     "TROE5"
+    },
+    {
         "specificName": "Overtime Yes/No - Map 1",
         "globalID":     "OT1"
     },
@@ -118,6 +174,14 @@
     {
         "specificName": "Overtime Yes/No - Map 3",
         "globalID":     "OT3"
+    },
+    {
+        "specificName": "Overtime Yes/No - Map 4",
+        "globalID":     "OT4"
+    },
+    {
+        "specificName": "Overtime Yes/No - Map 5",
+        "globalID":     "OT5"
     },
     {
         "specificName": "Map 1 1X2",
@@ -132,6 +196,14 @@
         "globalID":     "M3WD"
     },
     {
+        "specificName": "Map 4 1X2",
+        "globalID":     "M4WD"
+    },
+    {
+        "specificName": "Map 5 1X2",
+        "globalID":     "M5WD"
+    },
+    {
         "specificName": "Winning margin - map 1",
         "globalID":     "WMM1"
     },
@@ -142,6 +214,14 @@
     {
         "specificName": "Winning margin - map 3",
         "globalID":     "WMM3"
+    },
+    {
+        "specificName": "Winning margin - map 4",
+        "globalID":     "WMM4"
+    },
+    {
+        "specificName": "Winning margin - map 5",
+        "globalID":     "WMM5"
     },
     {
         "specificName": "Total Kills Over/Under - Map 1",
@@ -156,6 +236,14 @@
         "globalID":     "TKM3"
     },
     {
+        "specificName": "Total Kills Over/Under - Map 4",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "Total Kills Over/Under - Map 5",
+        "globalID":     "TKM5"
+    },
+    {
         "specificName": "Team to Draw First Blood - Map 1",
         "globalID":     "FBM1"
     },
@@ -166,6 +254,14 @@
     {
         "specificName": "Team to Draw First Blood - Map 3",
         "globalID":     "FBM3"
+    },
+    {
+        "specificName": "Team to Draw First Blood - Map 4",
+        "globalID":     "FBM4"
+    },
+    {
+        "specificName": "Team to Draw First Blood - Map 5",
+        "globalID":     "FBM5"
     },
     {
         "specificName": "First to Reach Kills - Map 1",
@@ -180,6 +276,14 @@
         "globalID":     "FTRKM3"
     },
     {
+        "specificName": "First to Reach Kills - Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "First to Reach Kills - Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
         "specificName": "Map Kills Handicap - Map 1",
         "globalID":     "KHDPM1"
     },
@@ -190,6 +294,14 @@
     {
         "specificName": "Map Kills Handicap - Map 3",
         "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Map Kills Handicap - Map 4",
+        "globalID":     "KHDPM4"
+    },
+    {
+        "specificName": "Map Kills Handicap - Map 5",
+        "globalID":     "KHDPM5"
     },
     {
         "specificName": "Map Duration Over/Under - Map 1",
@@ -204,6 +316,14 @@
         "globalID":     "DURM3"
     },
     {
+        "specificName": "Map Duration Over/Under - Map 4",
+        "globalID":     "DURM4"
+    },
+    {
+        "specificName": "Map Duration Over/Under - Map 5",
+        "globalID":     "DURM5"
+    },
+    {
         "specificName": "Total Towers Destroyed Over/Under - Map 1",
         "globalID":     "TTM1"
     },
@@ -214,6 +334,14 @@
     {
         "specificName": "Total Towers Destroyed Over/Under - Map 3",
         "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Total Towers Destroyed Over/Under - Map 4",
+        "globalID":     "TTM4"
+    },
+    {
+        "specificName": "Total Towers Destroyed Over/Under - Map 5",
+        "globalID":     "TTM5"
     },
     {
         "specificName": "Kill Maker - Map 1",
@@ -228,6 +356,14 @@
         "globalID":     "KMM3"
     },
     {
+        "specificName": "Kill Maker - Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill Maker - Map 5",
+        "globalID":     "KMM5"
+    },
+    {
         "specificName": "Team to Slay the First Baron - Map 1",
         "globalID":     "FBARM1"
     },
@@ -238,6 +374,14 @@
     {
         "specificName": "Team to Slay the First Baron - Map 3",
         "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "Team to Slay the First Baron - Map 4",
+        "globalID":     "FBARM4"
+    },
+    {
+        "specificName": "Team to Slay the First Baron - Map 5",
+        "globalID":     "FBARM5"
     },
     {
         "specificName": "Quadrakill Yes/No - Map 1",
@@ -252,6 +396,14 @@
         "globalID":     "QUADM3"
     },
     {
+        "specificName": "Quadrakill Yes/No - Map 4",
+        "globalID":     "QUADM4"
+    },
+    {
+        "specificName": "Quadrakill Yes/No - Map 5",
+        "globalID":     "QUADM5"
+    },
+    {
         "specificName": "Pentakill Yes/No - Map 1",
         "globalID":     "PENTM1"
     },
@@ -262,6 +414,14 @@
     {
         "specificName": "Pentakill Yes/No - Map 3",
         "globalID":     "PENTM3"
+    },
+    {
+        "specificName": "Pentakill Yes/No - Map 4",
+        "globalID":     "PENTM4"
+    },
+    {
+        "specificName": "Pentakill Yes/No - Map 5",
+        "globalID":     "PENTM5"
     },
     {
         "specificName": "Team to Destroy the 1st Inhibitor - Map 1",
@@ -276,6 +436,14 @@
         "globalID":     "FINHIBM3"
     },
     {
+        "specificName": "Team to Destroy the 1st Inhibitor - Map 4",
+        "globalID":     "FINHIBM4"
+    },
+    {
+        "specificName": "Team to Destroy the 1st Inhibitor - Map 5",
+        "globalID":     "FINHIBM5"
+    },
+    {
         "specificName": "Total barons - Map 1",
         "globalID":     "TBARM1"
     },
@@ -286,6 +454,14 @@
     {
         "specificName": "Total barons - Map 3",
         "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "Total barons - Map 4",
+        "globalID":     "TBARM4"
+    },
+    {
+        "specificName": "Total barons - Map 5",
+        "globalID":     "TBARM5"
     },
     {
         "specificName": "Total elemental dragons - Map 1",
@@ -300,6 +476,14 @@
         "globalID":     "TDRGM3"
     },
     {
+        "specificName": "Total elemental dragons - Map 4",
+        "globalID":     "TDRGM4"
+    },
+    {
+        "specificName": "Total elemental dragons - Map 5",
+        "globalID":     "TDRGM5"
+    },
+    {
         "specificName": "Team to destroy the first barracks - Map 1",
         "globalID":     "FBRCKSM1"
     },
@@ -310,5 +494,13 @@
     {
         "specificName": "Team to destroy the first barracks - Map 3",
         "globalID":     "FBRCKSM3"
+    },
+    {
+        "specificName": "Team to destroy the first barracks - Map 4",
+        "globalID":     "FBRCKSM4"
+    },
+    {
+        "specificName": "Team to destroy the first barracks - Map 5",
+        "globalID":     "FBRCKSM5"
     }
 ]
