@@ -121,8 +121,10 @@ export async function scrapeMatchURL(data, browser, book, i){
     const teams = await page.evaluate( () => {
       return Array.from(document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[1].querySelectorAll('.text-gray-light')).map( e => e.textContent)
     });
-    const teamHome = teams[0];
-    const teamAway = teams[1];
+    const labelHome = teams[0];
+    const labelAway = teams[1];
+    const teamHome = stripTeamName(teams[0]);
+    const teamAway = stripTeamName(teams[1]);
 //    console.log('>>>>>>>>>>>>>>> scraped teamHome: ' + teamHome);
 //    console.log('>>>>>>>>>>>>>>> scraped teamAway: ' + teamAway);
     let datetime;
@@ -244,6 +246,10 @@ export async function scrapeMatchURL(data, browser, book, i){
     // write (odds and vals)
     let odd;
     for(let j = 0; j < odds.length; j++){
+      odds[j] = odds[j]
+      .replace(labelHome, teamHome)
+      .replace(labelAway, teamAway)
+      .replace(/\+/g, '');
       odd = market.odds.findLast(o => o.name === odds[j]);
       if(!odd){
         market.odds.push({name: odds[j], coefs: []})
