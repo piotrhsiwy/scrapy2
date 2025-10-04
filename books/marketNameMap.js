@@ -144,6 +144,21 @@ export const marketNameMap = Object.freeze
     KMM4:       'Kill Maker Map 4',
     QUADM4:     'Quadrakill Map 4 Yes/No',
     PENTM4:     'Pentakill Map 4 Yes/No',
+    // CS2
+    CSM4:       'Correct score Map 4',
+    OT4:        'Overtime Map 4',
+    RHDPM4:     'Rounds Handicap Map 4',
+    TRM4:       'Total Rounds Map 4',
+    TROE4:      'Total Rounds Odd/Even Map 4',
+    FTRRM4:     'First to Reach Rounds Map 4',
+    R1WM4:      'Round 1 Winner Map 4',
+    R13WM4:     'Round 13 Winner Map 4',
+    WMM4:       'Winning Margin Map 4',
+    FHWM4:      'First Half Winner Map 4',
+    FHRHDPM4:   'First Half Round Handicap Map 4',
+    // DOTA2
+    FROSHM4:    'First to Kill Roshan Map 4',
+    FBRCKSM4:   'First to Destroy Barracks Map 4',
 
     M5W:        'Map 5 Winner',
     M5WD:       'Map 5 Winner incl. Draw',
@@ -166,4 +181,19 @@ export const marketNameMap = Object.freeze
     KMM5:       'Kill Maker Map 5',
     QUADM5:     'Quadrakill Map 5 Yes/No',
     PENTM5:     'Pentakill Map 5 Yes/No',
+    // CS2
+    CSM5:       'Correct score Map 5',
+    OT5:        'Overtime Map 5',
+    RHDPM5:     'Rounds Handicap Map 5',
+    TRM5:       'Total Rounds Map 5',
+    TROE5:      'Total Rounds Odd/Even Map 5',
+    FTRRM5:     'First to Reach Rounds Map 5',
+    R1WM5:      'Round 1 Winner Map 5',
+    R13WM5:     'Round 13 Winner Map 5',
+    WMM5:       'Winning Margin Map 5',
+    FHWM5:      'First Half Winner Map 5',
+    FHRHDPM5:   'First Half Round Handicap Map 5',
+    // DOTA2
+    FROSHM5:    'First to Kill Roshan Map 5',
+    FBRCKSM5:   'First to Destroy Barracks Map 5',
 });
