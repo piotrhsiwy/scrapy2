@@ -77,9 +77,13 @@ export async function scrapeMatchURL(data, browser, book, i){
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
 
-    const valid = await page.$('div.sport-6000');
+    let valid = undefined;
+    while(!valid){
+      valid = await page.$('div.sport-6000');
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
     if(!valid){
-      log.write(`Critical Failure! No element with clas div.sport-6000. Probably invalid url ${await page.url()}\n`);
+      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${await page.url()}\n`);
       return -1;
     }
     let selector, el, mapping;
