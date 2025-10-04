@@ -146,5 +146,13 @@
     {
         "specificName": "StarCraft BroodWar",
         "globalID": "SC_BROODWAR"
+    },
+    {
+        "specificName": "Overwatch",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "Warcraft 3",
+        "globalID": "WARCRAFT3"
     }
 ]
