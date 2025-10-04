@@ -40,15 +40,16 @@ export async function scrapeMatchURL(data, browser, book, i){
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
   await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
 
-  /************************************* was used to try and circumvent cloudflare software blocking access when running headless */
-//   // call our patcher BEFORE navigating
-//   await applyPatches(page, {
-//     timezone: 'America/Los_Angeles',
-//     deviceMemory: 8,
-//     hardwareConcurrency: 8,
-//   });
+  // call our patcher BEFORE navigating
+  await applyPatches(page, {
+    timezone: 'America/Los_Angeles',
+    deviceMemory: 8,
+    hardwareConcurrency: 8,
+  });
+  await page.goto(book.urls[i], { waitUntil: 'networkidle2', timeout: 60000 });
 
-// const TARGET = "https://thunderpick.io/esports/overwatch/overwatch-champions-series-2025-na-stage-2/7047/sakura-esports-vs-team-z/1450966";
+  /************************************* was used to try and circumvent cloudflare software blocking access when running headless */
+
 // const OUTPUT_DIR = path.resolve(process.cwd(), 'puppeteer-debug');
 
 // if (!existsSync(OUTPUT_DIR)) mkdirSync(OUTPUT_DIR);
@@ -95,7 +96,7 @@ export async function scrapeMatchURL(data, browser, book, i){
 //   });
 
 //  try {
-//     await page.goto(TARGET, { waitUntil: 'networkidle2', timeout: 60000 });
+//     await page.goto(book.urls[i], { waitUntil: 'networkidle2', timeout: 60000 });
 //   } catch (e) {
 //     console.warn('goto error (likely 403 or timeout):', e.message);
 //   }
@@ -117,13 +118,11 @@ export async function scrapeMatchURL(data, browser, book, i){
 
 //   console.log(`Run  ${outPath} (screenshot: ${screenshotPath})`);
 
-  // /************************************************* */
-
-  // await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
-  // // debug outputs
-  // console.log('content length', (await page.content()).length);
-  // await page.screenshot({ path: 'debug-full.png', fullPage: true });
-  // /**************************************************** */
+//   /************************************************* */
+//   // debug outputs
+//   console.log('content length', (await page.content()).length);
+//   await page.screenshot({ path: 'debug-full.png', fullPage: true });
+//   /**************************************************** */
 
   const bookAbbrev = book.abbrev; 
   // open a file for logging
@@ -148,7 +147,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   }
 
   try{
-    await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
+    // await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
     // check if the match still exists (url is valid)
     let selector, el, mapping;
     try{

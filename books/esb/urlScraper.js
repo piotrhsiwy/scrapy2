@@ -68,7 +68,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     let infoHandle;
     try{
       selector = 'div.oPInfo';
-      infoHandle = await page.waitForSelector(selector, {timeout:5000});
+      infoHandle = await page.waitForSelector(selector, {timeout:60000});
     } catch{
       log.write(`Critical Failure! No infoHandle present! Probably invalid url ${await page.url()}\n`);
       return -1;

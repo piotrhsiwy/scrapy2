@@ -1,6 +1,6 @@
 import { writeFileSync, truncateSync, existsSync, createWriteStream } from "fs"
 import { promisify } from "util";
-import { prepPage } from "../page.js";
+import { applyPatches } from "../page.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -28,10 +28,21 @@ export async function huntSportURLs(browser, book){
     //     truncateSync(toursPath, 0);
     // }
 
-    const page = await prepPage(browser, book);
+  const page = await browser.newPage();
+  await page.setViewport(book.viewport);
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+
+  // call our patcher BEFORE navigating
+  await applyPatches(page, {
+    timezone: 'America/Los_Angeles',
+    deviceMemory: 8,
+    hardwareConcurrency: 8,
+  });
+
     let hrefs = [];
     try{
-        await page.goto(url);
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
         await page.waitForSelector('div.infinite-scroll-list');
         hrefs = await page.evaluate( async () => {
@@ -41,7 +52,8 @@ export async function huntSportURLs(browser, book){
                 e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2')
             );
             for(let i = 0; i < sports.length; i++){
-                const matchCount = parseInt(sports[i].textContent);
+                const text = sports[i].querySelector('button')?.textContent;
+                const matchCount = parseInt(text);
                 if(matchCount > 0){
                     await sports[i].click();
                     while(document.querySelector('[data-testid="match-details-link"') === null){

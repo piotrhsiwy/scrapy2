@@ -25,6 +25,8 @@ function filterReq(request, blockRequestURLs){
     }
 }
 
+// this function is suposed to decreasing loading times by limiting the number of requests for media, tracking, etc.
+// note that this might/does change the structure of the DOM, which interfers with scraping
 export async function prepPage(browser, book){
     const page = await browser.newPage();
     await page.setViewport(book.viewport);
@@ -32,7 +34,6 @@ export async function prepPage(browser, book){
     await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
     await page.setRequestInterception(true);
     page.on('request', (request) => filterReq(request, book.blockRequestURLs));
-
     return page;
 }
 
@@ -41,6 +42,7 @@ export async function prepPage(browser, book){
 // npm i puppeteer-extra puppeteer-extra-plugin-stealth puppeteer
 
 export async function applyPatches(page, opts = {}) {
+  
   // sensible defaults you can override via opts
   const {
     userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128 Safari/537.36',
