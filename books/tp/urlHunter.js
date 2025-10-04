@@ -72,7 +72,7 @@ export async function huntSportURLs(browser, book){
                         hrefs = hrefs.concat(newHrefs);
                         expectedMatchCount = parseInt(document.querySelector('[data-testid="AllTab"] span')?.textContent);
                         expectedMatchCount = expectedMatchCount ? expectedMatchCount : 0;
-                    }while(hrefs.length !== expectedMatchCount);
+                    }while(hrefs.length < expectedMatchCount);
                     ret = ret.concat(hrefs);
                 }
             }
