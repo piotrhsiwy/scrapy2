@@ -204,7 +204,7 @@ function ev2(evs, sport, match, market, odd){
             const strength = evStrength(v, mean);
             const cutoff = -0.07;
             if(strength < cutoff){
-                const book = odd.coefs.find(c => c.value = v).book;
+                const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book ).url;
                 let newEv = {
                     "timestamp(calculated)":ISO8601Prettify(new Date().toISOString()),
@@ -515,16 +515,16 @@ export async function calcSports(){
 
     if(arbs.length > 0){
         arbs.sort((a, b) => {
-            const agT = unprettifyISO8601(a["timestamp (calculated)"]).getTime();
-            const bgT = unprettifyISO8601(b["timestamp (calculated)"]).getTime();
+            const agT = unprettifyISO8601(a["timestamp(calculated)"]).getTime();
+            const bgT = unprettifyISO8601(b["timestamp(calculated)"]).getTime();
             return agT - bgT;
         });
     }
 
     if(evs.length > 0){
         evs.sort( (a, b) => {
-            const agT = unprettifyISO8601(a["timestamp (calculated)"]).getTime();
-            const bgT = unprettifyISO8601(b["timestamp (calculated)"]).getTime();
+            const agT = unprettifyISO8601(a["timestamp(calculated)"]).getTime();
+            const bgT = unprettifyISO8601(b["timestamp(calculated)"]).getTime();
             return agT - bgT;
         });
     }

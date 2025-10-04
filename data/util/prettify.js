@@ -1,5 +1,6 @@
 export function unprettifyISO8601(dateString){
   // Split the date and time parts
+  if(!dateString) return dateString;
   const [datePart, timePart] = dateString.split(' at ');
 
   // Extract date components

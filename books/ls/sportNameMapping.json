@@ -34,5 +34,9 @@
     {
         "specificName": "KoG",
         "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "OW",
+        "globalID": "OVERWATCH2"
     }
 ]

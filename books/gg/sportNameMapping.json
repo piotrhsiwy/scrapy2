@@ -52,7 +52,7 @@
         "globalID": "ROCKET_LEAGUE"
     },
     {
-        "specificName": "Overwatch",
+        "specificName": "overwatch",
         "globalID": "OVERWATCH2"
     },
     {
@@ -72,12 +72,8 @@
         "globalID": "CROSSFIRE"
     },
     {
-        "specificName": "hearthstone",
-        "globalID": "HEARTHSTONE"
-    },
-    {
         "specificName": "mortal-combat",
-        "globalID": "HEARTHSTONE"
+        "globalID": "MORTAL_COMBAT"
     },
     {
         "specificName": "hearthstone",
