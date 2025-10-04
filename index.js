@@ -37,33 +37,43 @@ async function load(){
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
+  const CHROMIUM_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
+  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\puppeteer_userData';
+  console.log('Chromium instance will be ran on the following (persistent) userData directory:', USERDATA_PATH);
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
-  const browser =  await puppeteer.launch({
+  const browser = await puppeteer.launch({
     headless: true,
     args: [
+      // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
+      // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
+      '--start-maximized',
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-accelerated-2d-canvas',
       '--disable-gpu',
       '--disable-web-security',
+      '--disable-blink-features=AutomationControlled',
       '--proxy-server="direct://"',
       '--proxy-bypass-list=*',
       '-no-startup-window',
       '--disk-cache-dir=./NUL',
-      ' --disk-cache-size=1',
+      '--disk-cache-size=1',
       '--aggressive-cache-discard',
       '--disable-notifications',
       '--disable-remote-fonts',
-      // '--disable-reading-from-canvas', // causes 22bet to not load elements
+      '--disable-reading-from-canvas', // causes 22bet to not load elements
       '--disable-remote-playback-api',
       '--disable-shared-workers --disable-voice-input',
       '--enable-aggressive-domstorage-flushing',
       '--disable-site-isolation-trials',
       '--disable-features=NetworkService,NetworkServiceInProcess',
     ],
-    userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp',
+    //     userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp', <- this userData directory produces ja3 digest that is being blocked by cloudflare, when running in headless
+    // userDataDir: 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\User Data',
+    userDataDir: USERDATA_PATH,
+    executablePath: CHROMIUM_EXECUTABLE_PATH,
     devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
@@ -168,7 +178,7 @@ async function run(browser){
       }
     }
     await Promise.all(q);
-    await singleHunt(browser);
+    // await singleHunt(browser);
   } 
 }
 
@@ -184,7 +194,8 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'tp',
   'gg',
   'ls',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+// '22', // 15min ratelimiter if too many requests -> IP blockers in place
+// // restricted from germany
   'ms',
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
