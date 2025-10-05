@@ -16,6 +16,10 @@
         "globalID":     "TK"
     },
     {
+        "specificName": "Rounds Handicap (incl. overtimes)",
+        "globalID":     "TRHDP"
+    },
+    {
         "specificName": "Odd/Even maps",
         "globalID":     "TMOE"
     },
@@ -590,5 +594,105 @@
     {
         "specificName": "Map 5 - First Barrack",
         "globalID":     "FBRCKSM5"
+    },
+    {
+        "specificName": "Map 1 - Winning margin (incl. overtime)",
+        "globalID":     "WMM1"
+    },
+    {
+        "specificName": "Map 2 - Winning margin (incl. overtime)",
+        "globalID":     "WMM2"
+    },
+    {
+        "specificName": "Map 3 - Winning margin (incl. overtime)",
+        "globalID":     "WMM3"
+    },
+    {
+        "specificName": "Map 4 - Winning margin (incl. overtime)",
+        "globalID":     "WMM4"
+    },
+    {
+        "specificName": "Map 5 - Winning margin (incl. overtime)",
+        "globalID":     "WMM5"
+    },
+    {
+        "specificName": "Map 1 - Total rounds",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "Map 2 - Total rounds",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Map 3 - Total rounds",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Map 4 - Total rounds",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Map 5 - Total rounds",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Map 1 - Atakhan",
+        "globalID":     "FATKM1"
+    },
+    {
+        "specificName": "Map 2 - Atakhan",
+        "globalID":     "FATKM2"
+    },
+    {
+        "specificName": "Map 3 - Atakhan",
+        "globalID":     "FATKM3"
+    },
+    {
+        "specificName": "Map 4 - Atakhan",
+        "globalID":     "FATKM4"
+    },
+    {
+        "specificName": "Map 5 - Atakhan",
+        "globalID":     "FATKM5"
+    },
+    {
+        "specificName": "Map 1 - Kill maker",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Map 2 - Kill maker",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Map 3 - Kill maker",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Map 4 - Kill maker",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Map 5 - Kill maker",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Map 1  - Kills handicap",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "Map 2  - Kills handicap",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "Map 3  - Kills handicap",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Map 4  - Kills handicap",
+        "globalID":     "KHDPM4"
+    },
+    {
+        "specificName": "Map 5  - Kills handicap",
+        "globalID":     "KHDPM5"
     }
 ]

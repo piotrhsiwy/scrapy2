@@ -7,6 +7,7 @@ export const marketNameMap = Object.freeze
     TM:         'Total Maps',
     TMOE:       'Total Maps Odd/Even',
     TR:         'Total Rounds',
+    TRHDP:      'Total Rounds Handicap',
     TK:         'Total Kills',
     TT:         'Total Towers',
     TDRG:       'Total Dragons',
@@ -44,10 +45,18 @@ export const marketNameMap = Object.freeze
     R13WM1:     'Round 13 Winner Map 1',
     WMM1:       'Winning Margin Map 1',
     FHWM1:      'First Half Winner Map 1',
+    SHWM1:      'Second Half Winner Map 1',
     FHRHDPM1:   'First Half Round Handicap Map 1',
+    R1TKM1:     'Round 1 Total Kills Map 1',
+    R13TKM1:    'Round 13 Total Kills Map 1',
+    R1FKM1:     'Round 1 First Kill Map 1',
+    R13FKM1:    'Round 13 First Kill Map 1',
     // DOTA2
     FROSHM1:    'First to Kill Roshan Map 1',
     FBRCKSM1:   'First to Destroy Barracks Map 1',
+    // MOBILE MOBA
+    FTYRM1:     'First Tyrant Map 1',
+    FDOMM1:     'First Dominator Map 1',
 
     M2W:        'Map 2 Winner',
     M2WD:       'Map 2 Winner incl. Draw',
@@ -81,10 +90,18 @@ export const marketNameMap = Object.freeze
     R13WM2:     'Round 13 Winner Map 2',
     WMM2:       'Winning Margin Map 2',
     FHWM2:      'First Half Winner Map 2',
+    SHWM2:      'Second Half Winner Map 2',
     FHRHDPM2:   'First Half Round Handicap Map 2',
+    R1TKM2:     'Round 1 Total Kills Map 2',
+    R13TKM2:    'Round 13 Total Kills Map 2',
+    R1FKM2:     'Round 1 First Kill Map 2',
+    R13FKM2:    'Round 13 First Kill Map 2',
     // DOTA2
     FROSHM2:    'First to Kill Roshan Map 2',
     FBRCKSM2:   'First to Destroy Barracks Map 2',
+    // MOBILE MOBA
+    FTYRM2:     'First Tyrant Map 2',
+    FDOMM2:     'First Dominator Map 2',
 
     M3W:        'Map 3 Winner',
     M3WD:       'Map 3 Winner incl. Draw',
@@ -118,10 +135,18 @@ export const marketNameMap = Object.freeze
     R13WM3:     'Round 13 Winner Map 3',
     WMM3:       'Winning Margin Map 3',
     FHWM3:      'First Half Winner Map 3',
+    SHWM3:      'Second Half Winner Map 3',
     FHRHDPM3:   'First Half Round Handicap Map 3',
+    R1TKM3:     'Round 1 Total Kills Map 3',
+    R13TKM3:    'Round 13 Total Kills Map 3',
+    R1FKM3:     'Round 1 First Kill Map 3',
+    R13FKM3:    'Round 13 First Kill Map 3',
     // DOTA2
     FROSHM3:    'First to Kill Roshan Map 3',
     FBRCKSM3:   'First to Destroy Barracks Map 3',
+    // MOBILE MOBA
+    FTYRM3:     'First Tyrant Map 3',
+    FDOMM3:     'First Dominator Map 3',
 
     M4W:        'Map 4 Winner',
     M4WD:       'Map 4 Winner incl. Draw',
@@ -155,10 +180,18 @@ export const marketNameMap = Object.freeze
     R13WM4:     'Round 13 Winner Map 4',
     WMM4:       'Winning Margin Map 4',
     FHWM4:      'First Half Winner Map 4',
+    SHWM4:      'Second Half Winner Map 4',
     FHRHDPM4:   'First Half Round Handicap Map 4',
+    R1TKM4:     'Round 1 Total Kills Map 4',
+    R13TKM4:    'Round 13 Total Kills Map 4',
+    R1FKM4:     'Round 1 First Kill Map 4',
+    R13FKM4:    'Round 13 First Kill Map 4',
     // DOTA2
     FROSHM4:    'First to Kill Roshan Map 4',
     FBRCKSM4:   'First to Destroy Barracks Map 4',
+    // MOBILE MOBA
+    FTYRM4:     'First Tyrant Map 4',
+    FDOMM4:     'First Dominator Map 4',
 
     M5W:        'Map 5 Winner',
     M5WD:       'Map 5 Winner incl. Draw',
@@ -192,8 +225,16 @@ export const marketNameMap = Object.freeze
     R13WM5:     'Round 13 Winner Map 5',
     WMM5:       'Winning Margin Map 5',
     FHWM5:      'First Half Winner Map 5',
+    SHWM5:      'Second Half Winner Map 5',
     FHRHDPM5:   'First Half Round Handicap Map 5',
+    R1TKM5:     'Round 1 Total Kills Map 5',
+    R13TKM5:    'Round 13 Total Kills Map 5',
+    R1FKM5:     'Round 1 First Kill Map 5',
+    R13FKM5:    'Round 13 First Kill Map 5',
     // DOTA2
     FROSHM5:    'First to Kill Roshan Map 5',
     FBRCKSM5:   'First to Destroy Barracks Map 5',
+    // MOBILE MOBA
+    FTYRM5:     'First Tyrant Map 5',
+    FDOMM5:     'First Dominator Map 5',
 });
