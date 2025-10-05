@@ -12,6 +12,10 @@
         "globalID":     "MHDP"
     },
     {
+        "specificName": "BO3 Total Games 2.5",
+        "globalID":     "TM"
+    },
+    {
         "specificName": "BO5 Total Games 3.5",
         "globalID":     "TM"
     },
@@ -178,6 +182,26 @@
     {
         "specificName": "Game 5 Total Rounds Odd Or Even",
         "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Game 1 Correct Score (No OT)",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "Game 2 Correct Score (No OT)",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "Game 3 Correct Score (No OT)",
+        "globalID":     "CSM3"
+    },
+    {
+        "specificName": "Game 4 Correct Score (No OT)",
+        "globalID":     "CSM4"
+    },
+    {
+        "specificName": "Game 5 Correct Score (No OT)",
+        "globalID":     "CSM5"
     },
     {
         "specificName": "Game 1 First Blood",
@@ -360,6 +384,26 @@
         "globalID":     "FTRKM5"
     },
     {
+        "specificName": "Game 1 First to 20 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First to 20 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First to 20 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 4 First to 20 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First to 20 Kills",
+        "globalID":     "FTRKM5"
+    },
+    {
         "specificName": "Game 1 Kills Handicap",
         "globalID":     "KHDPM1"
     },
@@ -478,6 +522,26 @@
     {
         "specificName": "Game 5 First To Take Inhibitor",
         "globalID":     "FINHIBM5"
+    },
+    {
+        "specificName": "Game 1 Total Tower Taken",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Game 2 Total Tower Taken",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "Game 3 Total Tower Taken",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Game 4 Total Tower Taken",
+        "globalID":     "TTM4"
+    },
+    {
+        "specificName": "Game 5 Total Tower Taken",
+        "globalID":     "TTM5"
     },
     {
         "specificName": "Game 1 Total Barons",
