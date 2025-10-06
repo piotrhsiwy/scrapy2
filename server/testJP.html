@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Live JSON Viewer — sort by value</title>
+<style>
+  :root{
+    --bg: #0f1720;
+    --card: #0b1220;
+    --muted: #9aa4b2;
+    --accent: #7dd3fc;
+    --glass: rgba(255,255,255,0.03);
+  }
+  body{
+    margin:0;
+    font-family: Inter, Roboto, system-ui, Arial;
+    background: linear-gradient(180deg,#061225 0%, #07142a 100%);
+    color:#e6eef6;
+    min-height:100vh;
+    padding:24px;
+  }
+  .container{ max-width:980px; margin:0 auto; }
+  header{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  h1{ font-size:1.2rem; margin:0; color:var(--accent); }
+  p.help{ margin:0; color:var(--muted); font-size:0.9rem; }
+
+  .controls{ display:flex; gap:8px; align-items:center; margin:12px 0 20px; }
+  .input{ background:var(--card); border:1px solid rgba(255,255,255,0.02); padding:8px 10px; border-radius:8px; color:inherit; }
+  label{ color:var(--muted); font-size:0.85rem; }
+
+  #list{ display:grid; gap:10px; }
+  .card{
+    background:var(--glass);
+    border-radius:12px;
+    padding:12px;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .value{ font-weight:700; font-size:1.05rem; color:var(--accent); }
+  .line{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace; color:#d9e9f5; margin-top:6px; font-size:0.95rem; }
+  .books{ margin-top:8px; color:var(--muted); font-size:0.88rem; }
+  .meta{ margin-top:8px; font-size:0.78rem; color:var(--muted); display:flex; gap:12px; flex-wrap:wrap; }
+  .small-btn{ background:none; border:1px solid rgba(255,255,255,0.04); color:var(--muted); padding:6px 8px; border-radius:8px; cursor:pointer; }
+  .small-btn:hover{ color:var(--accent); border-color: rgba(125,211,252,0.15); }
+  .empty{ color:var(--muted); padding:24px; text-align:center; border-radius:10px; border:1px dashed rgba(255,255,255,0.03); }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Live JSON Viewer — sort by <code>value</code> ↓</h1>
+      <p class="help">Automatycznie zaczytuje plik JSON i pokazuje najpierw rekordy z największym <code>value</code>.</p>
+    </header>
+
+    <div class="controls">
+      <label>
+        Endpoint JSON:
+        <input id="endpoint" class="input" type="text" value="../data/arbs.json" /> 				## PLIK JSON DO ZAŁADOWANIA ##
+      </label>
+      <label>
+        Poll interval (ms):
+        <input id="interval" class="input" type="number" value="2000" style="width:120px"/>
+      </label>
+      <button id="btnStart" class="small-btn">Start</button>
+      <button id="btnStop" class="small-btn">Stop</button>
+      <button id="btnSSE" class="small-btn">Use SSE (if available)</button>
+    </div>
+
+    <div id="list" aria-live="polite"></div>
+    <div id="status" class="meta"></div>
+  </div>
+
+<script>
+(() => {
+  const endpointEl = document.getElementById('endpoint');
+  const intervalEl = document.getElementById('interval');
+  const listEl = document.getElementById('list');
+  const statusEl = document.getElementById('status');
+  const btnStart = document.getElementById('btnStart');
+  const btnStop = document.getElementById('btnStop');
+  const btnSSE = document.getElementById('btnSSE');
+
+  let polling = null;
+  let lastRaw = null;
+  let lastFetchedAt = null;
+  let sse = null;
+
+  function setStatus(text) {
+    statusEl.innerText = text;
+  }
+
+  function detectOutcomeKeys(obj) {
+    // outcome keys are those whose value is an object containing oddValue (or oddName)
+    return Object.keys(obj).filter(k => {
+      const v = obj[k];
+      return v && typeof v === 'object' && ('oddValue' in v || 'oddName' in v || 'book' in v);
+    });
+  }
+
+  function renderData(data) {
+    if (!Array.isArray(data)) {
+      listEl.innerHTML = '<div class="empty">Oczekiwano tablicy JSON (Array). Sprawdź endpoint.</div>';
+      return;
+    }
+    // sort descending by value (coerce to number)
+    const sorted = data.slice().sort((a,b) => {
+      const va = Number(a.value ?? 0);
+      const vb = Number(b.value ?? 0);
+      return vb - va;
+    });
+
+    // build DOM
+    const frag = document.createDocumentFragment();
+    if (sorted.length === 0) {
+      const d = document.createElement('div');
+      d.className = 'empty';
+      d.textContent = 'Brak rekordów w pliku JSON.';
+      frag.appendChild(d);
+    } else {
+      sorted.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        // Line 1: value (formatted)
+        const val = document.createElement('div');
+        val.className = 'value';
+        const valueNumber = Number(item.value ?? 0);
+        val.textContent = isFinite(valueNumber) ? valueNumber.toFixed(6) : String(item.value ?? '');
+        card.appendChild(val);
+
+        // find outcome keys
+        const outcomeKeys = detectOutcomeKeys(item);
+
+        // Line 2: outcomes
+        const line2 = document.createElement('div');
+        line2.className = 'line';
+        if (outcomeKeys.length === 0) {
+          line2.textContent = '(brak outcome keys)';
+        } else {
+          // map each outcome to "(KEY) oddName — oddValue"
+          const parts = outcomeKeys.map(k => {
+            const o = item[k] || {};
+            const oddName = o.oddName ?? o.name ?? '';
+            const oddValue = ('oddValue' in o) ? o.oddValue : (o.value ?? '');
+            // ensure oddValue printed nicely if number
+            const oddValueStr = (typeof oddValue === 'number' && isFinite(oddValue)) ? oddValue : oddValue;
+            return `(${k}) ${oddName} — ${oddValueStr}`;
+          });
+          line2.textContent = parts.join('  -  ');
+        }
+        card.appendChild(line2);
+
+        // Line 3: books
+        const books = [];
+        outcomeKeys.forEach(k => {
+          const b = (item[k] && item[k].book) ? item[k].book : null;
+          if (b && !books.includes(b)) books.push(b);
+        });
+        const booksEl = document.createElement('div');
+        booksEl.className = 'books';
+        booksEl.textContent = books.length ? books.join('  -  ') : '(brak informacji o bookach)';
+        card.appendChild(booksEl);
+
+        // optional meta (sport, teams, market, datetime)
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const metaParts = [];
+        if (item.sport) metaParts.push(item.sport);
+        if (item.market) metaParts.push(item.market);
+        if (item.teamHome || item.teamAway) metaParts.push(`${item.teamHome ?? ''} vs ${item.teamAway ?? ''}`);
+        if (item.datetime) metaParts.push(item.datetime);
+        meta.textContent = metaParts.join(' • ');
+        if (metaParts.length) card.appendChild(meta);
+
+        frag.appendChild(card);
+      });
+    }
+
+    // replace content
+    listEl.innerHTML = '';
+    listEl.appendChild(frag);
+  }
+
+  async function fetchAndUpdate() {
+    const url = endpointEl.value.trim() || '/data.json';
+    try {
+      // cache-bust to ensure fresh file
+      const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), {cache: 'no-store'});
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.text();
+      lastFetchedAt = new Date();
+      setStatus(`Ostatnie pobranie: ${lastFetchedAt.toLocaleString()} • ${res.status} ${res.statusText}`);
+      // check if changed (string compare)
+      if (raw === lastRaw) return; // no change
+      lastRaw = raw;
+      let json;
+      try {
+        json = JSON.parse(raw);
+      } catch (err) {
+        listEl.innerHTML = `<div class="empty">Błąd parsowania JSON: ${err.message}</div>`;
+        return;
+      }
+      // render
+      renderData(json);
+    } catch (err) {
+      setStatus(`Błąd pobierania: ${err.message}`);
+      // keep previous content
+    }
+  }
+
+  function startPolling() {
+    stopPolling(); // ensure single poller
+    const ms = Math.max(500, Number(intervalEl.value) || 2000);
+    polling = setInterval(fetchAndUpdate, ms);
+    // run immediately once
+    fetchAndUpdate();
+    setStatus('Polling uruchomiony');
+  }
+
+  function stopPolling() {
+    if (polling) {
+      clearInterval(polling);
+      polling = null;
+      setStatus('Polling zatrzymany');
+    }
+  }
+
+  function startSSE() {
+    // expects server SSE endpoint at (endpoint + '?sse=1' or '/sse')
+    // We'll try endpoint + '?sse=1' first, otherwise /sse
+    stopSSE();
+
+    const base = endpointEl.value.trim() || '/data.json';
+    const tryUrl = base.includes('?') ? base + '&sse=1' : base + '?sse=1';
+    try {
+      sse = new EventSource(tryUrl, {withCredentials: false});
+    } catch (e) {
+      setStatus('SSE nieobsługiwane przez przeglądarkę.');
+      return;
+    }
+    sse.onopen = () => setStatus('SSE: połączono. Oczekiwanie na wydarzenia...');
+    sse.onerror = (ev) => setStatus('SSE: błąd połączenia lub zakończono.');
+    sse.onmessage = (ev) => {
+      // server should send entire JSON as data
+      lastFetchedAt = new Date();
+      setStatus(`SSE: otrzymano aktualizację ${lastFetchedAt.toLocaleString()}`);
+      try {
+        const payload = JSON.parse(ev.data);
+        lastRaw = JSON.stringify(payload);
+        renderData(payload);
+      } catch (err) {
+        setStatus('SSE: błąd parsowania payload: ' + err.message);
+      }
+    };
+  }
+
+  function stopSSE() {
+    if (sse) {
+      sse.close();
+      sse = null;
+      setStatus('SSE: zamknięto połączenie');
+    }
+  }
+
+  // UI bindings
+  btnStart.addEventListener('click', () => {
+    stopSSE();
+    startPolling();
+  });
+  btnStop.addEventListener('click', () => {
+    stopPolling();
+    stopSSE();
+  });
+  btnSSE.addEventListener('click', () => {
+    stopPolling();
+    startSSE();
+  });
+
+  // start automatically
+  startPolling();
+
+  // expose for debugging
+  window.__liveJsonViewer = { startPolling, stopPolling, startSSE, stopSSE, fetchAndUpdate, renderData };
+})();
+</script>
+</body>
+</html>
