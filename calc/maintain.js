@@ -16,7 +16,7 @@ export function cleanupData(data){
             if( dategT < nowgT - 60*60*1000 ){
                 /* is outdated */
                 data.sports[i].matches.splice(j, 1);
-                i--;
+                j--;
             }
         }
     }
