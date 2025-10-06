@@ -1,7 +1,6 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { ISO8601Prettify, unprettifyISO8601 } from "../data/util/prettify.js";
-import { kMaxLength } from "buffer";
 
 let log;
 let consideredArbCount;
@@ -172,7 +171,6 @@ function meanArray(arr){
 function meanArrayExcluding(arr, value){
     let acc = 0.0;
     arr.forEach( v => { acc+=v; });
-    return (acc-value)/(arr.length-1);
 }
 
 function stdDevArray(values){
@@ -202,7 +200,7 @@ function ev2(evs, sport, match, market, odd){
             then v could potentially be an arb aginast the mean_Excluded(v).
             I define this as a potential positive EV bet. */
             const strength = evStrength(v, mean);
-            const cutoff = -0.07;
+            const cutoff = -0.05;
             if(strength < cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book ).url;
