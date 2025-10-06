@@ -28,6 +28,10 @@
         "globalID": "SC2"
     },
     {
+        "specificName": "warcraft-iii",
+        "globalID": "WARCRAFT3"
+    },
+    {
         "specificName": "PUBG",
         "globalID": "PUBG"
     },
