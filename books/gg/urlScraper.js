@@ -77,7 +77,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     const chicken = await page.evaluate( () => document.querySelector('img[src="/spa-assets/image/empty-state/chicken.png"]'));
     if(chicken){
       log.write(`Critical Failure! The 'game not available'-chicken is present! ${await page.url()}\n`);
-      return -1;
+      return 10;
     }
 
     let selector, el, mapping;
@@ -102,7 +102,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return -1;
+      return 20;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);

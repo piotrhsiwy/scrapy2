@@ -1,5 +1,4 @@
 import { createWriteStream, readFileSync, writeFileSync,  existsSync, mkdirSync } from "fs"
-import path from "path";
 import { promisify } from "util";
 
 import { sportNameMap } from "../sportNameMap.js";
@@ -164,7 +163,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return -1;
+      return 20;
     }
 //    console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);

@@ -80,8 +80,8 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
-      log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-      return -1;
+      log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
+      return 20;
     }
 //console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
     let sport = data.sports.findLast(s => s.name === sportName);
