@@ -520,6 +520,106 @@
         "globalID":     "TROSHM5"
     },
     {
+        "specificName": "Team To Slay More Roshans - Map 1",
+        "globalID":     "MROSHM1"
+    },
+    {
+        "specificName": "Team To Slay More Roshans - Map 2",
+        "globalID":     "MROSHM2"
+    },
+    {
+        "specificName": "Team To Slay More Roshans - Map 3",
+        "globalID":     "MROSHM3"
+    },
+    {
+        "specificName": "Team To Slay More Roshans - Map 4",
+        "globalID":     "MROSHM4"
+    },
+    {
+        "specificName": "Team To Slay More Roshans - Map 5",
+        "globalID":     "MROSHM5"
+    },
+    {
+        "specificName": "Will Divine Rapier Be Built - Map 1",
+        "globalID":     "DRAPM1"
+    },
+    {
+        "specificName": "Will Divine Rapier Be Built - Map 2",
+        "globalID":     "DRAPM2"
+    },
+    {
+        "specificName": "Will Divine Rapier Be Built - Map 3",
+        "globalID":     "DRAPM3"
+    },
+    {
+        "specificName": "Will Divine Rapier Be Built - Map 4",
+        "globalID":     "DRAPM4"
+    },
+    {
+        "specificName": "Will Divine Rapier Be Built - Map 5",
+        "globalID":     "DRAPM5"
+    },
+    {
+        "specificName": "First Team to Slay Courier - Map 1",
+        "globalID":     "FCOURM1"
+    },
+    {
+        "specificName": "First Team to Slay Courier - Map 2",
+        "globalID":     "FCOURM2"
+    },
+    {
+        "specificName": "First Team to Slay Courier - Map 3",
+        "globalID":     "FCOURM3"
+    },
+    {
+        "specificName": "First Team to Slay Courier - Map 4",
+        "globalID":     "FCOURM4"
+    },
+    {
+        "specificName": "First Team to Slay Courier - Map 5",
+        "globalID":     "FCOURM5"
+    },
+    {
+        "specificName": "Aegis Of The Immportal Will Be Snatched Yes/No - Map 1",
+        "globalID":     "AOTIM1"
+    },
+    {
+        "specificName": "Aegis Of The Immportal Will Be Snatched Yes/No - Map 2",
+        "globalID":     "AOTIM2"
+    },
+    {
+        "specificName": "Aegis Of The Immportal Will Be Snatched Yes/No - Map 3",
+        "globalID":     "AOTIM3"
+    },
+    {
+        "specificName": "Aegis Of The Immportal Will Be Snatched Yes/No - Map 4",
+        "globalID":     "AOTIM4"
+    },
+    {
+        "specificName": "Aegis Of The Immportal Will Be Snatched Yes/No - Map 5",
+        "globalID":     "AOTIM5"
+    },
+    {
+        "specificName": "Team To Destroy More Towers - Map 1",
+        "globalID":     "MTM1"
+    },
+    {
+        "specificName": "Team To Destroy More Towers - Map 2",
+        "globalID":     "MTM2"
+    },
+    {
+        "specificName": "Team To Destroy More Towers - Map 3",
+        "globalID":     "MTM3"
+    },
+    {
+        "specificName": "Team To Destroy More Towers - Map 4",
+        "globalID":     "MTM4"
+    },
+    {
+        "specificName": "Team To Destroy More Towers - Map 5",
+        "globalID":     "MTM5"
+    },
+    {
         "specificName": "Megacreeps Yes/No - Map 1",
         "globalID":     "MEGAM1"
     },
@@ -738,6 +838,106 @@
     {
         "specificName": "Map 5 - Will there be a Rampage",
         "globalID":     "RAMPM5"
+    },
+    {
+        "specificName": "Godlike Yes/No - Map 1",
+        "globalID":     "GDLKM1"
+    },
+    {
+        "specificName": "Godlike Yes/No - Map 2",
+        "globalID":     "GDLKM2"
+    },
+    {
+        "specificName": "Godlike Yes/No - Map 3",
+        "globalID":     "GDLKM3"
+    },
+    {
+        "specificName": "Godlike Yes/No - Map 4",
+        "globalID":     "GDLKM4"
+    },
+    {
+        "specificName": "Godlike Yes/No - Map 5",
+        "globalID":     "GDLKM5"
+    },
+    {
+        "specificName": "Will there be a High Explosive grenade kill? - map 1",
+        "globalID":     "GRNDM1"
+    },
+    {
+        "specificName": "Will there be a High Explosive grenade kill? - map 2",
+        "globalID":     "GRNDM2"
+    },
+    {
+        "specificName": "Will there be a High Explosive grenade kill? - map 3",
+        "globalID":     "GRNDM3"
+    },
+    {
+        "specificName": "Will there be a High Explosive grenade kill? - map 4",
+        "globalID":     "GRNDM4"
+    },
+    {
+        "specificName": "Will there be a High Explosive grenade kill? - map 5",
+        "globalID":     "GRNDM5"
+    },
+    {
+        "specificName": "Will there be a Zeus kill? - map 1",
+        "globalID":     "ZEUSM1"
+    },
+    {
+        "specificName": "Will there be a Zeus kill? - map 2",
+        "globalID":     "ZEUSM2"
+    },
+    {
+        "specificName": "Will there be a Zeus kill? - map 3",
+        "globalID":     "ZEUSM3"
+    },
+    {
+        "specificName": "Will there be a Zeus kill? - map 4",
+        "globalID":     "ZEUSM4"
+    },
+    {
+        "specificName": "Will there be a Zeus kill? - map 5",
+        "globalID":     "ZEUSM5"
+    },
+    {
+        "specificName": "Will there be a knife kill? - map 1",
+        "globalID":     "KNIFEM1"
+    },
+    {
+        "specificName": "Will there be a knife kill? - map 2",
+        "globalID":     "KNIFEM2"
+    },
+    {
+        "specificName": "Will there be a knife kill? - map 3",
+        "globalID":     "KNIFEM3"
+    },
+    {
+        "specificName": "Will there be a knife kill? - map 4",
+        "globalID":     "KNIFEM4"
+    },
+    {
+        "specificName": "Will there be a knife kill? - map 5",
+        "globalID":     "KNIFEM5"
+    },
+    {
+        "specificName": "Will there be a molotov / incendiary kill? - map 1'",
+        "globalID":     "MLTVM1"
+    },
+    {
+        "specificName": "Will there be a molotov / incendiary kill? - map 2'",
+        "globalID":     "MLTVM2"
+    },
+    {
+        "specificName": "Will there be a molotov / incendiary kill? - map 3'",
+        "globalID":     "MLTVM3"
+    },
+    {
+        "specificName": "Will there be a molotov / incendiary kill? - map 4'",
+        "globalID":     "MLTVM4"
+    },
+    {
+        "specificName": "Will there be a molotov / incendiary kill? - map 5'",
+        "globalID":     "MLTVM5"
     },
     {
         "specificName": "Team to Destroy the First Barracks - Map 1",
