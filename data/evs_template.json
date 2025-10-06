@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp(calculated)": "October 6, 2025 at 12:57:16 AM GMT+2",
+    "value": 1.848,
+    "values": [
+      1.848,
+      1.65,
+      1.62
+    ],
+    "mean": 1.6350000000000002,
+    "stdDev": 0.12388704532758867,
+    "deviationInTermsOfStdDev": 1.719308095828535,
+    "strength": -0.07049525398149248,
+    "sport": "Counter-Strike 2",
+    "teamHome": "largadosypelados",
+    "teamAway": "vasco",
+    "datetime": "October 6, 2025 at 03:00:00 PM GMT+2",
+    "market": "Match Winner",
+    "odd": {
+      "oddName": "largadosypelados",
+      "oddValue": 1.848,
+      "book": "Esportsbet",
+      "url": "https://esportsbet.io/esportsbull/OddsPage/36359132/47/"
+    }
+  }
+]
