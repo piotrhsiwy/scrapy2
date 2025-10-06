@@ -397,23 +397,23 @@
     },
     {
         "specificName": "Map 1 - Race  to kills",
-        "globalID":     "TKM1"
+        "globalID":     "FTRKM1"
     },
     {
         "specificName": "Map 2 - Race  to kills",
-        "globalID":     "TKM2"
+        "globalID":     "FTRKM2"
     },
     {
         "specificName": "Map 3 - Race  to kills",
-        "globalID":     "TKM3"
+        "globalID":     "FTRKM3"
     },
     {
         "specificName": "Map 4 - Race  to kills",
-        "globalID":     "TKM4"
+        "globalID":     "FTRKM4"
     },
     {
         "specificName": "Map 5 - Race  to kills",
-        "globalID":     "TKM5"
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "Map 1 -  Kills handicap",

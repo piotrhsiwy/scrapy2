@@ -8,6 +8,22 @@
         "globalID":     "MHDP"
     },
     {
+        "specificName": "Match Total Rounds",
+        "globalID":     "TR"
+    },
+    {
+        "specificName": "Match Total Kills",
+        "globalID":     "TK"
+    },
+    {
+        "specificName": "Match Kills Handicap",
+        "globalID":     "TKHDP"
+    },
+    {
+        "specificName": "Match Round Handicap",
+        "globalID":     "TRHDP"
+    },
+    {
         "specificName": "Best of 3 Correct Match Score",
         "globalID":     "CS"
     },
@@ -104,24 +120,64 @@
         "globalID":     "R1WM5"
     },
     {
-        "specificName": "Round 13 Winner - Map 1",
+        "specificName": "Pistol Round 1. Winner - Map 1",
         "globalID":     "R1WM1"
     },
     {
-        "specificName": "Round 13 Winner - Map 2",
+        "specificName": "Pistol Round 1. Winner - Map 2",
         "globalID":     "R1WM2"
     },
     {
-        "specificName": "Round 13 Winner - Map 3",
+        "specificName": "Pistol Round 1. Winner - Map 3",
         "globalID":     "R1WM3"
     },
     {
-        "specificName": "Round 14 Winner - Map 3",
+        "specificName": "Pistol Round 1. Winner - Map 4",
         "globalID":     "R1WM4"
     },
     {
-        "specificName": "Round 15 Winner - Map 3",
+        "specificName": "Pistol Round 1. Winner - Map 5",
         "globalID":     "R1WM5"
+    },
+    {
+        "specificName": "Pistol Round 2. Winner - Map 1",
+        "globalID":     "R13WM1"
+    },
+    {
+        "specificName": "Pistol Round 2. Winner - Map 2",
+        "globalID":     "R13WM2"
+    },
+    {
+        "specificName": "Pistol Round 2. Winner - Map 3",
+        "globalID":     "R13WM3"
+    },
+    {
+        "specificName": "Pistol Round 2. Winner - Map 4",
+        "globalID":     "R13WM4"
+    },
+    {
+        "specificName": "Pistol Round 2. Winner - Map 5",
+        "globalID":     "R13WM5"
+    },
+    {
+        "specificName": "Round 13 Winner - Map 1",
+        "globalID":     "R13WM1"
+    },
+    {
+        "specificName": "Round 13 Winner - Map 2",
+        "globalID":     "R13WM2"
+    },
+    {
+        "specificName": "Round 13 Winner - Map 3",
+        "globalID":     "R13WM3"
+    },
+    {
+        "specificName": "Round 14 Winner - Map 3",
+        "globalID":     "R13WM4"
+    },
+    {
+        "specificName": "Round 15 Winner - Map 3",
+        "globalID":     "R13WM5"
     },
     {
         "specificName": "Total Rounds - Map 1",
@@ -222,6 +278,26 @@
     {
         "specificName": "Winning margin - map 5",
         "globalID":     "WMM5"
+    },
+    {
+        "specificName": "Correct Round Score - Map 1",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "Correct Round Score - Map 2",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "Correct Round Score - Map 3",
+        "globalID":     "CSM3"
+    },
+    {
+        "specificName": "Correct Round Score - Map 4",
+        "globalID":     "CSM4"
+    },
+    {
+        "specificName": "Correct Round Score - Map 5",
+        "globalID":     "CSM5"
     },
     {
         "specificName": "Total Kills Over/Under - Map 1",
@@ -342,6 +418,126 @@
     {
         "specificName": "Total Towers Destroyed Over/Under - Map 5",
         "globalID":     "TTM5"
+    },
+    {
+        "specificName": "Total Towers Destroyed Handicap - Map 1",
+        "globalID":     "TTHDPM1"
+    },
+    {
+        "specificName": "Total Towers Destroyed Handicap - Map 2",
+        "globalID":     "TTHDPM2"
+    },
+    {
+        "specificName": "Total Towers Destroyed Handicap - Map 3",
+        "globalID":     "TTHDPM3"
+    },
+    {
+        "specificName": "Total Towers Destroyed Handicap - Map 4",
+        "globalID":     "TTHDPM4"
+    },
+    {
+        "specificName": "Total Towers Destroyed Handicap - Map 5",
+        "globalID":     "TTHDPM5"
+    },
+    {
+        "specificName": "Team to Destroy the First Tower - Map 1",
+        "globalID":     "FTM1"
+    },
+    {
+        "specificName": "Team to Destroy the First Tower - Map 2",
+        "globalID":     "FTM2"
+    },
+    {
+        "specificName": "Team to Destroy the First Tower - Map 3",
+        "globalID":     "FTM3"
+    },
+    {
+        "specificName": "Team to Destroy the First Tower - Map 4",
+        "globalID":     "FTM4"
+    },
+    {
+        "specificName": "Team to Destroy the First Tower - Map 5",
+        "globalID":     "FTM5"
+    },
+    {
+        "specificName": "Team to Slay The First Roshan - Map 1",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "Team to Slay The First Roshan - Map 2",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "Team to Slay The First Roshan - Map 3",
+        "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "Team to Slay The First Roshan - Map 4",
+        "globalID":     "FROSHM4"
+    },
+    {
+        "specificName": "Team to Slay The First Roshan - Map 5",
+        "globalID":     "FROSHM5"
+    },
+    {
+        "specificName": "Ultrakill Yes/No - Map 1",
+        "globalID":     "ULTRAM1"
+    },
+    {
+        "specificName": "Ultrakill Yes/No - Map 2",
+        "globalID":     "ULTRAM2"
+    },
+    {
+        "specificName": "Ultrakill Yes/No - Map 3",
+        "globalID":     "ULTRAM3"
+    },
+    {
+        "specificName": "Ultrakill Yes/No - Map 4",
+        "globalID":     "ULTRAM4"
+    },
+    {
+        "specificName": "Ultrakill Yes/No - Map 5",
+        "globalID":     "ULTRAM5"
+    },
+    {
+        "specificName": "Total Roshans Slain - Map 1",
+        "globalID":     "TROSHM1"
+    },
+    {
+        "specificName": "Total Roshans Slain - Map 2",
+        "globalID":     "TROSHM2"
+    },
+    {
+        "specificName": "Total Roshans Slain - Map 3",
+        "globalID":     "TROSHM3"
+    },
+    {
+        "specificName": "Total Roshans Slain - Map 4",
+        "globalID":     "TROSHM4"
+    },
+    {
+        "specificName": "Total Roshans Slain - Map 5",
+        "globalID":     "TROSHM5"
+    },
+    {
+        "specificName": "Megacreeps Yes/No - Map 1",
+        "globalID":     "MEGAM1"
+    },
+    {
+        "specificName": "Megacreeps Yes/No - Map 2",
+        "globalID":     "MEGAM2"
+    },
+    {
+        "specificName": "Megacreeps Yes/No - Map 3",
+        "globalID":     "MEGAM3"
+    },
+    {
+        "specificName": "Megacreeps Yes/No - Map 4",
+        "globalID":     "MEGAM4"
+    },
+    {
+        "specificName": "Megacreeps Yes/No - Map 5",
+        "globalID":     "MEGAM5"
     },
     {
         "specificName": "Kill Maker - Map 1",
@@ -501,6 +697,66 @@
     },
     {
         "specificName": "Team to destroy the first barracks - Map 5",
+        "globalID":     "FBRCKSM5"
+    },
+    {
+        "specificName": "Map 1 - Kill first tormentor",
+        "globalID":     "FTORMM1"
+    },
+    {
+        "specificName": "Map 2 - Kill first tormentor",
+        "globalID":     "FTORMM2"
+    },
+    {
+        "specificName": "Map 3 - Kill first tormentor",
+        "globalID":     "FTORMM3"
+    },
+    {
+        "specificName": "Map 4 - Kill first tormentor",
+        "globalID":     "FTORMM4"
+    },
+    {
+        "specificName": "Map 5 - Kill first tormentor",
+        "globalID":     "FTORMM5"
+    },
+    {
+        "specificName": "Map 1 - Will there be a Rampage",
+        "globalID":     "RAMPM1"
+    },
+    {
+        "specificName": "Map 2 - Will there be a Rampage",
+        "globalID":     "RAMPM2"
+    },
+    {
+        "specificName": "Map 3 - Will there be a Rampage",
+        "globalID":     "RAMPM3"
+    },
+    {
+        "specificName": "Map 4 - Will there be a Rampage",
+        "globalID":     "RAMPM4"
+    },
+    {
+        "specificName": "Map 5 - Will there be a Rampage",
+        "globalID":     "RAMPM5"
+    },
+    {
+        "specificName": "Team to Destroy the First Barracks - Map 1",
+        "globalID":     "FBRCKSM1"
+    },
+    {
+        "specificName": "Team to Destroy the First Barracks - Map 2",
+        "globalID":     "FBRCKSM2"
+    },
+    {
+        "specificName": "Team to Destroy the First Barracks - Map 3",
+        "globalID":     "FBRCKSM3"
+    },
+    {
+        "specificName": "Team to Destroy the First Barracks - Map 4",
+        "globalID":     "FBRCKSM4"
+    },
+    {
+        "specificName": "Team to Destroy the First Barracks - Map 5",
         "globalID":     "FBRCKSM5"
     }
 ]

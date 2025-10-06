@@ -32,6 +32,14 @@
         "globalID":     "M3W"
     },
     {
+        "specificName": "4rd map - Winner",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "5rd map - Winner",
+        "globalID":     "M5W"
+    },
+    {
         "specificName": "1st map - Rounds handicap",
         "globalID":     "RHDPM1"
     },
@@ -42,6 +50,14 @@
     {
         "specificName": "3rd map - Rounds handicap",
         "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "4rd map - Rounds handicap",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "5rd map - Rounds handicap",
+        "globalID":     "RHDPM5"
     },
     {
         "specificName": "Race to Rounds (Map 1)",
@@ -56,6 +72,14 @@
         "globalID":     "FTRRM3"
     },
     {
+        "specificName": "Race to Rounds (Map 4)",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to Rounds (Map 5)",
+        "globalID":     "FTRRM5"
+    },
+    {
         "specificName": "1st map - Total rounds",
         "globalID":     "TRM1"
     },
@@ -66,6 +90,14 @@
     {
         "specificName": "3rd map - Total rounds",
         "globalID":     "TRM3"
+    },
+    {
+        "specificName": "4th map - Total rounds",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "5th map - Total rounds",
+        "globalID":     "TRM5"
     },
     {
         "specificName": "1st map - Rounds odd/even",
@@ -80,6 +112,14 @@
         "globalID":     "TROE3"
     },
     {
+        "specificName": "4rd map - Rounds odd/even",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "5rd map - Rounds odd/even",
+        "globalID":     "TROE5"
+    },
+    {
         "specificName": "Will there be Overtime? (Map 1)",
         "globalID":     "OT1"
     },
@@ -90,6 +130,14 @@
     {
         "specificName": "Will there be Overtime? (Map 3)",
         "globalID":     "OT3"
+    },
+    {
+        "specificName": "Will there be Overtime? (Map 4)",
+        "globalID":     "OT4"
+    },
+    {
+        "specificName": "Will there be Overtime? (Map 5)",
+        "globalID":     "OT5"
     },
     {
         "specificName": "Winner 1st Half (Map 1)",
@@ -104,12 +152,32 @@
         "globalID":     "FHWM3"
     },
     {
+        "specificName": "Winner 1st Half (Map 4)",
+        "globalID":     "FHWM4"
+    },
+    {
+        "specificName": "Winner 1st Half (Map 5)",
+        "globalID":     "FHWM5"
+    },
+    {
         "specificName": "Rounds handicap 1st Half (Map 1)",
         "globalID":     "FHRHDPM1"
     },
     {
         "specificName": "Rounds handicap 1st Half (Map 2)",
         "globalID":     "FHRHDPM2"
+    },
+    {
+        "specificName": "Rounds handicap 1st Half (Map 3)",
+        "globalID":     "FHRHDPM3"
+    },
+    {
+        "specificName": "Rounds handicap 1st Half (Map 4)",
+        "globalID":     "FHRHDPM4"
+    },
+    {
+        "specificName": "Rounds handicap 1st Half (Map 5)",
+        "globalID":     "FHRHDPM5"
     },
     {
         "specificName": "1st map - 1st blood",
@@ -124,6 +192,14 @@
         "globalID":     "FBM3"
     },
     {
+        "specificName": "4th map - 1st blood",
+        "globalID":     "FBM4"
+    },
+    {
+        "specificName": "5th map - 1st blood",
+        "globalID":     "FBM5"
+    },
+    {
         "specificName": "Race to Kills (Map 1)",
         "globalID":     "FTRKM1"
     },
@@ -134,6 +210,14 @@
     {
         "specificName": "Race to Kills (Map 3)",
         "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to Kills (Map 4)",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to Kills (Map 5)",
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "1st map - Total kills",
@@ -148,6 +232,14 @@
         "globalID":     "TKM3"
     },
     {
+        "specificName": "4rd map - Total kills",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "5rd map - Total kills",
+        "globalID":     "TKM5"
+    },
+    {
         "specificName": "1st map - Kill first Baron",
         "globalID":     "FBARM1"
     },
@@ -158,6 +250,14 @@
     {
         "specificName": "3rd map - Kill first Baron",
         "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "4th map - Kill first Baron",
+        "globalID":     "FBARM4"
+    },
+    {
+        "specificName": "5th map - Kill first Baron",
+        "globalID":     "FBARM5"
     },
     {
         "specificName": "1st map - Destroy first Inhibitor",
@@ -172,6 +272,34 @@
         "globalID":     "FINHIBM3"
     },
     {
+        "specificName": "4th map - Destroy first Inhibitor",
+        "globalID":     "FINHIBM4"
+    },
+    {
+        "specificName": "5th map - Destroy first Inhibitor",
+        "globalID":     "FINHIBM5"
+    },
+    {
+        "specificName": "1st map - Total destroyed Inhibitors",
+        "globalID":     "TINHIBM1"
+    },
+    {
+        "specificName": "2nd map - Total destroyed Inhibitors",
+        "globalID":     "TINHIBM2"
+    },
+    {
+        "specificName": "3rd map - Total destroyed Inhibitors",
+        "globalID":     "TINHIBM3"
+    },
+    {
+        "specificName": "4th map - Total destroyed Inhibitors",
+        "globalID":     "TINHIBM4"
+    },
+    {
+        "specificName": "5th map - Total destroyed Inhibitors",
+        "globalID":     "TINHIBM5"
+    },
+    {
         "specificName": "1st map - Total Barons slain",
         "globalID":     "TBARM1"
     },
@@ -182,6 +310,14 @@
     {
         "specificName": "3rd map - Total Barons slain",
         "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "4th map - Total Barons slain",
+        "globalID":     "TBARM4"
+    },
+    {
+        "specificName": "5th map - Total Barons slain",
+        "globalID":     "TBARM5"
     },
     {
         "specificName": "1st map - Total Elemental Dragons slain",
@@ -196,6 +332,14 @@
         "globalID":     "TDRGM3"
     },
     {
+        "specificName": "4th map - Total Elemental Dragons slain",
+        "globalID":     "TDRGM4"
+    },
+    {
+        "specificName": "5th map - Total Elemental Dragons slain",
+        "globalID":     "TDRGM5"
+    },
+    {
         "specificName": "1st map - First to kill Roshan",
         "globalID":     "FROSHM1"
     },
@@ -208,6 +352,14 @@
         "globalID":     "FROSHM3"
     },
     {
+        "specificName": "4th map - First to kill Roshan",
+        "globalID":     "FROSHM4"
+    },
+    {
+        "specificName": "5th map - First to kill Roshan",
+        "globalID":     "FROSHM5"
+    },
+    {
         "specificName": "1st map - Total destroyed inhibitors",
         "globalID":     "TINHIBM1"
     },
@@ -218,5 +370,13 @@
     {
         "specificName": "3rd map - Total destroyed inhibitors",
         "globalID":     "TINHIBM3"
+    },
+    {
+        "specificName": "4th map - Total destroyed inhibitors",
+        "globalID":     "TINHIBM4"
+    },
+    {
+        "specificName": "5th map - Total destroyed inhibitors",
+        "globalID":     "TINHIBM5"
     }
 ]

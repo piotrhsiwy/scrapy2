@@ -9,6 +9,7 @@ export const marketNameMap = Object.freeze
     TR:         'Total Rounds',
     TRHDP:      'Total Rounds Handicap',
     TK:         'Total Kills',
+    TKHDP:      'Total Kills Handicap',
     TT:         'Total Towers',
     TDRG:       'Total Dragons',
     TINHIB:     'Total Inhibitors',
@@ -31,6 +32,7 @@ export const marketNameMap = Object.freeze
     KHDPM1:     'Kills Handicap Map 1',
     DURM1:      'Map Duration Map 1',
     TTM1:       'Total Towers Map 1',
+    TTHDPM1:    'Total Towers Handicap Map 1',
     KMM1:       'Kill Maker Map 1',
     QUADM1:     'Quadrakill Map 1 Yes/No',
     PENTM1:     'Pentakill Map 1 Yes/No',
@@ -54,6 +56,11 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM1:    'First to Kill Roshan Map 1',
     FBRCKSM1:   'First to Destroy Barracks Map 1',
+    FTORMM1:    'First to Kill Tormentor Map 1',
+    ULTRAM1:    'Ultrakill Map 1 Yes/No',
+    RAMPM1:     'Rampage Map 1 Yes/No',
+    TROSHM1:    'Total Roshans Map 1',
+    MEGAM1:     'Megacreeps Map 1 Yes/No',
     // MOBILE MOBA
     FTYRM1:     'First Tyrant Map 1',
     FDOMM1:     'First Dominator Map 1',
@@ -99,6 +106,11 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM2:    'First to Kill Roshan Map 2',
     FBRCKSM2:   'First to Destroy Barracks Map 2',
+    FTORMM2:    'First to Kill Tormentor Map 2',
+    ULTRAM2:    'Ultrakill Map 2 Yes/No',
+    RAMPM2:     'Rampage Map 2 Yes/No',
+    TROSHM2:    'Total Roshans Map 2',
+    MEGAM2:     'Megacreeps Map 2 Yes/No',
     // MOBILE MOBA
     FTYRM2:     'First Tyrant Map 2',
     FDOMM2:     'First Dominator Map 2',
@@ -144,6 +156,11 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM3:    'First to Kill Roshan Map 3',
     FBRCKSM3:   'First to Destroy Barracks Map 3',
+    FTORMM3:    'First to Kill Tormentor Map 3',
+    ULTRAM3:    'Ultrakill Map 3 Yes/No',
+    RAMPM3:     'Rampage Map 3 Yes/No',
+    TROSHM3:    'Total Roshans Map 3',
+    MEGAM3:     'Megacreeps Map 3 Yes/No',
     // MOBILE MOBA
     FTYRM3:     'First Tyrant Map 3',
     FDOMM3:     'First Dominator Map 3',
@@ -189,6 +206,11 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM4:    'First to Kill Roshan Map 4',
     FBRCKSM4:   'First to Destroy Barracks Map 4',
+    FTORMM4:    'First to Kill Tormentor Map 4',
+    ULTRAM4:    'Ultrakill Map 4 Yes/No',
+    RAMPM4:     'Rampage Map 4 Yes/No',
+    TROSHM4:    'Total Roshans Map 4',
+    MEGAM4:     'Megacreeps Map 4 Yes/No',
     // MOBILE MOBA
     FTYRM4:     'First Tyrant Map 4',
     FDOMM4:     'First Dominator Map 4',
@@ -234,6 +256,11 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM5:    'First to Kill Roshan Map 5',
     FBRCKSM5:   'First to Destroy Barracks Map 5',
+    FTORMM5:    'First to Kill Tormentor Map 5',
+    ULTRAM5:    'Ultrakill Map 5 Yes/No',
+    RAMPM5:     'Rampage Map 5 Yes/No',
+    TROSHM5:    'Total Roshans Map 5',
+    MEGAM5:     'Megacreeps Map 5 Yes/No',
     // MOBILE MOBA
     FTYRM5:     'First Tyrant Map 5',
     FDOMM5:     'First Dominator Map 5',

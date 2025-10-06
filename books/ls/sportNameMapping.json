@@ -38,5 +38,13 @@
     {
         "specificName": "OW",
         "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "NBA2K",
+        "globalID": "NBA2K"
+    },
+    {
+        "specificName": "EA Sports FC",
+        "globalID": "EA_SPORTS_FC"
     }
 ]
