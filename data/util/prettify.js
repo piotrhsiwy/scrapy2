@@ -1,4 +1,19 @@
-export function unprettifyISO8601(dateString){
+/**
+ *                      Pretty format: October 6, 2025 at 07:00:00 PM GMT+2 
+ *                      ISO8601 format: 2025-10-06T13:39:32.517Z
+ *                      Date Object
+ * the @function ISO8601ToPretty is  ONLY to present the date in a human-friendlier format
+ * the @function prettyToDate is used to translate it into Date object for comparisons, etc.
+ */
+
+/**
+ * this function takes a pretty datestring, like: October 6, 2025 at 07:00:00 PM GMT+2
+ * and returns a Date object.
+ * 
+ * @param datestring - pretty datestring in this format: October 6, 2025 at 07:00:00 PM GMT+2
+ * @return Date object
+ */
+export function prettyToDate(dateString){
   // Split the date and time parts
   if(!dateString) return dateString;
   const [datePart, timePart] = dateString.split(' at ');
@@ -28,7 +43,14 @@ export function unprettifyISO8601(dateString){
   return utcDate;
 }
 
-export function ISO8601Prettify(isoDatetime){
+/**
+ * this function takes an ISO8601 datestring and returns a pretty version 
+ * of it, like this: October 6, 2025 at 07:00:00 PM GMT+2
+ * 
+ * @param isoDatetime - ISO8601 datestring in this format: 2025-10-06T13:39:32.517Z
+ * @return pretty datetime string in this format: October 6, 2025 at 07:00:00 PM GMT+2
+ */
+export function ISO8601ToPretty(isoDatetime){
     if(isoDatetime.includes('live')){
         return 'live';
     }
@@ -50,6 +72,23 @@ export function ISO8601Prettify(isoDatetime){
     const prettyDate = date.toLocaleString('en-US', options);
     
     return prettyDate;
+}
+
+/**
+ * this function takes an ISO8601 datestring, like: 2025-10-06T13:39:32.517Z
+ * and returns a standard JavaScript Date object.
+ * * @param isoDatetime - ISO8601 datestring in this format: 2025-10-06T13:39:32.517Z
+ * @return Date object
+ */
+export function ISO8601ToDate(isoDatetime){
+    if (!isoDatetime) {
+        return isoDatetime;
+    } else if(isoDatetime === 'live'){
+        return new Date();
+    } else{
+        // The Date constructor handles valid ISO 8601 strings by default.
+        return new Date(isoDatetime);
+    }
 }
 
 export function arbPrettifyToPercent(f){
