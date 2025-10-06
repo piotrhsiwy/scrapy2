@@ -1,5 +1,5 @@
 /xyz/urlScraper.js return codes interpretation:
-1 failure:
+10 failure:
   there is an element on the page indicating that the match is in the past and/or doesn't exist
 0 success:
   successfully retrieved all available markets

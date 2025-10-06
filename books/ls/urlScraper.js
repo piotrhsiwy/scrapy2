@@ -88,7 +88,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
     if(empty){
       log.write(`Failure! There is an element with class div.osg-empty under this url: ${await page.url()}. Probably past match\n`);
-      return 1;
+      return 10;
     }
     if(!valid){
       log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${await page.url()}\n`);
