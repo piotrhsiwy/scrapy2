@@ -1,0 +1,7 @@
+/xyz/urlScraper.js return codes interpretation:
+1 failure:
+  there is an element on the page indicating that the match is in the past and/or doesn't exist
+0 success:
+  successfully retrieved all available markets
+-1 critical failure:
+  some critical error thrown when scraping. no markets scraped
