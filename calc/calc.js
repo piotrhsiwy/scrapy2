@@ -168,7 +168,7 @@ function meanArray(arr){
     return acc/arr.length;
 }
 
-function meanArrayExcluding(arr, value){
+function meanArrayExcluding(arr, v){
     let acc = 0.0;
     arr.forEach( v => { acc+=v; });
 }
@@ -469,7 +469,6 @@ export async function calcSports(){
     } else {
         log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
     }
-
     const evsFilePath = './data/evs.json';
     let evs = [];
     if(existsSync(evsFilePath)) {
@@ -479,8 +478,11 @@ export async function calcSports(){
         log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
     }
 
+    log.write(`Maintaining the file ${arbsFilePath}.\n`);
     cleanupOnDatetime(arbs);    
+    log.write(`Maintaining the file ${evsFilePath}.\n`);
     cleanupOnDatetime(evs);    
+    log.write(`Maintaining the file ${dataFilePath}.\n`);
     cleanupData(data);
     
     consideredArbCount = 0;
