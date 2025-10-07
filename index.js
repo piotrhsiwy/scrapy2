@@ -1,4 +1,4 @@
-async function clean(){
+async function cleanLogs(){
   console.log(`Cleaning...`);
   for(const book of books){
     const path = `./books/${book.abbrev}/log.txt`;
@@ -10,7 +10,7 @@ async function clean(){
   console.log(`Cleared file ${path}`);
 }
 
-async function load(){
+async function loadModules(){
   console.log(`Loading modules...`);
   for(let i = 0; i < books.length; i++){
     const hunterModuleName = `./books/${books[i].abbrev}/urlHunter.js`;
@@ -37,9 +37,27 @@ async function load(){
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
-  const CHROMIUM_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
-  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\puppeteer_userData';
-  console.log('Chromium instance will be ran on the following (persistent) userData directory:', USERDATA_PATH);
+  // verifying that the executable is present
+  const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
+  try{
+    accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
+  } catch(error){
+    if(error.code === 'ENOENT'){
+      console.log('Browser executable is missing under: ', BROWSER_EXECUTABLE_PATH);
+      return undefined;
+    }
+  }
+  // preparing the userData dir
+  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp';
+  try{
+    console.log('Clearing the userData directory under: ', USERDATA_PATH);
+    rmSync(USERDATA_PATH, {recursive: true, force: true});
+  } catch(error){
+    if(error.code === 'ENOENT' || error.code === 'ENOTDIR'){
+      console.log('This is a file, not a directory! ', BROWSER_EXECUTABLE_PATH);
+    }
+  }
+  console.log('Browser instance will be ran on the following userData directory:', USERDATA_PATH);
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
@@ -63,22 +81,21 @@ async function openBrowser(){
       '--aggressive-cache-discard',
       '--disable-notifications',
       '--disable-remote-fonts',
-      '--disable-reading-from-canvas', // causes 22bet to not load elements
+      // '--disable-reading-from-canvas', // causes 22bet to not load elements
       '--disable-remote-playback-api',
       '--disable-shared-workers --disable-voice-input',
       '--enable-aggressive-domstorage-flushing',
       '--disable-site-isolation-trials',
       '--disable-features=NetworkService,NetworkServiceInProcess',
     ],
-    //     userDataDir: 'C:\\Users\\User\\AppData\\Local\\Temp\\puppeteer_temp', <- this userData directory produces ja3 digest that is being blocked by cloudflare, when running in headless
-    // userDataDir: 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\User Data',
     userDataDir: USERDATA_PATH,
-    executablePath: CHROMIUM_EXECUTABLE_PATH,
+    executablePath: BROWSER_EXECUTABLE_PATH,
     devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
   }); 
+
   return browser;
 }
   
@@ -90,28 +107,26 @@ async function singleHunt(browser){
   }
 }
 
-// let mutex = false;
-// async function hunt(){
-//   while(true){
-//     await new Promise(resolve => setTimeout(resolve, 3*3600000)) // 1h
-//     console.log('Hunter retrieving lock...')
-//     while(mutex){ await new Promise(resolve => setTimeout(resolve, 1)); }
-//     mutex = true;
-//     for(const book of books){
-//       console.log(`Queued hunt from ${book.abbrev} module`);
-//       await book.hunterModule.huntSportURLs(book);
-//       const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-//       book.urls = JSON.parse(readFileSync(urlsFilePath));
-//       console.log(`Reloaded ${book.urls.length} entries from file ${urlsFilePath}`);
-//     }
-//     mutex = false;
-//   }
-// }
+const DATA_FILE_PATH = 'data/data_out.json';
+function loadData(){
+  let data = {sports:[]};
+  try{
+    console.log(`Loading the data file: ${DATA_FILE_PATH}`);
+    accessSync(DATA_FILE_PATH, constants.W_OK | constants.R_OK);
+    data = JSON.parse(readFileSync(DATA_FILE_PATH));
+  } catch(error){
+    if(error.code === 'ENOENT'){
+      console.log(`Data file does not exist. Creating file: ${DATA_FILE_PATH}. Starting with empty data = {sports:[]}`);
+      writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf8');
+    }
+  } finally{
+    return data;
+  }
+}
 
-async function save(data){
-  const dataPathOut = 'data/data_out.json';
-  console.log(`Saving the results in ${dataPathOut}`);
-  writeFileSync(dataPathOut, JSON.stringify(data, null, 2), 'utf8')
+function saveData(data){
+  console.log(`Saving the results in ${DATA_FILE_PATH}`);
+  writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf8')
 }
 
 import { calcSports } from './calc/calc.js'
@@ -122,63 +137,73 @@ async function calc(){
   console.log(calcReport);
 }
 
-async function savecalc(data){
-  await save(data);
+async function saveCalc(data){
+  saveData(data);
   await calc();
 }
 
-
 import { Queue } from "async-await-queue";
 async function run(browser){ 
-  console.log('Loading urls from files...');
   if(books.length === 0){
     console.log(`No books available.`);
     return -1;
   }
-  for(const book of books){
-    const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
-    try{
-      book.urls = JSON.parse(readFileSync(urlsFilePath));
-    } catch(error){
-      console.log(`Loading file ${urlsFilePath} failed.`)
-      return -1;
-    }
-    console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
-  } 
-  const data = {sports: []};
-  let i = 0;;
+  /** initial calc *******************/
+  const data = loadData();
+  await calc();
+  /********************************* */
   while(true){;
     const myq = new Queue(10, 1000);
     const q = [];
-    for(let i = 0; ; i++){
-      let anyUrlUnderI = false;
+    const browser = await openBrowser();
+    try{
+      /** hunt and load urls ****************/
+      // await singleHunt(browser);
+      console.log('Loading urls from files...');
       for(const book of books){
-        if(i < book.urls.length){
-          async function wrapper(data, browser, book, i){
-            let ret;
-            try{
-              ret = await book.scraperModule.scrapeMatchURL(data, browser, book, i);
-            } catch(e){
-              throw e;
-            }
-            console.log(`Completed scrape with result: ${ret} from ${book.urls[i]}`);
-          }
-          q.push(myq.run(() => wrapper(data, browser, book, i)
-            .catch((e) => console.error(e))));
-          // console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
-          anyUrlUnderI = true;
+        const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
+        try{
+          book.urls = JSON.parse(readFileSync(urlsFilePath));
+        } catch(error){
+          console.log(`Loading file ${urlsFilePath} failed.`)
+          return -1;
         }
+        console.log(`Loaded file ${book.urls.length} entries from file ${urlsFilePath}`);
+      } 
+      /************************************ */
+      for(let i = 0; ; i++){
+        let anyUrlUnderI = false;
+        /** scrape ****************************/
+        for(const book of books){
+          if(i < book.urls.length){
+            async function wrapper(data, browser, book, i){
+              let ret;
+              try{
+                ret = await book.scraperModule.scrapeMatchURL(data, browser, book, i);
+              } catch(e){
+                throw e;
+              }
+              console.log(`Completed scrape with result: ${ret} from ${book.urls[i]}`);
+            }
+            q.push(myq.run(() => wrapper(data, browser, book, i)
+              .catch((e) => console.error(e))));
+            // console.log(`Queued scrape from ${book.abbrev} module urls[${i}]: ${book.urls[i]}`);
+            anyUrlUnderI = true;
+          }
+        }
+        if(i%10 === 9){
+          q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
+          // console.log(`Queued savecalc()`);
+        }
+        if(!anyUrlUnderI){
+          break;
+        }
+        await Promise.all(q);
+        /******************************* */
       }
-      if(i%10 === 0){
-        q.push(myq.run(() => savecalc(data)).catch((e) => console.error(e)));
-        // console.log(`Queued savecalc()`);
-      }
-      if(!anyUrlUnderI){
-        break;
-      }
+    } finally{
+      await browser?.close(); 
     }
-    await Promise.all(q);
-    // await singleHunt(browser);
   } 
 }
 
@@ -187,16 +212,17 @@ async function run(browser){
 // ##############################################################################################################
 // ##############################################################################################################
 
-import { readFileSync, writeFileSync, existsSync, truncateSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSync } from 'fs'
+import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+  'gg',
   'esb',
   'tp',
-  'gg',
   'ls',
+  'ms',
 // '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany
-  'ms',
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
@@ -216,15 +242,9 @@ for(const abbrev of availableAbbrev){
 
 // ### Running
 (async function main(){
-  await load();
-  await clean();
-  const browser = await openBrowser();
-  // await singleHunt(browser);
-  try{
-    return await run(browser);
-  } finally{
-    browser.close();
-  }
+  await loadModules();
+  await cleanLogs();
+  await run();
 })()
 
 // ##############################################################################################################
