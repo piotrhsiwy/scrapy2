@@ -10,6 +10,9 @@ import { applyPatches } from "../page.js"
 function convDatetimeToISO(dateStr){
 
   const parseDateStr = (dateStr) => {
+    if(dateStr === 'live'){
+      return new Date();
+    }
     const [monthDay, time] = dateStr.split(', ');
     const [month, day] = monthDay.split(' ');
     const [hours, minutes] = time.split(':');
@@ -149,11 +152,21 @@ export async function scrapeMatchURL(data, browser, book, i){
     // await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
     // check if the match still exists (url is valid)
     let selector, el, mapping;
-    try{
-      el = await page.waitForSelector('#markets-list', {timeout: 10000});
-    } catch{
-      log.write(`Critical Failure! No initial selector: url is not valid or the page didn't load. ${await page.url()}\n`);
-      return -1;
+    let count = 0; 
+    el = await page.evaluate( () => document.querySelector('#markets-list') !== null);
+    while(!el && count++ < 20){
+      await new Promise(resolve => setTimeout(resolve, 100));
+      el = await page.evaluate( () => document.querySelector('#markets-list') !== null);
+    }
+    if(!el){
+      const currentUrl = await page.url();
+      if(currentUrl !== book.urls[i]){
+        log.write(`Failure! No element matching selector '#markets-list'. Redirected from ${book.urls[i]} to ${currentUrl}\n`);
+        return 11;
+      } else{
+        log.write(`Failure! No element matching selector '#markets-list'. ${book.urls[i]}\n`);
+      return 10;
+      }
     }
     // get sport
     selector = "#breadcrumbs a";
@@ -212,19 +225,20 @@ export async function scrapeMatchURL(data, browser, book, i){
 //    console.log('>>>>>>>>>>>>>>> scraped teamAway: ' + teamAway);
     let datetime;
     let dateString = await page.evaluate( () => {
-      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[0].childNodes[0].childNodes[0].childNodes[4];
-      if(ret){
-        return ret.textContent;
-      } else{
-        return null;
-      }
+      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[0].childNodes[0].childNodes[0].childNodes[4]?.textContent;
     })
-    const isLive = await page.evaluate( () => {
-      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].querySelector('[data-testid="live-tag-red"]');
+    const liveTagRed = await page.evaluate( () => {
+      return document.querySelectorAll('#match-view .bg-secondary')[0]?.querySelector('[data-testid="live-tag-red"]')
     })
-    if(isLive){
-      datetime = 'live';
+    if(liveTagRed){
+      dateString = 'live';
     } else{
+      const streamPresent = await page.evaluate( () => {
+        return document.querySelector('iframe')?.getAttribute('id')?.includes('stream') !== null;
+      })
+      if(streamPresent){
+        dateString = 'live';
+      }
       datetime = convDatetimeToISO( dateString/*.replace(/\u00a0/g, '\u0020').trim()*/);
     }
 //    console.log('>>>>>>>>>>>>>>> scraped datetime: ' + datetime);

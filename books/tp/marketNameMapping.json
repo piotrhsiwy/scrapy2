@@ -128,6 +128,46 @@
         "globalID":     "FHWWDM5"
     },
     {
+        "specificName": "First Half Winner 1X2 - Map 1",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "First Half Winner 1X2 - Map 2",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "First Half Winner 1X2 - Map 3",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "First Half Winner 1X2 - Map 4",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "First Half Winner 1X2 - Map 5",
+        "globalID":     "FHWWDM5"
+    },
+    {
+        "specificName": "Second Half Winner 1X2 - Map1",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "Second Half Winner 1X2 - Map2",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "Second Half Winner 1X2 - Map3",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "Second Half Winner 1X2 - Map4",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "Second Half Winner 1X2 - Map5",
+        "globalID":     "FHWWDM5"
+    },
+    {
         "specificName": "1st Half Correct score - Map 1",
         "globalID":     "CSFHM1"
     },

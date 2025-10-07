@@ -7,4 +7,4 @@
   successfully retrieved all available markets. Note that  live odds are 
   not being scraped
 -1 critical failure:
-  some critical error thrown when scraping. no markets scraped
+  some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.

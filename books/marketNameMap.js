@@ -80,6 +80,7 @@ export const marketNameMap = Object.freeze
     FDOMM1:     'First Dominator Map 1',
     // VALORANT
     FHWWDM1:    'First Half Winner incl. Draw Map 1',
+    SHWWDM1:    'Second Half Winner incl. Draw Map 1',
     CSFHM1:     'Correct Score First Half Map 1',
     RHDPFHM1:   'Round Handicap First Half Map 1',
     RHDPSHM1:   'Round Handicap Second Half Map 1',
@@ -148,6 +149,7 @@ export const marketNameMap = Object.freeze
     FDOMM2:     'First Dominator Map 2',
     // VALORANT
     FHWWDM2:    'First Half Winner incl. Draw Map 2',
+    SHWWDM2:    'Second Half Winner incl. Draw Map 2',
     CSFHM2:     'Correct Score First Half Map 2',
     RHDPFHM2:   'Round Handicap First Half Map 2',
     RHDPSHM2:   'Round Handicap Second Half Map 2',
@@ -216,6 +218,7 @@ export const marketNameMap = Object.freeze
     FDOMM3:     'First Dominator Map 3',
     // VALORANT
     FHWWDM3:     'First Half Winner incl. Draw Map 3',
+    SHWWDM3:    'Second Half Winner incl. Draw Map 3',
     CSFHM3:     'Correct Score First Half Map 3',
     RHDPFHM3:   'Round Handicap First Half Map 3',
     RHDPSHM3:   'Round Handicap Second Half Map 3',
@@ -284,6 +287,7 @@ export const marketNameMap = Object.freeze
     FDOMM4:     'First Dominator Map 4',
     // VALORANT
     FHWWDM5:    'First Half Winner incl. Draw Map 4',
+    SHWWDM4:    'Second Half Winner incl. Draw Map 4',
     CSFHM5:     'Correct Score First Half Map 4',
     RHDPFHM5:   'Round Handicap First Half Map 4',
     RHDPSHM4:   'Round Handicap Second Half Map 4',
@@ -352,6 +356,7 @@ export const marketNameMap = Object.freeze
     FDOMM5:     'First Dominator Map 5',
     // VALORANT
     FHWWDM5:    'First Half Winner incl. Draw Map 5',
+    SHWWDM5:    'Second Half Winner incl. Draw Map 5',
     CSFHM5:     'Correct Score First Half Map 5',
     RHDPFHM5:   'Round Handicap First Half Map 5',
     RHDPSHM5:   'Round Handicap Second Half Map 5',
