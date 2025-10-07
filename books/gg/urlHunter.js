@@ -81,13 +81,13 @@ export async function huntSportURLs(browser, book){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport')){
                     sport.click();
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await new Promise(resolve => setTimeout(resolve, 2000));
                     let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
                     let size;
                     do{
                         size = matches.length;
                         matches[matches.length-1].scrollIntoView();
-                        matches = await waitMax(500);
+                        matches = await waitMax(2000);
                     } while(size !== matches.length);
                     ret = ret.concat(Array.from(matches).map( match => baseurl + match.getAttribute('href')));
                 }
