@@ -333,6 +333,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       .replace(labelHome, teamHome)
       .replace(labelAway, teamAway)
       .replace(/\+/g, '');
+      odds[j] = stripTeamName(odds[j]);
       odd = market.odds.findLast(o => o.name === odds[j]);
       if(!odd){
         market.odds.push({name: odds[j], coefs: []})
