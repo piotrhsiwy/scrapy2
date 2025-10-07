@@ -2,6 +2,7 @@
 export const marketNameMap = Object.freeze
 ({
     MW:         'Match Winner',
+    MWD:        'Match Winner incl. Draw',
     MHDP:       'Match Handicap',
     CS:         'Correct Score',
     TM:         'Total Maps',
@@ -61,6 +62,7 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM1:    'First to Kill Roshan Map 1',
     FBRCKSM1:   'First to Destroy Barracks Map 1',
+    BBRCKSM1:   'Both Teams to Destroy Barracks Map 1',
     FTORMM1:    'First to Kill Tormentor Map 1',
     FCOURM1:    'First to Kill Courier Map 1',
     ULTRAM1:    'Ultrakill Map 1 Yes/No',
@@ -68,12 +70,18 @@ export const marketNameMap = Object.freeze
     GDLKM1:     'Godlike Map 1 Yes/No',
     TROSHM1:    'Total Roshans Map 1',
     MROSHM1:    'More Roshans Map 1',
+    BROSHM1:    'Both Teams to Slay Roshan Map 1',
     MEGAM1:     'Megacreeps Map 1 Yes/No',
     DRAPM1:     'Divine Rapier Built Map 1 Yes/No',
     AOTIM1:     'Aegis Of The Immortal Snatched Map 1 Yes/No',
     // MOBILE MOBA
     FTYRM1:     'First Tyrant Map 1',
     FDOMM1:     'First Dominator Map 1',
+    // VALORANT
+    FHWWDM1:    'First Half Winner incl. Draw Map 1',
+    CSFHM1:     'Correct Score First Half Map 1',
+    RHDPFHM1:   'Round Handicap First Half Map 1',
+    RHDPSHM1:   'Round Handicap Second Half Map 1',
 
     M2W:        'Map 2 Winner',
     M2WD:       'Map 2 Winner incl. Draw',
@@ -121,6 +129,7 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM2:    'First to Kill Roshan Map 2',
     FBRCKSM2:   'First to Destroy Barracks Map 2',
+    BBRCKSM2:   'Both Teams to Destroy Barracks Map 2',
     FTORMM2:    'First to Kill Tormentor Map 2',
     FCOURM2:    'First to Kill Courier Map 2',
     ULTRAM2:    'Ultrakill Map 2 Yes/No',
@@ -128,12 +137,18 @@ export const marketNameMap = Object.freeze
     GDLKM2:     'Godlike Map 2 Yes/No',
     TROSHM2:    'Total Roshans Map 2',
     MROSHM2:    'More Roshans Map 2',
+    BROSHM2:    'Both Teams to Slay Roshan Map 2',
     MEGAM2:     'Megacreeps Map 2 Yes/No',
     DRAPM2:     'Divine Rapier Built Map 2 Yes/No',
     AOTIM2:     'Aegis Of The Immortal Snatched Map 2 Yes/No',
     // MOBILE MOBA
     FTYRM2:     'First Tyrant Map 2',
     FDOMM2:     'First Dominator Map 2',
+    // VALORANT
+    FHWWDM2:    'First Half Winner incl. Draw Map 2',
+    CSFHM2:     'Correct Score First Half Map 2',
+    RHDPFHM2:   'Round Handicap First Half Map 2',
+    RHDPSHM2:   'Round Handicap Second Half Map 2',
 
     M3W:        'Map 3 Winner',
     M3WD:       'Map 3 Winner incl. Draw',
@@ -181,6 +196,7 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM3:    'First to Kill Roshan Map 3',
     FBRCKSM3:   'First to Destroy Barracks Map 3',
+    BBRCKSM3:   'Both Teams to Destroy Barracks Map 3',
     FTORMM3:    'First to Kill Tormentor Map 3',
     FCOURM3:    'First to Kill Courier Map 3',
     ULTRAM3:    'Ultrakill Map 3 Yes/No',
@@ -188,12 +204,18 @@ export const marketNameMap = Object.freeze
     GDLKM3:     'Godlike Map 3 Yes/No',
     TROSHM3:    'Total Roshans Map 3',
     MROSHM3:    'More Roshans Map 3',
+    BROSHM3:    'Both Teams to Slay Roshan Map 3',
     MEGAM3:     'Megacreeps Map 3 Yes/No',
     DRAPM3:     'Divine Rapier Built Map 3 Yes/No',
     AOTIM3:     'Aegis Of The Immortal Snatched Map 3 Yes/No',
     // MOBILE MOBA
     FTYRM3:     'First Tyrant Map 3',
     FDOMM3:     'First Dominator Map 3',
+    // VALORANT
+    FHWWDM3:     'First Half Winner incl. Draw Map 3',
+    CSFHM3:     'Correct Score First Half Map 3',
+    RHDPFHM3:   'Round Handicap First Half Map 3',
+    RHDPSHM3:   'Round Handicap Second Half Map 3',
 
     M4W:        'Map 4 Winner',
     M4WD:       'Map 4 Winner incl. Draw',
@@ -241,6 +263,7 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM4:    'First to Kill Roshan Map 4',
     FBRCKSM4:   'First to Destroy Barracks Map 4',
+    BBRCKSM4:   'Both Teams to Destroy Barracks Map 4',
     FTORMM4:    'First to Kill Tormentor Map 4',
     FCOURM4:    'First to Kill Courier Map 4',
     ULTRAM4:    'Ultrakill Map 4 Yes/No',
@@ -248,12 +271,18 @@ export const marketNameMap = Object.freeze
     GDLKM4:     'Godlike Map 4 Yes/No',
     TROSHM4:    'Total Roshans Map 4',
     MROSHM4:    'More Roshans Map 4',
+    BROSHM4:    'Both Teams to Slay Roshan Map 4',
     MEGAM4:     'Megacreeps Map 4 Yes/No',
     DRAPM4:     'Divine Rapier Built Map 4 Yes/No',
     AOTIM4:     'Aegis Of The Immortal Snatched Map 4 Yes/No',
     // MOBILE MOBA
     FTYRM4:     'First Tyrant Map 4',
     FDOMM4:     'First Dominator Map 4',
+    // VALORANT
+    FHWWDM5:    'First Half Winner incl. Draw Map 4',
+    CSFHM5:     'Correct Score First Half Map 4',
+    RHDPFHM5:   'Round Handicap First Half Map 4',
+    RHDPSHM4:   'Round Handicap Second Half Map 4',
 
     M5W:        'Map 5 Winner',
     M5WD:       'Map 5 Winner incl. Draw',
@@ -301,6 +330,7 @@ export const marketNameMap = Object.freeze
     // DOTA2
     FROSHM5:    'First to Kill Roshan Map 5',
     FBRCKSM5:   'First to Destroy Barracks Map 5',
+    BBRCKSM5:   'Both Teams to Destroy Barracks Map 5',
     FTORMM5:    'First to Kill Tormentor Map 5',
     FCOURM5:    'First to Kill Courier Map 5',
     ULTRAM5:    'Ultrakill Map 5 Yes/No',
@@ -308,10 +338,16 @@ export const marketNameMap = Object.freeze
     GDLKM5:     'Godlike Map 5 Yes/No',
     TROSHM5:    'Total Roshans Map 5',
     MROSHM5:    'More Roshans Map 5',
+    BROSHM5:    'Both Teams to Slay Roshan Map 5',
     MEGAM5:     'Megacreeps Map 5 Yes/No',
     DRAPM5:     'Divine Rapier Built Map 5 Yes/No',
     AOTIM5:     'Aegis Of The Immortal Snatched Map 5 Yes/No',
     // MOBILE MOBA
     FTYRM5:     'First Tyrant Map 5',
     FDOMM5:     'First Dominator Map 5',
+    // VALORANT
+    FHWWDM5:    'First Half Winner incl. Draw Map 5',
+    CSFHM5:     'Correct Score First Half Map 5',
+    RHDPFHM5:   'Round Handicap First Half Map 5',
+    RHDPSHM5:   'Round Handicap Second Half Map 5',
 });

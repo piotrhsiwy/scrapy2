@@ -162,7 +162,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
-      log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
+      log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return 20;
     }
 //    console.log('>>>>>>>>>>>>>>> scraped sportName: ' + sportName);
@@ -306,13 +306,13 @@ export async function scrapeMatchURL(data, browser, book, i){
     let {odds, vals} = await marketHandles[i].evaluate( async (e) => {
       debugger;
       let oddPrefixH = e.childNodes[1].querySelectorAll('.grid span.text-center')[0]?.textContent
-      oddPrefixH = oddPrefixH ? oddPrefixH : "";
+      oddPrefixH = oddPrefixH ? oddPrefixH.toLowerCase(): "";
       let oddPrefixA = e.childNodes[1].querySelectorAll('.grid span.text-center')[1]?.textContent
-      oddPrefixA = oddPrefixA ? oddPrefixA : "";
+      oddPrefixA = oddPrefixA ? oddPrefixA.toLowerCase() : "";
       let odds = [],  vals= [];
       let odd = true, val;
       for( let j = 0; e.childNodes[1].querySelectorAll('button div')[j]; j++ ){
-        odd = e.childNodes[1].querySelectorAll('button div')[j]?.textContent
+        odd = e.childNodes[1].querySelectorAll('button div')[j]?.textContent.toLowerCase();
         val = e.childNodes[1].querySelectorAll('button span')[j]?.textContent
         // entries for an even value of j are on the left (home)
         // entries for an odd value of j are on the right (away)
