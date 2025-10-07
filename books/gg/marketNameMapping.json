@@ -36,6 +36,46 @@
         "globalID":     "TR"
     },
     {
+        "specificName": "Map 1 - Will there be overtime",
+        "globalID":     "OT1"
+    },
+    {
+        "specificName": "Map 2 - Will there be overtime",
+        "globalID":     "OT2"
+    },
+    {
+        "specificName": "Map 3 - Will there be overtime",
+        "globalID":     "OT3"
+    },
+    {
+        "specificName": "Map 4 - Will there be overtime",
+        "globalID":     "OT4"
+    },
+    {
+        "specificName": "Map 5 - Will there be overtime",
+        "globalID":     "OT5"
+    },
+    {
+        "specificName": "Map 1 - Race to rounds",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Map 2 - Race to rounds",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Map 3 - Race to rounds",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Map 4 - Race to rounds",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Map 5 - Race to rounds",
+        "globalID":     "FTRRM5"
+    },
+    {
         "specificName": "1st map - winner",
         "globalID":     "M1W"
     },
@@ -274,6 +314,26 @@
     {
         "specificName": "Map 5 - Correct score",
         "globalID":     "CSM5"
+    },
+    {
+        "specificName": "Map 1 - total kills(incl. overtime)",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Map 2 - total kills(incl. overtime)",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Map 3 - total kills(incl. overtime)",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Map 4 - total kills(incl. overtime)",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "Map 5 - total kills(incl. overtime)",
+        "globalID":     "TKM5"
     },
     {
         "specificName": "1st map - will there be overtime",
