@@ -316,6 +316,86 @@
         "globalID":     "TROE5"
     },
     {
+        "specificName": "Map 1 - Odd/even rounds (incl. overtime)",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "Map 2 - Odd/even rounds (incl. overtime)",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Map 3 - Odd/even rounds (incl. overtime)",
+        "globalID":     "TROE3"
+    },
+    {
+        "specificName": "Map 4 - Odd/even rounds (incl. overtime)",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Map 5 - Odd/even rounds (incl. overtime)",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Map 1 - half - 1x2",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "Map 2 - half - 1x2",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "Map 3 - half - 1x2",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "Map 4 - half - 1x2",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "Map 5 - half - 1x2",
+        "globalID":     "FHWWDM5"
+    },
+    {
+        "specificName": "Map 1 - half round handicap",
+        "globalID":     "RHDPFHM1"
+    },
+    {
+        "specificName": "Map 2 - half round handicap",
+        "globalID":     "RHDPFHM2"
+    },
+    {
+        "specificName": "Map 3 - half round handicap",
+        "globalID":     "RHDPFHM3"
+    },
+    {
+        "specificName": "Map 4 - half round handicap",
+        "globalID":     "RHDPFHM4"
+    },
+    {
+        "specificName": "Map 5 - half round handicap",
+        "globalID":     "RHDPFHM5"
+    },
+    {
+        "specificName": "Map 1 - 1st half correct score",
+        "globalID":     "CSFHM1"
+    },
+    {
+        "specificName": "Map 2 - 1st half correct score",
+        "globalID":     "CSFHM2"
+    },
+    {
+        "specificName": "Map 3 - 1st half correct score",
+        "globalID":     "CSFHM3"
+    },
+    {
+        "specificName": "Map 4 - 1st half correct score",
+        "globalID":     "CSFHM4"
+    },
+    {
+        "specificName": "Map 5 - 1st half correct score",
+        "globalID":     "CSFHM5"
+    },
+    {
         "specificName": "1st map - Winning margin",
         "globalID":     "WMM1"
     },
@@ -328,12 +408,52 @@
         "globalID":     "WMM3"
     },
     {
-        "specificName": "4rd map - Winning margin",
+        "specificName": "4th map - Winning margin",
         "globalID":     "WMM4"
     },
     {
-        "specificName": "5rd map - Winning margin",
+        "specificName": "5th map - Winning margin",
         "globalID":     "WMM5"
+    },
+    {
+        "specificName": "Map 1 - Race to kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Map 2 - Race to kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Map 3 - Race to kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Map 4 - Race to kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Map 5 - Race to kills",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Map 1 - Both teams to slay a dragon",
+        "globalID":     "BDRGM1"
+    },
+    {
+        "specificName": "Map 2 - Both teams to slay a dragon",
+        "globalID":     "BDRGM2"
+    },
+    {
+        "specificName": "Map 3 - Both teams to slay a dragon",
+        "globalID":     "BDRGM3"
+    },
+    {
+        "specificName": "Map 4 - Both teams to slay a dragon",
+        "globalID":     "BDRGM4"
+    },
+    {
+        "specificName": "Map 5 - Both teams to slay a dragon",
+        "globalID":     "BDRGM5"
     },
     {
         "specificName": "Map 1 - Pistol round winner",
@@ -634,6 +754,26 @@
     {
         "specificName": "Map 5 - Total rounds",
         "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Map 1 - Odd/even rounds",
+        "globalID":     "TROEM1"
+    },
+    {
+        "specificName": "Map 2 - Odd/even rounds",
+        "globalID":     "TROEM2"
+    },
+    {
+        "specificName": "Map 3 - Odd/even rounds",
+        "globalID":     "TROEM3"
+    },
+    {
+        "specificName": "Map 4 - Odd/even rounds",
+        "globalID":     "TROEM4"
+    },
+    {
+        "specificName": "Map 5 - Odd/even rounds",
+        "globalID":     "TROEM5"
     },
     {
         "specificName": "Map 1 - Atakhan",
