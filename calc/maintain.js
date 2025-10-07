@@ -6,6 +6,7 @@ import { prettyToDate, ISO8601ToDate } from "../data/util/prettify.js";
  * @param {*} data 
  */
 export function cleanupData(data){
+    let count = 0;
     const now = new Date(); 
     for(let i = 0; i < data.sports.length; i++){
         for(let j = 0; j < data.sports[i].matches.length; j++){
@@ -17,9 +18,11 @@ export function cleanupData(data){
                 /* is outdated */
                 data.sports[i].matches.splice(j, 1);
                 j--;
+                count++;
             }
         }
     }
+    return count;
 }
 
 /**
@@ -28,6 +31,7 @@ export function cleanupData(data){
  * @param {*} items 
  */
 export function cleanupOnDatetime(items){
+    let count = 0;
     const now = new Date();
     for(let i = 0; i < items.length; i++){
         const date = prettyToDate(items[i]["datetime"]);
@@ -37,6 +41,8 @@ export function cleanupOnDatetime(items){
             /* is outdated */
             items.splice(i, 1);
             i--;
+            count++;
         }
     }
+    return count;
 }

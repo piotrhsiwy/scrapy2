@@ -480,12 +480,13 @@ export async function calcSports(){
         log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
     }
 
-    log.write(`Maintaining the file ${arbsFilePath}.\n`);
-    cleanupOnDatetime(arbs);    
-    log.write(`Maintaining the file ${evsFilePath}.\n`);
-    cleanupOnDatetime(evs);    
-    log.write(`Maintaining the file ${dataFilePath}.\n`);
-    cleanupData(data);
+    let ret;
+    ret = cleanupOnDatetime(arbs);    
+    log.write(`Maintaining the file ${arbsFilePath} finished. ${ret} entries sliced.\n`);
+    ret = cleanupOnDatetime(evs);    
+    log.write(`Maintaining the file ${evsFilePath} finished. ${ret} entries sliced.\n`);
+    ret = cleanupData(data);
+    log.write(`Maintaining the file ${dataFilePath} finished. ${ret} entries sliced.\n`);
     
     consideredArbCount = 0;
     positiveArbCount = 0;
