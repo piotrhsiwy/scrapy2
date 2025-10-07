@@ -325,8 +325,8 @@ export async function scrapeMatchURL(data, browser, book, i){
       oddPrefixA = oddPrefixA ? oddPrefixA.toLowerCase() : "";
       let odds = [],  vals= [];
       let odd = true, val;
-      for( let j = 0; e.childNodes[1].querySelectorAll('button div')[j]; j++ ){
-        odd = e.childNodes[1].querySelectorAll('button div')[j]?.textContent.toLowerCase();
+      for( let j = 0; e.childNodes[1].querySelectorAll('button div.odds-button__name')[j]; j++ ){
+        odd = e.childNodes[1].querySelectorAll('button div.odds-button__name')[j]?.textContent.toLowerCase();
         val = e.childNodes[1].querySelectorAll('button span')[j]?.textContent
         // entries for an even value of j are on the left (home)
         // entries for an odd value of j are on the right (away)
