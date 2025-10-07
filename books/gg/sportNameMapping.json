@@ -16,14 +16,6 @@
         "globalID": "LOL"
     },
     {
-        "specificName": "basketball esports",
-        "globalID": "E_BASKETBALL"
-    },
-    {
-        "specificName": "football esports",
-        "globalID": "E_SOCCER"
-    },
-    {
         "specificName": "starcraft-ii",
         "globalID": "SC2"
     },
