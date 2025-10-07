@@ -282,7 +282,7 @@ function calcMarket(arbs, evs, sport, match, market){
             `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
             : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
     } else{//    odds.length >= 3
-        if(market.name.includes('Handicap')){
+        if(market.name?.includes('Handicap')){
             /* handicap market with oddNames of the format: "Virtus.pro-2.5" */
             let processed = [];
             while(odds.length !== processed.length){
@@ -328,7 +328,7 @@ function calcMarket(arbs, evs, sport, match, market){
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
-        } else if(market.name.includes('First to Reach')){
+        } else if(market.name?.includes('First to Reach')){
             /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
             let processed = [];
             while(odds.length !== processed.length){
@@ -374,7 +374,7 @@ function calcMarket(arbs, evs, sport, match, market){
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
-        } else if(market.name.includes('Total') || market.name.includes('Map Duration')){
+        } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
             /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
             /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
             let processed = [];
@@ -421,7 +421,7 @@ function calcMarket(arbs, evs, sport, match, market){
             marketReport = positiveArbCount > 0 ?
                 `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
                 : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
-        } else if(market.name.includes('Correct Score')){
+        } else if(market.name?.includes('Correct Score')){
             /* correct-score market can be a
             for a BO1 2-way(synonymous with Match Winner), 
             for a BO3 4-way
