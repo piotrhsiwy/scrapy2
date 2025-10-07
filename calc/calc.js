@@ -168,9 +168,10 @@ function meanArray(arr){
     return acc/arr.length;
 }
 
-function meanArrayExcluding(arr, v){
+function meanArrayExcluding(arr, value){
     let acc = 0.0;
     arr.forEach( v => { acc+=v; });
+    return (acc-value)/(arr.length-1);
 }
 
 function stdDevArray(values){
