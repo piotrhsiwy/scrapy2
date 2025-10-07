@@ -110,7 +110,8 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                 continue;
             }
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
-            if(arb > 0.0){
+            const cutoff = 0.02;
+            if(arb > cutoff){
                 let newArb = {
                     "timestamp(calculated)":ISO8601ToPretty(new Date().toISOString()),
                     "value":arb,
@@ -201,7 +202,7 @@ function ev2(evs, sport, match, market, odd){
             then v could potentially be an arb aginast the mean_Excluded(v).
             I define this as a potential positive EV bet. */
             const strength = evStrength(v, mean);
-            const cutoff = -0.05;
+            const cutoff = -0.07;
             if(strength < cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book ).url;
