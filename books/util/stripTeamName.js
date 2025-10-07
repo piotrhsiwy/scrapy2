@@ -99,6 +99,10 @@ const teamNameMap = Object.freeze([
         globalName:'uu',
         specificNames:['undefeatedunited']
     },
+    {
+        globalName:'1w',
+        specificNames:['1win']
+    },
 ])
 
 export function stripTeamName(str){
