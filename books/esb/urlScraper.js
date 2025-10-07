@@ -37,7 +37,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   await page.setViewport(book.viewport);
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
   await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
-  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
+  await page.goto(book.urls[i],  { waitUntil: 'networkidle2', timeout: 60000 });
   const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
@@ -64,19 +64,31 @@ export async function scrapeMatchURL(data, browser, book, i){
 //console.log('data: ');
 //console.log(JSON.stringify(data, null, 2));
     let selector, el, mapping;
-    // get sport
-    let infoHandle;
-    try{
-      selector = 'div.oPInfo';
-      infoHandle = await page.waitForSelector(selector, {timeout:60000});
-    } catch{
-      log.write(`Critical Failure! No infoHandle present! Probably invalid url ${await page.url()}\n`);
-      return -1;
+    // check if match is still there
+    let count = 0;
+    let oPInfoExists = await page.evaluate( () => { return document.querySelector('div.oPInfo') !== null });
+    let msg = await page.evaluate( () => document.querySelector('div.msgTxt')?.textContent);
+    while( !oPInfoExists && !msg && count < 20){
+      oPInfoExists = await page.evaluate( () => { return document.querySelector('div.oPInfo') !== null });
+      msg = await page.evaluate( () => document.querySelector('div.msgTxt')?.textContent);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      count++;
     }
+    if(oPInfoExists){
+      if(msg){
+        log.write(`Failure! div.msgTxt present with textContent=${msg}! ${await page.url()}\n`);
+        return 10;
+      }
+    } else{
+      log.write(`Failure! The element div.oPInfo is not present! ${await page.url()}\n`);
+      return 10;
+    }
+    // get sport
+    let infoHandle = await page.$('div.oPInfo');
     let sportName = await infoHandle.$eval('img', e => e.getAttribute('src').split('/').pop().split('.')[0]);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
-      sportName = sportNameMap[mapping.globalID];;
+      sportName = sportNameMap[mapping.globalID];
     } else{
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return 20;

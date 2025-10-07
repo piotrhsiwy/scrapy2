@@ -76,7 +76,7 @@ export async function scrapeMatchURL(data, browser, book, i){
 //console.log(JSON.stringify(data, null, 2));
     const chicken = await page.evaluate( () => document.querySelector('img[src="/spa-assets/image/empty-state/chicken.png"]'));
     if(chicken){
-      log.write(`Critical Failure! The 'game not available'-chicken is present! ${await page.url()}\n`);
+      log.write(`Failure! The 'game not available'-chicken is present! ${await page.url()}\n`);
       return 10;
     }
 

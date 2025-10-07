@@ -4,6 +4,7 @@
 10 failure:
   there is an element on the page indicating that the match is in the past and/or doesn't exist
 0 success:
-  successfully retrieved all available markets
+  successfully retrieved all available markets. Note that  live odds are 
+  not being scraped
 -1 critical failure:
   some critical error thrown when scraping. no markets scraped
