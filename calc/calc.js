@@ -1,6 +1,6 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { ISO8601ToPretty, prettyToDate } from "../data/util/prettify.js";
+import { ISO8601ToPretty, prettyToDate,  ISO8601ToDate } from "../data/util/prettify.js";
 
 export let log;
 let consideredArbCount;
@@ -19,7 +19,7 @@ function isMultiSelfArb(arr){
     return false;
 }
 
-function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
+function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     for(const A of oddA.coefs){
         for(const B of oddB.coefs){
             for(const C of oddC.coefs){
@@ -29,9 +29,9 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                         continue;
                     }
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
-                    if(arb > 0.0){
+                    if(arb > cutoff){
                         let newArb = {
-                            "timestamp(calculated)":ISO8601ToPretty(new Date().toISOString()),
+                            "timestamp":ISO8601ToPretty(new Date().toISOString()),
                             "value":arb,
                             "sport":sport.name,
                             // "tournament":tournament.name,
@@ -43,25 +43,25 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
                                 "oddName":oddA.name,
                                 "oddValue":A.value,
                                 "book":A.book,
-                                "url":match.urls.find( item => item.book === A.book ).url,
+                                "url":match.urls.find( item => item.book === A.book )?.url,
                             },
                             "oddB":{
                                 "oddName":oddB.name,
                                 "oddValue":B.value,
                                 "book":B.book,
-                                "url":match.urls.find( item => item.book === B.book ).url,
+                                "url":match.urls.find( item => item.book === B.book )?.url,
                             },
                             "oddC":{
                                 "oddName":oddC.name,
                                 "oddValue":C.value,
                                 "book":C.book,
-                                "url":match.urls.find( item => item.book === C.book ).url,
+                                "url":match.urls.find( item => item.book === C.book )?.url,
                             },
                             "oddD":{
                                 "oddName":oddD.name,
                                 "oddValue":D.value,
                                 "book":D.book,
-                                "url":match.urls.find( item => item.book === D.book ).url,
+                                "url":match.urls.find( item => item.book === D.book )?.url,
                             },
                         };
                         if(!arbs.some( a => 
@@ -103,14 +103,13 @@ function arb4(arbs, sport, match, market, oddA, oddB, oddC, oddD){
     }
 }
 
-function arb2(arbs, sport, match, market, oddHome, oddAway){
+function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
     for(const coefHome of oddHome.coefs){
         for(const coefAway of oddAway.coefs){
             if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
                 continue;
             }
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
-            const cutoff = 0.02;
             if(arb > cutoff){
                 let newArb = {
                     "timestamp(calculated)":ISO8601ToPretty(new Date().toISOString()),
@@ -125,13 +124,13 @@ function arb2(arbs, sport, match, market, oddHome, oddAway){
                         "oddName":oddHome.name,
                         "oddValue":coefHome.value,
                         "book":coefHome.book,
-                        "url":match.urls.find( item => item.book === coefHome.book ).url,
+                        "url":match.urls.find( item => item.book === coefHome.book )?.url,
                     },
                     "Away":{
                         "oddName":oddAway.name,
                         "oddValue":coefAway.value,
                         "book":coefAway.book,
-                        "url":match.urls.find( item => item.book === coefAway.book ).url,
+                        "url":match.urls.find( item => item.book === coefAway.book )?.url,
                     }
                 };
                 if(!arbs.some( a => 
@@ -188,7 +187,7 @@ function evStrength(a, b){
     return (1/a - 1/b);
 }
 
-function ev2(evs, sport, match, market, odd){
+function ev2(evs, cutoff, sport, match, market, odd){
     const valuesNoNull = [];
     odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
     // log.write(`values: ${values}\n`);
@@ -202,12 +201,11 @@ function ev2(evs, sport, match, market, odd){
             then v could potentially be an arb aginast the mean_Excluded(v).
             I define this as a potential positive EV bet. */
             const strength = evStrength(v, mean);
-            const cutoff = -0.07;
-            if(strength < cutoff){
+            if(strength < -cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
-                const url = match.urls.find( u => u.book === book ).url;
+                const url = match.urls.find( u => u.book === book )?.url;
                 let newEv = {
-                    "timestamp(calculated)":ISO8601ToPretty(new Date().toISOString()),
+                    "timestamp":odd.coefs.find(c => c.value === v).timestamp,
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
@@ -257,7 +255,7 @@ function ev2(evs, sport, match, market, odd){
     // log.write(`potentialArbWithMean: ${potentialArbWithMean}\n`);
 }
 
-function calcMarket(arbs, evs, sport, match, market){
+function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
 
     let marketReport;
     const teamHome = match.teamHome;
@@ -272,9 +270,9 @@ function calcMarket(arbs, evs, sport, match, market){
         let oddHome = market.odds[0];
         let oddAway = market.odds[1];
         if(oddHome && oddAway){
-            arb2(arbs, sport, match, market, oddHome, oddAway);
-            ev2(evs, sport, match, market, oddHome);
-            ev2(evs, sport, match, market, oddAway);
+            arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
+            ev2(evs, evCutoff, sport, match, market, oddHome);
+            ev2(evs, evCutoff, sport, match, market, oddAway);
         } else{
             // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
@@ -316,9 +314,9 @@ function calcMarket(arbs, evs, sport, match, market){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(arbs, sport, match, market, oddHome, oddAway);
-                    ev2(evs, sport, match, market, oddHome);
-                    ev2(evs, sport, match, market, oddAway);
+                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -362,9 +360,9 @@ function calcMarket(arbs, evs, sport, match, market){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(arbs, sport, match, market, oddHome, oddAway);
-                    ev2(evs, sport, match, market, oddHome);
-                    ev2(evs, sport, match, market, oddAway);
+                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -409,9 +407,9 @@ function calcMarket(arbs, evs, sport, match, market){
                     }
                 }
                 if(oddHome && oddAway){
-                    arb2(arbs, sport, match, market, oddHome, oddAway);
-                    ev2(evs, sport, match, market, oddHome);
-                    ev2(evs, sport, match, market, oddAway);
+                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -433,7 +431,7 @@ function calcMarket(arbs, evs, sport, match, market){
             oddNames are of the following format: '2:0', '1:2', etc.
             */
             if(odds.length == 4){ // BO3 4-way marketa
-                arb4(arbs, sport, match, market, odds[0], odds[1], odds[2], odds[3]);
+                arb4(arbs, arbCutoff, sport, match, market, odds[0], odds[1], odds[2], odds[3]);
             } else{ // B05+ not supported yet
                 marketReport = `Failure! calcMarket cannot handle this Correct Score market: '${market.name}'. Incorrect number of odds: ${odds.length}.
                 Expected: supported={4}, not supported={6,8,10...}\n`;
@@ -445,7 +443,7 @@ function calcMarket(arbs, evs, sport, match, market){
             marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
         }
     }
-    // log.write(marketReport);
+    // console.log(marketReport);
 }
 
 import { cleanupOnDatetime, cleanupData } from "./maintain.js";
@@ -497,7 +495,9 @@ export async function calcSports(){
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    calcMarket(arbs, evs, sport, match, market);
+                    const arbCutoff = 0.02;
+                    const evCutoff = 0.07;
+                    calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
                 }
             }
         }
@@ -506,16 +506,16 @@ export async function calcSports(){
 
     if(arbs.length > 0){
         arbs.sort((a, b) => {
-            const agT = prettyToDate(a["timestamp(calculated)"]).getTime();
-            const bgT = prettyToDate(b["timestamp(calculated)"]).getTime();
+            const agT = ISO8601ToDate(a["timestamp"])?.getTime();
+            const bgT = ISO8601ToDate(b["timestamp"])?.getTime();
             return agT - bgT;
         });
     }
 
     if(evs.length > 0){
         evs.sort( (a, b) => {
-            const agT = prettyToDate(a["timestamp(calculated)"]).getTime();
-            const bgT = prettyToDate(b["timestamp(calculated)"]).getTime();
+            const agT = ISO8601ToDate(a["timestamp"])?.getTime();
+            const bgT = ISO8601ToDate(b["timestamp"])?.getTime();
             return agT - bgT;
         });
     }

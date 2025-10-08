@@ -6,16 +6,17 @@
  * @param {*} value 
  * @returns the coef that has just been added/created
  */
+import { ISO8601ToPretty } from "./prettify.js";
 export function insertCoefIntoOdd(log, odd, book, value){
     let coef = odd.coefs.findLast(c => c.book === book);
     if(!coef){
         /* the coef is new */
         log.write(`Warning! This coef is new: ${book}: ${value}\n`);
-        odd.coefs.push({"timestamp":new Date(), book: book, value: value});
+        odd.coefs.push({"timestamp":ISO8601ToPretty(new Date().toISOString), book: book, value: value});
     } else{
         /* the coef already exists */
         // update policy: always update
-        coef.timestamp = new Date();
+        coef.timestamp = ISO8601ToPretty(new Date());
         coef.value = value;
     }
     return coef;

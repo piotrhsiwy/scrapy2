@@ -4,6 +4,7 @@
  *                      Date Object
  * the @function ISO8601ToPretty is  ONLY to present the date in a human-friendlier format
  * the @function prettyToDate is used to translate it into Date object for comparisons, etc.
+ * the @function ISO8601ToDate accordingly
  */
 
 /**
@@ -91,10 +92,30 @@ export function ISO8601ToDate(isoDatetime){
     }
 }
 
-export function ISO8601isPast(isoDatetime){
-    const gT1 = ISO8601ToDate(isoDatetime).getTime();
-    const gT2 = new Date().getTime();
+function ISO8601isBefore(isoDatetime1, isoDatetime2){
+    const gT1 = ISO8601ToDate(isoDatetime1).getTime();
+    const gT2 = ISO8601ToDate(isoDatetime2).getTime();
     return gT1<gT2;
+}
+
+export function ISO8601isPast(isoDatetime){
+    return ISO8601isBefore(isoDatetime, new Date().toISOString);
+}
+
+export function ISO8601lastestFrom(timestamps){
+    if(!timestamps){
+        return timestamps;
+    } else if(timestamps.length <= 1){
+        return timestamps[0];
+    } else{
+        let latest = timestamps[0];
+        for(let i = 0; i < timestamps.length; i++){
+            if(ISO8601isBefore(latest, timestamps[i])){
+                latest = timestamps[i];
+            }
+        }
+        return latest;
+    }
 }
 
 export function arbPrettifyToPercent(f){
