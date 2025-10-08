@@ -209,13 +209,13 @@ export async function scrapeMatchURL(data, browser, book, i){
     const teamAway = stripTeamName(teams[1]);
     let datetime;
     let dateString = await page.evaluate( () => {
-      const ret = document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[0].childNodes[0].childNodes[0].childNodes[4]?.textContent;
+      return document.querySelectorAll('#match-view .bg-secondary')[0].childNodes[0].childNodes[0].childNodes[0].childNodes[4]?.textContent;
     })
     const liveTagRed = await page.evaluate( () => {
-      return document.querySelectorAll('#match-view .bg-secondary')[0]?.querySelector('[data-testid="live-tag-red"]')
+      return !!document.querySelectorAll('#match-view .bg-secondary')[0]?.querySelector('[data-testid="live-tag-red"]')
     })
     if(liveTagRed){
-      dateString = 'live';
+      datetime = 'live';
     } else{
       const streamPresent = await page.evaluate( () => {
         return document.querySelector('iframe')?.getAttribute('id')?.includes('stream') !== null;
@@ -249,6 +249,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     // if it's a slider market, switch to "All" View
     if(marketName.includes('Slider')){
       await marketHandles[i].$eval( ('[data-testid="allTab"]'),  async (e) => await e?.click() );
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
     marketName = marketName.split('Slider')[0];
     mapping = marketNameMapping.find( m => m.specificName === marketName);
@@ -263,7 +264,7 @@ export async function scrapeMatchURL(data, browser, book, i){
 
     // get odds and vals
     let {odds, vals} = await marketHandles[i].evaluate( async (e) => {
-      debugger;
+      // debugger;
       let oddPrefixH = e.childNodes[1].querySelectorAll('.grid span.text-center')[0]?.textContent
       oddPrefixH = oddPrefixH ? oddPrefixH.toLowerCase(): "";
       let oddPrefixA = e.childNodes[1].querySelectorAll('.grid span.text-center')[1]?.textContent
@@ -286,15 +287,19 @@ export async function scrapeMatchURL(data, browser, book, i){
       return {odds, vals};
     })
     // write (odds and vals)
-    let odd;
-    for(let j = 0; j < odds.length; j++){
-      odds[j] = odds[j]
-      .replace(labelHome, teamHome)
-      .replace(labelAway, teamAway)
-      .replace(/\+/g, '');
-      odds[j] = stripTeamName(odds[j]);
-      let odd = insertOddIntoMarket(log, market, odds[j]);
-      let coef = insertCoefIntoOdd(log, odd, book.name, vals[j])
+    if(odds.length != vals.length){
+      log.write(`Failure! The odds and vals array lengths don't match. ${odds.length} !== !${vals.length}`);
+    } else{
+      let odd;
+      for(let j = 0; j < odds.length && j < vals.length; j++){
+        odds[j] = odds[j]
+        .replace(labelHome, teamHome)
+        .replace(labelAway, teamAway)
+        .replace(/\+/g, '');
+        odds[j] = stripTeamName(odds[j]);
+        let odd = insertOddIntoMarket(log, market, odds[j]);
+        let coef = insertCoefIntoOdd(log, odd, book.name, vals[j])
+      }
     }
 
     }

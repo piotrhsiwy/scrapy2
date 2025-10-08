@@ -61,7 +61,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -90,7 +90,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: false,
+    devtools: true,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -183,7 +183,7 @@ async function run(browser){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -241,11 +241,11 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'gg',
-  'esb',
   'tp',
-  'ls',
-  'ms',
+  // 'gg',
+  // 'esb',
+  // 'ls',
+  // 'ms',
 // '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany
 ]

@@ -6,13 +6,14 @@
  * @param {*} value 
  * @returns the coef that has just been added/created
  */
-import { ISO8601ToPretty } from "./prettify.js";
+import { ISO8601ToPretty, prettyToDate } from "./prettify.js";
 export function insertCoefIntoOdd(log, odd, book, value){
     let coef = odd.coefs.findLast(c => c.book === book);
     if(!coef){
         /* the coef is new */
-        log.write(`Warning! This coef is new: ${book}: ${value}\n`);
-        odd.coefs.push({"timestamp":ISO8601ToPretty(new Date().toISOString), book: book, value: value});
+        log.write(`Warning! This coef is new: ${book.name}: ${value}\n`);
+        const timestamp = ISO8601ToPretty(new Date().toISOString());
+        odd.coefs.push({timestamp: timestamp, book: book.name, value: value});
     } else{
         /* the coef already exists */
         // update policy: always update
@@ -71,9 +72,10 @@ export function insertMarketIntoMatch( log, match, marketName){
  * @returns the match that has just been updated/created
  */
 export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, book, url){
+    const pretty = ISO8601ToPretty(datetime);
     let match = sport.matches.findLast(m =>
         (
-          m.datetime === datetime || (Math.abs( (new Date(m.datetime)) - (new Date(datetime)) ) <= 3*60*60*1000) 
+          m.datetime === pretty || (Math.abs( prettyToDate(m.datetime).getTime() - prettyToDate(pretty).getTime() ) <= 3*60*60*1000) 
           // maximum of 3h difference is allowed, becuase some books have different datetimes
         )
         &&
