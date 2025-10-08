@@ -92,17 +92,17 @@ export function ISO8601ToDate(isoDatetime){
     }
 }
 
-function ISO8601isBefore(isoDatetime1, isoDatetime2){
-    const gT1 = ISO8601ToDate(isoDatetime1).getTime();
-    const gT2 = ISO8601ToDate(isoDatetime2).getTime();
+function prettyIsBefore(pretty1, pretty2){
+    const gT1 = prettyToDate(pretty1).getTime();
+    const gT2 = prettyToDate(pretty2).getTime();
     return gT1<gT2;
 }
 
-export function ISO8601isPast(isoDatetime){
-    return ISO8601isBefore(isoDatetime, new Date().toISOString);
+export function prettyIsPast(pretty){
+    return prettyIsBefore(pretty, ISO8601ToPretty(new Date().toISOString));
 }
 
-export function ISO8601lastestFrom(timestamps){
+export function prettyLatestFrom(timestamps){
     if(!timestamps){
         return timestamps;
     } else if(timestamps.length <= 1){
@@ -110,7 +110,7 @@ export function ISO8601lastestFrom(timestamps){
     } else{
         let latest = timestamps[0];
         for(let i = 0; i < timestamps.length; i++){
-            if(ISO8601isBefore(latest, timestamps[i])){
+            if(prettyIsBefore(latest, timestamps[i])){
                 latest = timestamps[i];
             }
         }

@@ -6,7 +6,7 @@
                 {
                     "teamHome":"virtus.pro",
                     "teamAway":"liquid",
-                    "datetime":"2025-10-06T13:39:32.517Z",
+                    "datetime":"October 6, 2025 at 12:57:16 AM GMT+2",
                     "urls": [
                         {
                         "book": "Esportsbet",
@@ -21,7 +21,7 @@
                                     "name":"liquid",
                                     "coefs": [
                                         {
-                                            "timestamp(scraped)": "2025-10-06T13:39:32.517Z",
+                                            "timestamp": "October 6, 2025 at 12:57:16 AM GMT+2",
                                             "book":"Thunderpick",
                                             "value":1.52
                                         }
@@ -31,7 +31,7 @@
                                     "name":"virtus.pro",
                                     "coefs": [
                                         {
-                                            "timestamp(scraped)": "2025-10-06T13:39:32.517Z",
+                                            "timestamp": "October 6, 2025 at 12:57:16 AM GMT+2",
                                             "book":"Thunderpick",
                                             "value":2.35
                                         }

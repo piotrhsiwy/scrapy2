@@ -1,6 +1,6 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { ISO8601ToPretty, prettyToDate,  ISO8601ToDate } from "../data/util/prettify.js";
+import { ISO8601ToPretty, prettyToDate,  ISO8601ToDate, prettyLatestFrom } from "../data/util/prettify.js";
 
 export let log;
 let consideredArbCount;
@@ -31,13 +31,13 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
                     if(arb > cutoff){
                         let newArb = {
-                            "timestamp":ISO8601ToPretty(new Date().toISOString()),
+                            "timestamp":prettyLatestFrom([oddA.timestamp, oddB.timestamp, oddC.timestamp, oddD.timestamp]),
                             "value":arb,
                             "sport":sport.name,
                             // "tournament":tournament.name,
                             "teamHome":match.teamHome,
                             "teamAway":match.teamAway,
-                            "datetime":ISO8601ToPretty(match.datetime),
+                            "datetime":match.datetime,
                             "market":market.name,
                             "oddA":{
                                 "oddName":oddA.name,
@@ -112,13 +112,13 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > cutoff){
                 let newArb = {
-                    "timestamp(calculated)":ISO8601ToPretty(new Date().toISOString()),
+                    "timestamp":prettyLatestFrom([oddHome.timestamp, oddAway.timestamp]),
                     "value":arb,
                     "sport":sport.name,
                     // "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
-                    "datetime":ISO8601ToPretty(match.datetime),
+                    "datetime":match.datetime,
                     "market":market.name,
                     "Home":{
                         "oddName":oddHome.name,
@@ -216,7 +216,7 @@ function ev2(evs, cutoff, sport, match, market, odd){
                     // "tournament":tournament.name,
                     "teamHome":match.teamHome,
                     "teamAway":match.teamAway,
-                    "datetime":ISO8601ToPretty(match.datetime),
+                    "datetime":match.datetime,
                     "market":market.name,
                     "odd":{
                         "oddName":odd.name,
@@ -495,8 +495,8 @@ export async function calcSports(){
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    const arbCutoff = 0.02;
-                    const evCutoff = 0.07;
+                    const arbCutoff = 0.015;
+                    const evCutoff = 0.05;
                     calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
                 }
             }
@@ -506,19 +506,20 @@ export async function calcSports(){
 
     if(arbs.length > 0){
         arbs.sort((a, b) => {
-            const agT = ISO8601ToDate(a["timestamp"])?.getTime();
-            const bgT = ISO8601ToDate(b["timestamp"])?.getTime();
+            const agT = prettyToDate(a.datetime)?.getTime();
+            const bgT = prettyToDate(b.datetime)?.getTime();
             return agT - bgT;
         });
     }
-
+    log.write(`Sorted arbs by datetime, ascending.\n`)
     if(evs.length > 0){
         evs.sort( (a, b) => {
-            const agT = ISO8601ToDate(a["timestamp"])?.getTime();
-            const bgT = ISO8601ToDate(b["timestamp"])?.getTime();
+            const agT = prettyToDate(a.datetime)?.getTime();
+            const bgT = prettyToDate(b.datetime)?.getTime();
             return agT - bgT;
         });
     }
+    log.write(`Sorted evs by datetime, ascending.\n`)
 
     log.write(`Writing the results to ${arbsFilePath}\n`);
     writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));

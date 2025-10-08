@@ -11,7 +11,7 @@ export function cleanupData(data){
     for(let i = 0; i < data.sports.length; i++){
         for(let j = 0; j < data.sports[i].matches.length; j++){
             const match = data.sports[i].matches[j]
-            const date = ISO8601ToDate(match["datetime"]);
+            const date = prettyToDate(match.datetime);
             const dategT = date.getTime();
             const nowgT = now.getTime();
             if( dategT < nowgT - 60*60*1000 ){
@@ -34,7 +34,7 @@ export function cleanupOnDatetime(items){
     let count = 0;
     const now = new Date();
     for(let i = 0; i < items.length; i++){
-        const date = prettyToDate(items[i]["datetime"]);
+        const date = prettyToDate(items[i].datetime);
         const dategT = date.getTime();
         const nowgT = now.getTime();
         if( dategT < nowgT - 60*60*1000 ){

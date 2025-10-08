@@ -103,11 +103,12 @@ async function singleHunt(browser){
   console.log('Hunting...')
   for(const book of books){ 
     const MAX_RETRIES = 3;
-    console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}. MAX_RETRIES=3`);
-    let count =  0;
+    let count =  MAX_RETRIES;
     let ret;
     do{
+      console.log(`Hunt from ${book.abbrev} module ${book.baseURL}. Retries left: 3`);
       ret = await book.hunterModule.huntSportURLs(browser, book);
+      console.log(`Successful`);
     } while(ret !== 0 && count++ < MAX_RETRIES);
   }
 }
