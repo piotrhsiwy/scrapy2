@@ -96,6 +96,7 @@ export async function huntSportURLs(browser, book){
             return ret;
         }, book.baseURLBuilder);
             
+        if(hrefs.length <= 0){throw"";}
         log.write(`Done hunting for sportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
         return 0;
 

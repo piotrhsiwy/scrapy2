@@ -62,11 +62,11 @@ export async function scrapeMatchURL(data, browser, book, i){
     try{
       selector = 'iframe[name="sportsbook_iframe"]';
       await page.waitForSelector(selector, {timeout:3000});
-      log.write(`Changing context to iframe ${await page.url()}\n`)
+      log.write(`Changing context to iframe ${await book.urls[i]}\n`)
       const iframeHandle = await page.$(selector);
       const frame = page = await iframeHandle.contentFrame();
     } catch{
-      log.write(`No iframe ${await page.url()}\n`)
+      log.write(`No iframe ${await book.urls[i]}\n`)
     }
   
     // get sport
@@ -110,13 +110,13 @@ export async function scrapeMatchURL(data, browser, book, i){
 //     el = await page.waitForSelector(selector);
 //     const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, await page.url());
+    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div.m-col > div';
     const marketHandles = await page.$$(selector);
     if(marketHandles.length === 0){
-      log.write(`No market handles ${await page.url()}\n`)
+      log.write(`No market handles ${await book.urls[i]}\n`)
     }
     for(const marketHandle of marketHandles){
 
@@ -150,10 +150,10 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await page.url()}\n`);
+  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
   return 0;    
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
+    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
     return -1;
   } finally{
     try{

@@ -143,7 +143,7 @@ export async function scrapeMatchURL(data, browser, book, i){
           m.datetime === datetime
       );
     }
-    match.urls.push({book: '22bet', url: await page.url()});
+    match.urls.push({book: '22bet', url: await book.urls[i]});
 //console.log('match: ');
 //console.log(JSON.stringify(match, null, 2));
 
@@ -248,11 +248,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await page.url()}\n`);
+  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
   return 0;
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
+    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
     return -1;
   } finally{
     try{

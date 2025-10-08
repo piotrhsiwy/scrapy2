@@ -13,7 +13,7 @@ export function insertCoefIntoOdd(log, odd, book, value){
         /* the coef is new */
         log.write(`Warning! This coef is new: ${book.name}: ${value}\n`);
         const timestamp = ISO8601ToPretty(new Date().toISOString());
-        odd.coefs.push({timestamp: timestamp, book: book.name, value: value});
+        odd.coefs.push({timestamp: timestamp, book: book, value: value});
     } else{
         /* the coef already exists */
         // update policy: always update

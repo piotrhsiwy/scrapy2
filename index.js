@@ -106,10 +106,10 @@ async function singleHunt(browser){
     let count =  MAX_RETRIES;
     let ret;
     do{
-      console.log(`Hunt from ${book.abbrev} module ${book.baseURL}. Retries left: 3`);
+      console.log(`Hunt from ${book.abbrev} module ${book.baseURL}. Retries left: ${count}`);
       ret = await book.hunterModule.huntSportURLs(browser, book);
-      console.log(`Successful`);
-    } while(ret !== 0 && count++ < MAX_RETRIES);
+      console.log(`Returned ${ret}.`);
+    } while(ret !== 0 && count--);
   }
 }
 
@@ -160,7 +160,7 @@ async function run(browser){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(10, 0);
+    const myq = new Queue(16, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -241,8 +241,8 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'tp',
   'gg',
+  'tp',
   'esb',
   'ls',
   'ms',

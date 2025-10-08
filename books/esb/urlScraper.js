@@ -75,11 +75,11 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
     if(oPInfoExists){
       if(msg){
-        log.write(`Failure! div.msgTxt present with textContent=${msg}! ${await page.url()}\n`);
+        log.write(`Failure! div.msgTxt present with textContent=${msg}! ${await book.urls[i]}\n`);
         return 10;
       }
     } else{
-      log.write(`Failure! The element div.oPInfo is not present! ${await page.url()}\n`);
+      log.write(`Failure! The element div.oPInfo is not present! ${await book.urls[i]}\n`);
       return 10;
     }
     // get sport
@@ -123,7 +123,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     const datetime = convDatetimeToISO(el.split('B')[0].trim());
     let mode = el.split('B')[1];
     mode = 'B' + mode;    
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, await page.url());
+    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, await book.urls[i]);
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div.matchWrp';
@@ -248,11 +248,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await page.url()}\n`);
+  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
+    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
     return -1;
   } finally{
     try{

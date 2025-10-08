@@ -86,11 +86,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     if(empty){
-      log.write(`Failure! There is an element with class div.osg-empty under this url: ${await page.url()}. Probably past match\n`);
+      log.write(`Failure! There is an element with class div.osg-empty under this url: ${await book.urls[i]}. Probably past match\n`);
       return 10;
     }
     if(!valid){
-      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${await page.url()}\n`);
+      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${await book.urls[i]}\n`);
       return -1;
     }
     let selector, el, mapping;
@@ -134,7 +134,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     selector = 'div.osg-coupon span';
     el = await page.$eval(selector, e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
     const datetime = convDatetimeToISO(el);
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, page.url());
+    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div.osg-coupon__market';
     let marketHandles = await page.$$(selector);
@@ -170,11 +170,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await page.url()}\n`);
+  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await page.url()}\n`);
+    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
     return -1;
   } finally{
     try{

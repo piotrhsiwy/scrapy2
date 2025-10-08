@@ -112,7 +112,7 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > cutoff){
                 let newArb = {
-                    "timestamp":prettyLatestFrom([oddHome.timestamp, oddAway.timestamp]),
+                    "timestamp":prettyLatestFrom([coefHome.timestamp, coefAway.timestamp]),
                     "value":arb,
                     "sport":sport.name,
                     // "tournament":tournament.name,
@@ -495,8 +495,8 @@ export async function calcSports(){
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    const arbCutoff = 0.015;
-                    const evCutoff = 0.05;
+                    const arbCutoff = 0.01;
+                    const evCutoff = 0.06;
                     calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
                 }
             }
