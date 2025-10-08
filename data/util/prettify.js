@@ -91,6 +91,12 @@ export function ISO8601ToDate(isoDatetime){
     }
 }
 
+export function ISO8601isPast(isoDatetime){
+    const gT1 = ISO8601ToDate(isoDatetime).getTime();
+    const gT2 = new Date().getTime();
+    return gT1<gT2;
+}
+
 export function arbPrettifyToPercent(f){
     return (f*100.0).toFixed(2);
 }

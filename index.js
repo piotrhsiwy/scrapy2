@@ -102,8 +102,13 @@ async function openBrowser(){
 async function singleHunt(browser){
   console.log('Hunting...')
   for(const book of books){ 
-    console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}`);
-    await book.hunterModule.huntSportURLs(browser, book);
+    const MAX_RETRIES = 3;
+    console.log(`Queued hunt from ${book.abbrev} module ${book.baseURL}. MAX_RETRIES=3`);
+    let count =  0;
+    let ret;
+    do{
+      ret = await book.hunterModule.huntSportURLs(browser, book);
+    } while(ret !== 0 && count++ < MAX_RETRIES);
   }
 }
 
@@ -153,12 +158,31 @@ async function run(browser){
   await calc();
   /********************************* */
   while(true){;
-    const myq = new Queue(10, 1000);
+    //  new
+    const myq = new Queue(16, 0);
+    /**
+     * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
+     * 8      0       3:07
+     * 16     10      3:03
+     * 16     100     3:26
+     * 32     10      3:08
+     * 64     0       3:21
+     * 64     10      3:16
+     * size   delay   time[s]
+     * 5      10      76 
+     * 5      1000    92
+     * 10     10      71
+     * 10     100     76
+     * 10     1000    83
+     * 20     10      71
+     * 20     1000    82 
+     * 64     1000    77 
+     */
     const q = [];
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -191,7 +215,7 @@ async function run(browser){
             anyUrlUnderI = true;
           }
         }
-        if(i%10 === 9){
+        if(i%11 === 10){
           q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
         }

@@ -1,4 +1,5 @@
 {
+    "name":"Esportsbet",
     "abbrev":"esb",
     "baseURL":"https://esportsbet.io/esportsbull/",
     "viewport":{"width":1920, "height":768},

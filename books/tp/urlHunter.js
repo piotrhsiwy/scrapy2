@@ -79,7 +79,6 @@ export async function huntSportURLs(browser, book){
             return ret;
         });
         log.write(`Success! Hunted ${hrefs.length} hrefs from ${url}\n`);
-
         return 0;
 
     } catch(error){

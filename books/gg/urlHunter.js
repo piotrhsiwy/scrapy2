@@ -81,13 +81,14 @@ export async function huntSportURLs(browser, book){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport')){
                     sport.click();
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    const NAVI_DELAY = 3000;
+                    await new Promise(resolve => setTimeout(resolve, NAVI_DELAY));
                     let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
                     let size;
                     do{
                         size = matches.length;
                         matches[matches.length-1].scrollIntoView();
-                        matches = await waitMax(2000);
+                        matches = await waitMax(NAVI_DELAY);
                     } while(size !== matches.length);
                     ret = ret.concat(Array.from(matches).map( match => baseurl + match.getAttribute('href')));
                 }
@@ -95,7 +96,7 @@ export async function huntSportURLs(browser, book){
             return ret;
         }, book.baseURLBuilder);
             
-        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        log.write(`Done hunting for sportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
