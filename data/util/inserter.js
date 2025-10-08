@@ -72,10 +72,10 @@ export function insertMarketIntoMatch( log, match, marketName){
  * @returns the match that has just been updated/created
  */
 export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, book, url){
-    const pretty = ISO8601ToPretty(datetime);
+    datetime = ISO8601ToPretty(datetime);
     let match = sport.matches.findLast(m =>
         (
-          m.datetime === pretty || (Math.abs( prettyToDate(m.datetime).getTime() - prettyToDate(pretty).getTime() ) <= 3*60*60*1000) 
+          m.datetime === datetime || (Math.abs( prettyToDate(m.datetime).getTime() - prettyToDate(datetime).getTime() ) <= 3*60*60*1000) 
           // maximum of 3h difference is allowed, becuase some books have different datetimes
         )
         &&

@@ -1,6 +1,6 @@
 /**
- *                      Pretty format: October 6, 2025 at 07:00:00 PM GMT+2 
- *                      ISO8601 format: 2025-10-06T13:39:32.517Z
+ *                      Pretty format: 'October 6, 2025 at 07:00:00 PM GMT+2'   OR      'live'
+ *                      ISO8601 format: 2025-10-06T13:39:32.517Z                OR      'live'
  *                      Date Object
  * the @function ISO8601ToPretty is  ONLY to present the date in a human-friendlier format
  * the @function prettyToDate is used to translate it into Date object for comparisons, etc.
@@ -17,6 +17,9 @@
 export function prettyToDate(dateString){
   // Split the date and time parts
   if(!dateString) return dateString;
+  if(dateString.includes('live')){
+    return new Date();
+  }
   const [datePart, timePart] = dateString.split(' at ');
 
   // Extract date components

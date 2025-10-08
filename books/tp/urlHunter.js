@@ -46,7 +46,7 @@ export async function huntSportURLs(browser, book){
 
         await page.waitForSelector('div.infinite-scroll-list');
         hrefs = await page.evaluate( async () => {
-            debugger;
+            // debugger;
             let ret = [];
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
                 e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2')
