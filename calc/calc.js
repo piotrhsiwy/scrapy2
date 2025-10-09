@@ -119,10 +119,8 @@ function meanArray(arr){
     return acc/arr.length;
 }
 
-function meanArrayExcluding(arr, value){
-    let acc = 0.0;
-    arr.forEach( v => { acc+=v; });
-    return (acc-value)/(arr.length-1);
+function stdDevArrayExcluding(arr, value){
+    return stdDevArray(arr.slice(arr.findIndex((v) => v === value), 1));
 }
 
 function stdDevArray(values){
@@ -155,13 +153,14 @@ function ev2(evs, cutoff, sport, match, market, odd){
             if(strength < -cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book )?.url;
+                const stdDev = stdDevArrayExcluding(valuesNoNull, v);
                 let newEv = {
                     "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
-                    "stdDev":stdDevArray(valuesNoNull),
-                    "deviationInTermsOfStdDev":Math.abs((v-mean)/stdDevArray(valuesNoNull)),
+                    "stdDev":stdDev,
+                    "deviationInTermsOfStdDev":Math.abs((v-mean)/stdDev),
                     "strength":strength,
                     "sport":sport.name,
                     // "tournament":tournament.name,
@@ -429,7 +428,7 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
             }
         }
     log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
-    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} stronger than cutoff.\n`)
+    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} positive.\n`)
 
     if(arbs.length > 0){
         arbs.sort((a, b) => {
@@ -456,5 +455,5 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 
     await promisify(log.end).bind(log);
-    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount}, *new*positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, *new*positiveEvs=${positiveEvCount}`;
+    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which positiveArbs=${arbs.length}\nconsideredEvs=${consideredEvCount}, of which positiveEvs=${evs.length}`;
 }
