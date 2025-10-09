@@ -160,7 +160,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       el = await page.evaluate( () => document.querySelector('#markets-list') !== null);
     }
     if(!el){
-      const currentUrl = await book.urls[i];
+      const currentUrl = book.urls[i];
       if(currentUrl !== book.urls[i]){
         log.write(`Failure! No element matching selector '#markets-list'. Redirected from ${book.urls[i]} to ${currentUrl}\n`);
         return 11;
@@ -229,7 +229,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     // selector = "div.match-header__bo";
     // el = await page.waitForSelector(selector);
     // const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, await book.urls[i]);
+    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
 
   // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
   const allHandles = await page.$$('#markets-list [data-state="open"]');
@@ -305,11 +305,11 @@ export async function scrapeMatchURL(data, browser, book, i){
 
     }
 
-    log.write(`Success! scraping from ${await book.urls[i]} succeeded\n`);
+    log.write(`Success! scraping from ${book.urls[i]} succeeded\n`);
     return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
+    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
     return -1;
   } finally{
     try{ await page?.close() } catch{ log.write(`Error thrown when closing page`); }

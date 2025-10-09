@@ -75,7 +75,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   try{
     const chicken = await page.evaluate( () => document.querySelector('img[src="/spa-assets/image/empty-state/chicken.png"]'));
     if(chicken){
-      log.write(`Failure! The 'game not available'-chicken is present! ${await book.urls[i]}\n`);
+      log.write(`Failure! The 'game not available'-chicken is present! ${book.urls[i]}\n`);
       return 10;
     }
 
@@ -139,7 +139,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       const datetimeRaw = await teamsDatetimeHandle.$eval(selector, e => e.textContent);
       datetime = convDatetimeToISO( datetimeRaw );
     }
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, await book.urls[i]);
+    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div[data-tab=All]';
@@ -229,11 +229,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
+  log.write(`Success! scraping a match from ${book.urls[i]}\n`);
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
+    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
     return -1;
   } finally{
     try{

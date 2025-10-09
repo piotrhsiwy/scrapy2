@@ -86,11 +86,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     if(empty){
-      log.write(`Failure! There is an element with class div.osg-empty under this url: ${await book.urls[i]}. Probably past match\n`);
+      log.write(`Failure! There is an element with class div.osg-empty under this url: ${book.urls[i]}. Probably past match\n`);
       return 10;
     }
     if(!valid){
-      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${await book.urls[i]}\n`);
+      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${book.urls[i]}\n`);
       return -1;
     }
     let selector, el, mapping;
@@ -170,11 +170,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
 
-  log.write(`Success! scraping a match from ${await book.urls[i]}\n`);
+  log.write(`Success! scraping a match from ${book.urls[i]}\n`);
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
+    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
     return -1;
   } finally{
     try{
