@@ -157,7 +157,7 @@ function ev2(evs, cutoff, sport, match, market, odd){
                 const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book )?.url;
                 let newEv = {
-                    "timestamp":odd.coefs.find(c => c.value === v).timestamp,
+                    "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
