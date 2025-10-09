@@ -252,7 +252,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}\n`);
+    log.write(`Critical Failure! scraping a match from ${await book.urls[i]}. Error code:\n`);
     return -1;
   } finally{
     try{
