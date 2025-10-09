@@ -183,7 +183,7 @@ async function run(browser){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      // await singleHunt(browser);
+      await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -216,7 +216,7 @@ async function run(browser){
             anyUrlUnderI = true;
           }
         }
-        if(i%11 === 10){
+        if(i%2 === 1){
           q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
         }

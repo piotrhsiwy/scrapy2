@@ -217,12 +217,13 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(liveTagRed){
       datetime = 'live';
     } else{
-      const streamPresent = await page.evaluate( () => {
-        return document.querySelector('iframe')?.getAttribute('id')?.includes('stream') !== null;
-      })
-      if(streamPresent){
-        dateString = 'live';
-      }
+      // NOTE: stream element is also present on big matches that are NOT yet live!
+      // const streamPresent = await page.evaluate( () => {
+      //   return document.querySelector('iframe')?.getAttribute('id')?.includes('stream') !== null;
+      // })
+      // if(streamPresent){
+      //   dateString = 'live';
+      // }
       datetime = convDatetimeToISO( dateString/*.replace(/\u00a0/g, '\u0020').trim()*/);
     }
     // selector = "div.match-header__bo";

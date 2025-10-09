@@ -17,7 +17,7 @@ export function insertCoefIntoOdd(log, odd, book, value){
     } else{
         /* the coef already exists */
         // update policy: always update
-        coef.timestamp = ISO8601ToPretty(new Date());
+        coef.timestamp = ISO8601ToPretty(new Date().toISOString());
         coef.value = value;
     }
     return coef;
