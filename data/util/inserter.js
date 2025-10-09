@@ -11,7 +11,7 @@ export function insertCoefIntoOdd(log, odd, book, value){
     let coef = odd.coefs.findLast(c => c.book === book);
     if(!coef){
         /* the coef is new */
-        log.write(`Warning! This coef is new: ${book.name}: ${value}\n`);
+        // log.write(`Warning! This coef is new: ${book.name}: ${value}\n`);
         const timestamp = ISO8601ToPretty(new Date().toISOString());
         odd.coefs.push({timestamp: timestamp, book: book, value: value});
     } else{
@@ -34,7 +34,7 @@ export function insertOddIntoMarket(log, market, oddName){
     let odd = market.odds.findLast(o => o.name === oddName);
     if(!odd){
         /* the odd is new */
-        log.write(`Warning! This odd is new: ${oddName}\n`);
+        // log.write(`Warning! This odd is new: ${oddName}\n`);
         market.odds.push({name: oddName, coefs: []})
         odd = market.odds.findLast(o => o.name === oddName);
     } else{
@@ -54,7 +54,7 @@ export function insertMarketIntoMatch( log, match, marketName){
     let market = match.markets.findLast(m => m.name === marketName);
     if(!market){
         /* the market is new */
-        log.write(`Warning! This market is new: ${marketName}\n`);
+        // log.write(`Warning! This market is new: ${marketName}\n`);
         match.markets.push({name: marketName, odds: []});
         market = match.markets.findLast(m => m.name === marketName);
     } else{
@@ -91,7 +91,7 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
     )
     if(!match){
       /* the match is new */
-      log.write(`Warning! This match is new: ${teamHome}, ${teamAway}, ${datetime}\n`);
+      // log.write(`Warning! This match is new: ${teamHome}, ${teamAway}, ${datetime}\n`);
       sport.matches.push({ 
         teamHome: teamHome,
         teamAway: teamAway,
@@ -127,7 +127,7 @@ export function insertSportIntoData(log, data, sportName){
     let sport = data.sports.findLast(s => s.name === sportName);
     if(!sport){
         /* the sport is new */
-        log.write(`Warning! This sport is new: ${sportName}\n`);
+        // log.write(`Warning! This sport is new: ${sportName}\n`);
         data.sports.push({ name: sportName, matches: [] });
         sport = data.sports.findLast(s => s.name === sportName);
     } else{
