@@ -143,20 +143,14 @@ async function calc(){
   console.log(calcReport);
 }
 
-async function saveCalc(data){
-  saveData(data);
-  await calc();
-}
-
 import { Queue } from "async-await-queue";
 async function run(browser){ 
   if(books.length === 0){
     console.log(`No books available.`);
     return -1;
   }
-  /** initial calc *******************/
+  /** load data *******************/
   const data = loadData();
-  await calc();
   /********************************* */
   while(true){;
     //  new
@@ -217,7 +211,9 @@ async function run(browser){
           }
         }
         if(i%6 === 5){
-          q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
+          saveData(data);
+          // q.push(myq.run( () => saveData(data).catch( (e) => console.error(e))));
+          // q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
         }
         if(!anyUrlUnderI){
