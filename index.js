@@ -136,15 +136,15 @@ function saveData(data){
 }
 
 import { calcSports } from './calc/calc.js'
-async function calc(){
+async function calc(arbCutoff, evCutoff){
   console.log('Calculating...')
-  const calcReport = await calcSports();
+  const calcReport = await calcSports(arbCutoff, evCutoff);
   console.log(`Finished calculations.`);
   console.log(calcReport);
 }
 
 import { Queue } from "async-await-queue";
-async function run(browser){ 
+async function run(){ 
   if(books.length === 0){
     console.log(`No books available.`);
     return -1;
@@ -212,8 +212,7 @@ async function run(browser){
         }
         if(i%6 === 5){
           saveData(data);
-          // q.push(myq.run( () => saveData(data).catch( (e) => console.error(e))));
-          // q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
+          // q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
         }
         if(!anyUrlUnderI){

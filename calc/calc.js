@@ -106,7 +106,6 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
                     }
                 };
                 const arbReport = insertArb2(arbs, newArb, positiveArbCount);
-                    
                 log.write(arbReport);
             }
             consideredArbCount++;
@@ -377,7 +376,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
 }
 
 import { cleanupOnDatetime, cleanupData } from "./maintain.js";
-export async function calcSports(){
+export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     
     const logFilePath = './calc/log.txt';
     try{
@@ -425,8 +424,6 @@ export async function calcSports(){
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    const arbCutoff = 0.02;
-                    const evCutoff = 0.07;
                     calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
                 }
             }
@@ -459,5 +456,5 @@ export async function calcSports(){
     writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 
     await promisify(log.end).bind(log);
-    return `consideredArbs=${consideredArbCount}, *new*positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, *new*positiveEvs=${positiveEvCount}`;
+    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount}, *new*positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, *new*positiveEvs=${positiveEvCount}`;
 }
