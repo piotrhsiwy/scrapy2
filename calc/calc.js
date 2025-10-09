@@ -1,6 +1,7 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { ISO8601ToPretty, prettyToDate,  ISO8601ToDate, prettyLatestFrom } from "../data/util/prettify.js";
+import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
+import { insertArb2, insertArb4, insertEv2 } from "./inserter.js";
 
 export let log;
 let consideredArbCount;
@@ -31,7 +32,7 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
                     if(arb > cutoff){
                         let newArb = {
-                            "timestamp":prettyLatestFrom([oddA.timestamp, oddB.timestamp, oddC.timestamp, oddD.timestamp]),
+                            "timestamp":prettyEarliestFrom([oddA.timestamp, oddB.timestamp, oddC.timestamp, oddD.timestamp]),
                             "value":arb,
                             "sport":sport.name,
                             // "tournament":tournament.name,
@@ -64,36 +65,7 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                                 "url":match.urls.find( item => item.book === D.book )?.url,
                             },
                         };
-                        if(!arbs.some( a => 
-                           a.value         === newArb.value         &&
-                           a.sport         === newArb.sport         &&
-                           a.teamHome      === newArb.teamHome      &&
-                           a.teamAway      === newArb.teamAway      &&
-                           a.datetime      === newArb.datetime      &&
-                           a.market        === newArb.market        &&
-                           a.oddA.oddName  === newArb.oddA.oddName  &&
-                           a.oddA.oddValue === newArb.oddA.oddValue &&
-                           a.oddA.book     === newArb.oddA.book     &&
-                           a.oddA.url      === newArb.oddA.url      &&
-                           a.oddB.oddName  === newArb.oddB.oddName  &&
-                           a.oddB.oddValue === newArb.oddB.oddValue &&
-                           a.oddB.book     === newArb.oddB.book     &&
-                           a.oddB.url      === newArb.oddB.url      &&
-                           a.oddC.oddName  === newArb.oddC.oddName  &&
-                           a.oddC.oddValue === newArb.oddC.oddValue &&
-                           a.oddC.book     === newArb.oddC.book     &&
-                           a.oddC.url      === newArb.oddC.url      &&
-                           a.oddD.oddName  === newArb.oddD.oddName  &&
-                           a.oddD.oddValue === newArb.oddD.oddValue &&
-                           a.oddD.book     === newArb.oddD.book     &&
-                           a.oddD.url      === newArb.oddD.url
-                        ) && !newArb.datetime.includes('live')){
-                        /* only if the arb is fresh, to give meaning to timestamps */
-                            positiveArbCount++;
-                            arbs.push(newArb);
-                        }
-                        const arbReport =  
-                            `${oddA.name.padEnd(20,' ')}@${A.value} on ${A.book.padEnd(20,' ')} - ${oddB.name.padEnd(20,' ')}@${B.value} on ${B.book.padEnd(20,' ')} - ${oddC.name.padEnd(20,' ')}@${C.value} on ${C.book.padEnd(20,' ')} -  ${oddD.name.padEnd(20,' ')}@${D.value} on ${D.book.padEnd(20,' ')}, ${arb} arb.\n`;
+                        const arbReport = insertArb4(arbs, newArb, positiveArbCount);
                         log.write(arbReport);
                     }
                     consideredArbCount++;
@@ -112,7 +84,7 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
             const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
             if(arb > cutoff){
                 let newArb = {
-                    "timestamp":prettyLatestFrom([coefHome.timestamp, coefAway.timestamp]),
+                    "timestamp":prettyEarliestFrom([coefHome.timestamp, coefAway.timestamp]),
                     "value":arb,
                     "sport":sport.name,
                     // "tournament":tournament.name,
@@ -133,28 +105,8 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
                         "url":match.urls.find( item => item.book === coefAway.book )?.url,
                     }
                 };
-                if(!arbs.some( a => 
-                    a.value         === newArb.value        &&
-                    a.sport         === newArb.sport        &&
-                    a.teamHome      === newArb.teamHome     &&
-                    a.teamAway      === newArb.teamAway     &&
-                    a.datetime      === newArb.datetime     &&
-                    a.market        === newArb.market       &&
-                    a.Home.oddName  === newArb.Home.oddName &&
-                    a.Home.oddValue === newArb.Home.oddValue&&
-                    a.Home.book     === newArb.Home.book    &&
-                    a.Home.url      === newArb.Home.url     &&
-                    a.Away.oddName  === newArb.Away.oddName &&
-                    a.Away.oddValue === newArb.Away.oddValue&&
-                    a.Away.book     === newArb.Away.book    &&
-                    a.Away.url      === newArb.Away.url
-                ) && !newArb.datetime.includes('live')){ // arbs.push() only prematch arbs
-                    /* only if the arb is fresh, to give meaning to timestamps */
-                    arbs.push(newArb);
-                    positiveArbCount++;
-                }
-                const arbReport =  
-                    `${oddHome.name.padEnd(20,' ')}@${coefHome.value} on ${coefHome.book.padEnd(20,' ')} - ${oddAway.name.padEnd(20,' ')}@${coefAway.value} on ${coefAway.book.padEnd(20,' ')}, ${arb} arb.\n`;
+                const arbReport = insertArb2(arbs, newArb, positiveArbCount);
+                    
                 log.write(arbReport);
             }
             consideredArbCount++;
@@ -225,34 +177,12 @@ function ev2(evs, cutoff, sport, match, market, odd){
                         "url":url,
                     },
                 };
-                if(!evs.some( e => 
-                    e.value                     === newEv.value                    && 
-                    e.mean                      === newEv.mean                     && 
-                    e.stdDev                    === newEv.stdDev                   && 
-                    e.deviationInTermsOfStdDev  === newEv.deviationInTermsOfStdDev && 
-                    e.strength                  === newEv.strength                 && 
-                    e.sport                     === newEv.sport                    && 
-                    e.teamHome                  === newEv.teamHome                 && 
-                    e.teamAway                  === newEv.teamAway                 && 
-                    e.datetime                  === newEv.datetime                 && 
-                    e.market                    === newEv.market                   && 
-                    e.odd.oddName               === newEv.odd.oddName              && 
-                    e.odd.oddValue              === newEv.odd.oddValue             && 
-                    e.odd.book                  === newEv.odd.book                 && 
-                    e.odd.url                   === newEv.odd.url
-                ) && !newEv.datetime.includes('live')){
-                    /* ev is fresh */
-                    evs.push(newEv);
-                    positiveEvCount++;
-                    const evReport =  
-                        `${newEv.odd.oddName.padEnd(20,' ')}@${newEv.odd.oddValue} \tstrength ${newEv.strength} \tamong ${newEv.values} \ton ${newEv.odd.book.padEnd(20,' ')}\n`;
-                    log.write(evReport);
-                }
+                const evReport = insertEv2(evs, newEv, positiveEvCount);
+                log.write(evReport);
             }
-            consideredEvCount++;
         }
+        consideredEvCount++;
     }
-    // log.write(`potentialArbWithMean: ${potentialArbWithMean}\n`);
 }
 
 function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
@@ -458,7 +388,7 @@ export async function calcSports(){
     
     log.write('Opening files...\n');
     const dataFilePath = './data/data_out.json'
-    const data = JSON.parse(readFileSync(dataFilePath));
+    let data = JSON.parse(readFileSync(dataFilePath));
     log.write(`Loaded data from ${dataFilePath}\n`);
 
     const arbsFilePath = './data/arbs.json';

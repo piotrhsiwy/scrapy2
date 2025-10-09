@@ -216,7 +216,7 @@ async function run(browser){
             anyUrlUnderI = true;
           }
         }
-        if(i%2 === 1){
+        if(i%6 === 5){
           q.push(myq.run(() => saveCalc(data)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
         }
