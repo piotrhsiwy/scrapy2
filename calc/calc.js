@@ -425,8 +425,8 @@ export async function calcSports(){
             for(const match of sport.matches){
                 log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
                 for(const market of match.markets){
-                    const arbCutoff = 0.01;
-                    const evCutoff = 0.06;
+                    const arbCutoff = 0.02;
+                    const evCutoff = 0.07;
                     calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
                 }
             }
@@ -455,6 +455,8 @@ export async function calcSports(){
     writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
     log.write(`Writing the results to ${evsFilePath}\n`);
     writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
+    log.write(`Writing to file ${dataFilePath}\n`);
+    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 
     await promisify(log.end).bind(log);
     return `consideredArbs=${consideredArbCount}, *new*positiveArbs=${positiveArbCount}\nconsideredEvs=${consideredEvCount}, *new*positiveEvs=${positiveEvCount}`;

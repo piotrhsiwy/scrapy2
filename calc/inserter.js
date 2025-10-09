@@ -1,5 +1,5 @@
 export function insertArb4(arbs, newArb, positiveArbCount){
-    let arb = arbs.find( a => 
+    let arbIndex = arbs.findIndex( a => 
         // a.value         === newArb.value         &&
         a.sport         === newArb.sport         &&
         a.teamHome      === newArb.teamHome      &&
@@ -24,7 +24,7 @@ export function insertArb4(arbs, newArb, positiveArbCount){
         a.oddD.url      === newArb.oddD.url
     );
     let report = "invalid";
-    if(!arb){
+    if( arbIndex === -1){
         /* the arb is new */
         positiveArbCount++;
         arbs.push(newArb);
@@ -33,14 +33,14 @@ export function insertArb4(arbs, newArb, positiveArbCount){
         /* the arb already exists (may have different odds)*/
         // update policy: always update
         positiveArbCount++;
-        arbs.push(newArb);
+        arbs[arbIndex] = newArb;
         report = `${newArb.oddA.oddName.padEnd(20,' ')}@${newArb.oddA.oddValue} on ${newArb.oddA.book.padEnd(20,' ')} - ${newArb.oddB.oddName.padEnd(20,' ')}@${newArb.oddB.oddValue} on ${newArb.oddB.book.padEnd(20,' ')} - ${newArb.oddC.oddName.padEnd(20,' ')}@${newArb.oddC.oddValue} on ${newArb.oddC.book.padEnd(20,' ')} -  ${newArb.oddD.oddName.padEnd(20,' ')}@${newArb.oddD.oddValue} on ${newArb.oddD.book.padEnd(20,' ')}, ${newArb.value} arb udpate.\n`;
     }
     return report;
 }
 
 export function insertArb2(arbs, newArb, positiveArbCount){
-    let arb = arbs.find( a => 
+    let arbIndex = arbs.findIndex( a => 
         // a.value         === newArb.value        &&
         a.sport         === newArb.sport        &&
         a.teamHome      === newArb.teamHome     &&
@@ -57,7 +57,7 @@ export function insertArb2(arbs, newArb, positiveArbCount){
         a.Away.url      === newArb.Away.url
     );
     let report = "invalid";
-    if(!arb){
+    if(arbIndex === -1){
         /* the arb is new */
         positiveArbCount++;
         arbs.push(newArb);
@@ -65,15 +65,15 @@ export function insertArb2(arbs, newArb, positiveArbCount){
     } else{
         /* the arb already exists (may have different odds)*/
         // update policy: always update
+        arbs[arbIndex] = newArb;
         positiveArbCount++;
-        arbs.push(newArb);
         report = `${newArb.Home.oddName.padEnd(20,' ')}@${newArb.Home.oddValue} on ${newArb.Home.book.padEnd(20,' ')} - ${newArb.Away.oddName.padEnd(20,' ')}@${newArb.Away.oddValue} on ${newArb.Away.book.padEnd(20,' ')}, ${newArb.value} arb update.\n`;
     }
     return report;
 }
 
 export function insertEv2(evs, newEv, positiveEvCount){
-    let ev = evs.find( e => 
+    let evIndex = evs.findIndex( e => 
         // e.value                     === newEv.value                    && 
         // e.mean                      === newEv.mean                     && 
         // e.stdDev                    === newEv.stdDev                   && 
@@ -90,7 +90,7 @@ export function insertEv2(evs, newEv, positiveEvCount){
         e.odd.url                   === newEv.odd.url
     );
     let report = "invalid";
-    if(!ev){
+    if( evIndex === -1){
         /* the ev is new */
         positiveEvCount++;
         evs.push(newEv);
@@ -99,7 +99,7 @@ export function insertEv2(evs, newEv, positiveEvCount){
         /* the ev already exists (may have different odds)*/
         // update policy: always update
         positiveEvCount++;
-        evs.push(newEv);
+        evs[evIndex] = newEv;
         report = `${newEv.odd.oddName.padEnd(20,' ')}@${newEv.odd.oddValue} \tstrength ${newEv.strength} \tamong ${newEv.values} \ton ${newEv.odd.book.padEnd(20,' ')} ev update\n`;
     }
     return report;
