@@ -12,3 +12,5 @@
   not being scraped
 -1 critical failure:
   some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.
+-10 critical failure:
+  one of the required files could not be opened

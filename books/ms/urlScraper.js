@@ -46,6 +46,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(!sportNameMapping){ throw error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
+    return -10;
   }
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
@@ -54,6 +55,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(!marketNameMapping){ throw error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
+    return -10;
   }
 
   try{
