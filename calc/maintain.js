@@ -14,7 +14,7 @@ export function cleanupData(data){
             const date = prettyToDate(match.datetime);
             const dategT = date.getTime();
             const nowgT = now.getTime();
-            if( dategT < nowgT - 60*60*1000 ){
+            if( dategT <= nowgT - 60*60*1000 ){
                 /* is outdated */
                 data.sports[i].matches.splice(j, 1);
                 j--;
@@ -37,7 +37,7 @@ export function cleanupOnDatetime(items){
         const date = prettyToDate(items[i].datetime);
         const dategT = date.getTime();
         const nowgT = now.getTime();
-            if( dategT < nowgT - 60*60*1000 ){
+            if( dategT <= nowgT - 60*60*1000 ){
             /* is outdated */
             items.splice(i, 1);
             i--;

@@ -272,9 +272,17 @@ export async function scrapeMatchURL(data, browser, book, i){
       oddPrefixA = oddPrefixA ? oddPrefixA.toLowerCase() : "";
       let odds = [],  vals= [];
       let odd = true, val;
-      for( let j = 0; e.childNodes[1].querySelectorAll('button div.odds-button__name')[j]; j++ ){
-        odd = e.childNodes[1].querySelectorAll('button div.odds-button__name')[j]?.textContent.toLowerCase();
-        val = e.childNodes[1].querySelectorAll('button span')[j]?.textContent
+      const buttons = e.childNodes[1].querySelectorAll('button div.odds-button');
+      for( let j = 0; j < buttons.length; j++ ){
+        const button = buttons[j];
+        odd = button.querySelector('div.odds-button__name')
+          ?.textContent.toLowerCase();
+        // when the odds are locked, the span element does not exist -> we need to return 0.0
+        val = button.querySelector('span.odds-button__odds')
+          ?.textContent
+          ?? '0.0';
+        val = parseFloat(val);
+        vals.push(val);
         // entries for an even value of j are on the left (home)
         // entries for an odd value of j are on the right (away)
         if(j % 2 === 0){
@@ -282,8 +290,6 @@ export async function scrapeMatchURL(data, browser, book, i){
         } else{
           odds.push(oddPrefixA + odd);
         }
-        val = val ? parseFloat(val) : 0.0;
-        vals.push(val);
       }
       return {odds, vals};
     })
@@ -291,7 +297,6 @@ export async function scrapeMatchURL(data, browser, book, i){
     if(odds.length != vals.length){
       log.write(`Failure! The odds and vals array lengths don't match. ${odds.length} !== !${vals.length}`);
     } else{
-      let odd;
       for(let j = 0; j < odds.length && j < vals.length; j++){
         odds[j] = odds[j]
         .replace(labelHome, teamHome)
