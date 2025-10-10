@@ -113,6 +113,12 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
     }
 }
 
+function meanArrayExcluding(arr, v){
+    let acc = 0.0;
+    arr.forEach( v => { acc+=v; });
+    return (acc-v)/(arr.length-1);
+}
+
 function meanArray(arr){
     let acc = 0.0;
     arr.forEach( v => { acc+=v; });
