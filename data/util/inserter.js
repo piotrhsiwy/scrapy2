@@ -68,7 +68,7 @@ export function insertMarketIntoMatch( log, match, marketName){
  * @param {*} sport 
  * @param {*} teamHome 
  * @param {*} teamAway 
- * @param {*} datetime 
+ * @param {*} datetime is in the ISO8601 format or 'live'
  * @returns the match that has just been updated/created
  */
 export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, book, url){

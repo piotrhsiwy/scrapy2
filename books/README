@@ -1,6 +1,4 @@
 /xyz/urlScraper.js return codes interpretation:
-21 failure:
-  market mapping does not exist
 20 failure:
   sport mapping does not exist
 11  failure:
