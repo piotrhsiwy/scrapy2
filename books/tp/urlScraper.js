@@ -272,7 +272,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       oddPrefixA = oddPrefixA ? oddPrefixA.toLowerCase() : "";
       let odds = [],  vals= [];
       let odd = true, val;
-      const buttons = e.childNodes[1].querySelectorAll('button div.odds-button');
+      const buttons = e.childNodes[1].querySelectorAll('button.odds-button');
       for( let j = 0; j < buttons.length; j++ ){
         const button = buttons[j];
         odd = button.querySelector('div.odds-button__name')
@@ -281,8 +281,6 @@ export async function scrapeMatchURL(data, browser, book, i){
         val = button.querySelector('span.odds-button__odds')
           ?.textContent
           ?? '0.0';
-        val = parseFloat(val);
-        vals.push(val);
         // entries for an even value of j are on the left (home)
         // entries for an odd value of j are on the right (away)
         if(j % 2 === 0){
@@ -290,6 +288,8 @@ export async function scrapeMatchURL(data, browser, book, i){
         } else{
           odds.push(oddPrefixA + odd);
         }
+        val = parseFloat(val);
+        vals.push(val);
       }
       return {odds, vals};
     })
