@@ -16,16 +16,12 @@
         "globalID": "LOL"
     },
     {
-        "specificName": "basketball esports",
-        "globalID": "E_BASKETBALL"
-    },
-    {
-        "specificName": "football esports",
-        "globalID": "E_SOCCER"
-    },
-    {
         "specificName": "starcraft-ii",
         "globalID": "SC2"
+    },
+    {
+        "specificName": "warcraft-iii",
+        "globalID": "WARCRAFT3"
     },
     {
         "specificName": "PUBG",
@@ -36,7 +32,7 @@
         "globalID": "COD"
     },
     {
-        "specificName": "rainbox-six",
+        "specificName": "rainbow-six",
         "globalID": "RAINBOW6"
     },
     {
@@ -52,7 +48,7 @@
         "globalID": "ROCKET_LEAGUE"
     },
     {
-        "specificName": "Overwatch",
+        "specificName": "overwatch",
         "globalID": "OVERWATCH2"
     },
     {
@@ -72,12 +68,8 @@
         "globalID": "CROSSFIRE"
     },
     {
-        "specificName": "hearthstone",
-        "globalID": "HEARTHSTONE"
-    },
-    {
         "specificName": "mortal-combat",
-        "globalID": "HEARTHSTONE"
+        "globalID": "MORTAL_COMBAT"
     },
     {
         "specificName": "hearthstone",

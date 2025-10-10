@@ -1,4 +1,7 @@
 {
+    "name":"Thunderpick",
     "abbrev":"tp",
-    "baseURL":"https://thunderpick.io/esports"
+    "baseURL":"https://thunderpick.io/esports",
+    "viewport":{"width":1920, "height":30000},
+    "blockRequestURLs": "analytics|hotjar|piwik|ip-geo|google|googletagmanager|translations|twitch|casino|chat|banner"
 }

@@ -1,4 +1,7 @@
 {
+    "name":"MyStake",
     "abbrev":"ms",
-    "baseURL":"https://mystake.com/en/sportsbook/prematch"
+    "baseURL":"https://mystake.com/en/sportsbook/prematch",
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "hotjar|piwik|clarity|ip-geo|chat|googletagmanager|widget"
 }

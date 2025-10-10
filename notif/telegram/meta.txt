@@ -3,4 +3,5 @@ https://t.me/scrapy_assistant_bot?start
 start - login
 arb - request random arb
 top - request top arb
+ev - request random ev
 logout - logout

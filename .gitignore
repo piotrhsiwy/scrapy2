@@ -4,6 +4,8 @@ node_modules
 
 # IDE conf files
 # .vscode/*
+tags
+eslint*
 
 # scraping data
 books/*/urls.json
@@ -14,6 +16,7 @@ books/*/sports.json
 books/*/tours.json
 data/data_out.json
 data/arbs.json
+data/evs.json
 
 # log files
 calc/log.txt

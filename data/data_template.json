@@ -1,35 +1,37 @@
 {
     "sports":[
         {
-            "name":"CS2",
-            "matches":
-            [
+            "name":"Counter-Strike",
+            "matches": [
                 {
-                    "teamHome":"Virtus.pro",
-                    "teamAway":"Liquid",
-                    "datetime":"July 31, 19:30",
-                    "urls": [],
-                    "markets":
-                    [
+                    "teamHome":"virtus.pro",
+                    "teamAway":"liquid",
+                    "datetime":"October 6, 2025 at 12:57:16 AM GMT+2",
+                    "urls": [
+                        {
+                        "book": "Esportsbet",
+                        "url": "https://esportsbet.io/esportsbull/OddsPage/36269969/45/LOLBetting-T1-INVICTUS-GAMING/"
+                        }
+                    ],
+                    "markets": [
                         {
                             "name":"Match Winner",
-                            "odds":
-                            [
+                            "odds": [
                                 {
-                                    "name":"home",
-                                    "coefs":
-                                    [
+                                    "name":"liquid",
+                                    "coefs": [
                                         {
+                                            "timestamp": "October 6, 2025 at 12:57:16 AM GMT+2",
                                             "book":"Thunderpick",
                                             "value":1.52
                                         }
                                     ]
                                 },
                                 {
-                                    "name":"away",
-                                    "coefs":
-                                    [
+                                    "name":"virtus.pro",
+                                    "coefs": [
                                         {
+                                            "timestamp": "October 6, 2025 at 12:57:16 AM GMT+2",
                                             "book":"Thunderpick",
                                             "value":2.35
                                         }

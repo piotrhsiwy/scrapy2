@@ -1,18 +1,27 @@
 [
     {
         "specificName": "cs2",
+        "specificID": 47,
         "globalID": "CS2"
     },
     {
+        "specificName": "dota2",
+        "specificID": 46,
+        "globalID": "DOTA2"
+    },
+    {
         "specificName": "lol",
+        "specificID": 45,
         "globalID": "LOL"
     },
     {
         "specificName": "kog",
+        "specificID": 48,
         "globalID": "MOBILE_MOBA"
     },
     {
         "specificName": "val",
+        "specificID": 65,
         "globalID": "VALORANT"
     },
     {
@@ -20,7 +29,13 @@
         "globalID": "MOBILE_LEGENDS"
     },
     {
+        "specificName": "others",
+        "specificID": 87,
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
         "specificName": "rb6",
+        "specificID": 57,
         "globalID": "RAINBOW6"
     },
     {
@@ -37,6 +52,7 @@
     },
     {
         "specificName": "cf",
+        "specificID": 63,
         "globalID": "CROSSFIRE"
     },
     {
@@ -49,6 +65,7 @@
     },
     {
         "specificName": "ow",
+        "specificID": 51,
         "globalID": "OVERWATCH2"
     },
     {
@@ -65,6 +82,7 @@
     },
     {
         "specificName": "nba2k",
+        "specificID": 61,
         "globalID": "NBA2K"
     },
     {
@@ -103,5 +121,4 @@
         "specificName": "rs",
         "globalID": "RENNSPORT"
     }
-
 ]

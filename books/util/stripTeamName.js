@@ -99,11 +99,15 @@ const teamNameMap = Object.freeze([
         globalName:'uu',
         specificNames:['undefeatedunited']
     },
+    {
+        globalName:'1w',
+        specificNames:['1win']
+    },
 ])
 
 export function stripTeamName(str){
     str = str.toLowerCase()
-        .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|bnk|.vietnam|\(women\)/g, '')
+        .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|fredit|bnk|.vietnam|\(women\)/g, '')
         .replace(/\+showtime|\+r8|\+gabe|chongqing/g, '')
         // .replace(/\b(\w+)clan\b/g, '$1')
         // .replace(/\b(\w+)esports\b/g, '$1')
@@ -121,4 +125,8 @@ export function stripTeamName(str){
     }
 
     return str;
+}
+
+export function replaceNumericTeamName(str, home, away){
+    return str.replace(/1|2/, m => m === '1' ? home : away);
 }

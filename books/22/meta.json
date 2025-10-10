@@ -1,5 +1,7 @@
 {
     "abbrev":"22",
-    "baseURL":"https://22bets.me/line/esports/",
-    "baseURLBuilder":"https://22bets.me/"
+    "baseURL":"https://bestwinzz.net/en/line/esports",
+    "baseURLBuilder":"https://bestwinzz.net/",
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|chat|googletagmanager|adform|rtmark|snapchat"
 }

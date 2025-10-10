@@ -1,0 +1,14 @@
+/xyz/urlScraper.js return codes interpretation:
+21 failure:
+  market mapping does not exist
+20 failure:
+  sport mapping does not exist
+11  failure:
+  redirected. This can happen if the match is in the past
+10 failure:
+  there is an element on the page indicating that the match is in the past and/or doesn't exist
+0 success:
+  successfully retrieved all available markets. Note that  live odds are 
+  not being scraped
+-1 critical failure:
+  some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.

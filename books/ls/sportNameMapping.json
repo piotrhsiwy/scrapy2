@@ -20,8 +20,20 @@
         "globalID": "LOL"
     },
     {
+        "specificName": "LOL",
+        "globalID": "LOL"
+    },
+    {
         "specificName": "Rainbow Six",
         "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "rainbow-six",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "specificName": "AoE4",
+        "globalID": "AGE_OF_EMPIRES"
     },
     {
         "specificName": "VALORANT",
@@ -30,5 +42,25 @@
     {
         "specificName": "CODM",
         "globalID": "CROSSFIRE_MOBILE"
+    },
+    {
+        "specificName": "SC",
+        "globalID": "SC_BROODWAR"
+    },
+    {
+        "specificName": "KoG",
+        "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "OW",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "NBA2K",
+        "globalID": "NBA2K"
+    },
+    {
+        "specificName": "EA Sports FC",
+        "globalID": "EA_SPORTS_FC"
     }
 ]

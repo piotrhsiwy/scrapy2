@@ -8,9 +8,15 @@
   },
   "main": "index.js",
   "dependencies": {
-    "puppeteer": "^22.14.0",
+    "async-await-queue": "^2.1.4",
+    "puppeteer": "^22.15.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "eslint": "^9.8.0",
+    "globals": "^15.9.0"
   }
 }
