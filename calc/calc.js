@@ -5,9 +5,7 @@ import { insertArb2, insertArb4, insertEv2 } from "./inserter.js";
 
 export let log;
 let consideredArbCount;
-let positiveArbCount;
 let consideredEvCount;
-let positiveEvCount;
 
 function isMultiSelfArb(arr){
     const books = [arr[0]];
@@ -65,7 +63,7 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                                 "url":match.urls.find( item => item.book === D.book )?.url,
                             },
                         };
-                        const arbReport = insertArb4(arbs, newArb, positiveArbCount);
+                        const arbReport = insertArb4(arbs, newArb);
                         log.write(arbReport);
                     }
                     consideredArbCount++;
@@ -105,7 +103,7 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
                         "url":match.urls.find( item => item.book === coefAway.book )?.url,
                     }
                 };
-                const arbReport = insertArb2(arbs, newArb, positiveArbCount);
+                const arbReport = insertArb2(arbs, newArb);
                 log.write(arbReport);
             }
             consideredArbCount++;
@@ -181,7 +179,7 @@ function ev2(evs, cutoff, sport, match, market, odd){
                         "url":url,
                     },
                 };
-                const evReport = insertEv2(evs, newEv, positiveEvCount);
+                const evReport = insertEv2(evs, newEv);
                 log.write(evReport);
             }
         }
@@ -210,9 +208,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
         } else{
             // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
-        marketReport = positiveArbCount > 0 ?
-            `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
-            : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+        marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
     } else{//    odds.length >= 3
         if(market.name?.includes('Handicap')){
             /* handicap market with oddNames of the format: "Virtus.pro-2.5" */
@@ -257,9 +253,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
             }
-            marketReport = positiveArbCount > 0 ?
-                `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
-                : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
         } else if(market.name?.includes('First to Reach')){
             /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
             let processed = [];
@@ -303,9 +297,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
             }
-            marketReport = positiveArbCount > 0 ?
-                `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
-                : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
         } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
             /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
             /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
@@ -350,9 +342,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
             }
-            marketReport = positiveArbCount > 0 ?
-                `Considered ${consideredArbCount} Arbs, ${positiveArbCount} of them were positive\n`
-                : `Considered ${consideredArbCount} Arbs, none of them were profitable\n`
+            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
         } else if(market.name?.includes('Correct Score')){
             /* correct-score market can be a
             for a BO1 2-way(synonymous with Match Winner), 
@@ -421,9 +411,7 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     log.write(`Maintaining the file ${dataFilePath} finished. ${ret} entries sliced.\n`);
     
     consideredArbCount = 0;
-    positiveArbCount = 0;
     consideredEvCount = 0;
-    positiveEvCount = 0;
     for(const sport of data.sports){
         log.write(`Processing sport: ${sport.name}\n`);
             for(const match of sport.matches){
@@ -461,5 +449,5 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
 
     await promisify(log.end).bind(log);
-    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which positiveArbs=${arbs.length}\nconsideredEvs=${consideredEvCount}, of which positiveEvs=${evs.length}`;
+    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which ${arbs.length} higher than cutoff\nconsideredEvs=${consideredEvCount}, of which ${evs.length} higher than cutoff\n`;
 }

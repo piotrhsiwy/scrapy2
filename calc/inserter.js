@@ -93,7 +93,6 @@ export function insertEv2(evs, newEv){
     } else{
         /* the ev already exists (may have different odds)*/
         // update policy: always update
-        positiveEvCount++;
         evs[evIndex] = newEv;
         report = `${newEv.odd.oddName.padEnd(20,' ')}@${newEv.odd.oddValue} \tstrength ${newEv.strength} \tamong ${newEv.values} \ton ${newEv.odd.book.padEnd(20,' ')} ev update\n`;
     }
