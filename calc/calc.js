@@ -111,28 +111,38 @@ function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
     }
 }
 
-function meanArrayExcluding(arr, v){
+function meanArrayExcluding(arr, value){
     let acc = 0.0;
     arr.forEach( v => { acc+=v; });
-    return (acc-v)/(arr.length-1);
+    return (acc-value)/(arr.length-1);
 }
 
 function meanArray(arr){
     let acc = 0.0;
-    arr.forEach( v => { acc+=v; });
+    arr.forEach( v => acc+=v );
     return acc/arr.length;
 }
 
 function stdDevArrayExcluding(arr, value){
-    return stdDevArray(arr.slice(arr.findIndex((v) => v === value), 1));
+    const index = arr.findIndex((v) => v === value);
+    const mean = meanArrayExcluding(arr, value);
+    const dev = arr.map( v => Math.pow(v-mean, 2));
+    let devSum = 0.0;
+    dev.forEach( (v, i) => {
+        if( i !== index){
+            devSum += v;
+        }
+    });
+    const stdDev = Math.sqrt( ( 1/( arr.length-1 ) ) * devSum );
+    return stdDev;
 }
 
 function stdDevArray(values){
     const mean = meanArray(values);
     const dev = values.map( v => Math.pow(v-mean, 2));
     let devSum = 0.0;
-    dev.map( d => devSum += d );
-    const stdDev = Math.sqrt( ( 1/( values.length-1 ) ) * devSum );
+    dev.forEach( d => devSum += d );
+    const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
     return stdDev;
 }
 
