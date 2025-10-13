@@ -16,16 +16,36 @@
         "globalID": "VALORANT"
     },
     {
-        "specificName": "StarCraft II",
+        "specificName": "Starcraft II",
         "globalID": "SC2"
+    },
+    {
+        "specificName": "Starcraft BroodWar",
+        "globalID": "SC_BROODWAR"
     },
     {
         "specificName": "Rainbow Six",
         "globalID": "RAINBOW6"
     },
     {
+        "specificName": "Overwatch",
+        "globalID": "OVERWATCH2"
+    },
+    {
+        "specificName": "Honor of Kings",
+        "globalID": "HONOR_OF_KINGS"
+    },
+    {
+        "specificName": "Age of Empires II",
+        "globalID": "AGE_OF_EMPIRES"
+    },
+    {
         "specificName": "King Of Glory",
         "globalID": "KING_OF_GLORY"
+    },
+    {
+        "specificName": "Halo",
+        "globalID": "HALO"
     },
     {
         "specificName": "Call of Duty: Mobile",

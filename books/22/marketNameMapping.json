@@ -1,35 +1,291 @@
 [
     {
-        "specificName": "1x2",
+        "specificName": "Regular time 1x2",
         "globalID":     "MW"
     },
     {
-        "specificName": "Total Maps Handicap",
+        "specificName": "Regular time Total Maps Handicap",
         "globalID":     "MHDP"
     },
     {
-        "specificName": "Correct Score",
+        "specificName": "Regular time Correct Score",
         "globalID":     "CS"
     },
     {
-        "specificName": "Total Maps",
+        "specificName": "Regular time Total Maps",
         "globalID":     "TM"
     },
     {
-        "specificName": "Frags, Total",
+        "specificName": "Regular time Frags, Total",
         "globalID":     "TK"
     },
     {
-        "specificName": "Total Towers Destroyed",
+        "specificName": "Regular time Total Rounds",
+        "globalID":     "TR"
+    },
+    {
+        "specificName": "Regular time Handicap Rounds",
+        "globalID":     "TRHDP"
+    },
+    {
+        "specificName": "Regular time Total Towers Destroyed",
         "globalID":     "TT"
     },
     {
-        "specificName": "Total Inhibitors Destroyed",
+        "specificName": "Regular time Total Inhibitors Destroyed",
         "globalID":     "TINHIB"
     },
     {
-        "specificName": "Total Dragons Beaten",
+        "specificName": "Regular time Total Dragons Beaten",
         "globalID":     "TDRG"
+    },
+    {
+        "specificName": "Regular time Team 1 To Win At Least One Map",
+        "globalID":     "T1TWATLOM"
+    },
+    {
+        "specificName": "Regular time Team 2 To Win At Least One Map",
+        "globalID":     "T2TWATLOM"
+    },
+    {
+        "specificName": "1 map Ace",
+        "globalID":     "ACEM1"
+    },
+    {
+        "specificName": "2 map Ace",
+        "globalID":     "ACEM2"
+    },
+    {
+        "specificName": "3 map Ace",
+        "globalID":     "ACEM3"
+    },
+    {
+        "specificName": "4 map Ace",
+        "globalID":     "ACEM4"
+    },
+    {
+        "specificName": "5 map Ace",
+        "globalID":     "ACEM5"
+    },
+    {
+        "specificName": "1 map Correct Score",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "2 map Correct Score",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "3 map Correct Score",
+        "globalID":     "CSM3"
+    },
+    {
+        "specificName": "4 map Correct Score",
+        "globalID":     "CSM4"
+    },
+    {
+        "specificName": "5 map Correct Score",
+        "globalID":     "CSM5"
+    },
+    {
+        "specificName": "1 map Round Total",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "2 map Round Total",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "3 map Round Total",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "4 map Round Total",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "5 map Round Total",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "1 map Winner In Half",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "2 map Winner In Half",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "3 map Winner In Half",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "4 map Winner In Half",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "5 map Winner In Half",
+        "globalID":     "FHWWDM5"
+    },
+    {
+        "specificName": "1 map Half, Handicap",
+        "globalID":     "RHDPFHM1"
+    },
+    {
+        "specificName": "2 map Half, Handicap",
+        "globalID":     "RHDPFHM2"
+    },
+    {
+        "specificName": "3 map Half, Handicap",
+        "globalID":     "RHDPFHM3"
+    },
+    {
+        "specificName": "4 map Half, Handicap",
+        "globalID":     "RHDPFHM4"
+    },
+    {
+        "specificName": "5 map Half, Handicap",
+        "globalID":     "RHDPFHM5"
+    },
+    {
+        "specificName": "1 map Half, Correct Score",
+        "globalID":     "CSFHM1"
+    },
+    {
+        "specificName": "2 map Half, Correct Score",
+        "globalID":     "CSFHM2"
+    },
+    {
+        "specificName": "3 map Half, Correct Score",
+        "globalID":     "CSFHM3"
+    },
+    {
+        "specificName": "4 map Half, Correct Score",
+        "globalID":     "CSFHM4"
+    },
+    {
+        "specificName": "5 map Half, Correct Score",
+        "globalID":     "CSFHM5"
+    },
+    {
+        "specificName": "1 map Both Teams to Beat Dragon",
+        "globalID":     "BDRGM1"
+    },
+    {
+        "specificName": "2 map Both Teams to Beat Dragon",
+        "globalID":     "BDRGM2"
+    },
+    {
+        "specificName": "3 map Both Teams to Beat Dragon",
+        "globalID":     "BDRGM3"
+    },
+    {
+        "specificName": "4 map Both Teams to Beat Dragon",
+        "globalID":     "BDRGM4"
+    },
+    {
+        "specificName": "5 map Both Teams to Beat Dragon",
+        "globalID":     "BDRGM5"
+    },
+    {
+        "specificName": "1 map Both Teams to Beat Nashor",
+        "globalID":     "BDRGM1"
+    },
+    {
+        "specificName": "2 map Both Teams to Beat Nashor",
+        "globalID":     "BDRGM2"
+    },
+    {
+        "specificName": "3 map Both Teams to Beat Nashor",
+        "globalID":     "BDRGM3"
+    },
+    {
+        "specificName": "4 map Both Teams to Beat Nashor",
+        "globalID":     "BDRGM4"
+    },
+    {
+        "specificName": "5 map Both Teams to Beat Nashor",
+        "globalID":     "BDRGM5"
+    },
+    {
+        "specificName": "1 map Both Teams To Destroy Inhibitor",
+        "globalID":     "BDRGM1"
+    },
+    {
+        "specificName": "2 map Both Teams to Destroy Inhibitor",
+        "globalID":     "BDRGM2"
+    },
+    {
+        "specificName": "3 map Both Teams to Destroy Inhibitor",
+        "globalID":     "BDRGM3"
+    },
+    {
+        "specificName": "4 map Both Teams to Destroy Inhibitor",
+        "globalID":     "BDRGM4"
+    },
+    {
+        "specificName": "5 map Both Teams to Destroy Inhibitor",
+        "globalID":     "BDRGM5"
+    },
+    {
+        "specificName": "1 map Destroyed Towers Handicap",
+        "globalID":     "TTHDPM1"
+    },
+    {
+        "specificName": "2 map Destroyed Towers Handicap",
+        "globalID":     "TTHDPM2"
+    },
+    {
+        "specificName": "3 map Destroyed Towers Handicap",
+        "globalID":     "TTHDPM3"
+    },
+    {
+        "specificName": "4 map Destroyed Towers Handicap",
+        "globalID":     "TTHDPM4"
+    },
+    {
+        "specificName": "5 map Destroyed Towers Handicap",
+        "globalID":     "TTHDPM5"
+    },
+    {
+        "specificName": "1 map Team To Slay Atakhan",
+        "globalID":     "FATKM1"
+    },
+    {
+        "specificName": "2 map Team To Slay Atakhan",
+        "globalID":     "FATKM2"
+    },
+    {
+        "specificName": "3 map Team To Slay Atakhan",
+        "globalID":     "FATKM3"
+    },
+    {
+        "specificName": "4 map Team To Slay Atakhan",
+        "globalID":     "FATKM4"
+    },
+    {
+        "specificName": "5 map Team To Slay Atakhan",
+        "globalID":     "FATKM5"
+    },
+    {
+        "specificName": "1 map Dragons Beaten - Handicap",
+        "globalID":     "TDRGHDPM1"
+    },
+    {
+        "specificName": "2 map Dragons Beaten - Handicap",
+        "globalID":     "TDRGHDPM2"
+    },
+    {
+        "specificName": "3 map Dragons Beaten - Handicap",
+        "globalID":     "TDRGHDPM3"
+    },
+    {
+        "specificName": "4 map Dragons Beaten - Handicap",
+        "globalID":     "TDRGHDPM4"
+    },
+    {
+        "specificName": "5 map Dragons Beaten - Handicap",
+        "globalID":     "TDRGHDPM5"
     },
     {
         "specificName": "1 map 1x2",
@@ -44,6 +300,14 @@
         "globalID":     "M3W"
     },
     {
+        "specificName": "4 map 1x2",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "5 map 1x2",
+        "globalID":     "M5W"
+    },
+    {
         "specificName": "1 map Total",
         "globalID":     "TRM1"
     },
@@ -54,6 +318,14 @@
     {
         "specificName": "3 map Total",
         "globalID":     "TRM3"
+    },
+    {
+        "specificName": "4 map Total",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "5 map Total",
+        "globalID":     "TRM5"
     },
     {
         "specificName": "1 map Handicap",
@@ -68,6 +340,14 @@
         "globalID":     "RHDPM3"
     },
     {
+        "specificName": "4 map Handicap",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "5 map Handicap",
+        "globalID":     "RHDPM5"
+    },
+    {
         "specificName": "1 map Will There Be Overtime? - Yes/No",
         "globalID":     "OT1"
     },
@@ -78,6 +358,34 @@
     {
         "specificName": "3 map Will There Be Overtime? - Yes/No",
         "globalID":     "OT3"
+    },
+    {
+        "specificName": "4 map Will There Be Overtime? - Yes/No",
+        "globalID":     "OT4"
+    },
+    {
+        "specificName": "5 map Will There Be Overtime? - Yes/No",
+        "globalID":     "OT5"
+    },
+    {
+        "specificName": "1 map Who Will Beat Roshan",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "2 map Who Will Beat Roshan",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "3 map Who Will Beat Roshan",
+        "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "4 map Who Will Beat Roshan",
+        "globalID":     "FROSHM4"
+    },
+    {
+        "specificName": "5 map Who Will Beat Roshan",
+        "globalID":     "FROSHM5"
     },
     {
         "specificName": "1 map Total Rounds Even / Odd",
@@ -92,6 +400,54 @@
         "globalID":     "TROE3"
     },
     {
+        "specificName": "4 map Total Rounds Even / Odd",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "5 map Total Rounds Even / Odd",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "1 map Total Rounds",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "2 map Total Rounds",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "3 map Total Rounds",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "4 map Total Rounds",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "5 map Total Rounds",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "1 map Triple Kill",
+        "globalID":     "TRIPLEM1"
+    },
+    {
+        "specificName": "2 map Triple Kill",
+        "globalID":     "TRIPLEM2"
+    },
+    {
+        "specificName": "3 map Triple Kill",
+        "globalID":     "TRIPLEM3"
+    },
+    {
+        "specificName": "4 map Triple Kill",
+        "globalID":     "TRIPLEM4"
+    },
+    {
+        "specificName": "5 map Triple Kill",
+        "globalID":     "TRIPLEM5"
+    },
+    {
         "specificName": "1 map Who Will Beat Dragon",
         "globalID":     "FDM1"
     },
@@ -102,6 +458,14 @@
     {
         "specificName": "3 map Who Will Beat Dragon",
         "globalID":     "FDM3"
+    },
+    {
+        "specificName": "4 map Who Will Beat Dragon",
+        "globalID":     "FDM4"
+    },
+    {
+        "specificName": "5 map Who Will Beat Dragon",
+        "globalID":     "FDM5"
     },
     {
         "specificName": "1 map First Blood",
@@ -116,6 +480,14 @@
         "globalID":     "FBM3"
     },
     {
+        "specificName": "4 map First Blood",
+        "globalID":     "FBM4"
+    },
+    {
+        "specificName": "5 map First Blood",
+        "globalID":     "FBM5"
+    },
+    {
         "specificName": "1 map Frags, Total",
         "globalID":     "TKM1"
     },
@@ -126,6 +498,14 @@
     {
         "specificName": "3 map Frags, Total",
         "globalID":     "TKM3"
+    },
+    {
+        "specificName": "4 map Frags, Total",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "5 map Frags, Total",
+        "globalID":     "TKM5"
     },
     {
         "specificName": "1 map Who Will Destroy Tower",
@@ -140,6 +520,14 @@
         "globalID":     "FTM3"
     },
     {
+        "specificName": "4 map Who Will Destroy Tower",
+        "globalID":     "FTM4"
+    },
+    {
+        "specificName": "5 map Who Will Destroy Tower",
+        "globalID":     "FTM5"
+    },
+    {
         "specificName": "1 map Frags, Race To",
         "globalID":     "FTRKM1"
     },
@@ -150,6 +538,14 @@
     {
         "specificName": "3 map Frags, Race To",
         "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "4 map Frags, Race To",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "5 map Frags, Race To",
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "1 map Frags, Handicap",
@@ -164,6 +560,14 @@
         "globalID":     "KHDPM3"
     },
     {
+        "specificName": "4 map Frags, Handicap",
+        "globalID":     "KHDPM4"
+    },
+    {
+        "specificName": "5 map Frags, Handicap",
+        "globalID":     "KHDPM5"
+    },
+    {
         "specificName": "1 map Duration Of The Map",
         "globalID":     "DURM1"
     },
@@ -174,6 +578,14 @@
     {
         "specificName": "3 map Duration Of The Map",
         "globalID":     "DURM3"
+    },
+    {
+        "specificName": "4 map Duration Of The Map",
+        "globalID":     "DURM4"
+    },
+    {
+        "specificName": "5 map Duration Of The Map",
+        "globalID":     "DURM5"
     },
     {
         "specificName": "1 map Total Towers Destroyed",
@@ -188,6 +600,14 @@
         "globalID":     "TTM3"
     },
     {
+        "specificName": "4 map Total Towers Destroyed",
+        "globalID":     "TTM4"
+    },
+    {
+        "specificName": "5 map Total Towers Destroyed",
+        "globalID":     "TTM5"
+    },
+    {
         "specificName": "1 map Who Will Beat Nashor",
         "globalID":     "FBARM1"
     },
@@ -198,6 +618,14 @@
     {
         "specificName": "3 map Who Will Beat Nashor",
         "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "4 map Who Will Beat Nashor",
+        "globalID":     "FBARM4"
+    },
+    {
+        "specificName": "5 map Who Will Beat Nashor",
+        "globalID":     "FBARM5"
     },
     {
         "specificName": "1 map Quadra Kill",
@@ -212,6 +640,14 @@
         "globalID":     "QUADM3"
     },
     {
+        "specificName": "4 map Quadra Kill",
+        "globalID":     "QUADM4"
+    },
+    {
+        "specificName": "5 map Quadra Kill",
+        "globalID":     "QUADM5"
+    },
+    {
         "specificName": "1 map Penta Kill",
         "globalID":     "PENTM1"
     },
@@ -222,6 +658,14 @@
     {
         "specificName": "3 map Penta Kill",
         "globalID":     "PENTM3"
+    },
+    {
+        "specificName": "4 map Penta Kill",
+        "globalID":     "PENTM4"
+    },
+    {
+        "specificName": "5 map Penta Kill",
+        "globalID":     "PENTM5"
     },
     {
         "specificName": "1 map First To Destroy Inhibitor",
@@ -236,6 +680,14 @@
         "globalID":     "FINHIBM3"
     },
     {
+        "specificName": "4 map First To Destroy Inhibitor",
+        "globalID":     "FINHIBM4"
+    },
+    {
+        "specificName": "5 map First To Destroy Inhibitor",
+        "globalID":     "FINHIBM5"
+    },
+    {
         "specificName": "1 map Total Nashors Beaten",
         "globalID":     "TBARM1"
     },
@@ -246,6 +698,14 @@
     {
         "specificName": "3 map Total Nashors Beaten",
         "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "4 map Total Nashors Beaten",
+        "globalID":     "TBARM4"
+    },
+    {
+        "specificName": "5 map Total Nashors Beaten",
+        "globalID":     "TBARM5"
     },
     {
         "specificName": "1 map Total Dragons Beaten",
@@ -260,6 +720,14 @@
         "globalID":     "TDRGM3"
     },
     {
+        "specificName": "4 map Total Dragons Beaten",
+        "globalID":     "TDRGM4"
+    },
+    {
+        "specificName": "5 map Total Dragons Beaten",
+        "globalID":     "TDRGM5"
+    },
+    {
         "specificName": "1 map Team To Destroy Next Barracks",
         "globalID":     "FBRCKSM1"
     },
@@ -272,6 +740,14 @@
         "globalID":     "FBRCKSM3"
     },
     {
+        "specificName": "4 map Team To Destroy Next Barracks",
+        "globalID":     "FBRCKSM4"
+    },
+    {
+        "specificName": "5 map Team To Destroy Next Barracks",
+        "globalID":     "FBRCKSM5"
+    },
+    {
         "specificName": "1 map Total Inhibitors Destroyed",
         "globalID":     "TINHIBM1"
     },
@@ -282,5 +758,13 @@
     {
         "specificName": "3 map Total Inhibitors Destroyed",
         "globalID":     "TINHIBM3"
+    },
+    {
+        "specificName": "4 map Total Inhibitors Destroyed",
+        "globalID":     "TINHIBM4"
+    },
+    {
+        "specificName": "5 map Total Inhibitors Destroyed",
+        "globalID":     "TINHIBM5"
     }
 ]
