@@ -101,6 +101,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     log.write(`Critical Failure! Cannot open page ${book.urls[i]}\n`);
     return -1;
   }
+    await page.waitForSelector('#game-filters option');
   const maps = await page.$$eval('#game-filters option', (es) => {
     return es.map( e => { 
       return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}

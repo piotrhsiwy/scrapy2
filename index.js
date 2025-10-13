@@ -38,7 +38,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
+  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
@@ -48,7 +48,7 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp';
+  const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
     rmSync(USERDATA_PATH, {recursive: true, force: true});
@@ -154,7 +154,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(16, 1000);
+    const myq = new Queue(32, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -177,7 +177,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -241,7 +241,7 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'esb',
   'ls',
   'ms',
-// '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
