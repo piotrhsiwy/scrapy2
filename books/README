@@ -1,6 +1,4 @@
 /xyz/urlScraper.js return codes interpretation:
-21 failure:
-  market mapping does not exist
 20 failure:
   sport mapping does not exist
 11  failure:
@@ -12,3 +10,5 @@
   not being scraped
 -1 critical failure:
   some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.
+-10 critical failure:
+  one of the required files could not be opened

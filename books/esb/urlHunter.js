@@ -37,6 +37,7 @@ export async function huntSportURLs(browser, book){
         if(!sportNameMapping){ throw error(); }
     } catch (error){
         log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
+        return -10;
     }
 
     const page = await prepPage(browser, book);

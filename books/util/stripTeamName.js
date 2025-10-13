@@ -126,7 +126,3 @@ export function stripTeamName(str){
 
     return str;
 }
-
-export function replaceNumericTeamName(str, home, away){
-    return str.replace(/1|2/, m => m === '1' ? home : away);
-}
