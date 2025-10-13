@@ -9,6 +9,7 @@
   "main": "index.js",
   "dependencies": {
     "async-await-queue": "^2.1.4",
+    "axios": "^1.12.2",
     "puppeteer": "^22.15.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",

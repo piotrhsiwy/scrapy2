@@ -28,8 +28,76 @@ function convDatetimeToISO(dateStr){
   return date.toISOString();
 }
 
+import axios from 'axios';
+import { betsModel, betsModelGroup } from "./map.js";
 export async function scrapeMatchURL(data, browser, book, i){
-  
+
+    const games = [
+      {
+        id: '282417117',
+        slug: 't1-invictus-gaming',
+        leagueId: '1081149',
+        leagueName: 'league-of-legends-world-championship',
+        teamHome: 't1',
+        teamAway: 'invictus'
+      },
+      {
+        id: '282262864',
+        slug: 'g2-esports-geng',
+        leagueId: '2847231',
+        leagueName: 'rainbow-six-europe-mena-league',
+        teamHome: 'g2',
+        teamAway: 'geng'
+      }
+    ]
+    const CURRENT_COOKIE = 'fast_coupon=true; flaglng=en; typeBetNames=full; che_g=05ce933e-22ae-972b-8e5b-a9b298155d5f; sh.session.id=acc24a5c-84c0-4952-88a1-2f2b11a81ee8; tzo=1; uhash=883dd069230324c74e5e09144f3b7149; cur=EUR; cookie-policy-accepted=1; application_locale=en; platform_type=desktop; v3fr=1; lng=en; auid=LiC1Q2jsGQk9t2qDBCF1Ag==; ggru=167; hdt=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZXYiOjEsImd1aWQiOiI3R2lzUDJVL1F4ZExUbFhiR3hCRDYxZmRHY2MvQkx3V0JYRXQxNGlsUXRtZ2kxNW1DSjgyZnZuZGtiUytsZHlBcUdSRVJBOWRYTkdFNE5DeS9lZEIvdS8ySjNNR29rRkhNblo0dU1lUUx5dzNXSy9sQ2tlSm1XbktoQUVPL1JhRmlZMEtDSXMvOVhxTk1VZWNhOE4xN1JocjBOVHhZalNHVVhIVEFkTDNzNDBGNnZsaXIxdnZxa2RHTXFZZlVDbng4UDZXUXhCc1h4V1pxTW9wQWE4MW1SSTZVc09CVkRWYUV0cXR1MTBZSWpnK2xtUEtJN3dtblFMK3EzTVBha1R1RkMwUFNtUTVrdko2dWJFY1RqRWh6OWl0ekNNNnRNdGs4Q3BXRWdaYkE4MkFhKzJsdVRkZnhMQnEwVDAxb2VnNEY5WFlYd3p0ZkUrbFZNQ08zNFlCOU5YMkJCcWJweVBlMW1uTDNYZ2hXdDJtSysvcCtFd1JTV0ZnZkRSMDFVejYyeDBTYzh0S1JTTmRlVlJxclRjTlI0WFN1UzZncmZZTUVvWmNJaXlWM1pUeWVzQXdxajBRM2I1MmF5RzN3OVFSWDZzc0tMS05ERWxpKytFMlVmN2Zvd1lNL2hWWU9ES1dLcitlbG5aa1o5T1JWWmVTZ1BiODFlS3N4akI3c2xUSnByMksxSHBURUZmMjFGbVd4UFUycWJTQThMT0JxejB5OU1iUFZlU1ZQbkhiNHNGYTR0a1pZZlRuZWV1YzFJZXZjMDB6ZktBS2NDUlNNako4V0hVdkpENjRjUnRmT2doczhOdWFDKzlwIiwiZXhwIjoxNzYwMzE3NzczLCJpYXQiOjE3NjAzMDMzNzN9.zSBjxb_o-7WCmWF8aO-vNosaFMud4L0kmVkIi5p9VjLf0Cu1NW8kG-0bs5lLiHlmXMh8OF25mwS09ShjWEwkKA; user_token=eyJhbGciOiJFUzI1NiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiI1MC81NjkyMDg4NzEiLCJwaWQiOiIxNTEiLCJqdGkiOiIwL2RhMWNlYjhkOGYyOTdjMjZkNDZkNDVjZWY3ZjgyMmU4ZjExMzA5NTc0NjZkNTMzNTA2ZTNkMjc5MDVmNDQ5YjUiLCJhcHAiOiJOQSIsImlubmVyIjoidHJ1ZSIsIm5iZiI6MTc2MDMwMzAzMSwiZXhwIjoxNzYwMzE3NDMxLCJpYXQiOjE3NjAzMDMwMzF9.yM1s0QrhXugqLLk0UdsuHnzhDvU6uxxlXfRZoTzWtExsQpb7u1PfsiJUHmpCJxc_0FU7irLH2TVCt9XP-8Fezw; ua=569208871; refresh_token=eyJhbGciOiJFUzI1NiIsImtpZCI6IjEiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiI1MC81NjkyMDg4NzEiLCJwaWQiOiIxNTEiLCJqdGkiOiIwLzFiZWUwYzY2OWU0OWQxNWIwZmRmMTk3NWVkZTNiYTRkODI1ODQ4ZGEwMDI5NzZjOTFlZDI1NDJmNzAzZjYxNmUiLCJhcHAiOiJiMjkzM2M0OWM4NjUxZTljYWFlNDY5MDQyNGM5NTMyY2JkNWYyZTEwIiwieHBqIjoiMTUxIiwieGdyIjoiMTUxIiwibmJmIjoxNzYwMzAzMzc1LCJleHAiOjE3NjA1NjI1NzUsImlhdCI6MTc2MDMwMzM3NX0.ZkfyQP06Yeb9u148e4O-pa2AvFsGlWnmQ63iXHSSgvktOGA-8UFyUQ5m8QZQyN9HpkwZSoUnK7RaYVa_CNLKzA; user_id_hash=36935b629c314abc4e1b5c9e6cc4c03c; SESSION=5aa6347a58dfecbb358e911bfdde525e; disallow_sport=; web_push_status=canceled; automax=false; PAY_SESSION=cbcc181409b7e3d48cd5ba4ea038272f; sh.message_sound_active=1; che_i=4; _glhf=1760332046; coefview=0'; 
+    for(const game of games){
+      const gameId = game.id;
+      const slug = game.slug;
+      const leagueId = game.leagueId;
+      const leagueName = game.leagueName;
+      const teamHome = game.teamHome;
+      const teamAway = game.teamAway;
+      const API_URL = `https://bestwinzz.net/LineFeed/GetGameZip?id=${gameId}&lng=en&tzo=1&cfview=0&isSubGames=true&GroupEvents=true&countevents=750&country=53&fcountry=53&isNewBuilder=true&partner=151&grMode=4`;
+      const REFERER = `https://bestwinzz.net/line/esports/${leagueId}-${leagueName}/${gameId}-${slug}`;
+      const HEADERS = {
+          'Cookie': CURRENT_COOKIE, 
+          // Dynamic Referer header:
+          'Referer': REFERER, 
+          
+          // Essential constant headers:
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'X-Requested-With': 'XMLHttpRequest',
+      };
+      try {
+        const response = await axios.get(API_URL, { headers: HEADERS });
+        const data =response.data;
+        if(data.Success === true){
+          const markets = data.Value.GE;
+          for(const market of markets){
+            const cols = market.E;
+            for(const col of cols){
+              for(const odd of col){
+                const marketName = betsModelGroup[odd.GS].N;
+                const oddName = betsModel[odd.T].N
+                  .replace('^1^', teamHome)
+                  .replace('^2^', teamAway);
+                const coef = odd.C;
+                console.log(marketName, oddName, coef);
+              }
+            }
+          }
+        }
+        console.log('Retgame', games.findIndex(g => g.id = game.id), response.data);
+      } catch (error) {
+        console.log(`Error loading game:\n\
+          gameId=${gameId}\n\
+          API_URL=${API_URL}\n\
+          REFERER=${REFERER}\n`);
+      }
+    }
+
   const page = await browser.newPage();
   await page.setViewport(book.viewport);
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');

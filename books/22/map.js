@@ -1,4 +1,4 @@
-var betsModel = {
+export var betsModel = {
     "1": {
         "IdG": "1",
         "N": "^1^",
@@ -90558,7 +90558,7 @@ var betsModel = {
         "A": true
     }
 };
-var betsModelGroup = {
+export var betsModelGroup = {
     "1": {
         "N": "1x2",
         "C": 3
