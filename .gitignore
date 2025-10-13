@@ -6,6 +6,7 @@ node_modules
 # .vscode/*
 tags
 eslint*
+NUL
 
 # scraping data
 books/*/urls.json
