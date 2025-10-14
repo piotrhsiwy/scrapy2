@@ -38,8 +38,8 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  // const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
-  const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
+  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
@@ -49,8 +49,8 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  // const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
-  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
+  const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
+  // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
     rmSync(USERDATA_PATH, {recursive: true, force: true});
@@ -204,7 +204,8 @@ async function run(){
               } catch(e){
                 throw e;
               }
-              console.log(`Completed scrape with result: ${ret} from ${book.urls[i]}`);
+              const date = new Date();  
+              console.log(`[$${date.getHours}:${date.getMinutes}:${date.getSeconds}] Completed scrape with result: ${ret} from ${book.urls[i]}`);
             }
             q.push(myq.run(() => wrapper(data, browser, book, i)
               .catch((e) => console.error(e))));

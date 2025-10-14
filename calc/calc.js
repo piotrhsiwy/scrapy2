@@ -30,7 +30,7 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                     const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
                     if(arb > cutoff){
                         let newArb = {
-                            "timestamp":prettyEarliestFrom([oddA.timestamp, oddB.timestamp, oddC.timestamp, oddD.timestamp]),
+                            "timestamp":prettyEarliestFrom([A.timestamp, B.timestamp, C.timestamp, D.timestamp]),
                             "value":arb,
                             "sport":sport.name,
                             // "tournament":tournament.name,
