@@ -205,7 +205,7 @@ async function run(){
                 throw e;
               }
               const date = new Date();  
-              console.log(`[$${date.getHours}:${date.getMinutes}:${date.getSeconds}] Completed scrape with result: ${ret} from ${book.urls[i]}`);
+              console.log(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Completed scrape with result: ${ret} from ${book.urls[i]}`);
             }
             q.push(myq.run(() => wrapper(data, browser, book, i)
               .catch((e) => console.error(e))));
