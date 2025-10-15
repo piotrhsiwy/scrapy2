@@ -38,10 +38,9 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
-  // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
+  // const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
-    accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
     if(error.code === 'ENOENT'){
       console.log('Browser executable is missing under: ', BROWSER_EXECUTABLE_PATH);
@@ -49,8 +48,8 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
-  // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
+  // const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
+  const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
     rmSync(USERDATA_PATH, {recursive: true, force: true});
@@ -63,7 +62,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -92,7 +91,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: false,
+    devtools: true,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -179,7 +178,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      // await singleHunt(browser);
+      await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;

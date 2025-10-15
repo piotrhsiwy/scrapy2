@@ -34,6 +34,14 @@ export async function prepPage(browser, book){
     await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
     await page.setRequestInterception(true);
     page.on('request', (request) => filterReq(request, book.blockRequestURLs));
+    // page.on('console', msg => {
+    //   // Log all console messages -> used to be able to better debug from inside of the browser context
+    //   console.log(`[Browser Console]: ${msg.type().toUpperCase()} ${msg.text()}`);
+    // });
+    // page.on('error', (error) => {
+    //   // Log all error messages on page crash -> used to be able to better debug from inside of the browser context
+    //   console.error(`[Page Crash Error] ${error.message}`);
+    // });
     return page;
 }
 

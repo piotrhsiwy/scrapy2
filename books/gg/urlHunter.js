@@ -1,29 +1,7 @@
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
-
-async function huntMatchURLs(browser, book, hrefs, url){
-    try{
-        const page = await prepPage(browser, book);
-        await page.goto(url);
-
-        const ret = await page.evaluate(async (baseurl) => {
-            // const sports = document.querySelector('a[data-action="Close sport"] div[data-test="categorizer-sport-list-content-title"]').textContent;
-            // const tours = Array.from(document.querySelectorAll('div[data-test="tournament-list-row-title"]'))
-            //     .map( e => e.textContent );
-        }, book.baseURLBuilder);
-        hrefs = hrefs.concat(ret);
-        
-        log.write(`Done hunting for hrefs from ${url}. ${hrefs.length - hrefs.length} + ${hrefs.length} new entries\n`);
-        return 0;
-
-    } catch(error){
-        log.write(`Critical Failure! Hunting for hrefs from ${url} failed.\n`);
-        return -1;
-    } finally{
-        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
-    }
-}
+import { datestringToISO } from "./parser.js";
 
 // global variables in this module
 let log;
@@ -55,11 +33,13 @@ export async function huntSportURLs(browser, book){
     let hrefs = [];
     try{
         const page = await prepPage(browser, book);
-        page.goto(url);
+        await page.goto(url);
         
         await page.waitForSelector('a[data-action="Open sport"]');
-        hrefs = await page.evaluate( async (baseurl) => {
-            // debugger;
+        await page.exposeFunction('datestringToISO', datestringToISO);
+        
+        hrefs = await page.evaluate( async () => {
+            debugger;
 
             async function waitMax(max){
                 let delay = 0;
@@ -80,28 +60,39 @@ export async function huntSportURLs(browser, book){
             for(const sport of sports){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport')){
-                    sport.click();
-                    const NAVI_DELAY = 3000;
+                    await sport.click();
+                    const NAVI_DELAY = 1000;
                     await new Promise(resolve => setTimeout(resolve, NAVI_DELAY));
                     let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
                     let size;
                     do{
                         size = matches.length;
-                        matches[matches.length-1].scrollIntoView();
+                        matches[matches.length-1]?.scrollIntoView();
                         matches = await waitMax(NAVI_DELAY);
                     } while(size !== matches.length);
-                    ret = ret.concat(Array.from(matches).map( match => baseurl + match.getAttribute('href')));
+                
+                    const arrayPromised = Array.from(document.querySelectorAll('div[data-test=sport-event-in-view-subscription] a')).map(async (e) => {
+                        const url = e.href;
+                        const datetime = e.querySelector('div.text-sm.text-grey-500.opacity-100')?.textContent;
+                        const ISOString = datetime ? await window.datestringToISO(datetime) : undefined;
+                        return {
+                            url: url,
+                            datetime: ISOString,
+                        }
+                    });
+                    let array = await Promise.all(arrayPromised);
+                    array = array.filter(e => e.url.includes('match') && !!e.datetime );
+                    ret = ret.concat(array);
                 }
             }
             return ret;
-        }, book.baseURLBuilder);
+        });
             
-        if(hrefs.length <= 0){throw"";}
-        log.write(`Done hunting for sportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        log.write(`Success! Done hunting for sportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n`);
+        log.write(`Critical Failure! Error message: ${error.message}. Error stack: ${error.stack} Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n`);
         return -1;
     } finally{
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
