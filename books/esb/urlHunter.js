@@ -1,6 +1,7 @@
 import { createWriteStream, writeFileSync, existsSync, truncateSync, readFileSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
+import { datestringToISO } from "./parser.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -71,7 +72,8 @@ export async function huntSportURLs(browser, book){
                         // the matchURL is built as follows: baseURL + ID + '/' + specificID (of the sport)
                         const sportName = items[j].classList[1];
                         const matchID = items[j].getAttribute('data-parentmatchid')
-                        ret.push({matchID, sportName});
+                        const datestring = items[j].querySelector('div.mSDateTime')?.textContent;
+                        ret.push({matchID, sportName, datestring});
                     }
                     // window.nodeLog('size of items:' + items.length);
 
@@ -118,7 +120,7 @@ export async function huntSportURLs(browser, book){
             }
             return ret;
         })
-        hrefs = hrefs.map( ({matchID, sportName}) => {
+        hrefs = hrefs.map( ({matchID, sportName, datestring}) => {
             let sportID = 0;
             const mapping = sportNameMapping.find( m => m.specificName === sportName )
             if(mapping){
@@ -128,10 +130,29 @@ export async function huntSportURLs(browser, book){
                 return -1;
             }
             const matchURL = url + 'OddsPage/' + matchID + '/' + sportID;
-            return matchURL;
+            let ISOString;
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}`);
+                return undefined;
+            }
+            return {
+                url: matchURL,
+                datetime: ISOString
+            };
         } )
 
-        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        for(let i = 0; i < hrefs.length; i++){
+            if(!hrefs[i]){
+                hrefs.slice(i, i+1);
+                i--;
+            }
+        }
+
+        log.write(`Success! Hunted ${hrefs.length} hrefs from ${url}\n`);
         return 0;
 
     } catch(error){
