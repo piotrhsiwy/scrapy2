@@ -2,25 +2,26 @@ function filterReq(request, blockRequestURLs){
     // request.continue();
     // if (request.isInterceptResolutionHandled()) return;
     // const regex = /iconatwitch|thp|hotjar|casino|chat|translations|survey|mobile/;
-    const regex = new RegExp(blockRequestURLs);
+    const regex = new RegExp(blockRequestURLs, 'i');
     const url = request.url();
     const type = request.resourceType();
     const block = 
+        type === 'image' ||
+        type === 'font' ||
+        type === 'ping' ||
+        type === 'media' ||
+        // the commented filters break the required functionality of the page
+        // type === 'stylesheet' ||
         url.endsWith('.png')      ||
         url.endsWith('.jpg')      ||
         url.endsWith('.svg')      ||
         url.endsWith('.ico')      ||
-        regex.test(url)           ||
-        type.includes('image');
+        regex.test(url)
     if(block){
-        // console.log(`Blocking`);
-        // console.log(type);
-        // console.log(url);
+        // console.log(`Blocking ${type} ${url}`);
         request.abort();
     } else {
-        // console.log(`Allowing`);
-        // console.log(type);
-        // console.log(url);
+        // console.log(`Allowing ${type} ${url}`);
         request.continue();
     }
 }

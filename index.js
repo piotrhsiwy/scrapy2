@@ -41,6 +41,7 @@ async function openBrowser(){
   // const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
   const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
+    accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
     if(error.code === 'ENOENT'){
       console.log('Browser executable is missing under: ', BROWSER_EXECUTABLE_PATH);
@@ -62,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -91,7 +92,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -155,7 +156,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(32, 1000);
+    const myq = new Queue(1, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -212,7 +213,7 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        if(i%6 === 5){
+        if(i%2 === 1){
           saveData(data);
           // q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
           // console.log(`Queued savecalc()`);
@@ -238,15 +239,15 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'gg',
+  // 'gg',
   'tp',
-  'esb',
-  'ls',
-  'ms',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  // 'esb',
+  // 'ls',
+  // 'ms',
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany
 ]
-console.log(`seeds of available books: ${availableAbbrev.toString()}`);
+console.log(`seeds of availabuule books: ${availableAbbrev.toString()}`);
 
 // ### Initializing books metadata
 console.log('Initializing books metadata...');

@@ -7,6 +7,9 @@
  * @returns undefined if the dateStr has an invalid format
  */
 export function datestringToISO(dateStr){
+  if(dateStr === 'live'){
+    return 'live';
+  }
 
   const parseDateStr = (dateStr) => {
     let date;

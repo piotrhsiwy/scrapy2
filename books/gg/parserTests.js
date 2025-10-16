@@ -18,7 +18,7 @@ function parserTest(cases){
     for(let i = 0; i < cases.length; i++){
         const testCase = cases[i];
         const retStr = test(testCase.in, testCase.out);
-        if( retStr.includes('Failure')){
+        if( retStr.includes('Failure') || retStr.includes('Error')){
             console.log(retStr);
             failed++;
         }

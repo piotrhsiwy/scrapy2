@@ -3,5 +3,5 @@
     "abbrev":"tp",
     "baseURL":"https://thunderpick.io/esports",
     "viewport":{"width":1920, "height":30000},
-    "blockRequestURLs": "analytics|hotjar|piwik|ip-geo|google|googletagmanager|translations|twitch|casino|chat|banner"
+    "blockRequestURLs": "cdn-cgi|api/health|wicket-keeper|piwik|google|googletagmanager|hotjar|twitch|reportratelimit|ip-geo|manifest|cloudflare"
 }
