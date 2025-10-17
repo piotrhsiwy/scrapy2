@@ -70,7 +70,7 @@ export async function huntSportURLs(browser, book){
                         matches = await waitMax(NAVI_DELAY);
                     } while(size !== matches.length);
                 
-                    const arrayPromised = Array.from(document.querySelectorAll('div[data-test=sport-event-in-view-subscription] a')).map(async (e) => {
+                    let array = Array.from(document.querySelectorAll('div[data-test=sport-event-in-view-subscription] a')).map((e) => {
                         const url = e.href;
                         const datetime = e.querySelector('div.text-sm.text-grey-500.opacity-100')?.textContent?.trim();
                         return {
@@ -78,8 +78,7 @@ export async function huntSportURLs(browser, book){
                             datestring: datetime,
                         }
                     });
-                    let array = await Promise.all(arrayPromised);
-                    array = array.filter(e => e.url.includes('match') && !!e.datetime );
+                    array = array.filter(e => e.url.includes('match') && !!e.datestring );
                     ret = ret.concat(array);
                 }
             }
@@ -88,12 +87,12 @@ export async function huntSportURLs(browser, book){
 
         // parse the datestrings
         hrefs = hrefs.map(e => {
-            if(!datestring){
+            if(!e.datestring){
                 return undefined;
             } else{
                 let ISOString;
                 try{
-                    ISOString = datestringToISO(datestring);
+                    ISOString = datestringToISO(e.datestring);
                 } catch(error){
                     log.write(`Warning! Invalid date of the match under [${e.url}]:${e.datestring}. Error thrown by the date parser: ${error.message}\n`);
                     return undefined;
