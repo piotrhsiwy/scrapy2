@@ -36,7 +36,6 @@ export async function huntSportURLs(browser, book){
         await page.goto(url);
         
         await page.waitForSelector('a[data-action="Open sport"]');
-        await page.exposeFunction('datestringToISO', datestringToISO);
         
         hrefs = await page.evaluate( async () => {
             debugger;
@@ -60,7 +59,7 @@ export async function huntSportURLs(browser, book){
             for(const sport of sports){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport')){
-                    await sport.click();
+                    sport.click();
                     const NAVI_DELAY = 1000;
                     await new Promise(resolve => setTimeout(resolve, NAVI_DELAY));
                     let matches = document.querySelectorAll('div[data-test=sport-event-in-view-subscription] > a');
@@ -73,11 +72,10 @@ export async function huntSportURLs(browser, book){
                 
                     const arrayPromised = Array.from(document.querySelectorAll('div[data-test=sport-event-in-view-subscription] a')).map(async (e) => {
                         const url = e.href;
-                        const datetime = e.querySelector('div.text-sm.text-grey-500.opacity-100')?.textContent;
-                        const ISOString = datetime ? await window.datestringToISO(datetime) : undefined;
+                        const datetime = e.querySelector('div.text-sm.text-grey-500.opacity-100')?.textContent?.trim();
                         return {
                             url: url,
-                            datetime: ISOString,
+                            datestring: datetime,
                         }
                     });
                     let array = await Promise.all(arrayPromised);
@@ -87,8 +85,31 @@ export async function huntSportURLs(browser, book){
             }
             return ret;
         });
-            
-        log.write(`Success! Done hunting for sportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+
+        // parse the datestrings
+        hrefs = hrefs.map(e => {
+            if(!datestring){
+                return undefined;
+            } else{
+                let ISOString;
+                try{
+                    ISOString = datestringToISO(datestring);
+                } catch(error){
+                    log.write(`Warning! Invalid date of the match under [${e.url}]:${e.datestring}. Error thrown by the date parser: ${error.message}\n`);
+                    return undefined;
+                }
+                return {
+                    url: e.url,
+                    datetime: ISOString
+                }
+            }
+        })
+
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        const hrefsPruned = hrefs.filter(e => e);
+
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         return 0;
 
     } catch(error){

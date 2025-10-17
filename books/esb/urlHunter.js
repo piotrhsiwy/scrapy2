@@ -72,7 +72,7 @@ export async function huntSportURLs(browser, book){
                         // the matchURL is built as follows: baseURL + ID + '/' + specificID (of the sport)
                         const sportName = items[j].classList[1];
                         const matchID = items[j].getAttribute('data-parentmatchid')
-                        const datestring = items[j].querySelector('div.mSDateTime')?.textContent;
+                        const datestring = items[j].querySelector('div.mSDateTime')?.textContent?.trim();
                         ret.push({matchID, sportName, datestring});
                     }
                     // window.nodeLog('size of items:' + items.length);
@@ -134,7 +134,7 @@ export async function huntSportURLs(browser, book){
             try{
                 ISOString = datestringToISO(datestring);
             } catch(error){
-                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}`);
+                log.write(`Warning! Invalid date of the match under [${matchURL}]:${datestring}. Error thrown by the date parser: ${error.message}\n`);
                 return undefined;
             }
             return {
@@ -145,14 +145,9 @@ export async function huntSportURLs(browser, book){
 
         // prune the hrefs array
         log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
-        for(let i = 0; i < hrefs.length; i++){
-            if(!hrefs[i]){
-                hrefs.slice(i, i+1);
-                i--;
-            }
-        }
+        const hrefsPruned = hrefs.filter(e => e);
 
-        log.write(`Success! Hunted ${hrefs.length} hrefs from ${url}\n`);
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         return 0;
 
     } catch(error){

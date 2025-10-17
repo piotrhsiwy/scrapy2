@@ -5,7 +5,7 @@
  */
 export function datestringToISO(dateStr){
   if(!dateStr){
-    return undefined;
+    
   }
   var split = dateStr.split(', ');
   let month, day, hours, minutes;
@@ -57,7 +57,7 @@ export function datestringToISO(dateStr){
     if(split[0] === ''){
       throw new Error('empty');
     } else{
-      return 'live';
+      throw new Error('live');
     }
   }
 

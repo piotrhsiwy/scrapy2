@@ -63,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -92,7 +92,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -239,8 +239,8 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'gg',
-  // 'tp',
+  'gg',
+  'tp',
   'esb',
   // 'ls',
   // 'ms',

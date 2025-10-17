@@ -102,7 +102,7 @@ export async function huntSportURLs(browser, book){
                 try{
                     ISOString = datestringToISO(datestring);
                 } catch(error){
-                    log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}`);
+                    log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
                     return undefined;
                 }
             }
@@ -114,14 +114,9 @@ export async function huntSportURLs(browser, book){
 
         // prune the hrefs array
         log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
-        for(let i = 0; i < hrefs.length; i++){
-            if(!hrefs[i]){
-                hrefs.slice(i, i+1);
-                i--;
-            }
-        }
+        const hrefsPruned = hrefs.filter(e => e);
 
-        log.write(`Success! Hunted ${hrefs.length} hrefs from ${url}\n`);
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         return 0;
 
     } catch(error){

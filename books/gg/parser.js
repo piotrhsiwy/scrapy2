@@ -8,7 +8,7 @@
  */
 export function datestringToISO(dateStr){
   if(dateStr === 'live'){
-    return 'live';
+    throw new Error('live');
   }
 
   const parseDateStr = (dateStr) => {
@@ -45,9 +45,11 @@ export function datestringToISO(dateStr){
     return date;
   };
   
-  
   const date = parseDateStr(dateStr);
 
-  // Format the date as ISO 8601
-  return date ? date.toISOString() : date;
+  if(!date){
+    throw new Error('invalid data');
+  } else{
+    return date.toISOString();
+  }
 }
