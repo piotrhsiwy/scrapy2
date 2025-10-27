@@ -1,6 +1,7 @@
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
+import { datestringToISO } from "./parser.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -48,14 +49,50 @@ export async function huntSportURLs(browser, book){
         selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
         await page.waitForSelector(selector);
         hrefs = await page.$$eval(selector, (items, url) => {
+            // debugger;
             const matchURLs = [];
-            for(const href of items.map( item => item.getAttribute('href'))){
-                matchURLs.push(url + href);
+            for(const item of items){
+                const href = items.map( item => item.getAttribute('href'))
+                let hour;
+                const rawHour = item.querySelector('span.event-name')?.textContent;
+                const split = rawHour?.split('\u00a0', 2);
+                if(!rawHour || split.length < 2){
+                    matchURLs.push({
+                        url: url + href,
+                        datestring: undefined
+                    });
+                } else{
+                    hour = split[0];
+                    const day = item.closest('div.osg-coupon__sport')?.querySelector('h3')?.textContent;
+                    matchURLs.push({
+                        url: url + href,
+                        datestring: hour + ', ' + day
+                    });
+                }
             }
             return matchURLs;
         }, book.baseURLBuilder);
 
-        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        hrefs = hrefs.map( ({url, datestring}) => {
+            let ISOString;
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under [${url}]:${datestring}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
+            }
+            return {
+                url: url,
+                datetime: ISOString
+            };
+        } )
+
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        const hrefsPruned = hrefs.filter(e => e);
+
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){

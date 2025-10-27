@@ -109,6 +109,7 @@ export async function huntSportURLs(browser, book){
         const hrefsPruned = hrefs.filter(e => e);
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){

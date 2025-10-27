@@ -29,11 +29,12 @@ export async function huntSportURLs(browser, book){
     //     truncateSync(toursPath, 0);
     // }
 
-    const page = await prepPage(browser, book);
-    // const page = await browser.newPage();
-    // await page.setViewport(book.viewport);
-    // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-    // await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+    // const page = await prepPage(browser, book);
+    // TODO tp does not work in headless when filtering requests
+    const page = await browser.newPage();
+    await page.setViewport(book.viewport);
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
 
     // call our patcher BEFORE navigating
     await applyPatches(page, {
@@ -117,6 +118,7 @@ export async function huntSportURLs(browser, book){
         const hrefsPruned = hrefs.filter(e => e);
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){

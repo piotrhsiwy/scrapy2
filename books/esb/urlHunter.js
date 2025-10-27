@@ -120,6 +120,7 @@ export async function huntSportURLs(browser, book){
             }
             return ret;
         })
+
         hrefs = hrefs.map( ({matchID, sportName, datestring}) => {
             let sportID = 0;
             const mapping = sportNameMapping.find( m => m.specificName === sportName )
@@ -148,6 +149,7 @@ export async function huntSportURLs(browser, book){
         const hrefsPruned = hrefs.filter(e => e);
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){
