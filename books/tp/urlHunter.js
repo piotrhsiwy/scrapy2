@@ -53,7 +53,9 @@ export async function huntSportURLs(browser, book){
             // debugger;
             let ret = [];
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
-                e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') && !e.href.includes('esim')
+                e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') &&
+                !e.href.includes('ebasketball') &&
+                !e.href.includes('esoccer')
             );
             for(let i = 0; i < sports.length; i++){
                 const text = sports[i].querySelector('button')?.textContent;
@@ -86,7 +88,7 @@ export async function huntSportURLs(browser, book){
         hrefs = hrefs.map(({datestring,  sectionTitle, url}) => {
             let ISOString;
             if(!sectionTitle){
-                log.write(`Failure! No sectionTitle for url: ${url}`);
+                log.write(`Failure! No sectionTitle for url: ${url}\n`);
                 return undefined;
             } else{
                 if(sectionTitle === 'Upcoming'){

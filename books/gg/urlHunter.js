@@ -58,7 +58,9 @@ export async function huntSportURLs(browser, book){
             let ret = [];
             for(const sport of sports){
                 const href = sport.getAttribute('href');
-                if(href.includes('esport')){
+                if(href.includes('esport') &&
+                !href.includes('esports_basketball') &&
+                !href.includes('esports_fifa')){
                     sport.click();
                     const NAVI_DELAY = 1000;
                     await new Promise(resolve => setTimeout(resolve, NAVI_DELAY));

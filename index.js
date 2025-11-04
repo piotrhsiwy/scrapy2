@@ -63,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: true,
+  headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -188,7 +188,7 @@ async function run(){
           book.urls = JSON.parse(readFileSync(urlsFilePath));
           book.urls.sort((a, b) => ISO8601ToDate(a.datetime).getTime() - ISO8601ToDate(b.datetime).getTime() );
           for(let i = 0; i < book.urls.length; i++){
-            const daysIntoTheFuture = 3;
+            const daysIntoTheFuture = 1;
             if(ISO8601ToDate(book.urls[i].datetime).getTime() - new Date().getTime() > daysIntoTheFuture*24*60*60*1000){
               book.urls.splice(i, book.urls.length - (i+1));
               break;

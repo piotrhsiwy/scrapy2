@@ -52,20 +52,20 @@ export async function huntSportURLs(browser, book){
             // debugger;
             const matchURLs = [];
             for(const item of items){
-                const href = items.map( item => item.getAttribute('href'))
                 let hour;
                 const rawHour = item.querySelector('span.event-name')?.textContent;
                 const split = rawHour?.split('\u00a0', 2);
+                const url = item.href;
                 if(!rawHour || split.length < 2){
                     matchURLs.push({
-                        url: url + href,
+                        url: url,
                         datestring: undefined
                     });
                 } else{
                     hour = split[0];
                     const day = item.closest('div.osg-coupon__sport')?.querySelector('h3')?.textContent;
                     matchURLs.push({
-                        url: url + href,
+                        url: url,
                         datestring: hour + ', ' + day
                     });
                 }
