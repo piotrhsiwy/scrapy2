@@ -37,7 +37,7 @@ export function cleanupOnDatetime(items){
         const date = prettyToDate(items[i].datetime);
         const dategT = date.getTime();
         const nowgT = now.getTime();
-            if( dategT <= nowgT - 60*60*1000 ){
+            if( dategT <= nowgT ){
             /* is outdated */
             items.splice(i, 1);
             i--;

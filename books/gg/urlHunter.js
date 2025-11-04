@@ -55,7 +55,7 @@ export async function huntSportURLs(browser, book){
     let hrefs = [];
     try{
         const page = await prepPage(browser, book);
-        page.goto(url);
+        await page.goto(url);
         
         await page.waitForSelector('a[data-action="Open sport"]');
         hrefs = await page.evaluate( async (baseurl) => {
