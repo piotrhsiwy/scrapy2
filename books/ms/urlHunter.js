@@ -1,6 +1,7 @@
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
+import { datestringListToISO } from "./parser.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -69,6 +70,7 @@ export async function huntSportURLs(browser, book){
         // });
 
         hrefs = await page.evaluate(async () => {
+            debugger;
             const ret = [];
             async function processItems() {
                 // scroll till all matches are loaded
@@ -88,18 +90,41 @@ export async function huntSportURLs(browser, book){
 
                 for (const item of items) {
                     const clickable = item.querySelector('div[class=market-count] > span');
+                    // get datestring
+                    const [day, time] = Array.from(item.querySelectorAll('div.start-time > p')).map( e => e?.textContent);
                     clickable.click();
-                    ret.push(window.location.href);
-    // console.log(page.url);
-                    window.history.back();
-                    // await new Promise(resolve => setTimeout(resolve, 100));
+                    const url = window.location.href;
+                    ret.push({
+                        url: url,
+                        day: day,
+                        time: time
+                    });
                 }
             }
             await processItems();
             return ret;
         }) 
 
-        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        hrefs = hrefs.map(({url, day, time}) => {
+            let ISOString;
+            try{
+                ISOString = datestringListToISO(day, time);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
+            }
+            return {
+                url: url,
+                datetime: ISOString
+            }
+        })
+
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        const hrefsPruned = hrefs.filter(e => e);
+
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){

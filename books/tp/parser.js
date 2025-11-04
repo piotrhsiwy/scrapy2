@@ -5,7 +5,7 @@
  */
 export function datestringToISO(dateStr){
   if(!dateStr){
-    
+    throw new Error('dateStr is undefined or null');
   }
   var split = dateStr.split(', ');
   let month, day, hours, minutes;
