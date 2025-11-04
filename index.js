@@ -157,7 +157,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(1, 1000);
+    const myq = new Queue(16, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -249,6 +249,7 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+  'gg',
   'tp',
   'esb',
   'ls',
