@@ -63,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -92,7 +92,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -146,6 +146,7 @@ async function calc(arbCutoff, evCutoff){
 }
 
 import { Queue } from "async-await-queue";
+import { ISO8601ToDate } from "./data/util/prettify.js";
 async function run(){ 
   if(books.length === 0){
     console.log(`No books available.`);
@@ -179,12 +180,21 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
         try{
           book.urls = JSON.parse(readFileSync(urlsFilePath));
+          book.urls.sort((a, b) => ISO8601ToDate(a.datetime).getTime() - ISO8601ToDate(b.datetime).getTime() );
+          for(let i = 0; i < book.urls.length; i++){
+            const daysIntoTheFuture = 3;
+            if(ISO8601ToDate(book.urls[i].datetime).getTime() - new Date().getTime() > daysIntoTheFuture*24*60*60*1000){
+              book.urls.splice(i, book.urls.length - (i+1));
+              break;
+            }
+          }
+          book.urls = book.urls.flatMap(e => e.url);
         } catch(error){
           console.log(`Loading file ${urlsFilePath} failed.`)
           return -1;
@@ -239,11 +249,11 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'tp',
-  // 'esb',
-  // 'ls',
-  // 'gg',
-  // `ms`,
+  'tp',
+  'esb',
+  'ls',
+  'gg',
+  `ms`,
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
