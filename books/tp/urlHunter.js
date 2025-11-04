@@ -53,7 +53,7 @@ export async function huntSportURLs(browser, book){
             // debugger;
             let ret = [];
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
-                e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2')
+                e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') && !e.href.includes('esim')
             );
             for(let i = 0; i < sports.length; i++){
                 const text = sports[i].querySelector('button')?.textContent;
