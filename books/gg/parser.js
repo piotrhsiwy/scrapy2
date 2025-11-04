@@ -40,7 +40,7 @@ export function datestringToISO(dateStr){
 
     // Create a new Date object with the parsed values
     
-    date = new Date(now.getFullYear(), parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes), 0, 0);
+    date = new Date(now.getFullYear(), parseInt(month), parseInt(day), parseInt(hours), parseInt(minutes), 0, 0);
   }
 
   if(!date){
