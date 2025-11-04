@@ -48,7 +48,7 @@ export async function huntSportURLs(browser, book){
             const tabs = document.querySelectorAll('ul.liga_menu > li > a');
             for(const tab of tabs){
                 tab.click();
-                await new Promise(resolve => setTimeout(resolve, 100));
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
 
             // scrape the hrefs of the games
