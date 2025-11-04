@@ -12,7 +12,7 @@ export function datestringListToISO(day, time){
     const dayMonthSplit = day.split('/');
     if(dayMonthSplit.length === 2){
       const [month, day] = dayMonthSplit;
-      date = new Date(today.getFullYear(), month-1, day);
+      date = new Date(today.getFullYear(), parseInt(month)-1, parseInt(day));
     } else{
       throw new Error('dayMonthSplit does not have 2 elements');
     }
@@ -21,8 +21,8 @@ export function datestringListToISO(day, time){
   const hourMinuteSplit = time.split(':');
   if(hourMinuteSplit.length === 2){
     const [hour, minute] = hourMinuteSplit;
-    date.setHours(hour);
-    date.setMinutes(minute);
+    date.setHours(parseInt(hour));
+    date.setMinutes(parseInt(minute));
     date.setSeconds(0);
     date.setMilliseconds(0);
   } else{

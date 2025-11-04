@@ -70,7 +70,7 @@ export async function huntSportURLs(browser, book){
         // });
 
         hrefs = await page.evaluate(async () => {
-            debugger;
+            // debugger;
             const ret = [];
             async function processItems() {
                 // scroll till all matches are loaded

@@ -1,6 +1,7 @@
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
+import { datestringToISO } from "./parser.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -41,44 +42,46 @@ export async function huntSportURLs(browser, book){
 
         await page.waitForSelector('ul.liga_menu');
         
-        hrefs = await page.evaluate( async (baseurl) => {
-            //debugger;
-            // open up all the tournament tabs to trigger adding event-menus to the dom
+        hrefs = await page.evaluate( async () => {
+            // debugger;
+            // open up all the tournament tabs to trigger adding event-menus to the dom (we scrape links fromt the left bar)
             const tabs = document.querySelectorAll('ul.liga_menu > li > a');
             for(const tab of tabs){
-                if (tab) {
-                    const tabPosition = tab.getBoundingClientRect().top + window.scrollY;
-                    window.scrollTo({ top: tabPosition, behavior: 'smooth' });
-                }
                 tab.click();
-                await new Promise(resolve => setTimeout(resolve, 1000));
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
 
             // scrape the hrefs of the games
-            const links = document.querySelectorAll('ul.event_menu > li > a.link');
-            const ret = Array.from(links).map( link => baseurl + link.getAttribute('href'));
+            const games = Array.from(document.querySelectorAll('ul.event_menu > li > a'));
+            const ret = games.map(e => {
+                return {
+                    url: e.href,
+                    datestring: e.querySelector('span[class=date]')?.textContent
+                }
+            })
             return ret;
+        });
 
-            // // get sport and tournament names
-            // const anchors = Array.from(document.querySelectorAll('a[title="Esports"] ~ ul.liga_menu > li > a.link'));
-            // const text = anchors.map( a => a.textContent);
-            // const sport_tour = anchors.map( (anchor, index) =>
-            //     text[index]
-            //         .replace(new RegExp (anchor.children[1].textContent + '$'), '')
-            //         .replace(/\u000a/g, '\u0020')
-            //         .trim());
-            // const tours = [], sports = [];
-            // for(const str of sport_tour){
-            //     const newSport = str.split('. ')[0];
-            //     if(!sports.some( s => s === newSport)){
-            //         sports.push(newSport);
-            //     }
-            //     tours.push(str.split('. ')[1]);
-            // }
-            // return {hrefs, sports, tours};
-        }, book.baseURLBuilder);
+        hrefs = hrefs.map(({url, datestring}) => {
+            let ISOString;
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
+            }
+            return {
+                url: url,
+                datetime: ISOString
+            }
+        })
+        
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        const hrefsPruned = hrefs.filter(e => e);
 
-        log.write(`Done hunting for SportsURLs from ${url}, ${hrefs.length} entries hunted\n`);
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){
