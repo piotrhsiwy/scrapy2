@@ -26,8 +26,7 @@ export function cleanupData(data){
 }
 
 /**
- * this fuction out the arbs/evs (items that have a datetime field) that are 
- * in the past by more than 1 hour.
+ * this fuction out the arbs/evs (items that have a datetime field) that are in the past
  * @param {*} items 
  */
 export function cleanupOnDatetime(items){
@@ -37,7 +36,7 @@ export function cleanupOnDatetime(items){
         const date = prettyToDate(items[i].datetime);
         const dategT = date.getTime();
         const nowgT = now.getTime();
-            if( dategT <= nowgT ){
+        if( dategT <= nowgT ){
             /* is outdated */
             items.splice(i, 1);
             i--;

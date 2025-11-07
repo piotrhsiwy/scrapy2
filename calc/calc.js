@@ -150,6 +150,13 @@ function evStrength(a, b){
     return (1/a - 1/b);
 }
 
+function evKelly(value, mean){
+    const BooksEdge = 0.08; 
+    const p = 1/mean - BooksEdge/2;
+    const b = value - 1;
+    return p - (1-p)/b;
+}
+
 function ev2(evs, cutoff, sport, match, market, odd){
     const valuesNoNull = [];
     odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
@@ -176,6 +183,7 @@ function ev2(evs, cutoff, sport, match, market, odd){
                     "stdDev":stdDev,
                     "deviationInTermsOfStdDev":Math.abs((v-mean)/stdDev),
                     "strength":strength,
+                    "kellyFraction":evKelly(v, mean),
                     "sport":sport.name,
                     // "tournament":tournament.name,
                     "teamHome":match.teamHome,
