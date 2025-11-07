@@ -174,14 +174,15 @@ function ev2(evs, cutoff, sport, match, market, odd){
             if(strength < -cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
                 const url = match.urls.find( u => u.book === book )?.url;
-                const stdDev = stdDevArrayExcluding(valuesNoNull, v);
+                // calculate standard deviation of the corresponding probabilities
+                const stdDev = stdDevArrayExcluding(valuesNoNull.map(o => 1/o), 1/v);
                 let newEv = {
                     "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
-                    "stdDev":stdDev,
-                    "deviationInTermsOfStdDev":Math.abs((v-mean)/stdDev),
+                    "probStdDev":stdDev,
+                    "probDeviationInTermsOfStdDev":Math.abs((1/v-1/mean)/stdDev),
                     "strength":strength,
                     "kellyFraction":evKelly(v, mean),
                     "sport":sport.name,
