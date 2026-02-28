@@ -157,7 +157,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(16, 1000);
+    const myq = new Queue(8, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -205,7 +205,7 @@ async function run(){
       for(let i = 0; ; i++){
         let anyUrlUnderI = false;
         /** scrape ****************************/
-        for(const book of books){
+        for(const book5of books){
           if(i < book.urls.length){
             async function wrapper(data, browser, book, i){
               let ret;
@@ -223,8 +223,10 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        if(i%16 === 15){
+        if(i%5 === 0){
           saveData(data);
+          const arbCutoff = 0.01;
+          const evCutoff = 0.05;
           q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
           console.log(`Queued savecalc()`);
         }
