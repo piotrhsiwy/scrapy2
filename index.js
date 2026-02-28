@@ -254,7 +254,7 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'esb',
   'ls',
   'gg',
-  `ms`,
+  'ms',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]

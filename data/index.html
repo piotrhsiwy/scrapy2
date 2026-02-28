@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Data Viewer</title>
+    <style>
+        /* Make the body exactly the height of the screen and prevent full-page scroll */
+        body { 
+            font-family: sans-serif; margin: 0; padding: 20px; 
+            background: #f4f4f9; box-sizing: border-box;
+            height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
+        }
+        
+        /* Layout */
+        .header-section {
+            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        .controls-container {
+            display: flex; flex-direction: column; gap: 15px; 
+            background: white; padding: 15px; border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-grow: 1; margin-right: 20px;
+        }
+
+        /* ASCII Bar Timer */
+        .timer-container { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+        .timer-label { font-size: 12px; color: #666; font-weight: bold; text-transform: uppercase; }
+        #ascii-timer {
+            font-family: 'Courier New', Courier, monospace; background: #1e1e1e; color: white; 
+            padding: 10px 15px; border-radius: 6px; margin: 0; font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 16px; white-space: pre; 
+            min-width: 160px; text-align: left;
+        }
+
+        /* Tabs and Controls */
+        .tabs { display: flex; gap: 10px; align-items: center; width: 100%; }
+        .tabs button {
+            padding: 8px 16px; font-size: 15px; cursor: pointer;
+            border: 1px solid #007bff; background-color: white; color: #007bff;
+            border-radius: 4px; transition: all 0.2s;
+        }
+        .tabs button.active { background-color: #007bff; color: white; }
+        
+        /* Reset Button Styling */
+        .btn-reset {
+            margin-left: auto; 
+            border-color: #dc3545 !important;
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+        .btn-reset:hover { background-color: #dc3545 !important; color: white !important; }
+
+        /* Book Filters */
+        .filters { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 14px; }
+        .filter-label { font-weight: bold; color: #333; }
+        .checkbox-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .checkbox-label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+
+        /* Table Container */
+        .table-container { 
+            width: 100%; flex-grow: 1; min-height: 0; overflow: auto; 
+            background: white; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; word-wrap: break-word; }
+        
+        /* Sticky Headers */
+        th { 
+            background-color: #343a40; color: white; position: sticky; top: 0; 
+            z-index: 2; cursor: pointer; user-select: none; transition: background 0.2s;
+            white-space: nowrap; box-shadow: 0 1px 0 #ddd;
+        }
+        th:hover { background-color: #495057; }
+        th.sort-asc::after { content: " ▲"; font-size: 10px; color: #4dabf7; }
+        th.sort-desc::after { content: " ▼"; font-size: 10px; color: #4dabf7; }
+
+        /* Group Stacking Visuals */
+        tbody.game-group {
+            border-bottom: 4px solid #343a40; 
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            cursor: pointer; /* Makes the whole group look clickable */
+        }
+        tbody.game-group tr:nth-child(even) { background-color: #f8f9fa; }
+        tbody.game-group tr:hover { background-color: #e2e6ea; }
+        
+        .action-cell {
+            background-color: #f1f3f5;
+            vertical-align: middle;
+            text-align: center;
+            border-right: 2px solid #ddd;
+        }
+
+        /* Fade Out Animation Class */
+        .fade-out-group {
+            opacity: 0 !important;
+            transform: scale(0.98);
+            pointer-events: none;
+        }
+
+        a { color: #007bff; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <div class="controls-container">
+            <div class="tabs">
+                <button id="btn-evs" class="active" onclick="switchTab('evs.json', 'btn-evs')">EVS Data</button>
+                <button id="btn-arbs" onclick="switchTab('arbs.json', 'btn-arbs')">ARBS Data</button>
+                <button class="btn-reset" onclick="resetDone()" title="Restore all hidden entries">[ ⟲ ] Reset Done</button>
+            </div>
+            <div class="filters">
+                <div class="filter-label">Filter Books:</div>
+                <div class="checkbox-group" id="book-filters">
+                    </div>
+            </div>
+        </div>
+        
+        <div class="timer-container">
+            <span class="timer-label">Refreshing In</span>
+            <div id="ascii-timer">[---------------]</div>
+        </div>
+    </div>
+
+    <div class="table-container" id="table-container">
+        <div style="padding: 20px;">Loading data...</div>
+    </div>
+
+    <script>
+        // Global State
+        let currentFile = 'evs.json';
+        let currentData = [];
+        let currentHeaders = [];
+        let activeBooks = new Set();
+        let sortColumn = null;
+        let sortAscending = true;
+        
+        // Timer State
+        const REFRESH_SECONDS = 15;
+        let timeRemainingSeconds = REFRESH_SECONDS;
+
+        // Load "DONE" items from local browser storage
+        let doneItems = JSON.parse(localStorage.getItem('doneGames') || '[]');
+
+        // Formatter & Flattener
+        function formatValue(key, val) {
+            if (val === null || val === undefined) return '';
+            if (typeof val === 'number') return Number.isInteger(val) ? val : val.toFixed(4);
+            if (Array.isArray(val)) return val.map(v => typeof v === 'number' ? v.toFixed(2) : v).join(', ');
+            if (key.toLowerCase().includes('url') && typeof val === 'string' && val.startsWith('http')) {
+                return `<a href="${val}" target="_blank">Link ↗</a>`;
+            }
+            return val;
+        }
+
+        function flattenObject(obj, prefix = '') {
+            let result = {};
+            for (const key in obj) {
+                if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                    result = { ...result, ...flattenObject(obj[key], `${prefix}${key} `) };
+                } else {
+                    result[`${prefix}${key}`] = formatValue(key, obj[key]);
+                }
+            }
+            return result;
+        }
+
+        // Actions
+        function handleRowClick(event, gameId) {
+            // Prevent marking as done if the user clicked a link
+            if (event.target.tagName.toLowerCase() === 'a') {
+                return;
+            }
+            markDone(gameId);
+        }
+
+        function markDone(gameId) {
+            if (!doneItems.includes(gameId)) {
+                doneItems.push(gameId);
+                localStorage.setItem('doneGames', JSON.stringify(doneItems));
+            }
+            
+            const tbody = document.getElementById(`group-${gameId}`);
+            if (tbody) {
+                // Visually check the box instantly for feedback
+                const checkbox = tbody.querySelector('input[type="checkbox"]');
+                if (checkbox) checkbox.checked = true;
+
+                // Trigger the CSS fade-out effect
+                tbody.classList.add('fade-out-group');
+                
+                // Wait for the CSS transition to finish, then re-render
+                setTimeout(() => {
+                    renderTable();
+                }, 400); 
+            }
+        }
+
+        function resetDone() {
+            doneItems = [];
+            localStorage.setItem('doneGames', JSON.stringify(doneItems));
+            renderTable(); // Instantly bring them back
+        }
+
+        // Data Fetching
+        async function fetchSilent() {
+            try {
+                const response = await fetch(currentFile + '?t=' + new Date().getTime());
+                const rawData = await response.json();
+                if (!rawData || rawData.length === 0) return;
+
+                currentData = rawData.map(item => flattenObject(item));
+                currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+                
+                extractAndRenderBooks(false); 
+                renderTable(); 
+            } catch (error) {
+                console.error("Background fetch failed:", error);
+            }
+        }
+
+        async function switchTab(filename, btnId) {
+            currentFile = filename;
+            document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(btnId).classList.add('active');
+            
+            sortColumn = null;
+            sortAscending = true;
+            timeRemainingSeconds = REFRESH_SECONDS; 
+            updateTimerUI();
+
+            try {
+                const response = await fetch(filename + '?t=' + new Date().getTime());
+                const rawData = await response.json();
+                
+                if (!rawData || rawData.length === 0) {
+                    document.getElementById('table-container').innerHTML = '<div style="padding: 20px;">No data available.</div>';
+                    return;
+                }
+
+                currentData = rawData.map(item => flattenObject(item));
+                currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+                
+                extractAndRenderBooks(true); 
+                renderTable();
+            } catch (error) {
+                document.getElementById('table-container').innerHTML = `<div style="padding: 20px; color: red;">Error loading data.</div>`;
+                console.error(error);
+            }
+        }
+
+        // Filters
+        function extractAndRenderBooks(resetActive = true) {
+            const allBooks = new Set();
+            currentData.forEach(row => {
+                if (row['odd book']) allBooks.add(row['odd book']);
+                if (row['Home book']) allBooks.add(row['Home book']);
+                if (row['Away book']) allBooks.add(row['Away book']);
+            });
+
+            const booksArray = Array.from(allBooks).sort();
+            
+            if (resetActive) { activeBooks = new Set(booksArray); }
+
+            const filterContainer = document.getElementById('book-filters');
+            if (booksArray.length === 0) {
+                filterContainer.innerHTML = '<span>No books found.</span>';
+                return;
+            }
+
+            filterContainer.innerHTML = booksArray.map(book => {
+                const isChecked = activeBooks.has(book) ? 'checked' : '';
+                return `
+                <label class="checkbox-label">
+                    <input type="checkbox" value="${book}" ${isChecked} onchange="toggleBook(this)">
+                    ${book}
+                </label>`;
+            }).join('');
+        }
+
+        function toggleBook(checkbox) {
+            if (checkbox.checked) activeBooks.add(checkbox.value);
+            else activeBooks.delete(checkbox.value);
+            renderTable();
+        }
+
+        function handleSort(column) {
+            if (sortColumn === column) sortAscending = !sortAscending;
+            else { sortColumn = column; sortAscending = true; }
+            renderTable();
+        }
+
+        // Core Render Engine
+        function renderTable() {
+            let processedData = currentData.filter(row => {
+                if (!row['odd book'] && !row['Home book'] && !row['Away book']) return true;
+                return activeBooks.has(row['odd book']) || 
+                       activeBooks.has(row['Home book']) || 
+                       activeBooks.has(row['Away book']);
+            });
+
+            let groups = {};
+            processedData.forEach(row => {
+                let gameStr = `${row.sport || ''}|${row.teamHome || ''}|${row.teamAway || ''}|${row.datetime || ''}`;
+                let gameId = btoa(unescape(encodeURIComponent(gameStr))); 
+                
+                if (!groups[gameId]) {
+                    groups[gameId] = { gameId: gameId, entries: [] };
+                }
+                groups[gameId].entries.push(row);
+            });
+
+            let groupedArray = Object.values(groups);
+
+            groupedArray = groupedArray.filter(group => !doneItems.includes(group.gameId));
+
+            if (sortColumn) {
+                let getSortValue = (entry) => {
+                    let val = entry[sortColumn] !== undefined ? entry[sortColumn] : '';
+                    if (typeof val === 'string') val = val.replace(/<[^>]*>?/gm, ''); 
+                    return val;
+                };
+
+                groupedArray.sort((groupA, groupB) => {
+                    let valsA = groupA.entries.map(getSortValue);
+                    let valsB = groupB.entries.map(getSortValue);
+                    
+                    let numA = valsA.map(v => parseFloat(v)).filter(n => !isNaN(n));
+                    let numB = valsB.map(v => parseFloat(v)).filter(n => !isNaN(n));
+                    
+                    if (numA.length > 0 && numB.length > 0) {
+                        let valA = sortAscending ? Math.min(...numA) : Math.max(...numA);
+                        let valB = sortAscending ? Math.min(...numB) : Math.max(...numB);
+                        return sortAscending ? valA - valB : valB - valA;
+                    } else {
+                        let valA = String(valsA[0]).toLowerCase();
+                        let valB = String(valsB[0]).toLowerCase();
+                        if (valA < valB) return sortAscending ? -1 : 1;
+                        if (valA > valB) return sortAscending ? 1 : -1;
+                        return 0;
+                    }
+                });
+
+                groupedArray.forEach(group => {
+                    group.entries.sort((a, b) => {
+                        let valA = getSortValue(a);
+                        let valB = getSortValue(b);
+                        let numA = parseFloat(valA);
+                        let numB = parseFloat(valB);
+                        if (!isNaN(numA) && !isNaN(numB)) return sortAscending ? numA - numB : numB - numA;
+                        valA = String(valA).toLowerCase();
+                        valB = String(valB).toLowerCase();
+                        if (valA < valB) return sortAscending ? -1 : 1;
+                        if (valA > valB) return sortAscending ? 1 : -1;
+                        return 0;
+                    });
+                });
+            }
+
+            let html = `<table><thead><tr>`;
+            html += `<th style="width: 50px;">Action</th>`; 
+            currentHeaders.forEach(header => {
+                let sortClass = sortColumn === header ? (sortAscending ? 'sort-asc' : 'sort-desc') : '';
+                html += `<th class="${sortClass}" onclick="handleSort('${header}')">${header}</th>`;
+            });
+            html += `</tr></thead>`;
+
+            if (groupedArray.length === 0) {
+                html += `<tbody><tr><td colspan="${currentHeaders.length + 1}" style="text-align:center; padding: 30px;">No active entries match your filters.</td></tr></tbody>`;
+            } else {
+                groupedArray.forEach(group => {
+                    // Added onclick event to the entire group body
+                    html += `<tbody id="group-${group.gameId}" class="game-group" onclick="handleRowClick(event, '${group.gameId}')">`;
+                    
+                    group.entries.forEach((row, index) => {
+                        html += `<tr>`;
+                        
+                        if (index === 0) {
+                            // Disabled pointer events on the checkbox so the row click handles it smoothly
+                            html += `<td rowspan="${group.entries.length}" class="action-cell">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight:bold;">
+                                    <input type="checkbox" style="transform: scale(1.3); pointer-events: none;">
+                                    <span style="font-size: 11px; color:#555;">DONE</span>
+                                </div>
+                            </td>`;
+                        }
+
+                        currentHeaders.forEach(header => {
+                            html += `<td>${row[header] !== undefined ? row[header] : ''}</td>`;
+                        });
+                        html += `</tr>`;
+                    });
+                    
+                    html += `</tbody>`;
+                });
+            }
+            html += `</table>`;
+            
+            document.getElementById('table-container').innerHTML = html;
+        }
+
+        // ASCII Bar Timer Logic
+        function updateTimerUI() {
+            let bar = "-".repeat(Math.max(0, timeRemainingSeconds));
+            let paddedBar = bar.padEnd(REFRESH_SECONDS, ' ');
+            document.getElementById('ascii-timer').innerText = `[${paddedBar}]`;
+        }
+
+        setInterval(() => {
+            timeRemainingSeconds--;
+            if (timeRemainingSeconds <= 0) {
+                timeRemainingSeconds = REFRESH_SECONDS;
+                fetchSilent(); 
+            }
+            updateTimerUI();
+        }, 1000);
+
+        // Initialize on load
+        switchTab('evs.json', 'btn-evs');
+    </script>
+</body>
+</html>
