@@ -13,6 +13,7 @@ export function datestringToISO(dateStr){
     const monthDay = split[0];
     const mDsplit = monthDay.split(' ');
     if(mDsplit.length === 1){
+
       if(mDsplit[0] === 'Upcoming'){
         const today = new Date();
         month = today.getMonth();
@@ -56,8 +57,10 @@ export function datestringToISO(dateStr){
   } else if(split.length === 1){
     if(split[0] === ''){
       throw new Error('empty');
-    } else{
+    } else if(split[0] === 'live'){
       throw new Error('live');
+    } else{
+      throw new Error('unknown one-word');
     }
   }
 

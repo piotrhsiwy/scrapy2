@@ -47,10 +47,10 @@ export async function huntSportURLs(browser, book){
     try{
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        await page.waitForSelector('div.infinite-scroll-list', {timeout: 1000});
+        await page.waitForSelector('div#match-list-header', {timeout: 1000});
         
         hrefs = await page.evaluate( async () => {
-            // debugger;
+            debugger;
             let ret = [];
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
                 e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') &&
@@ -62,9 +62,20 @@ export async function huntSportURLs(browser, book){
                 const matchCount = parseInt(text);
                 if(matchCount > 0){
                     await sports[i].click();
-                    while(document.querySelector('[data-testid="match-details-link"') === null){
+                    // i have to wait until the filter applies and only the matches from this sport are shown
+                    // 1. Loop until breadcrumbs exist (they exist only when a sport is selected)
+                    while(document.querySelector('div#breadcrumbs') === null){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+                    // 2. Loop until breadcrumbs match the just clicked sport (I don't unselect the prev filter)
+                    while(document.querySelector('div#breadcrumbs span').textContent !== sports[i].querySelector('div.text-base').textContent){
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
+                    while(document.querySelector('div[data-testid*=match-single-row]') === null){
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    // 4. Even then, the entries seem to be loaded only partially when I dont await here
                     await new Promise(resolve => setTimeout(resolve, 500));
                     let newHrefs = Array.from(document.querySelectorAll('[data-testid="match-details-link"]')).map( e => {
                         const divs = Array.from(e.parentNode.querySelectorAll('div'));
@@ -88,26 +99,18 @@ export async function huntSportURLs(browser, book){
         hrefs = hrefs.map(({datestring,  sectionTitle, url}) => {
             let ISOString;
             if(!sectionTitle){
-                log.write(`Failure! No sectionTitle for url: ${url}\n`);
-                return undefined;
+                log.write(`Warning! No sectionTitle for url: ${url}\n`);
             } else{
-                if(sectionTitle === 'Upcoming'){
-                    datestring = sectionTitle + ', ' + datestring;
-                } else if(sectionTitle === 'Featured'){
-                } else if(sectionTitle.includes('Live')){
+                if(sectionTitle.includes('Live')){
                     datestring = 'live';
-                } else{
-                    const dateMatch = sectionTitle.match(/.*, (.* \d+).*/);
-                    const date = dateMatch ? dateMatch[1] : "";
-                    datestring = date + ', ' + datestring;
                 }
+            }
 
-                try{
-                    ISOString = datestringToISO(datestring);
-                } catch(error){
-                    log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
-                    return undefined;
-                }
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
             }
             return {
                 url: url,

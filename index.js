@@ -223,10 +223,10 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        if(i%2 === 1){
+        if(i%3 === 4){
           saveData(data);
-          // q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
-          // console.log(`Queued savecalc()`);
+          q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
+          console.log(`Queued savecalc()`);
         }
         if(!anyUrlUnderI){
           break;
