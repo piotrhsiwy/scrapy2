@@ -249,13 +249,13 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'gg',
+  //'gg',
   'tp',
-  'esb',
-  'ls',
-  'gg',
-  'ms',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  //'esb',
+  //'ls',
+  //'gg',
+  //'ms',
+  //'22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of availabuule books: ${availableAbbrev.toString()}`);
