@@ -4,7 +4,7 @@ schillerwg37.ddns.net:443 {
     # Enable Basic Auth
     basic_auth {
         siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
-        haslo $2a$14$8D9Yc7qyl8Xiqyc3PDc2bePHuu.xbCMyQEEOLsmc4PDkHuw4VdeCO
+        kalinowski $2a$14$PwL3qkr37XY91oePKrMTrOQeJ.nJBrNAdUEjdF07PLz3W3mHsSTrm
     }
 
     # Serve the files

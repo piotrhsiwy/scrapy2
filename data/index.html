@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Betting Data Viewer</title>
+    <title>Scrapy</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='hotpink'/></svg>">
     <style>
         /* Make the body exactly the height of the screen and prevent full-page scroll */
         body { 
@@ -11,6 +12,17 @@
             background: #f4f4f9; box-sizing: border-box;
             height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
         }
+
+        /* File Metadata Bar */
+        .metadata-bar {
+            display: flex; gap: 20px; font-size: 13px; color: #555; margin-bottom: 15px;
+            background: white; padding: 10px 15px; border-radius: 6px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .metadata-item { display: flex; gap: 5px; align-items: center; }
+        .metadata-label { font-weight: bold; color: #007bff; font-family: monospace; font-size: 14px;}
+        .metadata-error { color: #dc3545; font-style: italic; }
         
         /* Layout */
         .header-section {
@@ -80,7 +92,7 @@
         tbody.game-group {
             border-bottom: 4px solid #343a40; 
             transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-            cursor: pointer; /* Makes the whole group look clickable */
+            cursor: pointer; 
         }
         tbody.game-group tr:nth-child(even) { background-color: #f8f9fa; }
         tbody.game-group tr:hover { background-color: #e2e6ea; }
@@ -104,6 +116,11 @@
     </style>
 </head>
 <body>
+
+    <div id="file-metadata" class="metadata-bar">
+        Fetching file info...
+    </div>
+
     <div class="header-section">
         <div class="controls-container">
             <div class="tabs">
@@ -136,6 +153,7 @@
         let activeBooks = new Set();
         let sortColumn = null;
         let sortAscending = true;
+        let knownEntryIds = new Set(); 
         
         // Timer State
         const REFRESH_SECONDS = 15;
@@ -143,6 +161,73 @@
 
         // Load "DONE" items from local browser storage
         let doneItems = JSON.parse(localStorage.getItem('doneGames') || '[]');
+
+        // Synthesizes a clean browser notification "ding"
+        function playNotificationSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); 
+
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+            } catch (error) {
+                console.log("Audio API blocked. User needs to click on the page first.");
+            }
+        }
+
+        // --- NEW META DATA MATCHER ---
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function fetchFileMetadata() {
+            const files = ['evs.json', 'arbs.json', 'data_out.json'];
+            let html = '';
+            
+            for (const file of files) {
+                try {
+                    // Use HEAD request to get just the headers, saving bandwidth
+                    const res = await fetch(file + '?t=' + new Date().getTime(), { method: 'HEAD' });
+                    if (res.ok) {
+                        const sizeBytes = parseInt(res.headers.get('Content-Length') || '0', 10);
+                        const lastMod = res.headers.get('Last-Modified');
+                        
+                        const sizeStr = formatBytes(sizeBytes);
+                        const dateStr = lastMod ? new Date(lastMod).toLocaleTimeString() : 'Unknown Time';
+                        
+                        html += `<div class="metadata-item"><span class="metadata-label">${file}</span> <span>${sizeStr} | Last Mod: ${dateStr}</span></div>`;
+                    } else {
+                        html += `<div class="metadata-item"><span class="metadata-label">${file}</span> <span class="metadata-error">Not found</span></div>`;
+                    }
+                } catch (e) {
+                    html += `<div class="metadata-item"><span class="metadata-label">${file}</span> <span class="metadata-error">Error fetching</span></div>`;
+                }
+                
+                // Add a divider if not the last item
+                if (file !== files[files.length - 1]) {
+                    html += `<div style="border-right: 1px solid #ccc; height: 16px;"></div>`;
+                }
+            }
+            document.getElementById('file-metadata').innerHTML = html;
+        }
 
         // Formatter & Flattener
         function formatValue(key, val) {
@@ -167,12 +252,18 @@
             return result;
         }
 
+        function getRowId(row) {
+            return btoa(unescape(encodeURIComponent(`${row.timestamp}|${row.teamHome}|${row.teamAway}|${row.market}`)));
+        }
+
+        function getGameId(row) {
+            let gameStr = `${row.sport || ''}|${row.teamHome || ''}|${row.teamAway || ''}|${row.datetime || ''}`;
+            return btoa(unescape(encodeURIComponent(gameStr))); 
+        }
+
         // Actions
         function handleRowClick(event, gameId) {
-            // Prevent marking as done if the user clicked a link
-            if (event.target.tagName.toLowerCase() === 'a') {
-                return;
-            }
+            if (event.target.tagName.toLowerCase() === 'a') return;
             markDone(gameId);
         }
 
@@ -184,29 +275,28 @@
             
             const tbody = document.getElementById(`group-${gameId}`);
             if (tbody) {
-                // Visually check the box instantly for feedback
                 const checkbox = tbody.querySelector('input[type="checkbox"]');
                 if (checkbox) checkbox.checked = true;
 
-                // Trigger the CSS fade-out effect
                 tbody.classList.add('fade-out-group');
-                
-                // Wait for the CSS transition to finish, then re-render
-                setTimeout(() => {
-                    renderTable();
-                }, 400); 
+                setTimeout(() => { renderTable(); }, 400); 
+            } else {
+                renderTable(); 
             }
         }
 
         function resetDone() {
             doneItems = [];
             localStorage.setItem('doneGames', JSON.stringify(doneItems));
-            renderTable(); // Instantly bring them back
+            renderTable(); 
         }
 
         // Data Fetching
         async function fetchSilent() {
             try {
+                // Update File Info Bar
+                await fetchFileMetadata();
+
                 const response = await fetch(currentFile + '?t=' + new Date().getTime());
                 const rawData = await response.json();
                 if (!rawData || rawData.length === 0) return;
@@ -214,6 +304,26 @@
                 currentData = rawData.map(item => flattenObject(item));
                 currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
                 
+                let triggerSound = false;
+                currentData.forEach(row => {
+                    let rId = getRowId(row);
+                    if (!knownEntryIds.has(rId)) {
+                        knownEntryIds.add(rId); 
+                        
+                        let passesFilter = false;
+                        if (!row['odd book'] && !row['Home book'] && !row['Away book']) passesFilter = true;
+                        else passesFilter = activeBooks.has(row['odd book']) || activeBooks.has(row['Home book']) || activeBooks.has(row['Away book']);
+                        
+                        if (passesFilter && !doneItems.includes(getGameId(row))) {
+                            triggerSound = true;
+                        }
+                    }
+                });
+
+                if (triggerSound) {
+                    playNotificationSound();
+                }
+
                 extractAndRenderBooks(false); 
                 renderTable(); 
             } catch (error) {
@@ -232,17 +342,23 @@
             updateTimerUI();
 
             try {
+                // Update File Info Bar
+                await fetchFileMetadata();
+
                 const response = await fetch(filename + '?t=' + new Date().getTime());
                 const rawData = await response.json();
                 
                 if (!rawData || rawData.length === 0) {
                     document.getElementById('table-container').innerHTML = '<div style="padding: 20px;">No data available.</div>';
+                    document.title = "Scrapy"; 
                     return;
                 }
 
                 currentData = rawData.map(item => flattenObject(item));
                 currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
                 
+                knownEntryIds = new Set(currentData.map(getRowId));
+
                 extractAndRenderBooks(true); 
                 renderTable();
             } catch (error) {
@@ -303,9 +419,7 @@
 
             let groups = {};
             processedData.forEach(row => {
-                let gameStr = `${row.sport || ''}|${row.teamHome || ''}|${row.teamAway || ''}|${row.datetime || ''}`;
-                let gameId = btoa(unescape(encodeURIComponent(gameStr))); 
-                
+                let gameId = getGameId(row);
                 if (!groups[gameId]) {
                     groups[gameId] = { gameId: gameId, entries: [] };
                 }
@@ -313,8 +427,9 @@
             });
 
             let groupedArray = Object.values(groups);
-
             groupedArray = groupedArray.filter(group => !doneItems.includes(group.gameId));
+
+            document.title = groupedArray.length > 0 ? `${groupedArray.length} - Scrapy` : "Scrapy";
 
             if (sortColumn) {
                 let getSortValue = (entry) => {
@@ -371,14 +486,12 @@
                 html += `<tbody><tr><td colspan="${currentHeaders.length + 1}" style="text-align:center; padding: 30px;">No active entries match your filters.</td></tr></tbody>`;
             } else {
                 groupedArray.forEach(group => {
-                    // Added onclick event to the entire group body
                     html += `<tbody id="group-${group.gameId}" class="game-group" onclick="handleRowClick(event, '${group.gameId}')">`;
                     
                     group.entries.forEach((row, index) => {
                         html += `<tr>`;
                         
                         if (index === 0) {
-                            // Disabled pointer events on the checkbox so the row click handles it smoothly
                             html += `<td rowspan="${group.entries.length}" class="action-cell">
                                 <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight:bold;">
                                     <input type="checkbox" style="transform: scale(1.3); pointer-events: none;">
