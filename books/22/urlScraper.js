@@ -28,7 +28,7 @@ import axios from 'axios';
 let CURRENT_COOKIE = "";
 let REFERER = "";
 async function fetchMap( mapId ){
-  const API_URL = `https://bestwinzz.net/LineFeed/GetGameZip?id=${mapId}&lng=en&tzo=1&cfview=0&isSubGames=true&GroupEvents=true&countevents=750&country=53&fcountry=53&isNewBuilder=true&partner=151&grMode=4`;
+  const API_URL = `https://bestwinzz.net/service-api/LineFeed/GetGameZip?id=${mapId}&lng=en&tzo=1&cfview=0&isSubGames=true&GroupEvents=true&countevents=750&country=53&fcountry=53&isNewBuilder=true&partner=151&grMode=4`;
   const HEADERS = {
       'Cookie': CURRENT_COOKIE, 
       'Referer': REFERER, 
@@ -163,14 +163,19 @@ export async function scrapeMatchURL(data, browser, book, i){
           }
         }
       }
+    } else{
+      throw error("fetchMap failure");
     }
   }
 
   try{
     await page?.close()
-  } catch{}
-  promisify(log.end).bind(log);
-  log.write(`Success! scraping a match from ${book.urls[i]}\n`);
-  return 0;
-
+    log.write(`Success! scraping a match from ${book.urls[i]}\n`);
+    return 0;
+  } catch(error){
+    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
+    return -1;
+  } finally{
+    promisify(log.end).bind(log);
+  }
 }

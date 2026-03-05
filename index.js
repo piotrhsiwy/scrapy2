@@ -180,7 +180,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -205,7 +205,7 @@ async function run(){
       for(let i = 0; ; i++){
         let anyUrlUnderI = false;
         /** scrape ****************************/
-        for(const book5of books){
+        for(const book of books){
           if(i < book.urls.length){
             async function wrapper(data, browser, book, i){
               let ret;
@@ -225,8 +225,8 @@ async function run(){
         }
         if(i%5 === 0){
           saveData(data);
-          const arbCutoff = 0.01;
-          const evCutoff = 0.05;
+          const arbCutoff = 0.00;
+          const evCutoff = 0.00;
           q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
           console.log(`Queued savecalc()`);
         }
@@ -251,16 +251,15 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'gg',
-  'tp',
-  'esb',
-  'ls',
-  'gg',
-  'ms',
+  //'gg',
+  //'tp',
+  //'esb',
+  //'ls',
+  //'ms',
   '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
-console.log(`seeds of availabuule books: ${availableAbbrev.toString()}`);
+console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 
 // ### Initializing books metadata
 console.log('Initializing books metadata...');
