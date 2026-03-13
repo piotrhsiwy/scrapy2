@@ -5,7 +5,17 @@ schillerwg37.ddns.net:443 {
     basic_auth {
         siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
     }
+    # Serve the files
+    file_server
+}
 
+localhost:80 {
+    root * .
+    
+    # Enable Basic Auth
+    basic_auth {
+        siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
+    }
     # Serve the files
     file_server
 }

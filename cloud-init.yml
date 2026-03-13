@@ -1,0 +1,130 @@
+#cloud-config
+# ============================================================
+# Hetzner CX11 – Tinyproxy egress proxy for scrapy2
+# Dynamic IP support via schillerwg37.ddns.net
+# Paste this into the "Cloud config" box when creating the server.
+# ============================================================
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - tinyproxy
+  - ufw
+  - fail2ban
+  - unattended-upgrades
+  - curl
+  - htop
+  - dnsutils
+
+write_files:
+  # ── Tinyproxy configuration ────────────────────────────────
+  - path: /etc/tinyproxy/tinyproxy.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      ## ── scrapy2 egress proxy config ──
+
+      Listen 0.0.0.0
+      Port 8888
+
+      Timeout 600
+      ConnectPort 443
+      ConnectPort 80
+
+      LogFile "/var/log/tinyproxy/tinyproxy.log"
+      LogLevel Warning
+      Syslog Off
+
+      MaxClients 100
+      StartServers 10
+      MinSpareServers 5
+      MaxSpareServers 20
+      MaxRequestsPerChild 0
+
+      # Managed by /usr/local/bin/update-tinyproxy-allow.sh
+      # Do NOT edit this line manually — it gets overwritten.
+      Allow 127.0.0.1
+
+      ViaProxyName "tinyproxy"
+      DisableViaHeader Yes
+      XTinyproxy No
+
+  # ── DDNS resolver script ───────────────────────────────────
+  - path: /usr/local/bin/update-tinyproxy-allow.sh
+    owner: root:root
+    permissions: "0755"
+    content: |
+      #!/bin/bash
+      # Resolves schillerwg37.ddns.net and updates tinyproxy Allow directive.
+      # Restarts tinyproxy only if the IP actually changed.
+
+      DDNS_HOST="schillerwg37.ddns.net"
+      CONF="/etc/tinyproxy/tinyproxy.conf"
+      STATE="/var/lib/tinyproxy-last-ip"
+
+      NEW_IP=$(dig +short "$DDNS_HOST" A | tail -1)
+
+      # Bail if DNS lookup failed
+      if [[ -z "$NEW_IP" || ! "$NEW_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        logger -t tinyproxy-ddns "DNS lookup for $DDNS_HOST failed — skipping"
+        exit 1
+      fi
+
+      OLD_IP=""
+      [[ -f "$STATE" ]] && OLD_IP=$(cat "$STATE")
+
+      if [[ "$NEW_IP" != "$OLD_IP" ]]; then
+        # Replace the Allow line (only the managed one, after the comment marker)
+        sed -i "s/^Allow .*/Allow $NEW_IP/" "$CONF"
+        # Keep localhost access too
+        grep -q "^Allow 127.0.0.1" "$CONF" || sed -i "/^Allow $NEW_IP/a Allow 127.0.0.1" "$CONF"
+
+        systemctl restart tinyproxy
+        echo "$NEW_IP" > "$STATE"
+        logger -t tinyproxy-ddns "Updated Allow to $NEW_IP (was: ${OLD_IP:-none})"
+      fi
+
+  # ── UFW application profile ────────────────────────────────
+  - path: /etc/ufw/applications.d/tinyproxy
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Tinyproxy]
+      title=Tinyproxy HTTP Proxy
+      description=Tinyproxy forward proxy
+      ports=8888/tcp
+
+runcmd:
+  # ── Firewall ──
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow OpenSSH
+  - ufw allow 8888/tcp comment 'tinyproxy'
+  - ufw --force enable
+
+  # ── Run the DDNS resolver once now so tinyproxy starts with the right IP ──
+  - /usr/local/bin/update-tinyproxy-allow.sh
+
+  # ── Cron: re-resolve every 5 minutes ──
+  - echo "*/5 * * * * root /usr/local/bin/update-tinyproxy-allow.sh" > /etc/cron.d/tinyproxy-ddns
+  - chmod 0644 /etc/cron.d/tinyproxy-ddns
+
+  # ── Enable services ──
+  - systemctl enable tinyproxy
+  - systemctl restart tinyproxy
+  - systemctl enable unattended-upgrades
+  - systemctl start unattended-upgrades
+  - systemctl enable fail2ban
+  - systemctl start fail2ban
+
+  # ── Connectivity check (visible in cloud-init log) ──
+  - echo "--- tinyproxy status ---"
+  - systemctl status tinyproxy --no-pager
+  - ss -tlnp | grep 8888
+
+power_state:
+  mode: reboot
+  message: "Cloud-init complete – rebooting to apply updates"
+  timeout: 30
+  condition: true
