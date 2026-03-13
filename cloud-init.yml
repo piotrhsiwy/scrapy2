@@ -89,7 +89,7 @@ write_files:
         logger -t tinyproxy-ddns "Updated Allow to $NEW_IP (was: ${OLD_IP:-none})"
       fi
 
-  # ── UFW application profile ────────────────────────────────
+  # ── UFW Tinyproxy application profile ────────────────────────────────
   - path: /etc/ufw/applications.d/tinyproxy
     owner: root:root
     permissions: "0644"
@@ -98,6 +98,16 @@ write_files:
       title=Tinyproxy HTTP Proxy
       description=Tinyproxy forward proxy
       ports=8888/tcp
+
+  # ── UFW Caddy application profile ────────────────────────────────
+  - path: /etc/ufw/applications.d/caddy
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Caddy]
+      title=Caddy HTTP Server
+      description=Fileserver from /root/scrapy2/data
+      ports=443/tcp
 
   # ── nodejs application configuration ────────────────────────────────
   - path: /etc/systemd/system/scrapy2.service
@@ -174,7 +184,8 @@ runcmd:
   - npm i
   # (for now) manual changes to the code have to be done. Create vps branch on the repo
   # branch from release, but changes include: executable path to /usr/bin/chromium-browser, 
-  # change the temp userData dir. comment-in proxy bypass flag.
+  # change the temp userData dir. comment-in proxy bypass flag. Caddyfile has to be extended 
+  # too
 
 
 power_state:
