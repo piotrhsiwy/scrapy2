@@ -156,6 +156,8 @@ runcmd:
   - ufw default allow outgoing
   - ufw allow OpenSSH
   - ufw allow 8888/tcp comment 'tinyproxy'
+  - ufw allow 443/tcp comment 'nginx'
+  - ufw allow 80/tcp comment 'nginx'
   - ufw --force enable
 
   # ── Run the DDNS resolver once now so tinyproxy starts with the right IP ──

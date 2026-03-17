@@ -64,11 +64,11 @@ export async function huntSportURLs(browser, book){
                     await sports[i].click();
                     // i have to wait until the filter applies and only the matches from this sport are shown
                     // 1. Loop until breadcrumbs exist (they exist only when a sport is selected)
-                    while(document.querySelector('div#breadcrumbs') === null){
+                    while(document.querySelector('div[data-testid=breadcrumbs]') === null){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     // 2. Loop until breadcrumbs match the just clicked sport (I don't unselect the prev filter)
-                    while(document.querySelector('div#breadcrumbs span').textContent !== sports[i].querySelector('div.text-base').textContent){
+                    while(document.querySelector('div[data-testid=breadcrumbs] button[data-base-ui-navigation-menu-trigger] div.truncate').textContent !== sports[i].querySelector('div.text-base').textContent){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
