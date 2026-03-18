@@ -144,8 +144,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
     // get sport
-    selector = "#breadcrumbs a";
-    let sportName = await page.$$eval(selector, els => els[1].textContent/*.trim().replace(/\u00a0/g, '\u0020')*/);
+    let sportName = await page.$eval('li[data-testid=breadcrumbs-segment-1]', e => e.textContent/*.trim().replace(/\u00a0/g, '\u0020')*/);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
