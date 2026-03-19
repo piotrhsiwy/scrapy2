@@ -1,10 +1,6 @@
-localhost:80, schillerwg37.ddns.net:443, scrapy2.duckdns.org:443 {
+:80 {
     root * .
     
-    # Enable Basic Auth
-    basic_auth {
-        siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
-    }
     # Serve the files
     file_server
 }
