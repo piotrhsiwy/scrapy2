@@ -65,7 +65,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: true,
+  headless: false,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -78,7 +78,7 @@ async function openBrowser(){
       '--disable-web-security',
       '--disable-blink-features=AutomationControlled',
       `--proxy-server=${PROXY_URL}`,
-      // '--proxy-bypass-list=*',
+      '--proxy-bypass-list=*',
       '-no-startup-window',
       '--disk-cache-dir=/dev/null',
       '--disk-cache-size=1',
@@ -94,7 +94,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: false,
+    devtools: true,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -268,12 +268,13 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'tp',
-  'gg',
-  'esb',
-  'ls',
-  'ms',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'pncl',
+  // 'tp',
+  // 'gg',
+  // 'esb',
+  // 'ls',
+  // 'ms',
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
