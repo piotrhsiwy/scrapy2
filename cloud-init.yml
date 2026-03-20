@@ -53,8 +53,8 @@ write_files:
       [Service]
       Type=simple
       User=root
-      ExecStart=/usr/bin/caddy run /root/scrapy2/data/Caddyfile
-      ExecReload=/usr/bin/caddy reload /root/scrapy2/data/Caddyfile
+      ExecStart=/usr/bin/caddy run --config /scrapy2/data/Caddyfile
+      ExecReload=/usr/bin/caddy reload --config /scrapy2/data/Caddyfile
       Restart=on-failure
       RestartSec=5
 
