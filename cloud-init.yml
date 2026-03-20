@@ -53,8 +53,8 @@ write_files:
       [Service]
       Type=simple
       User=root
-      ExecStart=/usr/local/bin/caddy run --config /root/scrapy2/data/Caddyfile
-      ExecReload=/usr/local/bin/caddy reload --config /root/scrapy2/data/Caddyfile
+      ExecStart=/usr/bin/caddy run /root/scrapy2/data/Caddyfile
+      ExecReload=/usr/bin/caddy reload /root/scrapy2/data/Caddyfile
       Restart=on-failure
       RestartSec=5
 
@@ -80,7 +80,12 @@ runcmd:
   - cd /
   - git clone https://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@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
   - cd scrapy2
-  - npm i
+  - npm i puppeteer-extra
+
+  - systemctl enable caddy
+  - systemctl start caddy
+  - systemctl enable scrapy2
+  - systemctl start scrapy2
 
 power_state:
   mode: reboot
