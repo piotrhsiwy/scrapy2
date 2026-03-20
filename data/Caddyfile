@@ -1,4 +1,4 @@
-localhost:80, schillerwg37.ddns.net:443 {
+localhost:80, scrapy2.duckdns.org {
 :80 {
     root * .
 

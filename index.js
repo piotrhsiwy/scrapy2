@@ -60,8 +60,6 @@ async function openBrowser(){
     }
   }
   console.log('Browser instance will be ran on the following userData directory:', USERDATA_PATH);
-  const PROXY_URL = 'http://46.224.158.94:8888';
-  console.log('Browser will use the following address to proxy HTTP traffic:', PROXY_URL);
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
@@ -77,8 +75,8 @@ async function openBrowser(){
       '--disable-gpu',
       '--disable-web-security',
       '--disable-blink-features=AutomationControlled',
-      `--proxy-server=${PROXY_URL}`,
-      // '--proxy-bypass-list=*',
+      // `--proxy-server=${PROXY_URL}`,
+      '--proxy-bypass-list=*',
       '-no-startup-window',
       '--disk-cache-dir=/dev/null',
       '--disk-cache-size=1',
@@ -99,22 +97,6 @@ async function openBrowser(){
     slowMo:false,
     dumpio:false,
   }); 
-  // Verify proxy is working
-  console.log('Verifying proxy connectivity...');
-  const testPage = await browser.newPage();
-  try {
-    const res = await testPage.goto('https://httpbin.org/ip', { timeout: 15000 });
-    const body = JSON.parse(await res.text());
-    if (body.origin === '46.224.158.94') {
-      console.log(`Proxy OK — traffic exits via ${body.origin}`);
-    } else {
-      console.warn(`WARNING: traffic exits via ${body.origin}, expected 46.224.158.94. Proxy may not be working!`);
-    }
-  } catch (e) {
-    console.error(`Proxy check failed: ${e.message}. Is tinyproxy running?`);
-  } finally {
-    await testPage.close();
-  }
   return browser;
 }
   
