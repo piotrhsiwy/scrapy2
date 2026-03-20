@@ -19,17 +19,6 @@ packages:
   - caddy
 
 write_files:
-  # ── UFW Caddy application profile ────────────────────────────────
-  # tcp:80 needed for ssl certificate verification over let's encrypt, automatic by caddy
-  - path: /etc/ufw/applications.d/caddy
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Caddy]
-      title=Caddy HTTP Server
-      description=Fileserver from /root/scrapy2/data
-      ports=443/tcp
-      ports=80/tcp
 
   # ── nodejs application configuration ────────────────────────────────
   - path: /etc/systemd/system/scrapy2.service
@@ -76,8 +65,9 @@ runcmd:
   # ── Firewall ──
   - ufw default deny incoming
   - ufw default allow outgoing
-  - ufw allow OpenSSH
-  - ufw allow Caddy
+  - ufw allow 22/tcp comment "ssh"
+  - ufw allow 80/tcp comment "caddy"
+  - ufw allow 443/tcp comment "caddy"
   - ufw --force enable
 
   # ── Enable services ──
@@ -87,14 +77,10 @@ runcmd:
   - systemctl start fail2ban
 
   # Setup node application environment
-  - git clone --branch deploy-hetznerccx33 --single-branch git@github.com:piotrhsiwy/scrapy2.git
+  - cd /
+  - git clone https://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@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
   - cd scrapy2
   - npm i
-  # (for now) manual changes to the code have to be done. Create vps branch on the repo
-  # branch from release, but changes include: executable path to /usr/bin/chromium-browser, 
-  # change the temp userData dir. comment-in proxy bypass flag. Caddyfile has to be extended 
-  # too
-
 
 power_state:
   mode: reboot

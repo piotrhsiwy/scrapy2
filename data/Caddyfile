@@ -1,9 +1,8 @@
 localhost:80, scrapy2.duckdns.org {
-:80 {
     root * .
 
     # Enable Basic Auth
-    basic_auth {
+    basicauth {
         siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
     }
     # Serve the files
