@@ -32,8 +32,8 @@ write_files:
       [Service]
       Type=simple
       User=root
-      WorkingDirectory=/root/scrapy2
-      ExecStart=/usr/bin/node /root/scrapy2/index.js
+      WorkingDirectory=/scrapy2
+      ExecStart=/usr/bin/node /scrapy2/index.js
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -77,10 +77,8 @@ runcmd:
   - systemctl start fail2ban
 
   # Setup node application environment
-  - cd /
-  - git clone https://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@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
-  - cd scrapy2
-  - npm i puppeteer-extra
+  - cd /; git clone https://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@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
+  - cd /scrapy2; npm i
 
   - systemctl enable caddy
   - systemctl start caddy
