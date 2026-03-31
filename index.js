@@ -38,7 +38,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium-browser';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
@@ -49,7 +49,7 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = '/home/Piotr/.config/chromium/temp';
+  const USERDATA_PATH = '/.userData_temp';
   // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
@@ -60,8 +60,6 @@ async function openBrowser(){
     }
   }
   console.log('Browser instance will be ran on the following userData directory:', USERDATA_PATH);
-  const PROXY_URL = 'http://46.224.158.94:8888';
-  console.log('Browser will use the following address to proxy HTTP traffic:', PROXY_URL);
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
@@ -77,7 +75,7 @@ async function openBrowser(){
       '--disable-gpu',
       '--disable-web-security',
       '--disable-blink-features=AutomationControlled',
-      `--proxy-server=${PROXY_URL}`,
+      // `--proxy-server=${PROXY_URL}`,
       '--proxy-bypass-list=*',
       '-no-startup-window',
       '--disk-cache-dir=/dev/null',
@@ -99,22 +97,6 @@ async function openBrowser(){
     slowMo:false,
     dumpio:false,
   }); 
-// // Verify proxy is working
-// console.log('Verifying proxy connectivity...');
-// const testPage = await browser.newPage();
-// try {
-//   const res = await testPage.goto('https://httpbin.org/ip', { timeout: 15000 });
-//   const body = JSON.parse(await res.text());
-//   if (body.origin === '46.224.158.94') {
-//     console.log(`Proxy OK — traffic exits via ${body.origin}`);
-//   } else {
-//     console.warn(`WARNING: traffic exits via ${body.origin}, expected 46.224.158.94. Proxy may not be working!`);
-//   }
-// } catch (e) {
-//   console.error(`Proxy check failed: ${e.message}. Is tinyproxy running?`);
-// } finally {
-//   await testPage.close();
-// }
   return browser;
 }
   
@@ -174,7 +156,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(8, 1000);
+    const myq = new Queue(32, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
