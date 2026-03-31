@@ -45,9 +45,20 @@ export async function huntSportURLs(browser, book){
 
     let hrefs = [];
     try{
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+        await page.goto(url);
 
-        await page.waitForSelector('div#match-list-header', {timeout: 1000});
+        // this is the initial sync locking on the page before navigation. Waits Until number of games in the All Tab is not empty.
+        while(await page.$('div[data-testid=AllTab] span') === null){
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        while(true){
+            const content = await page.$eval('div[data-testid=AllTab] span', e => e.textContent)
+            if(content != ''){
+              break; 
+            } else{
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
         
         hrefs = await page.evaluate( async () => {
             debugger;
@@ -72,7 +83,7 @@ export async function huntSportURLs(browser, book){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
-                    while(document.querySelector('div[data-testid*=match-single-row]') === null){
+                    while(document.querySelector('div[data-testid*=match-list-row-]') === null){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     // 4. Even then, the entries seem to be loaded only partially when I dont await here
