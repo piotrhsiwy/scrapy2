@@ -38,7 +38,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium-browser';
+  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
@@ -49,7 +49,7 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = '/.userData_temp';
+  const USERDATA_PATH = '/home/Piotr/.userData_temp';
   // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
@@ -63,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: false,
+  headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -156,7 +156,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(32, 1000);
+    const myq = new Queue(16, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
