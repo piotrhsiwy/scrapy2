@@ -38,7 +38,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium-browser';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
@@ -49,7 +49,7 @@ async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = '/home/Piotr/.userData_temp';
+  const USERDATA_PATH = '/.userData_temp';
   // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
