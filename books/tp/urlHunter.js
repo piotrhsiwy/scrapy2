@@ -90,11 +90,13 @@ export async function huntSportURLs(browser, book){
                     // 4. Even then, the entries seem to be loaded only partially when I dont await here
                     await new Promise(resolve => setTimeout(resolve, 500));
                     let newHrefs = Array.from(document.querySelectorAll('div[data-testid*=match-list-row-]')).map( e => {
-                        const datestring = e.querySelector('div[data-testid=*match-time-]')?.href;
-                        const sectionTitle = e.parentNode.parentNode.parentNode.parentNode.querySelector('div.match-group-title')?.textContent?.trim();
-                        // get parents > direct divs  and those that do not have data-testid match-list-row
-                      // get the previous brother of the one we're in (e)
+                        const datestring = e.querySelector('div[data-testid*=match-time-]')?.textContent;
                         const url = e.querySelector('a[data-testid=match-details-link]')?.href;
+                        let iter = e.previousElementSibling;
+                        while( iter && iter.matches('div[data-testid*=match-list-row-')){
+                            iter = iter.previousElementSibling;
+                        }
+                        const sectionTitle = iter?.textContent?.trim();
                         return {datestring, sectionTitle, url}
                     })
                     ret = ret.concat(newHrefs);
