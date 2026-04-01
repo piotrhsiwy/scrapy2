@@ -31,47 +31,58 @@ export async function huntSportURLs(browser, book){
     const page = await prepPage(browser, book);
     let hrefs = [];
     try{
-        await page.goto(url);
-        // // get sport Names
-        // tuple.sports = await page.evaluate( () => {
-        //     return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);
-        // });
 
-        // // get tournament Names
-        // tuple.tours = await page.evaluate( () => {
-        //     const arr = Array.from(document.querySelectorAll('h4')).map( e => e.textContent.trim() );
-        //     arr.pop();
-        //     return arr;
-        // });
+        await page.goto(url);
         
         // get hrefs
-        let selector;
-        selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
-        await page.waitForSelector(selector);
-        hrefs = await page.$$eval(selector, (items, url) => {
-            // debugger;
-            const matchURLs = [];
+        const sporthrefs = await page.$$eval('li[id*=sports-menu-sub-item_]', (items, url) => {
+            let ret = [];
             for(const item of items){
-                let hour;
-                const rawHour = item.querySelector('span.event-name')?.textContent;
-                const split = rawHour?.split('\u00a0', 2);
-                const url = item.href;
-                if(!rawHour || split.length < 2){
-                    matchURLs.push({
-                        url: url,
-                        datestring: undefined
-                    });
-                } else{
-                    hour = split[0];
-                    const day = item.closest('div.osg-coupon__sport')?.querySelector('h3')?.textContent;
-                    matchURLs.push({
-                        url: url,
-                        datestring: hour + ', ' + day
-                    });
-                }
+                const href = item.querySelector('a')?.href;
+                ret.push(href);
             }
-            return matchURLs;
-        }, book.baseURLBuilder);
+            return ret;
+        });
+
+        for(const sporthref of sporthrefs){
+
+            await page.goto(sporthref);
+            try{
+                await page.waitForSelector('div[class*=Sportsbook_sportsbook__event__]', {timeout: 5000});
+            } catch(TimeoutError){
+                log.write(`Warning! No events under url: [${sporthref}]\n`);
+            }
+
+            const events = await page.$$('div[class*=Sportsbook_sportsbook__event__]');
+
+            for(const event of events){
+
+                const { url, day, hour } = await page.evaluate(async (event, sporthref) => {
+                    // debugger;
+
+                    let iter = event.previousElementSibling;
+                    while( iter && !iter.matches('h4[class*=Sportsbook_sportsbook__subtitle__]')){
+                        iter = iter.previousElementSibling;
+                    }
+                    const leagueStub = iter?.textContent.trim().replace('[', '').replace(']', '').toLowerCase().replaceAll(' ', '-');
+                    const id = event.querySelector('div[id*=root_market__')?.id.split('__')[1];
+                    const url = sporthref + '/' + leagueStub + '/' + id;
+
+                    iter = event.previousElementSibling;
+                    while( iter && !iter.matches('h3[class*=Sportsbook_sportsbook__title__]')){
+                        iter = iter.previousElementSibling;
+                    }
+                    const day = await iter.querySelector('span')?.textContent;
+                    const hour = await event.querySelector( 'span[class*=Sportsbook_sportsbook__eventDescriptionTime__]')?.textContent;
+                    return {url, day, hour};
+                }, event, sporthref);
+
+                hrefs.push({
+                    url: url,
+                    datestring: hour + ', ' + day
+                });
+            }
+        }
 
         hrefs = hrefs.map( ({url, datestring}) => {
             let ISOString;
