@@ -11,7 +11,7 @@ export function datestringToISO(dateStr){
       date.setDate(date.getDate() + 1);
     } else {
       // Split the string further for day, month, and time
-      const [day, month, time] = dateStr.split(/[\s:]+/);
+      const [day, month, time] = dayOrKeyword.split(/[\s:]+/);
       const [hours, minutes] = rest.split(':');
   
       const currentYear = new Date().getFullYear();
