@@ -40,30 +40,11 @@ export async function scrapeMatchURL(data, browser, book, i){
 
   try{
 
-    let valid = undefined;
-    let empty = undefined;
-    let count = 0;
-    while(!valid && !empty && count < 20){
-      valid = await page.$('div.sport-6000');
-      empty = await page.$('div.osg-empty');
-      count++;
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    if(empty){
-      log.write(`Failure! There is an element with class div.osg-empty under this url: ${book.urls[i]}. Probably past match\n`);
-      return 10;
-    }
-    if(!valid){
-      log.write(`Critical Failure! No element with class div.sport-6000. Probably invalid url ${book.urls[i]}\n`);
-      return -1;
-    }
-    let selector, el, mapping;
-    // get sport
-    selector = 'div.osg-coupon__breadcrumbs a';
-    await page.waitForSelector(selector);
-    const breadcrumbs = await page.$$eval(selector, els => els.map(e => e.textContent));
-    let sportName = breadcrumbs[breadcrumbs.length-2].trim();
-    mapping = sportNameMapping.find( m => m.specificName === sportName);
+    await page.waitForSelector('span[class*=Breadcrumbs_breadcrumbs__item__]', {timeout: 10000});
+
+    const breadcrumbs = await page.$$eval('span[class*=Breadcrumbs_breadcrumbs__item__]', els => els.map(e => e.textContent));
+    let sportName = breadcrumbs[2].trim();
+    let mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
     } else{
@@ -72,40 +53,21 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
     let sport = insertSportIntoData(log, data, sportName);
 
-    // get tournament
-    // let tournamentName = breadcrumbs[breadcrumbs.length-1].trim();
-    // mapping = tournamentNameMapping.find( m => m.specificName === tournamentName);
-    // if(mapping){
-    //   tournamentName = tournamentNameMap[mapping.globalID];;
-    // } else{
-    //   log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
-    //   return;
-    // }
-    // let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
-    // if(!tournament){
-    //   /* tournament is new */
-    //   sport.tournaments.push({ name: tournamentName, matches: [] });
-    //   tournament = sport.tournaments.findLast(t => t.name === tournamentName);
-    // }
-
     // get teamHome, teamAway
-    selector = 'div.osg-coupon h1';
-    const teams = await page.$eval(selector, e => e.textContent.split(' - ') );
+    const teams = breadcrumbs[breadcrumbs.length-1].split(' - ');
     const teamHome = stripTeamName(teams[0]);
     const teamAway = stripTeamName(teams[1]);
     
-    // get datetime, mode
-    selector = 'div.osg-coupon span';
-    el = await page.$eval(selector, e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
-    const datetime = datestringToISO(el);
+    // get datetime
+    const day = await page.$eval('span[class*=PrematchEventBannerContent_eventBannerContent__day__]', e => e.textContent )
+    const hour = await page.$eval('span[class*=PrematchEventBannerContent_eventBannerContent__time__]', e => e.textContent )
+    const datetime = datestringToISO(hour + ', ' + day);
     let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-    selector = 'div.osg-coupon__market';
-    let marketHandles = await page.$$(selector);
+    const marketHandles = await page.$$('div[class*=Market_defaultPanelMarket__]');
     for(const marketHandle of marketHandles){
       // get marketName
-      selector = 'h4';
-      let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
+      let marketName = await marketHandle.$eval('h3[class*=NewDefaultAccordion_accordion__title__]', e => e.textContent?.trim());
       mapping = marketNameMapping.find( m => m.specificName === marketName);
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
@@ -113,20 +75,18 @@ export async function scrapeMatchURL(data, browser, book, i){
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
         continue;
       }
-      let  market =insertMarketIntoMatch(log, match, marketName);
+      let market = insertMarketIntoMatch(log, match, marketName);
       // get odds
-      selector = 'div.osg-coupon__market-outcomes div[role="button"]';
-      const oddHandles = await marketHandle.$$(selector);
+      const oddHandles = await marketHandle.$$('div[id*=outcome_btn__]');
       for(const oddHandle of oddHandles){
-        selector = 'span';
-        const NameValue = await oddHandle.$$eval(selector, es => es.map(e => e.textContent));
-        let oddName = stripTeamName(NameValue[0]);
+        const ValueName = await oddHandle.$$eval('span', es => es.map(e => e.textContent));
+        let oddName = stripTeamName(ValueName[1]);
         if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
           const [left, right] = oddName.split(':');
           oddName = `${right}:${left}`;
         }
         let odd = insertOddIntoMarket(log, market, oddName);
-        const value = parseFloat(NameValue[1]);
+        const value = parseFloat(ValueName[0]);
         let coef = insertCoefIntoOdd(log, odd, book.name, value);
       }
     }
