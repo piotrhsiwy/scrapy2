@@ -252,6 +252,26 @@
         "globalID":     "RHDPM5"
     },
     {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 1",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 2",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 3",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 4",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 5",
+        "globalID":     "RHDPM5"
+    },
+    {
         "specificName": "First To Reach Rounds - Map 1",
         "globalID":     "FTRRM1"
     },

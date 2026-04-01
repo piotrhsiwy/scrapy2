@@ -66,6 +66,7 @@ export async function huntSportURLs(browser, book){
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
                 e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') &&
                 !e.href.includes('ebasketball') &&
+                !e.href.includes('eamerican-football') &&
                 !e.href.includes('esoccer')
             );
             for(let i = 0; i < sports.length; i++){
@@ -88,17 +89,14 @@ export async function huntSportURLs(browser, book){
                     }
                     // 4. Even then, the entries seem to be loaded only partially when I dont await here
                     await new Promise(resolve => setTimeout(resolve, 500));
-                    let newHrefs = Array.from(document.querySelectorAll('[data-testid="match-details-link"]')).map( e => {
-                        const divs = Array.from(e.parentNode.querySelectorAll('div'));
-                        
-                        const index = divs.map( e => {
-                            return Array.from(e.classList);
-                                                }).findIndex( e => {
-                                                    return e.some( className => className.includes('matchTime'));
-                                                })
-                        let datestring = divs[index]?.textContent;
-                        const sectionTitle = e.parentNode.parentNode.parentNode.parentNode.querySelector('div.match-group-title')?.textContent?.trim();
-                        const url = e.href;
+                    let newHrefs = Array.from(document.querySelectorAll('div[data-testid*=match-list-row-]')).map( e => {
+                        const datestring = e.querySelector('div[data-testid*=match-time-]')?.textContent;
+                        const url = e.querySelector('a[data-testid=match-details-link]')?.href;
+                        let iter = e.previousElementSibling;
+                        while( iter && iter.matches('div[data-testid*=match-list-row-')){
+                            iter = iter.previousElementSibling;
+                        }
+                        const sectionTitle = iter?.textContent?.trim();
                         return {datestring, sectionTitle, url}
                     })
                     ret = ret.concat(newHrefs);
