@@ -43,6 +43,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       return 10;
     }
 
+    await page.waitForSelector('div[data-test=market-name]', {timeout: 10000});
     let selector, el, mapping;
     // get sport
     let sportName = await page.evaluate( () => {
