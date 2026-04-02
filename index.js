@@ -79,7 +79,7 @@ async function openBrowser(){
       // `--proxy-server=${PROXY_URL}`,
       '--proxy-bypass-list=*',
       '--no-startup-window',
-      // '--disk-cache-dir=/dev/null',
+      // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
       '--disk-cache-size=1',
       '--aggressive-cache-discard',
       '--disable-notifications',
@@ -188,7 +188,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      // await singleHunt(browser);
+      await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -260,7 +260,7 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
- 'ms',
+'ms',
 'ls',
 'gg',
 'tp',
