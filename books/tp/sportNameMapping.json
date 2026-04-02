@@ -82,5 +82,9 @@
     {
         "specificName": "Halo",
         "globalID": "HALO"
+    },
+    {
+        "specificName": "Crossfire",
+        "globalID": "CROSSFIRE"
     }
 ]

@@ -83,6 +83,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     try{
         await page.waitForSelector('#game-filters option');
     } catch(error){
+        // Some games do not have this filter, they just have game markets! Have to craft API call then?
         log.write(`Critical Failure! The '#game-filters option' selector not to be found on ${book.urls[i]}\n`);
         return 10;
     }
@@ -91,7 +92,6 @@ export async function scrapeMatchURL(data, browser, book, i){
       return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}
     })
   });
-  // https://bestwinzz.net/line/esports/1081149-league-of-legends-world-championship/282417117-t1-invictus-gaming
   const urlSplit = book.urls[i].split('/esports/', 2)[1].split('/', 2);
   const idAndName = urlSplit[0].split(/-(.*)/);
   const leagueId = idAndName[0];
