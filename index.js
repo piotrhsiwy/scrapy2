@@ -252,10 +252,10 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
 [
 //  'ms',
 // 'ls',
-'gg',
+// 'gg',
 // 'tp',
 // 'esb',
-// '22', // 15min ratelimiter if too many requests -> IP blockers in place
+'22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
