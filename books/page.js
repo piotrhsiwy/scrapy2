@@ -34,6 +34,7 @@ export async function prepPage(browser, book){
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
     await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
     await page.setRequestInterception(true);
+    await page.setDefaultNavigationTimeout(30000);
     page.on('request', (request) => filterReq(request, book.blockRequestURLs));
     // page.on('console', msg => {
     //   // Log all console messages -> used to be able to better debug from inside of the browser context
