@@ -92,7 +92,7 @@ async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
@@ -156,7 +156,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(32, 1000);
+    const myq = new Queue(8, 1000);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -222,19 +222,19 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        if(i%5 === 0){
-          saveData(data);
-          const arbCutoff = 0.00;
-          const evCutoff = 0.00;
-          q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
-          console.log(`Queued savecalc()`);
-        }
+        // if(i%5 === 0){
+        //   saveData(data);
+        //   const arbCutoff = 0.00;
+        //   const evCutoff = 0.00;
+        //   q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
+        //   console.log(`Queued savecalc()`);
+        // }
         if(!anyUrlUnderI){
           break;
         }
-        await Promise.all(q);
-        /******************************* */
       }
+      await Promise.all(q);
+      /******************************* */
     } finally{
       await browser?.close(); 
     }
@@ -250,11 +250,11 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-//  'ms',
-// 'ls',
-// 'gg',
-// 'tp',
-// 'esb',
+ 'ms',
+'ls',
+'gg',
+'tp',
+'esb',
 '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
