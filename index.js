@@ -38,7 +38,7 @@ import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 async function openBrowser(){
   // verifying that the executable is present
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  const BROWSER_EXECUTABLE_PATH = '/home/Piotr/Documents/scrapy2/chrome-headless-shell/linux-147.0.7727.50/chrome-headless-shell-linux64/chrome-headless-shell';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
@@ -63,7 +63,7 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: false,
+  headless: 'shell',
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
@@ -77,18 +77,26 @@ async function openBrowser(){
       '--disable-blink-features=AutomationControlled',
       // `--proxy-server=${PROXY_URL}`,
       '--proxy-bypass-list=*',
-      '-no-startup-window',
-      '--disk-cache-dir=/dev/null',
+      '--no-startup-window',
+      // '--disk-cache-dir=/dev/null',
       '--disk-cache-size=1',
       '--aggressive-cache-discard',
       '--disable-notifications',
       '--disable-remote-fonts',
+      '--disable-translate',
+      '--disable-infobars',
       // '--disable-reading-from-canvas', // causes 22bet to not load elements
       '--disable-remote-playback-api',
       '--disable-shared-workers --disable-voice-input',
       '--enable-aggressive-domstorage-flushing',
       '--disable-site-isolation-trials',
-      '--disable-features=NetworkService,NetworkServiceInProcess',
+      '--disable-features=NetworkService,NetworkServiceInProcess,TranslateUI',
+      '--disable-component-extensions-with-background-pages',
+      '--disable-extensions',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-ipc-flooding-protection',
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
@@ -156,7 +164,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(8, 1000);
+    const myq = new Queue(16, 100);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -222,13 +230,14 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        // if(i%5 === 0){
-        //   saveData(data);
-        //   const arbCutoff = 0.00;
-        //   const evCutoff = 0.00;
-        //   q.push(myq.run(() => calc(arbCutoff, evCutoff)).catch((e) => console.error(e)));
-        //   console.log(`Queued savecalc()`);
-        // }
+        if(i%5 === 0){
+          const arbCutoff = 0.00;
+          const evCutoff = 0.00;
+          q.push(myq.run(() => {
+              calc(arbCutoff, evCutoff);
+              saveData(data);
+            }).catch((e) => console.error(e)));
+        }
         if(!anyUrlUnderI){
           break;
         }

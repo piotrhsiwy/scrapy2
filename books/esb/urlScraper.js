@@ -37,8 +37,8 @@ export async function scrapeMatchURL(data, browser, book, i){
   await page.setViewport(book.viewport);
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
   await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
-  await page.goto(book.urls[i],  { waitUntil: 'networkidle2', timeout: 10000 });
   try{
+    await page.goto(book.urls[i],  { waitUntil: 'networkidle2', timeout: 30000 });
     try{
       let selector, el, mapping;
       // check if match is still there
@@ -235,6 +235,6 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
   } finally{
     await page?.close()
-    await promisify(log.end).bind(log);
+    promisify(log.end).bind(log);
   }
 }
