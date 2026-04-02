@@ -13,7 +13,7 @@ packages:
   - unattended-upgrades
   - curl
 # needed for node app
-  - chromium-browser
+  # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
 # needed for webserver
   - caddy
@@ -37,6 +37,7 @@ write_files:
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
 
       [Install]
       WantedBy=multi-user.target
@@ -79,6 +80,10 @@ runcmd:
   # Setup node application environment
   - cd /; git clone https://REPLACE@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
   - cd /scrapy2; npm i
+  - | # get path of the binary into env var
+    OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
+    CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
+    echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
 
   - systemctl enable caddy
   - systemctl start caddy
