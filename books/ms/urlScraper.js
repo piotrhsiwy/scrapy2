@@ -53,11 +53,8 @@ export async function scrapeMatchURL(data, browser, book, i){
     }
   
     // get sport
-    selector = 'div.match-title';
-    el = await page.waitForSelector(selector);
-
-    const breadcrumbs = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020').split(' keyboard_arrow_right'), el);
-    let sportName = breadcrumbs[0];
+    const breadcrumbs = await page.$eval( 'div.match-title', e => e.textContent.split('keyboard_arrow_right'));
+    let sportName = breadcrumbs[0].trim().replace(/\u00a0/g, '\u0020');
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
