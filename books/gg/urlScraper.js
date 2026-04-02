@@ -131,13 +131,15 @@ export async function scrapeMatchURL(data, browser, book, i){
 
         // scrolling
         let old_size;
+        let iterations = 0;
         let handles = document.querySelectorAll('div[data-test=markets] > div > div');
         do{
+          if(++iterations > 10) break;
           old_size = handles.length;
-        const availableOdds = handles[handles.length-1].querySelectorAll('div[data-test=odd-button__result]');
-        availableOdds[availableOdds.length-1].scrollIntoView();
-        handles = await waitMax(2000);
-      } while(handles.length !== old_size);
+          const availableOdds = handles[handles.length-1].querySelectorAll('div[data-test=odd-button__result]');
+          availableOdds[availableOdds.length-1].scrollIntoView();
+          handles = await waitMax(2000);
+        } while(handles.length !== old_size);
     });
     
     const marketHandles = await page.$$('div[data-test=markets] > div > div');
