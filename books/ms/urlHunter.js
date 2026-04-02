@@ -30,6 +30,7 @@ export async function huntSportURLs(browser, book){
     // }
 
     let page = await prepPage(browser, book);
+    const originalPage = page;
     let hrefs = [];
     try {
         await page.goto(url);
@@ -135,7 +136,7 @@ export async function huntSportURLs(browser, book){
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
         // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
+        try{ await originalPage.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
         await promisify(log.end).bind(log);
     }
 }
