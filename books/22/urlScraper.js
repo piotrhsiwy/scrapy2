@@ -75,107 +75,106 @@ export async function scrapeMatchURL(data, browser, book, i){
   // prepare headers data for the direct fetch to the API
   const page = await prepPage(browser, book);
   try{
-    await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
-  } catch(error){
-    log.write(`Critical Failure! Cannot open page ${book.urls[i]}\n`);
-    return -1;
-  }
     try{
-        await page.waitForSelector('#game-filters option');
+      await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
     } catch(error){
-        // Some games do not have this filter, they just have game markets! Have to craft API call then?
-        log.write(`Critical Failure! The '#game-filters option' selector not to be found on ${book.urls[i]}\n`);
-        return 10;
+      log.write(`Critical Failure! Cannot open page ${book.urls[i]}\n`);
+      return -1;
     }
-  const maps = await page.$$eval('#game-filters option', (es) => {
-    return es.map( e => { 
-      return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}
-    })
-  });
-  const urlSplit = book.urls[i].split('/esports/', 2)[1].split('/', 2);
-  const idAndName = urlSplit[0].split(/-(.*)/);
-  const leagueId = idAndName[0];
-  const leagueName = idAndName[1];
-  const slug = urlSplit[1].split(/-(.*)/)[1];
-  REFERER = `https://bestwinzz.net/line/esports/${leagueId}-${leagueName}/${maps[0].mapId}-${slug}`;
-  const cookiesArray = await page.cookies();
-  CURRENT_COOKIE = cookiesArray.map(cookie => 
-      `${cookie.name}=${cookie.value}`
-  ).join('; ');
-  
-  let datetime = undefined;
-  try{
-    const dateString = await page.$eval('a.link.open > span.date', e => e.textContent.trim())
-    datetime = datestringToISO( dateString );
-  } catch(error){
-    log.write(`Critical Failure! Can't read date: ${error.code} from ${book.urls[i]}\n`)
-    return -1;
-  }
-
-  for(const map of maps){
-    const respData = await fetchMap(map.mapId);
-    if(respData.Success === true){
-
-      let sportName = respData.Value.SSN;
-      var mapping = sportNameMapping.find( m => m.specificName === sportName);
-      if(mapping){
-        sportName = sportNameMap[mapping.globalID];
-      } else{
-        log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
-        return 20;
+      try{
+          await page.waitForSelector('#game-filters option');
+      } catch(error){
+          // Some games do not have this filter, they just have game markets! Have to craft API call then?
+          log.write(`Critical Failure! The '#game-filters option' selector not to be found on ${book.urls[i]}\n`);
+          return 10;
       }
-      let sport = insertSportIntoData(log, data, sportName);
-      const teamHome = stripTeamName(respData.Value.O1);
-      const teamAway = stripTeamName(respData.Value.O2);
-      let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+    const maps = await page.$$eval('#game-filters option', (es) => {
+      return es.map( e => { 
+        return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}
+      })
+    });
+    const urlSplit = book.urls[i].split('/esports/', 2)[1].split('/', 2);
+    const idAndName = urlSplit[0].split(/-(.*)/);
+    const leagueId = idAndName[0];
+    const leagueName = idAndName[1];
+    const slug = urlSplit[1].split(/-(.*)/)[1];
+    REFERER = `https://bestwinzz.net/line/esports/${leagueId}-${leagueName}/${maps[0].mapId}-${slug}`;
+    const cookiesArray = await page.cookies();
+    CURRENT_COOKIE = cookiesArray.map(cookie => 
+        `${cookie.name}=${cookie.value}`
+    ).join('; ');
     
-      const markets = respData.Value.GE;
-      for(const marketEntry of markets){
+    let datetime = undefined;
+    try{
+      const dateString = await page.$eval('a.link.open > span.date', e => e.textContent.trim())
+      datetime = datestringToISO( dateString );
+    } catch(error){
+      log.write(`Critical Failure! Can't read date: ${error.code} from ${book.urls[i]}\n`)
+      return -1;
+    }
 
-        const marketPrefix = map.mapName;
-        let marketName = marketPrefix + ' ' + betsModelGroup[marketEntry.G].N;
-        var mapping = marketNameMapping.find( m => m.specificName === marketName);
+    for(const map of maps){
+      const respData = await fetchMap(map.mapId);
+      if(respData.Success === true){
+
+        let sportName = respData.Value.SSN;
+        var mapping = sportNameMapping.find( m => m.specificName === sportName);
         if(mapping){
-          marketName = marketNameMap[mapping.globalID];
+          sportName = sportNameMap[mapping.globalID];
         } else{
-          log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
-          continue;
+          log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
+          return 20;
         }
-        let market = insertMarketIntoMatch(log, match, marketName);
+        let sport = insertSportIntoData(log, data, sportName);
+        const teamHome = stripTeamName(respData.Value.O1);
+        const teamAway = stripTeamName(respData.Value.O2);
+        let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+      
+        const markets = respData.Value.GE;
+        for(const marketEntry of markets){
 
-        const cols = marketEntry.E;
-        for(const col of cols){
-          for(const entry of col){
+          const marketPrefix = map.mapName;
+          let marketName = marketPrefix + ' ' + betsModelGroup[marketEntry.G]?.N;
+          var mapping = marketNameMapping.find( m => m.specificName === marketName);
+          if(mapping){
+            marketName = marketNameMap[mapping.globalID];
+          } else{
+            log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
+            continue;
+          }
+          let market = insertMarketIntoMatch(log, match, marketName);
 
-            const {arg1, arg2, argExtra} = extractArg(entry.P);
-            const oddName = betsModel[entry.T].N
-              .replace('^1^', teamHome)
-              .replace('^2^', teamAway)
-              .replace(/\(arg1\)/, arg1)
-              .replace(/\(arg2\)/, arg2)
-              .replace(/\(argExtra\)/, argExtra)
-              .replace(/\(\)/, arg1)
-              .replace(/\(\)/, arg2)
-              .replace(/\[\]/, entry.PL?.N) 
-            let odd = insertOddIntoMarket(log, market, oddName);
-            const value = entry.C;
-            let coef = insertCoefIntoOdd(log,odd, book.name, value);
+          const cols = marketEntry.E;
+          for(const col of cols){
+            for(const entry of col){
+
+              const {arg1, arg2, argExtra} = extractArg(entry.P);
+              const oddName = betsModel[entry.T].N
+                .replace('^1^', teamHome)
+                .replace('^2^', teamAway)
+                .replace(/\(arg1\)/, arg1)
+                .replace(/\(arg2\)/, arg2)
+                .replace(/\(argExtra\)/, argExtra)
+                .replace(/\(\)/, arg1)
+                .replace(/\(\)/, arg2)
+                .replace(/\[\]/, entry.PL?.N) 
+              let odd = insertOddIntoMarket(log, market, oddName);
+              const value = entry.C;
+              let coef = insertCoefIntoOdd(log,odd, book.name, value);
+            }
           }
         }
+      } else{
+        throw new Error("fetchMap failure");
       }
-    } else{
-      throw error("fetchMap failure");
     }
-  }
-
-  try{
-    await page?.close()
     log.write(`Success! scraping a match from ${book.urls[i]}\n`);
     return 0;
-  } catch(error){
+  }catch(error){
     log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
     return -1;
-  } finally{
+  }finally{
+    await page?.close()
     promisify(log.end).bind(log);
   }
 }
