@@ -42,6 +42,21 @@ write_files:
       [Install]
       WantedBy=multi-user.target
 
+  # ── nodejs application configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrapy2.timer
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description="Restart scrapy2 service daily at 3 am"
+
+      [Timer]
+      OnCalendar=Mon..Sun *-*-* 03:00:00
+      Unit=scrapy2.service
+
+      [Install]
+      WantedBy=multi-user.target
+
   # ── caddy server configuration ────────────────────────────────
   - path: /etc/systemd/system/caddy.service
     owner: root:root
@@ -87,8 +102,10 @@ runcmd:
 
   - systemctl enable caddy
   - systemctl start caddy
-  - systemctl enable scrapy2
-  - systemctl start scrapy2
+  - systemctl enable scrapy2.service
+  - systemctl start scrapy2.service
+  - systemctl enable scrapy2.timer
+  - systemctl start scrapy2.timer
 
 power_state:
   mode: reboot
