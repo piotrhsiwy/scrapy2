@@ -84,11 +84,16 @@ export async function huntSportURLs(browser, book){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
                     // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
-                    while(document.querySelector('div[data-testid*=match-list-row-]') === null){
-                        await new Promise(resolve => setTimeout(resolve, 100));
+                    // Only if more than 0 entries in AllTab
+                    const matchesInAllTab = document.querySelector('div[data-testid=AllTab] span')?.textContent;
+                    if(matchesInAllTab && matchesInAllTab > 0){
+                        while(document.querySelector('div[data-testid*=match-list-row-]') === null){
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                        }
                     }
                     // 4. Even then, the entries seem to be loaded only partially when I dont await here
                     await new Promise(resolve => setTimeout(resolve, 500));
+                    // 5. Read the entries
                     let newHrefs = Array.from(document.querySelectorAll('div[data-testid*=match-list-row-]')).map( e => {
                         const datestring = e.querySelector('div[data-testid*=match-time-]')?.textContent;
                         const url = e.querySelector('a[data-testid=match-details-link]')?.href;
