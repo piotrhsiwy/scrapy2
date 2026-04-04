@@ -125,6 +125,7 @@
         let knownEntryIds = new Set(); 
         
         let maxStrength = 0.0;
+        let minStdDev = 3.0;
         let minArbValue = 0.0; 
 
         const REFRESH_SECONDS = 15;
@@ -170,6 +171,11 @@
                            oninput="document.getElementById('sv').innerText=this.value;"
                            onchange="maxStrength=this.value; extractAndRenderBooks(false); renderTable();">
                     <span class="slider-value" id="sv">${maxStrength}</span>
+                    <label style="margin-left:20px;">Min StdDev:</label>
+                    <input type="range" min="0" max="10" step="0.5" value="${minStdDev}" 
+                           oninput="document.getElementById('sv2').innerText=this.value;"
+                           onchange="minStdDev=this.value; extractAndRenderBooks(false); renderTable();">
+                    <span class="slider-value" id="sv2">${minStdDev}</span>
                 `;
             } else {
                 container.innerHTML = `
@@ -221,7 +227,7 @@
         }
 
         function passesThresholds(row) {
-            if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength);
+            if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength) && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
             if (currentFile === 'arbs.json') return parseFloat(row.value || 0) >= parseFloat(minArbValue);
             return true;
         }
