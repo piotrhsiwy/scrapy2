@@ -52,6 +52,7 @@ write_files:
 
       [Timer]
       OnCalendar=Mon..Sun *-*-* 03:00:00
+      OnUnitActiveSec=2h
       Unit=scrapy2.service
 
       [Install]
