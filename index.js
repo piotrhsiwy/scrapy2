@@ -165,7 +165,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(16, 100);
+    const myq = new Queue(32, 100);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
