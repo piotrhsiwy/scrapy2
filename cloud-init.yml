@@ -1,9 +1,4 @@
-#cloud-config
-# ============================================================
-# Setup of scrapy2 full cloud deployment.
-# ============================================================
-
-package_update: true
+#cloud-config ============================================================ Setup of scrapy2 full cloud deployment. ============================================================ package_update: true
 package_upgrade: true
 
 packages:
