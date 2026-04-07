@@ -4,6 +4,7 @@ scrapy2.duckdns.org {
     # Enable Basic Auth
     basicauth {
         siwy $2a$14$uBqVqOUgkP50HjesNtOaIuIkqjT7WnGoVBNsWRUu2/ePla97FmFNO
+        kalinowski $2a$14$cupx5ytIi8ohGLZYPpreTOVOKU8/8MuLnugUOrR8lIh5Xmnf6u9.u
     }
     # Serve the files
     file_server
