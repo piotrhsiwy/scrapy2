@@ -204,7 +204,7 @@
             return result;
         }
 
-        function getRowId(row) { return btoa(unescape(encodeURIComponent(`${row.timestamp}|${row.teamHome}|${row.market}`))); }
+        function getRowId(row) { return btoa(unescape(encodeURIComponent(`${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['odd book'] || row['Home book'] || ''}`))); }
         function getGameId(row) { return btoa(unescape(encodeURIComponent(`${row.sport}|${row.teamHome}|${row.teamAway}|${row.datetime}`))); }
 
         async function fetchSilent() {
