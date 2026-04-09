@@ -76,7 +76,8 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; word-wrap: break-word; }
         th { background-color: #343a40; color: white; position: sticky; top: 0; z-index: 2; cursor: pointer; }
         
-        tbody.game-group { border-bottom: 4px solid #343a40; transition: opacity 0.4s ease-out; cursor: pointer; }
+        tbody.game-group { border-bottom: 4px solid #343a40; }
+        tbody.game-group tr { transition: opacity 0.4s ease-out; cursor: pointer; }
         tbody.game-group tr:nth-child(even) { background-color: #f8f9fa; }
         tbody.game-group tr:hover { background-color: #e2e6ea; }
         
@@ -125,6 +126,7 @@
         let knownEntryIds = new Set(); 
         
         let maxStrength = 0.0;
+        let minStdDev = 3.0;
         let minArbValue = 0.0; 
 
         const REFRESH_SECONDS = 15;
@@ -170,6 +172,11 @@
                            oninput="document.getElementById('sv').innerText=this.value;"
                            onchange="maxStrength=this.value; extractAndRenderBooks(false); renderTable();">
                     <span class="slider-value" id="sv">${maxStrength}</span>
+                    <label style="margin-left:20px;">Min StdDev:</label>
+                    <input type="range" min="0" max="10" step="0.5" value="${minStdDev}" 
+                           oninput="document.getElementById('sv2').innerText=this.value;"
+                           onchange="minStdDev=this.value; extractAndRenderBooks(false); renderTable();">
+                    <span class="slider-value" id="sv2">${minStdDev}</span>
                 `;
             } else {
                 container.innerHTML = `
@@ -197,7 +204,7 @@
             return result;
         }
 
-        function getRowId(row) { return btoa(unescape(encodeURIComponent(`${row.timestamp}|${row.teamHome}|${row.market}`))); }
+        function getRowId(row) { return btoa(unescape(encodeURIComponent(`${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['odd book'] || row['Home book'] || ''}`))); }
         function getGameId(row) { return btoa(unescape(encodeURIComponent(`${row.sport}|${row.teamHome}|${row.teamAway}|${row.datetime}`))); }
 
         async function fetchSilent() {
@@ -211,7 +218,7 @@
                 let rId = getRowId(row);
                 if (!knownEntryIds.has(rId)) {
                     knownEntryIds.add(rId);
-                    if (passesThresholds(row) && !doneItems.includes(getGameId(row))) triggerSound = true;
+                    if (passesThresholds(row) && !doneItems.includes(getRowId(row))) triggerSound = true;
                 }
             });
             if (triggerSound) playNotificationSound();
@@ -221,7 +228,7 @@
         }
 
         function passesThresholds(row) {
-            if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength);
+            if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength) && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
             if (currentFile === 'arbs.json') return parseFloat(row.value || 0) >= parseFloat(minArbValue);
             return true;
         }
@@ -267,7 +274,7 @@
             Array.from(books).forEach(b => {
                 bookCounts[b] = currentData.filter(row => {
                     const belongsToBook = row['odd book'] === b || row['Home book'] === b || row['Away book'] === b;
-                    return belongsToBook && passesThresholds(row) && !doneItems.includes(getGameId(row));
+                    return belongsToBook && passesThresholds(row) && !doneItems.includes(getRowId(row));
                 }).length;
             });
 
@@ -290,7 +297,7 @@
         function renderTable() {
             let filtered = currentData.filter(row => {
                 const bookPass = !row['odd book'] && !row['Home book'] && !row['Away book'] || activeBooks.has(row['odd book']) || activeBooks.has(row['Home book']) || activeBooks.has(row['Away book']);
-                return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
+                return bookPass && passesThresholds(row) && !doneItems.includes(getRowId(row));
             });
 
             let groups = {};
@@ -381,10 +388,11 @@
             }
 
             groupedArray.forEach(g => {
-                html += `<tbody id="group-${g.id}" class="game-group" onclick="event.target.tagName!='A'&&markDone('${g.id}')">`;
-                g.entries.forEach((row, i) => {
-                    html += `<tr>`;
-                    if (i === 0) html += `<td rowspan="${g.entries.length}" class="action-cell"><input type="checkbox" style="pointer-events:none;"></td>`;
+                html += `<tbody class="game-group">`;
+                g.entries.forEach((row) => {
+                    let rId = getRowId(row);
+                    html += `<tr id="row-${rId}" style="cursor:pointer;" onclick="event.target.tagName!='A'&&markDone('${rId}')">`;
+                    html += `<td class="action-cell"><input type="checkbox" style="pointer-events:none;"></td>`;
                     currentHeaders.forEach(h => html += `<td>${row[h] || ''}</td>`);
                     html += `</tr>`;
                 });
@@ -398,7 +406,7 @@
                 doneItems.push(id); 
                 localStorage.setItem('doneGames', JSON.stringify(doneItems)); 
             }
-            document.getElementById(`group-${id}`)?.classList.add('fade-out-group');
+            document.getElementById(`row-${id}`)?.classList.add('fade-out-group');
             setTimeout(() => {
                 extractAndRenderBooks(false); 
                 renderTable(); 

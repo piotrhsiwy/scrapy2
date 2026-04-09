@@ -10,8 +10,6 @@ import { datestringToISO } from "./parser.js";
 
 export async function scrapeMatchURL(data, browser, book, i){
   
-  const page = await prepPage(browser, book);
-  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
   const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
@@ -36,13 +34,16 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -10;
   }
 
+  const page = await prepPage(browser, book);
   try{
+    await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
     const chicken = await page.evaluate( () => document.querySelector('img[src="/spa-assets/image/empty-state/chicken.png"]'));
     if(chicken){
       log.write(`Failure! The 'game not available'-chicken is present! ${book.urls[i]}\n`);
       return 10;
     }
 
+    await page.waitForSelector('div[data-test=market-name]', {timeout: 10000});
     let selector, el, mapping;
     // get sport
     let sportName = await page.evaluate( () => {
@@ -109,35 +110,36 @@ export async function scrapeMatchURL(data, browser, book, i){
     selector = 'div[data-tab=All]';
     el = await page.waitForSelector(selector);
     await el.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await page.evaluate( async () => {
-      
-      // debugger;
-      async function waitMax(max){
-        let delay = 0;
-        let delta = 10;
-          let matches = document.querySelectorAll('div[data-test=markets] > div > div');
-          let size;
-          do{
-            size = matches.length;
-            await new Promise(resolve => setTimeout(resolve, delta));
-            delay += delta;
-            matches = document.querySelectorAll('div[data-test=markets] > div > div');
-          } while(size === matches.length && delay < max);
-          return matches;
-        };
+  // scroll to load all markets — controlled from Node side with a hard timeout
+    async function scrollMarkets(page, { maxIterations = 15, scrollPause = 300, timeout = 15000 } = {}) {
+      await page.bringToFront();
+      const deadline = Date.now() + timeout;
+      let prevCount = 0;
 
-        // scrolling
-        let old_size;
-        let handles = document.querySelectorAll('div[data-test=markets] > div > div');
-        do{
-          old_size = handles.length;
-        const availableOdds = handles[handles.length-1].querySelectorAll('div[data-test=odd-button__result]');
-        availableOdds[availableOdds.length-1].scrollIntoView();
-        handles = await waitMax(2000);
-      } while(handles.length !== old_size);
-    });
+      for (let i = 0; i < maxIterations; i++) {
+        if (Date.now() > deadline) break;
+
+        const count = await page.$$eval(
+          'div[data-test=markets] > div > div',
+          els => {
+            const last = els[els.length - 1];
+            if (last) {
+              const odd = last.querySelector('div[data-test=odd-button__result]');
+              (odd || last).scrollIntoView();
+            }
+            return els.length;
+          }
+        );
+
+        if (count === prevCount) break;
+        prevCount = count;
+        await new Promise(r => setTimeout(r, scrollPause));
+      }
+    }
+
+    await scrollMarkets(page);
     
     const marketHandles = await page.$$('div[data-test=markets] > div > div');
     let market, odd, coef;
@@ -201,9 +203,15 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -1;
   } finally{
     try{
-      await page?.close()
-    } catch{}
-    await promisify(log.end).bind(log);
+      await page.goto('about:blank', {timeout:3000});
+      await page?.close();
+    } catch {
+      try{
+        const client = await page.createCDPSession();
+        await client.send('Page.close');
+      } catch {}
+    }
+    promisify(log.end).bind(log);
   }
   
 }

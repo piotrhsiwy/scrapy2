@@ -1,113 +1,57 @@
-#cloud-config
-# ============================================================
-# Hetzner CX11 – Tinyproxy egress proxy for scrapy2
-# Dynamic IP support via schillerwg37.ddns.net
-# Paste this into the "Cloud config" box when creating the server.
-# ============================================================
-
-package_update: true
+#cloud-config ============================================================ Setup of scrapy2 full cloud deployment. ============================================================ package_update: true
 package_upgrade: true
 
 packages:
-  - tinyproxy
+# were part of the proxy setup
   - ufw
   - fail2ban
   - unattended-upgrades
   - curl
-  - htop
-  - dnsutils
-# not needed for proxy
-  - chromium-browser
+# needed for node app
+  # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
+# needed for webserver
   - caddy
+# chrome-headless-shell deps
+  - libasound2t64
+  - libatk1.0-0t64
+  - libc6
+  - libcairo2
+  - libcups2t64
+  - libdbus-1-3
+  - libexpat1
+  - libfontconfig1
+  - libgcc-s1
+  - libgdk-pixbuf2.0-0
+  - libglib2.0-0t64
+  - libgtk-3-0t64
+  - libnspr4
+  - libpango-1.0-0
+  - libpangocairo-1.0-0
+  - libstdc++6
+  - libx11-6
+  - libx11-xcb1
+  - libxcb1
+  - libxcomposite1
+  - libxcursor1
+  - libxdamage1
+  - libxext6
+  - libxfixes3
+  - libxi6
+  - libxrandr2
+  - libxrender1
+  - libxss1
+  - libxtst6
+  - ca-certificates
+  - fonts-liberation
+  - libnss3
+  - libnss3-dev
+  - lsb-release
+  - xdg-utils
+  - wget
+  - libgbm-dev
 
 write_files:
-  # ── Tinyproxy configuration ────────────────────────────────
-  - path: /etc/tinyproxy/tinyproxy.conf
-    owner: root:root
-    permissions: "0644"
-    content: |
-      ## ── scrapy2 egress proxy config ──
-
-      Listen 0.0.0.0
-      Port 8888
-
-      Timeout 600
-      ConnectPort 443
-      ConnectPort 80
-
-      LogFile "/var/log/tinyproxy/tinyproxy.log"
-      LogLevel Warning
-      Syslog Off
-
-      MaxClients 100
-      StartServers 10
-      MinSpareServers 5
-      MaxSpareServers 20
-      MaxRequestsPerChild 0
-
-      # Managed by /usr/local/bin/update-tinyproxy-allow.sh
-      # Do NOT edit this line manually — it gets overwritten.
-      Allow 127.0.0.1
-
-      ViaProxyName "tinyproxy"
-      DisableViaHeader Yes
-      XTinyproxy No
-
-  # ── DDNS resolver script ───────────────────────────────────
-  - path: /usr/local/bin/update-tinyproxy-allow.sh
-    owner: root:root
-    permissions: "0755"
-    content: |
-      #!/bin/bash
-      # Resolves schillerwg37.ddns.net and updates tinyproxy Allow directive.
-      # Restarts tinyproxy only if the IP actually changed.
-
-      DDNS_HOST="schillerwg37.ddns.net"
-      CONF="/etc/tinyproxy/tinyproxy.conf"
-      STATE="/var/lib/tinyproxy-last-ip"
-
-      NEW_IP=$(dig +short "$DDNS_HOST" A | tail -1)
-
-      # Bail if DNS lookup failed
-      if [[ -z "$NEW_IP" || ! "$NEW_IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        logger -t tinyproxy-ddns "DNS lookup for $DDNS_HOST failed — skipping"
-        exit 1
-      fi
-
-      OLD_IP=""
-      [[ -f "$STATE" ]] && OLD_IP=$(cat "$STATE")
-
-      if [[ "$NEW_IP" != "$OLD_IP" ]]; then
-        # Replace the Allow line (only the managed one, after the comment marker)
-        sed -i "s/^Allow .*/Allow $NEW_IP/" "$CONF"
-        # Keep localhost access too
-        grep -q "^Allow 127.0.0.1" "$CONF" || sed -i "/^Allow $NEW_IP/a Allow 127.0.0.1" "$CONF"
-
-        systemctl restart tinyproxy
-        echo "$NEW_IP" > "$STATE"
-        logger -t tinyproxy-ddns "Updated Allow to $NEW_IP (was: ${OLD_IP:-none})"
-      fi
-
-  # ── UFW Tinyproxy application profile ────────────────────────────────
-  - path: /etc/ufw/applications.d/tinyproxy
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Tinyproxy]
-      title=Tinyproxy HTTP Proxy
-      description=Tinyproxy forward proxy
-      ports=8888/tcp
-
-  # ── UFW Caddy application profile ────────────────────────────────
-  - path: /etc/ufw/applications.d/caddy
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Caddy]
-      title=Caddy HTTP Server
-      description=Fileserver from /root/scrapy2/data
-      ports=443/tcp
 
   # ── nodejs application configuration ────────────────────────────────
   - path: /etc/systemd/system/scrapy2.service
@@ -121,14 +65,31 @@ write_files:
       [Service]
       Type=simple
       User=root
-      WorkingDirectory=/root/scrapy2
-      ExecStart=/usr/bin/node /root/scrapy2/index.js
+      WorkingDirectory=/scrapy2
+      ExecStart=/usr/bin/node /scrapy2/index.js
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
 
       [Install]
       WantedBy=multi-user.target
+
+  # ── nodejs application configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrapy2.timer
+    owner: root:root
+    permissions: "0644"
+    content: |
+    [Unit] 
+    Description=Restart scrapy2 service daily at 3am and 2h after last restart 
+     
+    [Timer] 
+    OnCalendar=*-*-* 03:00:00 
+    OnUnitActiveSec=2h 
+    Unit=scrapy2.service 
+     
+    [Install] 
+    WantedBy=timers.target 
 
   # ── caddy server configuration ────────────────────────────────
   - path: /etc/systemd/system/caddy.service
@@ -142,8 +103,8 @@ write_files:
       [Service]
       Type=simple
       User=root
-      ExecStart=/usr/local/bin/caddy run --config /root/scrapy2/data/Caddyfile
-      ExecReload=/usr/local/bin/caddy reload --config /root/scrapy2/data/Caddyfile
+      ExecStart=/usr/bin/caddy run --config /scrapy2/data/Caddyfile
+      ExecReload=/usr/bin/caddy reload --config /scrapy2/data/Caddyfile
       Restart=on-failure
       RestartSec=5
 
@@ -154,41 +115,31 @@ runcmd:
   # ── Firewall ──
   - ufw default deny incoming
   - ufw default allow outgoing
-  - ufw allow OpenSSH
-  - ufw allow 8888/tcp comment 'tinyproxy'
-  - ufw allow 443/tcp comment 'nginx'
-  - ufw allow 80/tcp comment 'nginx'
+  - ufw allow 22/tcp comment "ssh"
+  - ufw allow 80/tcp comment "caddy"
+  - ufw allow 443/tcp comment "caddy"
   - ufw --force enable
 
-  # ── Run the DDNS resolver once now so tinyproxy starts with the right IP ──
-  - /usr/local/bin/update-tinyproxy-allow.sh
-
-  # ── Cron: re-resolve every 5 minutes ──
-  - echo "*/5 * * * * root /usr/local/bin/update-tinyproxy-allow.sh" > /etc/cron.d/tinyproxy-ddns
-  - chmod 0644 /etc/cron.d/tinyproxy-ddns
-
   # ── Enable services ──
-  - systemctl enable tinyproxy
-  - systemctl restart tinyproxy
   - systemctl enable unattended-upgrades
   - systemctl start unattended-upgrades
   - systemctl enable fail2ban
   - systemctl start fail2ban
 
-  # ── Connectivity check (visible in cloud-init log) ──
-  - echo "--- tinyproxy status ---"
-  - systemctl status tinyproxy --no-pager
-  - ss -tlnp | grep 8888
-
   # Setup node application environment
-  - git clone --branch test --single-branch git@github.com:piotrhsiwy/scrapy2.git
-  - cd scrapy2
-  - npm i
-  # (for now) manual changes to the code have to be done. Create vps branch on the repo
-  # branch from release, but changes include: executable path to /usr/bin/chromium-browser, 
-  # change the temp userData dir. comment-in proxy bypass flag. Caddyfile has to be extended 
-  # too
+  - cd /; git clone https://REPLACE@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
+  - cd /scrapy2; npm i
+  - | # get path of the binary into env var
+    OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
+    CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
+    echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
 
+  - systemctl enable caddy
+  - systemctl start caddy
+  - systemctl enable scrapy2.service
+  - systemctl start scrapy2.service
+  - systemctl enable scrapy2.timer
+  - systemctl start scrapy2.timer
 
 power_state:
   mode: reboot

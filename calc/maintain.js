@@ -2,7 +2,7 @@ import { prettyToDate, ISO8601ToDate } from "../data/util/prettify.js";
 
 /**
  * this function slices out the matches (items that have a singly nested datetime field)
- * that are in the past by more than 1 hour. the 
+ * that are in the past by more than 1 hour.
  * @param {*} data 
  */
 export function cleanupData(data){
@@ -26,7 +26,7 @@ export function cleanupData(data){
 }
 
 /**
- * this fuction out the arbs/evs (items that have a datetime field) that are in the past
+ * this fuction slices out the arbs/evs (items that have a datetime field) that are in the past
  * @param {*} items 
  */
 export function cleanupOnDatetime(items){
@@ -37,10 +37,7 @@ export function cleanupOnDatetime(items){
         const dategT = date.getTime();
         const nowgT = now.getTime();
         if( 
-          dategT <= nowgT ||
-          items[i].probDeviationInTermsOfStdDev < 3.0 ||
-          items[i].value > 3.0 ||
-          items[i].value < 1.4
+          dategT <= nowgT
         ){
             /* is outdated */
             items.splice(i, 1);
