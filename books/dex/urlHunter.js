@@ -37,101 +37,51 @@ export async function huntSportURLs(browser, book){
     let hrefs = [];
     try{
         await page.goto(url);
-        await page.waitForSelector('div.lg_inrInfo');
-        hrefs = await page.evaluate(async () => {
-            // debugger;
-            const ret = [];
-            let allTours = document.querySelectorAll('div.lg_inrInfo');
-            let curDispMatchrows = 0;
-            let indicesOfVisible = [];
-            for(let i = 0; i < allTours.length || curDispMatchrows !== 0; i++){
-
-                let matchesInNextTour;
-                if(i < allTours.length){
-                    matchesInNextTour = parseInt(allTours[i].children[1].textContent);
-                }
-
-                if( (curDispMatchrows !== 0 && curDispMatchrows + matchesInNextTour > 50) || i === allTours.length){
-
-                    // await new Promise(resolve => setTimeout(resolve, 2000));
-                    // scrape
-                    let items = [];
-                    while( items.length !== curDispMatchrows){
-                        items = document.querySelectorAll('[data-parentmatchid]');
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    for(let j = 0; j < items.length; j++){
-                        // the matchURL is built as follows: baseURL + ID + '/' + specificID (of the sport)
-                        const sportName = items[j].classList[1];
-                        const matchID = items[j].getAttribute('data-parentmatchid')
-                        const datestring = items[j].querySelector('div.mSDateTime')?.textContent?.trim();
-                        ret.push({matchID, sportName, datestring});
-                    }
-                    // window.nodeLog('size of items:' + items.length);
-
-                    // do this sequence to reset all the visible tournaments
-                    let temp = undefined;
-                    while(temp === undefined){
-                        temp = document.querySelector('div.leagueName')
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    await temp.click();
-                    temp = undefined;
-                    while(temp === undefined){
-                        temp = document.querySelector('i.icon-arrow-left')
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    await temp.click();
-
-                    // continue where you left off
-                    const tempLen = allTours.length;
-                    allTours = [];
-                    while( allTours.length !== tempLen ){
-                        allTours = document.querySelectorAll('div.lg_inrInfo');
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    curDispMatchrows = 0; 
-                    // decrease i to not skip any tournament (offset the one run of the i-loop used to scrape)
-                    i--;
-
-                } else{
-
-                    // enq aka click
-                    allTours[i].click();
-                    while(!allTours[i].classList.contains('inrActive')){
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    indicesOfVisible.push(i);
-                    curDispMatchrows += matchesInNextTour;
-                    if(curDispMatchrows > 50){
-                        curDispMatchrows = 50;
-                    }
-                    continue;
-
-                }
-            }
-            return ret;
-        })
-
-        hrefs = hrefs.map( ({matchID, sportName, datestring}) => {
-            let sportID = 0;
-            const mapping = sportNameMapping.find( m => m.specificName === sportName )
-            if(mapping){
-                sportID = mapping.specificID;
+        const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
+        await popup.click();
+        await page.waitForSelector('div.games-nav__group-pro', {timeout:30000});
+        
+        // get sports from menu
+        const sports = await page.$$('div.games-nav__group-pro._disciplines a.games-nav__item-pro');
+        for(const sport of sports){
+            await sport.click();
+            // select the Prematch filter
+            const prematchButtonArray = await page.$$eval('a.lobby-filters__item-pro span[class=lobby-filters__item-text]', els => {
+                els.filter(e.textContent == 'Prematch')
+            })
+            if(prematchButtonArray == []){
+                log.write(`Warning! Prematch button not found.\n`);
             } else{
-                log.write(`Critical Failure! sportName Mapping of '${sportName}' to specificID does not exist in ${sportNameMappingPath}. Cannot build matchURL.\n`);
-                return -1;
+                await prematchButtonArray[0].click();
+                await page.waitForSelector('div.grid-line', {timeout:3000});
+                // get hrefs for each game
+                batchHrefs = await page.$$eval('a.grid-event', els => els.map(e => {
+                    debugger;
+                    const day = e
+                        .closest('div.grid-line__content')
+                        .parentElement
+                        .querySelector('div.grid-line__title .grid-line__title-main span')
+                        .textContent;
+                    const time = e.querySelector('div.grid-event__time span').textContent;
+                    url = e.querySelector('a.grid-event__competitors').href
+                    return {
+                        url: url,
+                        datestring: day + ', ' + time
+                    }
+                }))
             }
-            const matchURL = url + 'OddsPage/' + matchID + '/' + sportID;
+        }
+
+        hrefs = hrefs.map( ({url, datestring}) => {
             let ISOString;
             try{
                 ISOString = datestringToISO(datestring);
             } catch(error){
-                log.write(`Warning! Invalid date of the match under [${matchURL}]:${datestring}. Error thrown by the date parser: ${error.message}\n`);
+                log.write(`Warning! Invalid date of the match under [${url}]:${datestring}. Error thrown by the date parser: ${error.message}\n`);
                 return undefined;
             }
             return {
-                url: matchURL,
+                url: url,
                 datetime: ISOString
             };
         } )
@@ -153,6 +103,6 @@ export async function huntSportURLs(browser, book){
         // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');
         try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
-        await promisify(log.end).bind(log);
+        promisify(log.end).bind(log);
     }
 }
