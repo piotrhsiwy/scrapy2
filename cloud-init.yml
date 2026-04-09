@@ -67,29 +67,14 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStart=/usr/bin/node /scrapy2/index.js
-      Restart=on-failure
+      Restart=always
       RestartSec=5
+      RuntimeMaxSec=7200
       Environment=NODE_ENV=production
       EnvironmentFile=/etc/scrapy2.env
 
       [Install]
       WantedBy=multi-user.target
-
-  # ── nodejs application configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrapy2.timer
-    owner: root:root
-    permissions: "0644"
-    content: |
-    [Unit] 
-    Description=Restart scrapy2 service daily at 3am and 2h after last restart 
-     
-    [Timer] 
-    OnCalendar=*-*-* 03:00:00 
-    OnUnitActiveSec=2h 
-    Unit=scrapy2.service 
-     
-    [Install] 
-    WantedBy=timers.target 
 
   # ── caddy server configuration ────────────────────────────────
   - path: /etc/systemd/system/caddy.service
@@ -138,8 +123,6 @@ runcmd:
   - systemctl start caddy
   - systemctl enable scrapy2.service
   - systemctl start scrapy2.service
-  - systemctl enable scrapy2.timer
-  - systemctl start scrapy2.timer
 
 power_state:
   mode: reboot
