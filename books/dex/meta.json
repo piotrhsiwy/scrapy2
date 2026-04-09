@@ -1,0 +1,7 @@
+{
+    "name":"Dexsport",
+    "abbrev":"dex",
+    "baseURL":"https://dexsport.io/esports/",
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|translations|chat|googletagmanager"
+}
