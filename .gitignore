@@ -1,4 +1,6 @@
 node_modules
+chrome-headless-shell
+# https://developer.chrome.com/blog/chrome-headless-shell
 
 # DO NOT RUN 'git clean -x -f' under ANY CIRCUMSTANCES
 
