@@ -101,6 +101,17 @@
             <div id="slider-container" class="slider-box">
                 </div>
 
+            <div class="slider-box">
+                <label>Min Datetime (UTC):</label>
+                <input type="date" id="min-date-input" value="" 
+                       onchange="updateMinDatetime()" style="flex-grow:0; font-size:14px;">
+                <select id="min-hour-input" onchange="updateMinDatetime()" style="font-size:14px;">
+                    <option value="">--</option>
+                </select>
+                <button onclick="setNow()" style="font-size:13px; padding:4px 10px; cursor:pointer; border:1px solid #007bff; background:#007bff; color:white; border-radius:4px;">Now</button>
+                <span style="margin-left:auto; font-family:'Courier New',monospace; font-weight:bold; color:#007bff;" id="utc-clock"></span>
+            </div>
+
             <div class="filters">
                 <div class="checkbox-group" id="book-filters"></div>
             </div>
@@ -128,10 +139,34 @@
         let maxStrength = 0.0;
         let minStdDev = 3.0;
         let minArbValue = 0.0; 
+        let minDatetime = '';
 
         const REFRESH_SECONDS = 15;
         let timeRemainingSeconds = REFRESH_SECONDS;
         let doneItems = JSON.parse(localStorage.getItem('doneGames') || '[]');
+
+        // Populate hour dropdown
+        const hourSelect = document.getElementById('min-hour-input');
+        for (let h = 0; h < 24; h++) hourSelect.innerHTML += `<option value="${h}">${String(h).padStart(2,'0')}:00</option>`;
+
+        function updateMinDatetime() {
+            const d = document.getElementById('min-date-input').value;
+            const h = document.getElementById('min-hour-input').value;
+            minDatetime = d ? `${d}T${String(h || 0).padStart(2,'0')}:00Z` : '';
+            extractAndRenderBooks(false); renderTable();
+        }
+
+        function setNow() {
+            const now = new Date();
+            document.getElementById('min-date-input').value = now.toISOString().slice(0, 10);
+            document.getElementById('min-hour-input').value = now.getUTCHours();
+            updateMinDatetime();
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('utc-clock').textContent = 'UTC ' + now.toISOString().slice(11, 16);
+        }, 1000);
 
         function playNotificationSound() {
             try {
@@ -228,6 +263,10 @@
         }
 
         function passesThresholds(row) {
+            if (minDatetime) {
+                let rowDate = Date.parse(String(row.datetime || '').replace(' at ', ' '));
+                if (isNaN(rowDate) || rowDate < new Date(minDatetime).getTime()) return false;
+            }
             if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength) && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
             if (currentFile === 'arbs.json') return parseFloat(row.value || 0) >= parseFloat(minArbValue);
             return true;
