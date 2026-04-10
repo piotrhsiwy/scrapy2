@@ -24,7 +24,20 @@ export function datestringToISO(dateStr){
     const date = new Date();
     const [datePart, timePart] = dateStr.split(', ');
     const today = new Date();
-    if(datePart.includes('TODAY')){
+    if(datePart.includes(' • ')){
+      // that means timePart does not exist and the datestring is of format: 'Apr 10 • 18:15' (all in datePart)
+      const dateTimeSplit = datePart.split(' • ')
+      if(dateTimeSplit.length < 2){
+        throw new Error(`unrecognized datestring: ${datePart} `);
+      } else{
+        // year is already current
+        const [month, day] = dateTimeSplit[0].trim().split(' ');
+        const monthIndex = new Date(`${month} 1, ${today.getFullYear()}`).getMonth();
+        date.setMonth(monthIndex);
+        date.setDate(parseInt(day));
+        parseHourMinute(date, dateTimeSplit[1]);
+      }
+    } else if(datePart.includes('TODAY')){
       date.setDate(today.getDate());
       if(timePart.includes('COMMON')){
         const CleantimePart = timePart.replace(/COMMON\.WILL_BE_LIVE:/, '').trim()

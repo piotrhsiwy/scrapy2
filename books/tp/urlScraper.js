@@ -291,7 +291,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -1;
   } finally{
     try{ await page?.close() } catch{ log.write(`Error thrown when closing page`); }
-    await promisify(log.end).bind(log);
+    await promisify(log.end).bind(log)();
   } 
 
 }

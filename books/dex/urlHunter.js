@@ -139,7 +139,7 @@ export async function huntSportURLs(browser, book){
         return -1;
     } finally{
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');
-        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
+        try{ await originalPage.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
         await promisify(log.end).bind(log)();
     }
 }

@@ -175,6 +175,6 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -1;
   }finally{
     await page?.close()
-    promisify(log.end).bind(log);
+    await promisify(log.end).bind(log)();
   }
 }

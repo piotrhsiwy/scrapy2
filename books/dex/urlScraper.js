@@ -6,6 +6,7 @@ import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
 import { insertCoefIntoOdd, insertMarketIntoMatch, insertMatchIntoSport, insertOddIntoMarket, insertSportIntoData } from "../../data/util/inserter.js";
 import { datestringToISO } from "./parser.js";
+import { prepPage } from "../page.js";
 
 export async function scrapeMatchURL(data, browser, book, i){
   
@@ -33,36 +34,24 @@ export async function scrapeMatchURL(data, browser, book, i){
       return -10;
     }
 
-  const page = await browser.newPage();
-  await page.setViewport(book.viewport);
-  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
+  let page = await prepPage(browser, book);
+  // let page = await browser.newPage();
+  const originalPage = page;
   try{
-    await page.goto(book.urls[i],  { waitUntil: 'networkidle2', timeout: 30000 });
+    let selector, mapping;
+
+    await page.goto(book.urls[i]);
+    const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
+    await popup.click();
+
+    const iframeHandle = await page.$('iframe');
+    page = await iframeHandle.contentFrame();
+    await page.waitForSelector('div.games-stream__title-item a', {timeout:10000})
+
     try{
-      let selector, el, mapping;
-      // check if match is still there
-      let count = 0;
-      let oPInfoExists = await page.evaluate( () => { return document.querySelector('div.oPInfo') !== null });
-      let msg = await page.evaluate( () => document.querySelector('div.msgTxt')?.textContent);
-      while( !oPInfoExists && !msg && count < 20){
-        oPInfoExists = await page.evaluate( () => { return document.querySelector('div.oPInfo') !== null });
-        msg = await page.evaluate( () => document.querySelector('div.msgTxt')?.textContent);
-        await new Promise(resolve => setTimeout(resolve, 100));
-        count++;
-      }
-      if(oPInfoExists){
-        if(msg){
-          log.write(`Failure! div.msgTxt present with textContent=${msg}! ${book.urls[i]}\n`);
-          return 10;
-        }
-      } else{
-        log.write(`Failure! The element div.oPInfo is not present! ${book.urls[i]}\n`);
-        return 10;
-      }
       // get sport
-      let infoHandle = await page.$('div.oPInfo');
-      let sportName = await infoHandle.$eval('img', e => e.getAttribute('src').split('/').pop().split('.')[0]);
+      const SportTournament = await page.$eval('div.games-stream__title-item a', e => e.textContent);
+      let sportName = SportTournament.split('. ')[0];
       mapping = sportNameMapping.find( m => m.specificName === sportName);
       if(mapping){
         sportName = sportNameMap[mapping.globalID];
@@ -72,39 +61,33 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
       let sport = insertSportIntoData(log, data, sportName);
 
-  //     // get tournament
-  //     selector = 'div.leagueName';
-  //     let tournamentName = await infoHandle.$eval(selector, e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
-  //     mapping = tournamentNameMapping.find( m => m.specificName === tournamentName);
-  //     if(mapping){
-  //       tournamentName = tournamentNameMap[mapping.globalID];;
-  //     } else{
-  //       log.write(`Failure! tournamentName Mapping of '${tournamentName}' does not exist in ${tournamentNameMappingPath}\n`);
-  //       return;
-  //     }
-  //     let tournament = sport.tournaments.findLast(t => t.name === tournamentName );
-  //     if(!tournament){
-  //       /* tournament is new */
-  //       sport.tournaments.push({ name: tournamentName, matches: [] });
-  //       tournament = sport.tournaments.findLast(t => t.name === tournamentName);
-  //     }
-
       // get teamHome, teamAway
-      selector = 'div.lDTeamName';
-      const teams = await page.$$eval(selector, elements => elements.map( e => e.textContent.trim() ));
+      const teams = await page.$$eval('div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
       const teamHome = stripTeamName(teams[0]);
       const teamAway = stripTeamName(teams[1]);
       
       // get datetime, mode
-      selector = 'div.matchStatus';
-      el = await infoHandle.$eval(selector, e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
-      const datetime = datestringToISO(el.split('B')[0].trim());
-      let mode = el.split('B')[1];
-      mode = 'B' + mode;    
+      const isLive = await page.$('div._badge--live');
+      let datetime;
+      if(isLive){
+        datetime = 'live';
+      } else{
+        const datestring = await page.$eval('div.slider-event-pro__info-date span', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
+        datetime = datestringToISO(datestring);
+      }
       let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
 
+      // check filter 'All markets'
+      await page.evaluate( async() => {
+        const filters = Array.from(document.querySelectorAll('span.games-stream-pro-nav__item-text'));
+        const allMarketsFilter = filters.find( e => e.textContent.includes('FILTER.ALL'));
+        if(allMarketsFilter){
+          await allMarketsFilter.click();
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+      })
       // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-      selector = 'div.matchWrp';
+      selector = 'div.game-event__market-wrapper';
       let marketHandles = await page.$$(selector);
       // scroll until no more elements are loaded
       let old_size, new_size;
@@ -112,23 +95,20 @@ export async function scrapeMatchURL(data, browser, book, i){
         // await new Promise(resolve => setTimeout(resolve, 1000));
         old_size =  marketHandles.length;
         await marketHandles[marketHandles.length-1].scrollIntoView();
-        await page.waitForNetworkIdle({idleTime: 100});
+        await new Promise(resolve => setTimeout(resolve, 100));
         marketHandles = await page.$$(selector);
         new_size =  marketHandles.length;
       } while( old_size !== new_size );
-      selector = 'div.marketRow';
-      const labelsHandle = await page.$(selector);
-      selector = 'label';
-      const labels = await labelsHandle.$$eval(selector, es => es.map( e => e.textContent));
-      const labelHome = labels[0];
-      const labelAway = labels[1];
+      // selector = 'div.marketRow';
+      // const labelsHandle = await page.$(selector);
+      // selector = 'label';
+      // const labels = await labelsHandle.$$eval(selector, es => es.map( e => e.textContent));
+      // const labelHome = labels[0];
+      // const labelAway = labels[1];
       for(const marketHandle of marketHandles){
         // get marketName
-        selector = 'div.matchInfoLeft';
+        selector = 'div.game-event-market__title';
         let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
-        const SplitOnSpaces = marketName.split(' ');
-        const HdpSpecial = marketName.split(' Hdp: ');
-        if(HdpSpecial.length > 1){ marketName = 'Match Handicap' }
         mapping = marketNameMapping.find( m => m.specificName === marketName);
         if(mapping){
           const globalName = marketNameMap[mapping.globalID];
@@ -143,86 +123,30 @@ export async function scrapeMatchURL(data, browser, book, i){
           continue;
         }
         let market = insertMarketIntoMatch(log, match, marketName);
-        // get odds
-        selector = 'div.oddsWrp';
+        // get odd
+        selector = 'button.outcome';
         const oddsHandles = await marketHandle.$$(selector);
         for(let i = 0; i < oddsHandles.length; i++){
           const oddHandle = oddsHandles[i];
-          let handle = await oddHandle.$('label');
+          selector = 'span.outcome__status';
+          let handle = await oddHandle.$(selector);
           if(!handle){
             continue;
           }
-          let oddName = await oddHandle.$eval('label', (e) => e.textContent);
-          // oddName.replace()
-          // if !oddName that means that ths div.oddWrp is indeed one of three and holds an oddName suffix like '23.5' , for Over/Under Market and so on...
-          // for Over/Under Total Maps markets, the sufix is the last bit, split on spaces, from the marketName. 
-          let sufix = '';
-          if(oddsHandles.length === 3){
-            if(oddName === 'Over' || oddName === 'Under'){
-              sufix = SplitOnSpaces[SplitOnSpaces.length-1];
-            } else{
-              sufix = await page.evaluate(e => e.parentNode.childNodes[1].textContent, oddHandle);
-            }
-          }
-          oddName = oddName
-          .replace(labelHome, teamHome)
-          .replace(labelAway, teamAway)
-          .replace(/\+/g, '');
-          if(HdpSpecial.length > 1){
-            /* Match Handicaps are named like this: "BO3 Hdp: VP -1.5". They have exactly 2 odd entries.
-            Note: The team in the is not always the first one listed */
-            const isFromTitle = HdpSpecial[1].replace(labelHome, teamHome).replace(labelAway, teamAway).includes(oddName);
-            if(isFromTitle){
-              oddName = HdpSpecial[1].replace(labelHome, teamHome).replace(labelAway, teamAway);
-            } else{
-              const hdpValue = -1.0 * parseFloat(HdpSpecial[1].split(' ')[1]);
-              const isHomeinTitle = HdpSpecial[1].includes(labelHome);
-              oddName = `${isHomeinTitle ? teamAway : teamHome} ${hdpValue}`;
-            }
-          }
-          /* Additionally remove spaces is the namse of all odds for a handicap market. This is separate from the previous
-          block, because non-map handicap markets do not fulfil the test in if */
-          if(marketName.includes('Handicap')){
-            oddName = oddName.replace(/\s+/g, '');
-          }
-          /* first to reach kill
-          Explanation: the first-to-reach have been mapped to a single market name.
-          hence oddNames have to be adjusted for esb. I append the no kills/rounds
-          at the end of the oddName */
-          let regex = /Game (\d) First to (\d+) Kills/;
-          let match = HdpSpecial[0].match(regex);
-          if(match) {
-            oddName = `${oddName}${match[2]}`;
-          }
-          /* first to reach rounds */
-          regex = /Game (\d) First to Win (\d+) Rounds/;
-          match = HdpSpecial[0].match(regex);
-          if(match) {
-            oddName = `${oddName}${match[2]}`;
-          }
-          oddName = oddName + sufix;
-          oddName = oddName.toLowerCase();
-          if(marketName.includes('Margin')){
-            oddName = oddName.replace('/', '');
-          }
-          if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
-            const [left, right] = oddName.split(':');
-            oddName = `${right}:${left}`;
-          }
+          const oddName = await oddHandle.$eval(selector, (e) => e.textContent);
           let odd = insertOddIntoMarket(log, market, oddName);
-          // value = null if an odd is locked
-          const is_locked = await oddHandle.evaluate( e =>
-            e.classList.contains('locked')
-          );
-          const value = is_locked ? null : 
-            await oddHandle.evaluate( (odd) => {
-              // //debugger;
-              const label = odd.querySelector('label');
-              let labelText = label ? label.textContent : '';
-              let value = odd ? parseFloat(odd.textContent.replace(labelText, '').trim()) : null;
-              return value;
-            })
-          let coef = insertCoefIntoOdd(log, odd, book.name, value)
+          // get coef
+          selector = 'span.outcome__number'
+          const coef = await oddHandle.$eval(selector, (e) => {
+            const text = e.textContent;
+            const f = parseFloat(text);
+            if(!Number.isNaN(f)){
+              return f;
+            } else{
+              return null;
+            }
+          });
+          insertCoefIntoOdd(log, odd, book.name, coef)
         }
       }
 
@@ -234,7 +158,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       return -1;
     }
   } finally{
-    await page?.close()
-    promisify(log.end).bind(log);
+    await originalPage?.close()
+    await promisify(log.end).bind(log)();
   }
 }
