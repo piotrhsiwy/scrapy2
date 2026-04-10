@@ -137,6 +137,6 @@ export async function huntSportURLs(browser, book){
         // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
         try{ await originalPage.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
-        await promisify(log.end).bind(log);
+        await promisify(log.end).bind(log)();
     }
 }

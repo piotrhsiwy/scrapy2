@@ -166,7 +166,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(16, 100);
+    const myq = new Queue(1, 100);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -189,7 +189,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
