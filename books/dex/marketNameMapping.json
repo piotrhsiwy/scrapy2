@@ -2,5 +2,533 @@
     {
         "specificName": "Match Winner",
         "globalID":     "MW"
+    },
+    {
+        "specificName": "Correct Score",
+        "globalID":     "CS"
+    },
+    {
+        "specificName": "Kills Handicap",
+        "globalID":     "TKHDP"
+    },
+    {
+        "specificName": "Total Kills",
+        "globalID":     "TK"
+    },
+    {
+        "specificName": "Maps Handicap",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Total maps",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "Total (maps) even/odd",
+        "globalID":     "TMOE"
+    },
+    {
+        "specificName": "Handicap (With overtime)",
+        "globalID":     "TRHDP"
+    },
+    {
+        "specificName": "Total. Map 1",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "Total. Map 2",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Total. Map 3",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Total. Map 4",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Total. Map 5",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Handicap. Map 1 (With overtime)",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "Handicap. Map 2 (With overtime)",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "Handicap. Map 3 (With overtime)",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Handicap. Map 4 (With overtime)",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Handicap. Map 5 (With overtime)",
+        "globalID":     "RHDPM5"
+    },
+    {
+        "specificName": "Handicap. Map 1. Half 1",
+        "globalID":     "RHDPFHM1"
+    },
+    {
+        "specificName": "Handicap. Map 2. Half 1",
+        "globalID":     "RHDPFHM2"
+    },
+    {
+        "specificName": "Handicap. Map 3. Half 1",
+        "globalID":     "RHDPFHM3"
+    },
+    {
+        "specificName": "Handicap. Map 4. Half 1",
+        "globalID":     "RHDPFHM4"
+    },
+    {
+        "specificName": "Handicap. Map 5. Half 1",
+        "globalID":     "RHDPFHM5"
+    },
+    {
+        "specificName": "Handicap. Map 1. Half 2",
+        "globalID":     "RHDPSHM1"
+    },
+    {
+        "specificName": "Handicap. Map 2. Half 2",
+        "globalID":     "RHDPSHM2"
+    },
+    {
+        "specificName": "Handicap. Map 3. Half 2",
+        "globalID":     "RHDPSHM3"
+    },
+    {
+        "specificName": "Handicap. Map 4. Half 2",
+        "globalID":     "RHDPSHM4"
+    },
+    {
+        "specificName": "Handicap. Map 5. Half 2",
+        "globalID":     "RHDPSHM5"
+    },
+    {
+        "specificName": "Correct score. Map 1",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "Correct score. Map 2",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "Correct score. Map 3",
+        "globalID":     "CSM3"
+    },
+    {
+        "specificName": "Correct score. Map 4",
+        "globalID":     "CSM4"
+    },
+    {
+        "specificName": "Correct score. Map 5",
+        "globalID":     "CSM5"
+    },
+    {
+        "specificName": "Correct score. Map 1. Half 1",
+        "globalID":     "CSFHM1"
+    },
+    {
+        "specificName": "Correct score. Map 2. Half 1",
+        "globalID":     "CSFHM2"
+    },
+    {
+        "specificName": "Correct score. Map 3. Half 1",
+        "globalID":     "CSFHM3"
+    },
+    {
+        "specificName": "Correct score. Map 4. Half 1",
+        "globalID":     "CSFHM4"
+    },
+    {
+        "specificName": "Correct score. Map 5. Half 1",
+        "globalID":     "CSFHM5"
+    },
+    {
+        "specificName": "Will be overtime. Map 1",
+        "globalID":     "OTM1"
+    },
+    {
+        "specificName": "Will be overtime. Map 2",
+        "globalID":     "OTM2"
+    },
+    {
+        "specificName": "Will be overtime. Map 3",
+        "globalID":     "OTM3"
+    },
+    {
+        "specificName": "Will be overtime. Map 4",
+        "globalID":     "OTM4"
+    },
+    {
+        "specificName": "Will be overtime. Map 5",
+        "globalID":     "OTM5"
+    },
+    {
+        "specificName": "Winner. Map 1. Pistol round 2",
+        "globalID":     "R13WM1"
+    },
+    {
+        "specificName": "Winner. Map 2. Pistol round 2",
+        "globalID":     "R13WM2"
+    },
+    {
+        "specificName": "Winner. Map 3. Pistol round 2",
+        "globalID":     "R13WM3"
+    },
+    {
+        "specificName": "Winner. Map 4. Pistol round 2",
+        "globalID":     "R13WM4"
+    },
+    {
+        "specificName": "Winner. Map 5. Pistol round 2",
+        "globalID":     "R13WM5"
+    },
+    {
+        "specificName": "Winner. Map 1. Pistol round 1",
+        "globalID":     "R1WM1"
+    },
+    {
+        "specificName": "Winner. Map 2. Pistol round 1",
+        "globalID":     "R1WM2"
+    },
+    {
+        "specificName": "Winner. Map 3. Pistol round 1",
+        "globalID":     "R1WM3"
+    },
+    {
+        "specificName": "Winner. Map 4. Pistol round 1",
+        "globalID":     "R1WM4"
+    },
+    {
+        "specificName": "Winner. Map 5. Pistol round 1",
+        "globalID":     "R1WM5"
+    },
+    {
+        "specificName": "Winning margin. Map 1 (With overtime)",
+        "globalID":     "WMM1"
+    },
+    {
+        "specificName": "Winning margin. Map 2 (With overtime)",
+        "globalID":     "WMM2"
+    },
+    {
+        "specificName": "Winning margin. Map 3 (With overtime)",
+        "globalID":     "WMM3"
+    },
+    {
+        "specificName": "Winning margin. Map 4 (With overtime)",
+        "globalID":     "WMM4"
+    },
+    {
+        "specificName": "Winning margin. Map 5 (With overtime)",
+        "globalID":     "WMM5"
+    },
+    {
+        "specificName": "Winner 1X2. Map 1",
+        "globalID":     "M1WD"
+    },
+    {
+        "specificName": "Winner 1X2. Map 2",
+        "globalID":     "M2WD"
+    },
+    {
+        "specificName": "Winner 1X2. Map 3",
+        "globalID":     "M3WD"
+    },
+    {
+        "specificName": "Winner 1X2. Map 4",
+        "globalID":     "M4WD"
+    },
+    {
+        "specificName": "Winner 1X2. Map 5",
+        "globalID":     "M5WD"
+    },
+    {
+        "specificName": "Winner. Map 1 (With overtime)",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Winner. Map 2 (With overtime)",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Winner. Map 3 (With overtime)",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "Winner. Map 4 (With overtime)",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Winner. Map 5 (With overtime)",
+        "globalID":     "M5W"
+    },
+    {
+        "specificName": "Winner. Map 1. Half 1",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "Winner. Map 2. Half 1",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "Winner. Map 3. Half 1",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "Winner. Map 4. Half 1",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "Winner. Map 5. Half 1",
+        "globalID":     "FHWWDM5"
+    },
+    {
+        "specificName": "Handicap. Map 1. Half 2",
+        "globalID":     "SHWWDM1"
+    },
+    {
+        "specificName": "Handicap. Map 2. Half 2",
+        "globalID":     "SHWWDM2"
+    },
+    {
+        "specificName": "Handicap. Map 3. Half 2",
+        "globalID":     "SHWWDM3"
+    },
+    {
+        "specificName": "Handicap. Map 4. Half 2",
+        "globalID":     "SHWWDM4"
+    },
+    {
+        "specificName": "Handicap. Map 5. Half 2",
+        "globalID":     "SHWWDM5"
+    },
+    {
+        "specificName": "Winner. Map 1",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Winner. Map 2",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Winner. Map 3",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "Winner. Map 4",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Winner. Map 5",
+        "globalID":     "M5W"
+    },
+    {
+        "specificName": "Handicap. Map 1",
+        "globalID":     "KHDPM1"
+    },
+    {
+        "specificName": "Handicap. Map 2",
+        "globalID":     "KHDPM2"
+    },
+    {
+        "specificName": "Handicap. Map 3",
+        "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Handicap. Map 4",
+        "globalID":     "KHDPM4"
+    },
+    {
+        "specificName": "Handicap. Map 5",
+        "globalID":     "KHDPM5"
+    },
+    {
+        "specificName": "Total kills. Map 1",
+        "globalID":     "TKM1"
+    },
+    {
+        "specificName": "Total kills. Map 2",
+        "globalID":     "TKM2"
+    },
+    {
+        "specificName": "Total kills. Map 3",
+        "globalID":     "TKM3"
+    },
+    {
+        "specificName": "Total kills. Map 4",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "Total kills. Map 5",
+        "globalID":     "TKM5"
+    },
+    {
+        "specificName": "First blood. Map 1",
+        "globalID":     "FBM1"
+    },
+    {
+        "specificName": "First blood. Map 2",
+        "globalID":     "FBM2"
+    },
+    {
+        "specificName": "First blood. Map 3",
+        "globalID":     "FBM3"
+    },
+    {
+        "specificName": "First blood. Map 4",
+        "globalID":     "FBM4"
+    },
+    {
+        "specificName": "First blood. Map 5",
+        "globalID":     "FBM5"
+    },
+    {
+        "specificName": "Total time (minutes). Map 1",
+        "globalID":     "DURM1"
+    },
+    {
+        "specificName": "Total time (minutes). Map 2",
+        "globalID":     "DURM2"
+    },
+    {
+        "specificName": "Total time (minutes). Map 3",
+        "globalID":     "DURM3"
+    },
+    {
+        "specificName": "Total time (minutes). Map 4",
+        "globalID":     "DURM4"
+    },
+    {
+        "specificName": "Total time (minutes). Map 5",
+        "globalID":     "DURM5"
+    },
+    {
+        "specificName": "Both teams to slay a dragon. Map 1",
+        "globalID":     "BDRGM1"
+    },
+    {
+        "specificName": "Both teams to slay a dragon. Map 2",
+        "globalID":     "BDRGM2"
+    },
+    {
+        "specificName": "Both teams to slay a dragon. Map 3",
+        "globalID":     "BDRGM3"
+    },
+    {
+        "specificName": "Both teams to slay a dragon. Map 4",
+        "globalID":     "BDRGM4"
+    },
+    {
+        "specificName": "Both teams to slay a dragon. Map 5",
+        "globalID":     "BDRGM5"
+    },
+    {
+        "specificName": "Total dragons slain. Map 1",
+        "globalID":     "TDRGM1"
+    },
+    {
+        "specificName": "Total dragons slain. Map 2",
+        "globalID":     "TDRGM2"
+    },
+    {
+        "specificName": "Total dragons slain. Map 3",
+        "globalID":     "TDRGM3"
+    },
+    {
+        "specificName": "Total dragons slain. Map 4",
+        "globalID":     "TDRGM4"
+    },
+    {
+        "specificName": "Total dragons slain. Map 5",
+        "globalID":     "TDRGM5"
+    },
+    {
+        "specificName": "First team to kill of the Baron. Map 1",
+        "globalID":     "FBARM1"
+    },
+    {
+        "specificName": "First team to kill of the Baron. Map 2",
+        "globalID":     "FBARM2"
+    },
+    {
+        "specificName": "First team to kill of the Baron. Map 3",
+        "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "First team to kill of the Baron. Map 4",
+        "globalID":     "FBARM4"
+    },
+    {
+        "specificName": "First team to kill of the Baron. Map 5",
+        "globalID":     "FBARM5"
+    },
+    {
+        "specificName": "Total barons slain. Map 1",
+        "globalID":     "TBARM1"
+    },
+    {
+        "specificName": "Total barons slain. Map 2",
+        "globalID":     "TBARM2"
+    },
+    {
+        "specificName": "Total barons slain. Map 3",
+        "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "Total barons slain. Map 4",
+        "globalID":     "TBARM4"
+    },
+    {
+        "specificName": "Total barons slain. Map 5",
+        "globalID":     "TBARM5"
+    },
+    {
+        "specificName": "Total towers destroyed. Map 1",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Total towers destroyed. Map 2",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "Total towers destroyed. Map 3",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Total towers destroyed. Map 4",
+        "globalID":     "TTM4"
+    },
+    {
+        "specificName": "Total towers destroyed. Map 5",
+        "globalID":     "TTM5"
+    },
+    {
+        "specificName": "Total even/odd. Map 1",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "Total even/odd. Map 2",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Total even/odd. Map 3",
+        "globalID":     "TROE3"
+    },
+    {
+        "specificName": "Total even/odd. Map 4",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Total even/odd. Map 5",
+        "globalID":     "TROE5"
     }
 ]

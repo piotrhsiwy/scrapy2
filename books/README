@@ -55,7 +55,7 @@ Pinnacle is apparently the sharpest odds there is
 /xyz/urlScraper.js return codes interpretation:
 20 failure:
   sport mapping does not exist
-11  failure:
+11 failure:
   redirected. This can happen if the match is in the past
 10 failure:
   there is an element on the page indicating that the match is in the past and/or doesn't exist

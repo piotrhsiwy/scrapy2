@@ -62,7 +62,14 @@ export async function scrapeMatchURL(data, browser, book, i){
       let sport = insertSportIntoData(log, data, sportName);
 
       // get teamHome, teamAway
-      const teams = await page.$$eval('div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
+      let teams = await page.$$eval('div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
+      if(teams.length != 2){
+        teams = await page.$$eval('div.slider-event-pro__team-name', elements => elements.map( e => e.textContent.trim() ));
+        if(teams.length != 2){
+          log.write(`Failure! Read incorrect number of team names for this game (possibly none)\n`);
+          return 10;
+        }
+      }
       const teamHome = stripTeamName(teams[0]);
       const teamAway = stripTeamName(teams[1]);
       
@@ -154,7 +161,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     return 0;    
 
     } catch (error){
-      log.write(`Critical Failure! scraping a match from ${book.urls[i]}. Error code:\n`);
+      log.write(`Critical Failure! scraping a match from ${book.urls[i]}. Error code:${error}\n`);
       return -1;
     }
   } finally{
