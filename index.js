@@ -76,7 +76,9 @@ async function openBrowser(){
       // '--disable-accelerated-2d-canvas',
       // '--disable-gpu',
       // '--disable-web-security',
-      // // '--disable-blink-features=AutomationControlled', // already handled by puppeteerStealth plugin // `--proxy-server=${PROXY_URL}`, '--proxy-bypass-list=*',
+      // // '--disable-blink-features=AutomationControlled', // already handled by puppeteerStealth plugin
+      // // `--proxy-server=${PROXY_URL}`,
+      // '--proxy-bypass-list=*',
       // '--no-startup-window',
       // // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
       // '--disk-cache-size=1',

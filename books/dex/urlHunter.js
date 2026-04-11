@@ -134,8 +134,8 @@ export async function huntSportURLs(browser, book){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
         log.write(error.message);
+        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
         return -1;
     } finally{
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');

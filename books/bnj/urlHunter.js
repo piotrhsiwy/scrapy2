@@ -33,19 +33,20 @@ export async function huntSportURLs(browser, book){
         return -10;
     }
 
-    // let page = await browser.newPage();
-    let page = await prepPage(browser, book);
+    let page = await browser.newPage();
+    // let page = await prepPage(browser, book);
     const originalPage = page;
 
     let hrefs = [];
     try{
         await page.goto(url);
 
-        const el = await page.$('p');
-        const attrName = await el.evaluate(el =>
-        [...el.attributes].find(a => a.name.startsWith('data-astro-cid-'))?.name
-        );
-        const isVercelCheckpoint = await page.$(`p[${attrName}]`);
+        // const el = await page.$('p');
+        // const attrName = await el.evaluate(el =>
+        // [...el.attributes].find(a => a.name.startsWith('data-astro-cid-'))?.name
+        // );
+        // const isVercelCheckpoint = await page.$(`p[${attrName}]`);
+
         const iframeHandle = await page.waitForSelector('iframe', {timeout:30000});
         page = await iframeHandle.contentFrame();
 
@@ -77,28 +78,25 @@ export async function huntSportURLs(browser, book){
             // get the tournament urls
         const tournamentUrls = await page.$$eval('li.item-competition a', els => els.map( e => e.href));
         for(const tournamentUrl of tournamentUrls){
-            let tpage = await prepPage(browser, book)
-            const originalTpage = tpage;
+            const tpage = await prepPage(browser, book)
             try{
                 await tpage.goto(tournamentUrl);
-                const iframeHandle = await tpage.$('iframe');
-                tpage = await iframeHandle.contentFrame();
 
                 await tpage.waitForSelector('div.upcoming-events', {timeout:30000});
 
                 const batch = await tpage.$$eval('div.lines div.event-part', els => els.map( e => {
-                    debugger;
+                    // debugger;
                     const datestring = e.querySelector('div.date-event').textContent;
                     const url = e.querySelector('a.snc-link-to-event').href;
-                    return {datestring, url};
+                    return {url, datestring};
                 }))
 
                 hrefs = hrefs.concat(batch);
 
             } catch(e){
-                log.write(`Warning! Error: ${e} when hunting for tournament under: ${tournamentUrl}\n`);
+                log.write(`Warning! Error: ${e.message} when hunting for tournament under: ${tournamentUrl}\n`);
             } finally{
-                try{ await originalTpage.close() } catch{ log.write(`Error thrown when closing page ${tournamentUrl}\n`); }
+                try{ await tpage.close() } catch{ log.write(`Error thrown when closing page ${tournamentUrl}\n`); }
             }
         }            
 
@@ -125,8 +123,8 @@ export async function huntSportURLs(browser, book){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
         log.write(error.message);
+        log.write(`\nCritical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
         return -1;
     } finally{
         writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');
