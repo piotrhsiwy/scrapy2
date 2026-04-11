@@ -276,6 +276,9 @@ export async function scrapeMatchURL(data, browser, book, i){
         .replace(labelAway, teamAway)
         .replace(/\+/g, '');
         odds[j] = stripTeamName(odds[j]);
+        if(market.name.includes('Kill Maker')){
+          odds[j] = odds[j].replace('thkill', '');
+        }
         let odd = insertOddIntoMarket(log, market, odds[j]);
         let coef = insertCoefIntoOdd(log, odd, book.name, vals[j])
       }
