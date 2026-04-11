@@ -12,7 +12,15 @@
         "globalID":     "TKHDP"
     },
     {
+        "specificName": "Kills handicap",
+        "globalID":     "TKHDP"
+    },
+    {
         "specificName": "Total Kills",
+        "globalID":     "TK"
+    },
+    {
+        "specificName": "Total kills",
         "globalID":     "TK"
     },
     {
@@ -32,8 +40,324 @@
         "globalID":     "TRHDP"
     },
     {
-        "specificName": "Total. Map 1",
-        "globalID":     "TRM1"
+        "specificName": "Towers Handicap. Map 1",
+        "globalID":     "TTHDPM1"
+    },
+    {
+        "specificName": "Towers Handicap. Map 2",
+        "globalID":     "TTHDPM2"
+    },
+    {
+        "specificName": "Towers Handicap. Map 3",
+        "globalID":     "TTHDPM3"
+    },
+    {
+        "specificName": "Towers Handicap. Map 4",
+        "globalID":     "TTHDPM4"
+    },
+    {
+        "specificName": "Towers Handicap. Map 5",
+        "globalID":     "TTHDPM5"
+    },
+    {
+        "specificName": "Winner by Roshan kills. Map 1",
+        "globalID":     "MROSHM1"
+    },
+    {
+        "specificName": "Winner by Roshan kills. Map 2",
+        "globalID":     "MROSHM2"
+    },
+    {
+        "specificName": "Winner by Roshan kills. Map 3",
+        "globalID":     "MROSHM3"
+    },
+    {
+        "specificName": "Winner by Roshan kills. Map 4",
+        "globalID":     "MROSHM4"
+    },
+    {
+        "specificName": "Winner by Roshan kills. Map 5",
+        "globalID":     "MROSHM5"
+    },
+    {
+        "specificName": "Will take 1st tower. Map 1",
+        "globalID":     "FTM1"
+    },
+    {
+        "specificName": "Will take 1st tower. Map 2",
+        "globalID":     "FTM2"
+    },
+    {
+        "specificName": "Will take 1st tower. Map 3",
+        "globalID":     "FTM3"
+    },
+    {
+        "specificName": "Will take 1st tower. Map 4",
+        "globalID":     "FTM4"
+    },
+    {
+        "specificName": "Will take 1st tower. Map 5",
+        "globalID":     "FTM5"
+    },
+    {
+        "specificName": "First to kill Roshan. Map 1",
+        "globalID":     "FROSHM1"
+    },
+    {
+        "specificName": "First to kill Roshan. Map 2",
+        "globalID":     "FROSHM2"
+    },
+    {
+        "specificName": "First to kill Roshan. Map 3",
+        "globalID":     "FROSHM3"
+    },
+    {
+        "specificName": "First to kill Roshan. Map 4",
+        "globalID":     "FROSHM4"
+    },
+    {
+        "specificName": "First to kill Roshan. Map 5",
+        "globalID":     "FROSHM5"
+    },
+    {
+        "specificName": "Total destruction Roshans. Map 1",
+        "globalID":     "TROSHM1"
+    },
+    {
+        "specificName": "Total destruction Roshans. Map 2",
+        "globalID":     "TROSHM2"
+    },
+    {
+        "specificName": "Total destruction Roshans. Map 3",
+        "globalID":     "TROSHM3"
+    },
+    {
+        "specificName": "Total destruction Roshans. Map 4",
+        "globalID":     "TROSHM4"
+    },
+    {
+        "specificName": "Total destruction Roshans. Map 5",
+        "globalID":     "TROSHM5"
+    },
+    {
+        "specificName": "First team to destroy barak. Map 1",
+        "globalID":     "FBRCKSM1"
+    },
+    {
+        "specificName": "First team to destroy barak. Map 2",
+        "globalID":     "FBRCKSM2"
+    },
+    {
+        "specificName": "First team to destroy barak. Map 3",
+        "globalID":     "FBRCKSM3"
+    },
+    {
+        "specificName": "First team to destroy barak. Map 4",
+        "globalID":     "FBRCKSM4"
+    },
+    {
+        "specificName": "First team to destroy barak. Map 5",
+        "globalID":     "FBRCKSM5"
+    },
+    {
+        "specificName": "Both teams destroy barracks. Map 1",
+        "globalID":     "BBRCKSM1"
+    },
+    {
+        "specificName": "Both teams destroy barracks. Map 2",
+        "globalID":     "BBRCKSM2"
+    },
+    {
+        "specificName": "Both teams destroy barracks. Map 3",
+        "globalID":     "BBRCKSM3"
+    },
+    {
+        "specificName": "Both teams destroy barracks. Map 4",
+        "globalID":     "BBRCKSM4"
+    },
+    {
+        "specificName": "Both teams destroy barracks. Map 5",
+        "globalID":     "BBRCKSM5"
+    },
+    {
+        "specificName": "Kill First Courier. Map 1",
+        "globalID":     "FCOURM1"
+    },
+    {
+        "specificName": "Kill First Courier. Map 2",
+        "globalID":     "FCOURM2"
+    },
+    {
+        "specificName": "Kill First Courier. Map 3",
+        "globalID":     "FCOURM3"
+    },
+    {
+        "specificName": "Kill First Courier. Map 4",
+        "globalID":     "FCOURM4"
+    },
+    {
+        "specificName": "Kill First Courier. Map 5",
+        "globalID":     "FCOURM5"
+    },
+    {
+        "specificName": "Kill first tormentor. Map 1",
+        "globalID":     "FTORMM1"
+    },
+    {
+        "specificName": "Kill first tormentor. Map 2",
+        "globalID":     "FTORMM2"
+    },
+    {
+        "specificName": "Kill first tormentor. Map 3",
+        "globalID":     "FTORMM3"
+    },
+    {
+        "specificName": "Kill first tormentor. Map 4",
+        "globalID":     "FTORMM4"
+    },
+    {
+        "specificName": "Kill first tormentor. Map 5",
+        "globalID":     "FTORMM5"
+    },
+    {
+        "specificName": "Megacreeps. Map 1",
+        "globalID":     "MEGAM1"
+    },
+    {
+        "specificName": "Megacreeps. Map 2",
+        "globalID":     "MEGAM2"
+    },
+    {
+        "specificName": "Megacreeps. Map 3",
+        "globalID":     "MEGAM3"
+    },
+    {
+        "specificName": "Megacreeps. Map 4",
+        "globalID":     "MEGAM4"
+    },
+    {
+        "specificName": "Megacreeps. Map 5",
+        "globalID":     "MEGAM5"
+    },
+    {
+        "specificName": "Godlike. Map 1",
+        "globalID":     "GDLKM1"
+    },
+    {
+        "specificName": "Godlike. Map 2",
+        "globalID":     "GDLKM2"
+    },
+    {
+        "specificName": "Godlike. Map 3",
+        "globalID":     "GDLKM3"
+    },
+    {
+        "specificName": "Godlike. Map 4",
+        "globalID":     "GDLKM4"
+    },
+    {
+        "specificName": "Godlike. Map 5",
+        "globalID":     "GDLKM5"
+    },
+    {
+        "specificName": "Divine Rapier. Map 1",
+        "globalID":     "DRAPM1"
+    },
+    {
+        "specificName": "Divine Rapier. Map 2",
+        "globalID":     "DRAPM2"
+    },
+    {
+        "specificName": "Divine Rapier. Map 3",
+        "globalID":     "DRAPM3"
+    },
+    {
+        "specificName": "Divine Rapier. Map 4",
+        "globalID":     "DRAPM4"
+    },
+    {
+        "specificName": "Divine Rapier. Map 5",
+        "globalID":     "DRAPM5"
+    },
+    {
+        "specificName": "Will there be an ultra kill. Map 1",
+        "globalID":     "ULTRAM1"
+    },
+    {
+        "specificName": "Will there be an ultra kill. Map 2",
+        "globalID":     "ULTRAM2"
+    },
+    {
+        "specificName": "Will there be an ultra kill. Map 3",
+        "globalID":     "ULTRAM3"
+    },
+    {
+        "specificName": "Will there be an ultra kill. Map 4",
+        "globalID":     "ULTRAM4"
+    },
+    {
+        "specificName": "Will there be an ultra kill. Map 5",
+        "globalID":     "ULTRAM5"
+    },
+    {
+        "specificName": "Rampage. Map 1",
+        "globalID":     "RAMPM1"
+    },
+    {
+        "specificName": "Rampage. Map 2",
+        "globalID":     "RAMPM2"
+    },
+    {
+        "specificName": "Rampage. Map 3",
+        "globalID":     "RAMPM3"
+    },
+    {
+        "specificName": "Rampage. Map 4",
+        "globalID":     "RAMPM4"
+    },
+    {
+        "specificName": "Rampage. Map 5",
+        "globalID":     "RAMPM5"
+    },
+    {
+        "specificName": "Both teams kill Roshan. Map 1",
+        "globalID":     "BROSHM1"
+    },
+    {
+        "specificName": "Both teams kill Roshan. Map 2",
+        "globalID":     "BROSHM2"
+    },
+    {
+        "specificName": "Both teams kill Roshan. Map 3",
+        "globalID":     "BROSHM3"
+    },
+    {
+        "specificName": "Both teams kill Roshan. Map 4",
+        "globalID":     "BROSHM4"
+    },
+    {
+        "specificName": "Both teams kill Roshan. Map 5",
+        "globalID":     "BROSHM5"
+    },
+    {
+        "specificName": "Aegis of the Immortal snatched. Map 1",
+        "globalID":     "AOTIM1"
+    },
+    {
+        "specificName": "Aegis of the Immortal snatched. Map 2",
+        "globalID":     "AOTIM2"
+    },
+    {
+        "specificName": "Aegis of the Immortal snatched. Map 3",
+        "globalID":     "AOTIM3"
+    },
+    {
+        "specificName": "Aegis of the Immortal snatched. Map 4",
+        "globalID":     "AOTIM4"
+    },
+    {
+        "specificName": "Aegis of the Immortal snatched. Map 5",
+        "globalID":     "AOTIM5"
     },
     {
         "specificName": "Total. Map 2",
@@ -50,6 +374,466 @@
     {
         "specificName": "Total. Map 5",
         "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Race to 1. Map 1",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Race to 1. Map 2",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Race to 1. Map 3",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Race to 1. Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to 1. Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Race to 4. Map 1",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Race to 4. Map 2",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Race to 4. Map 3",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Race to 4. Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to 4. Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Race to 7. Map 1",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Race to 7. Map 2",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Race to 7. Map 3",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Race to 7. Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to 7. Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Race to 10. Map 1",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Race to 10. Map 2",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Race to 10. Map 3",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Race to 10. Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to 10. Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Race to 13. Map 1",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "Race to 13. Map 2",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "Race to 13. Map 3",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "Race to 13. Map 4",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Race to 13. Map 5",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Race to 5 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 5 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 5 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 5 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 5 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 6 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 6 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 6 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 6 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 6 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 10 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 10 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 10 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 10 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 10 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 12 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 12 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 12 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 12 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 12 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 15 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 15 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 15 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 15 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 15 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 18 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 18 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 18 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 18 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 18 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Race to 20 kills. Map 1",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Race to 20 kills. Map 2",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Race to 20 kills. Map 3",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Race to 20 kills. Map 4",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Race to 20 kills. Map 5",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Kill 2th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 2th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 2th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 2th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 2th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 3th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 3th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 3th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 3th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 3th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 4th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 4th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 4th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 4th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 4th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 5th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 5th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 5th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 5th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 5th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 10th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 10th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 10th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 10th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 10th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 15th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 15th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 15th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 15th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 15th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 20th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 20th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 20th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 20th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 20th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Kill 40th maker. Map 1",
+        "globalID":     "KMM1"
+    },
+    {
+        "specificName": "Kill 40th maker. Map 2",
+        "globalID":     "KMM2"
+    },
+    {
+        "specificName": "Kill 40th maker. Map 3",
+        "globalID":     "KMM3"
+    },
+    {
+        "specificName": "Kill 40th maker. Map 4",
+        "globalID":     "KMM4"
+    },
+    {
+        "specificName": "Kill 40th maker. Map 5",
+        "globalID":     "KMM5"
+    },
+    {
+        "specificName": "Winner by destroyed towers. Map 1",
+        "globalID":     "MTM1"
+    },
+    {
+        "specificName": "Winner by destroyed towers. Map 2",
+        "globalID":     "MTM2"
+    },
+    {
+        "specificName": "Winner by destroyed towers. Map 3",
+        "globalID":     "MTM3"
+    },
+    {
+        "specificName": "Winner by destroyed towers. Map 4",
+        "globalID":     "MTM4"
+    },
+    {
+        "specificName": "Winner by destroyed towers. Map 5",
+        "globalID":     "MTM5"
+    },
+    {
+        "specificName": "Baron type. Map 1",
+        "globalID":     "BARTYPM1"
+    },
+    {
+        "specificName": "Baron type. Map 2",
+        "globalID":     "BARTYPM2"
+    },
+    {
+        "specificName": "Baron type. Map 3",
+        "globalID":     "BARTYPM3"
+    },
+    {
+        "specificName": "Baron type. Map 4",
+        "globalID":     "BARTYPM4"
+    },
+    {
+        "specificName": "Baron type. Map 5",
+        "globalID":     "BARTYPM5"
+    },
+    {
+        "specificName": "First dragon type. Map 1",
+        "globalID":     "FDRGTYPM1"
+    },
+    {
+        "specificName": "First dragon type. Map 2",
+        "globalID":     "FDRGTYPM2"
+    },
+    {
+        "specificName": "First dragon type. Map 3",
+        "globalID":     "FDRGTYPM3"
+    },
+    {
+        "specificName": "First dragon type. Map 4",
+        "globalID":     "FDRGTYPM4"
+    },
+    {
+        "specificName": "First dragon type. Map 5",
+        "globalID":     "FDRGTYPM5"
     },
     {
         "specificName": "Handicap. Map 1 (With overtime)",

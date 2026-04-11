@@ -106,16 +106,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       marketHandles = await page.$$(selector);
       new_size =  marketHandles.length;
     } while( old_size !== new_size );
-    // selector = 'div.marketRow';
-    // const labelsHandle = await page.$(selector);
-    // selector = 'label';
-    // const labels = await labelsHandle.$$eval(selector, es => es.map( e => e.textContent));
-    // const labelHome = labels[0];
-    // const labelAway = labels[1];
     for(const marketHandle of marketHandles){
       // get marketName
       selector = 'div.game-event-market__title';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
+      const origMarketName = marketName;
       mapping = marketNameMapping.find( m => m.specificName === marketName);
       if(mapping){
         const globalName = marketNameMap[mapping.globalID];
@@ -140,8 +135,24 @@ export async function scrapeMatchURL(data, browser, book, i){
         if(!handle){
           continue;
         }
-        const oddName = await oddHandle.$eval(selector, (e) => e.textContent);
-        let odd = insertOddIntoMarket(log, market, oddName);
+        let suffix = '';
+        let oddName = await oddHandle.$eval(selector, (e) => e.textContent.toLowerCase())
+          /* thigs to check when implementing oddName sanitization:
+          - toLowerCase() everything at the beggining
+          - removing + for Handicap markets with .replace(/\+/g, '')
+          - teamName stripping using stripTeamName
+          - replace the separator correctly for Correct Score markets: 2-0 -> 2:0
+          */
+        oddName = oddName.replace(/\+/g, '');
+        oddName = stripTeamName(oddName);
+        if(market.name.includes('Correct Score')){
+          oddName = oddName.replace('-',':');
+        } else if(market.name.includes('First to Reach Kills')){
+          suffix = origMarketName.match(/\d+/)[0];
+        } else if(market.name.includes('Kill Maker')){
+          suffix = origMarketName.match(/\d+/)[0];
+        }
+        let odd = insertOddIntoMarket(log, market, oddName + suffix);
         // get coef
         selector = 'span.outcome__number'
         const coef = await oddHandle.$eval(selector, (e) => {
