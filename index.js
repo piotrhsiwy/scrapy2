@@ -260,6 +260,7 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+'dex',
 'ms',
 'ls',
 'gg',
