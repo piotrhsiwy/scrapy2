@@ -65,40 +65,38 @@ async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: true,
+  headless: false,
     args: [
-      // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
-      // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
-      '--start-maximized',
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--disable-gpu',
-      '--disable-web-security',
-      '--disable-blink-features=AutomationControlled',
-      // `--proxy-server=${PROXY_URL}`,
-      '--proxy-bypass-list=*',
-      '--no-startup-window',
-      // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
-      '--disk-cache-size=1',
-      '--aggressive-cache-discard',
-      '--disable-notifications',
-      '--disable-remote-fonts',
-      '--disable-translate',
-      '--disable-infobars',
-      // '--disable-reading-from-canvas', // causes 22bet to not load elements
-      '--disable-remote-playback-api',
-      '--disable-shared-workers --disable-voice-input',
-      '--enable-aggressive-domstorage-flushing',
-      '--disable-site-isolation-trials',
-      '--disable-features=NetworkService,NetworkServiceInProcess,TranslateUI',
-      '--disable-component-extensions-with-background-pages',
-      '--disable-extensions',
-      '--disable-background-timer-throttling',
-      '--disable-backgrounding-occluded-windows',
-      '--disable-renderer-backgrounding',
-      '--disable-ipc-flooding-protection',
+      // // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
+      // // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
+      // '--start-maximized',
+      // '--no-sandbox',
+      // '--disable-setuid-sandbox',
+      // '--disable-dev-shm-usage',
+      // '--disable-accelerated-2d-canvas',
+      // '--disable-gpu',
+      // '--disable-web-security',
+      // // '--disable-blink-features=AutomationControlled', // already handled by puppeteerStealth plugin // `--proxy-server=${PROXY_URL}`, '--proxy-bypass-list=*',
+      // '--no-startup-window',
+      // // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
+      // '--disk-cache-size=1',
+      // '--aggressive-cache-discard',
+      // '--disable-notifications',
+      // '--disable-remote-fonts',
+      // '--disable-translate',
+      // '--disable-infobars',
+      // // '--disable-reading-from-canvas', // causes 22bet to not load elements
+      // '--disable-remote-playback-api',
+      // '--disable-shared-workers --disable-voice-input',
+      // '--enable-aggressive-domstorage-flushing',
+      // '--disable-site-isolation-trials',
+      // '--disable-features=NetworkService,NetworkServiceInProcess,TranslateUI',
+      // '--disable-component-extensions-with-background-pages',
+      // '--disable-extensions',
+      // '--disable-background-timer-throttling',
+      // '--disable-backgrounding-occluded-windows',
+      // '--disable-renderer-backgrounding',
+      // '--disable-ipc-flooding-protection',
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
@@ -189,7 +187,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      // await singleHunt(browser);
+      await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -261,13 +259,14 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'dex',
-  'tp',
-  'ms',
-  'ls',
-  'gg',
-  'esb',
-  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'bnj',
+  // 'dex',
+  // 'tp',
+  // 'ms',
+  // 'ls',
+  // 'gg',
+  // 'esb',
+  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);

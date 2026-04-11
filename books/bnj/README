@@ -1,0 +1,2 @@
+I had to turn off all the chromium startup flags to pass the Vercel Checkpoint verfication. Later I could turn 
+them all back on and the test passed. It seems to be statefully bound to IP.
