@@ -28,15 +28,9 @@ export const sportNameMap = Object.freeze({
     APEX_LEGENDS:       'Apex Legends',
     RENNSPORT:          'Rennsport',
     HALO:               'Halo',
-    E_CRICKET:          'E-Cricket',
     ARENA_OF_VALOR:     'Arena of Valor',
     AGE_OF_EMPIRES:     'Age of Empires',
     KING_OF_GLORY:      'King of Glory',
-    E_BASKETBALL:       'E-Basketball',
-    E_SOCCER:           'E-Soccer',
-    FIFA:               'FIFA',
-    OLYMPIC_ESPORT:     'Olympic Esport Games',
-    CROSSFIRE_MOBILE:   'CrossFire Mobile',
     COD_MOBILE:         'Call of Duty: Mobile',
     WORLD_OF_WARCRAFT:  'World of Warcraft',
     FUSSBALL_ESPORTS:   'E-Soccer',
@@ -68,5 +62,6 @@ export const sportNameMap = Object.freeze({
     BIATHLON:           'Biathlon',
     ALPINE_SKIING:      'Alpine Skiing',
     OTHER:              'Other',
-    HEROES_OF_THE_STORM:'Heroes of the Storm'
+    HEROES_OF_THE_STORM:'Heroes of the Storm',
+    MORTAL_COMBAT:      'Mortal Combat'
 });

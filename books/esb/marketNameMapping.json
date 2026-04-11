@@ -12,6 +12,18 @@
         "globalID":     "MHDP"
     },
     {
+        "specificName": "BO3 Total Games 2.5",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "BO5 Total Games 3.5",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "BO5 Total Games 4.5",
+        "globalID":     "TM"
+    },
+    {
         "specificName": "Game 1 Win",
         "globalID":     "M1W"
     },
@@ -44,6 +56,14 @@
         "globalID":     "RHDPM3"
     },
     {
+        "specificName": "Game 4 Round Handicap",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Game 5 Round Handicap",
+        "globalID":     "RHDPM5"
+    },
+    {
         "specificName": "Game 1 First to Win 5 Rounds",
         "globalID":     "FTRRM1"
     },
@@ -68,6 +88,22 @@
         "globalID":     "FTRRM3"
     },
     {
+        "specificName": "Game 4 First to Win 5 Rounds",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Game 4 First to Win 10 Rounds",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "Game 5 First to Win 5 Rounds",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "Game 5 First to Win 10 Rounds",
+        "globalID":     "FTRRM5"
+    },
+    {
         "specificName": "Game 1 First Round Win",
         "globalID":     "R1WM1"
     },
@@ -78,6 +114,14 @@
     {
         "specificName": "Game 3 First Round Win",
         "globalID":     "R1WM3"
+    },
+    {
+        "specificName": "Game 4 First Round Win",
+        "globalID":     "R1WM4"
+    },
+    {
+        "specificName": "Game 5 First Round Win",
+        "globalID":     "R1WM5"
     },
     {
         "specificName": "Game 1 13th Round Win",
@@ -92,6 +136,14 @@
         "globalID":     "R13WM3"
     },
     {
+        "specificName": "Game 4 13th Round Win",
+        "globalID":     "R13WM4"
+    },
+    {
+        "specificName": "Game 5 13th Round Win",
+        "globalID":     "R13WM5"
+    },
+    {
         "specificName": "Game 1 Total Rounds",
         "globalID":     "TRM1"
     },
@@ -102,6 +154,14 @@
     {
         "specificName": "Game 3 Total Rounds",
         "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Game 4 Total Rounds",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Game 5 Total Rounds",
+        "globalID":     "TRM5"
     },
     {
         "specificName": "Game 1 Total Rounds Odd Or Even",
@@ -116,6 +176,34 @@
         "globalID":     "TROE3"
     },
     {
+        "specificName": "Game 4 Total Rounds Odd Or Even",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Game 5 Total Rounds Odd Or Even",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Game 1 Correct Score (No OT)",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "Game 2 Correct Score (No OT)",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "Game 3 Correct Score (No OT)",
+        "globalID":     "CSM3"
+    },
+    {
+        "specificName": "Game 4 Correct Score (No OT)",
+        "globalID":     "CSM4"
+    },
+    {
+        "specificName": "Game 5 Correct Score (No OT)",
+        "globalID":     "CSM5"
+    },
+    {
         "specificName": "Game 1 First Blood",
         "globalID":     "FBM1"
     },
@@ -128,8 +216,12 @@
         "globalID":     "FBM3"
     },
     {
-        "specificName": "Game 1 First Dragon",
-        "globalID":     "FDM1"
+        "specificName": "Game 4 First Blood",
+        "globalID":     "FBM4"
+    },
+    {
+        "specificName": "Game 5 First Blood",
+        "globalID":     "FBM5"
     },
     {
         "specificName": "Game 1 First Turret",
@@ -144,12 +236,32 @@
         "globalID":     "FTM3"
     },
     {
+        "specificName": "Game 4 First Turret",
+        "globalID":     "FTM4"
+    },
+    {
+        "specificName": "Game 5 First Turret",
+        "globalID":     "FTM5"
+    },
+    {
+        "specificName": "Game 1 First Dragon",
+        "globalID":     "FDM1"
+    },
+    {
         "specificName": "Game 2 First Dragon",
         "globalID":     "FDM2"
     },
     {
         "specificName": "Game 3 First Dragon",
         "globalID":     "FDM3"
+    },
+    {
+        "specificName": "Game 4 First Dragon",
+        "globalID":     "FDM4"
+    },
+    {
+        "specificName": "Game 5 First Dragon",
+        "globalID":     "FDM5"
     },
     {
         "specificName": "Game 1 Total Kills",
@@ -164,6 +276,14 @@
         "globalID":     "TKM3"
     },
     {
+        "specificName": "Game 4 Total Kills",
+        "globalID":     "TKM4"
+    },
+    {
+        "specificName": "Game 5 Total Kills",
+        "globalID":     "TKM5"
+    },
+    {
         "specificName": "Game 1 First to 5 Kills",
         "globalID":     "FTRKM1"
     },
@@ -174,6 +294,14 @@
     {
         "specificName": "Game 3 First to 5 Kills",
         "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 4 First to 5 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First to 5 Kills",
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "Game 1 First to 10 Kills",
@@ -188,8 +316,36 @@
         "globalID":     "FTRKM3"
     },
     {
+        "specificName": "Game 4 First to 10 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First to 10 Kills",
+        "globalID":     "FTRKM5"
+    },
+    {
         "specificName": "Game 1 First to 15 Kills",
         "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 1 First To 15 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First To 15 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First To 15 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 4 First To 15 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First To 15 Kills",
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "Game 2 First to 15 Kills",
@@ -198,6 +354,14 @@
     {
         "specificName": "Game 3 First to 15 Kills",
         "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 4 First to 15 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First to 15 Kills",
+        "globalID":     "FTRKM5"
     },
     {
         "specificName": "Game 1 First to 20 Kills",
@@ -212,6 +376,114 @@
         "globalID":     "FTRKM3"
     },
     {
+        "specificName": "Game 4 First to 20 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First to 20 Kills",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Game 1 First To 20 Kills",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Game 2 First To 20 Kills",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "Game 3 First To 20 Kills",
+        "globalID":     "FTRKM3"
+    },
+    {
+        "specificName": "Game 4 First To 20 Kills",
+        "globalID":     "FTRKM4"
+    },
+    {
+        "specificName": "Game 5 First To 20 Kills",
+        "globalID":     "FTRKM5"
+    },
+    {
+        "specificName": "Game 1 First Round Total Kills",
+        "globalID":     "R1TKM1"
+    },
+    {
+        "specificName": "Game 2 First Round Total Kills",
+        "globalID":     "R1TKM2"
+    },
+    {
+        "specificName": "Game 3 First Round Total Kills",
+        "globalID":     "R1TKM3"
+    },
+    {
+        "specificName": "Game 4 First Round Total Kills",
+        "globalID":     "R1TKM4"
+    },
+    {
+        "specificName": "Game 5 First Round Total Kills",
+        "globalID":     "R1TKM5"
+    },
+    {
+        "specificName": "Game 1 13th Round Total Kills",
+        "globalID":     "R13TKM1"
+    },
+    {
+        "specificName": "Game 2 13th Round Total Kills",
+        "globalID":     "R13TKM2"
+    },
+    {
+        "specificName": "Game 3 13th Round Total Kills",
+        "globalID":     "R13TKM3"
+    },
+    {
+        "specificName": "Game 4 13th Round Total Kills",
+        "globalID":     "R13TKM4"
+    },
+    {
+        "specificName": "Game 5 13th Round Total Kills",
+        "globalID":     "R13TKM5"
+    },
+    {
+        "specificName": "Game 1 First Round First Kill",
+        "globalID":     "R1FKM1"
+    },
+    {
+        "specificName": "Game 2 First Round First Kill",
+        "globalID":     "R1FKM2"
+    },
+    {
+        "specificName": "Game 3 First Round First Kill",
+        "globalID":     "R1FKM3"
+    },
+    {
+        "specificName": "Game 4 First Round First Kill",
+        "globalID":     "R1FKM4"
+    },
+    {
+        "specificName": "Game 5 First Round First Kill",
+        "globalID":     "R1FKM5"
+    },
+    {
+        "specificName": "Game 1 13th Round First Kill",
+        "globalID":     "R13FKM1"
+    },
+    {
+        "specificName": "Game 2 13th Round First Kill",
+        "globalID":     "R13FKM2"
+    },
+    {
+        "specificName": "Game 3 13th Round First Kill",
+        "globalID":     "R13FKM3"
+    },
+    {
+        "specificName": "Game 4 13th Round First Kill",
+        "globalID":     "R13FKM4"
+    },
+    {
+        "specificName": "Game 5 13th Round First Kill",
+        "globalID":     "R13FKM5"
+    },
+    {
         "specificName": "Game 1 Kills Handicap",
         "globalID":     "KHDPM1"
     },
@@ -222,6 +494,14 @@
     {
         "specificName": "Game 3 Kills Handicap",
         "globalID":     "KHDPM3"
+    },
+    {
+        "specificName": "Game 4 Kills Handicap",
+        "globalID":     "KHDPM4"
+    },
+    {
+        "specificName": "Game 5 Kills Handicap",
+        "globalID":     "KHDPM5"
     },
     {
         "specificName": "Game 1 Duration Minutes",
@@ -236,6 +516,14 @@
         "globalID":     "DURM3"
     },
     {
+        "specificName": "Game 4 Duration Minutes",
+        "globalID":     "DURM4"
+    },
+    {
+        "specificName": "Game 5 Duration Minutes",
+        "globalID":     "DURM5"
+    },
+    {
         "specificName": "Game 1 First Baron",
         "globalID":     "FBARM1"
     },
@@ -246,6 +534,54 @@
     {
         "specificName": "Game 3 First Baron",
         "globalID":     "FBARM3"
+    },
+    {
+        "specificName": "Game 4 First Baron",
+        "globalID":     "FBARM4"
+    },
+    {
+        "specificName": "Game 5 First Baron",
+        "globalID":     "FBARM5"
+    },
+    {
+        "specificName": "Game 1 First Atakhan",
+        "globalID":     "FATKM1"
+    },
+    {
+        "specificName": "Game 2 First Atakhan",
+        "globalID":     "FATKM2"
+    },
+    {
+        "specificName": "Game 3 First Atakhan",
+        "globalID":     "FATKM3"
+    },
+    {
+        "specificName": "Game 4 First Atakhan",
+        "globalID":     "FATKM4"
+    },
+    {
+        "specificName": "Game 5 First Atakhan",
+        "globalID":     "FATKM5"
+    },
+    {
+        "specificName": "Game 1 First Herald Eye",
+        "globalID":     "FHERM1"
+    },
+    {
+        "specificName": "Game 2 First Herald Eye",
+        "globalID":     "FHERM2"
+    },
+    {
+        "specificName": "Game 3 First Herald Eye",
+        "globalID":     "FHERM3"
+    },
+    {
+        "specificName": "Game 4 First Herald Eye",
+        "globalID":     "FHERM4"
+    },
+    {
+        "specificName": "Game 5 First Herald Eye",
+        "globalID":     "FHERM5"
     },
     {
         "specificName": "Game 1 First To Take Inhibitor",
@@ -260,6 +596,34 @@
         "globalID":     "FINHIBM3"
     },
     {
+        "specificName": "Game 4 First To Take Inhibitor",
+        "globalID":     "FINHIBM4"
+    },
+    {
+        "specificName": "Game 5 First To Take Inhibitor",
+        "globalID":     "FINHIBM5"
+    },
+    {
+        "specificName": "Game 1 Total Tower Taken",
+        "globalID":     "TTM1"
+    },
+    {
+        "specificName": "Game 2 Total Tower Taken",
+        "globalID":     "TTM2"
+    },
+    {
+        "specificName": "Game 3 Total Tower Taken",
+        "globalID":     "TTM3"
+    },
+    {
+        "specificName": "Game 4 Total Tower Taken",
+        "globalID":     "TTM4"
+    },
+    {
+        "specificName": "Game 5 Total Tower Taken",
+        "globalID":     "TTM5"
+    },
+    {
         "specificName": "Game 1 Total Barons",
         "globalID":     "TBARM1"
     },
@@ -270,6 +634,14 @@
     {
         "specificName": "Game 3 Total Barons",
         "globalID":     "TBARM3"
+    },
+    {
+        "specificName": "Game 4 Total Barons",
+        "globalID":     "TBARM4"
+    },
+    {
+        "specificName": "Game 5 Total Barons",
+        "globalID":     "TBARM5"
     },
     {
         "specificName": "Game 1 First Roshan",
@@ -284,6 +656,14 @@
         "globalID":     "FROSHM3"
     },
     {
+        "specificName": "Game 4 First Roshan",
+        "globalID":     "FROSHM4"
+    },
+    {
+        "specificName": "Game 5 First Roshan",
+        "globalID":     "FROSHM5"
+    },
+    {
         "specificName": "Game 1 First To Take Melee Barrack",
         "globalID":     "FBRCKSM1"
     },
@@ -294,5 +674,93 @@
     {
         "specificName": "Game 3 First To Take Melee Barrack",
         "globalID":     "FBRCKSM3"
+    },
+    {
+        "specificName": "Game 4 First To Take Melee Barrack",
+        "globalID":     "FBRCKSM4"
+    },
+    {
+        "specificName": "Game 5 First To Take Melee Barrack",
+        "globalID":     "FBRCKSM5"
+    },
+    {
+        "specificName": "Game 1 First Tyrant",
+        "globalID":     "FTYRM1"
+    },
+    {
+        "specificName": "Game 2 First Tyrant",
+        "globalID":     "FTYRM2"
+    },
+    {
+        "specificName": "Game 3 First Tyrant",
+        "globalID":     "FTYRM3"
+    },
+    {
+        "specificName": "Game 4 First Tyrant",
+        "globalID":     "FTYRM4"
+    },
+    {
+        "specificName": "Game 5 First Tyrant",
+        "globalID":     "FTYRM5"
+    },
+    {
+        "specificName": "Game 1 First Dominator",
+        "globalID":     "FDOMM1"
+    },
+    {
+        "specificName": "Game 2 First Dominator",
+        "globalID":     "FDOMM2"
+    },
+    {
+        "specificName": "Game 3 First Dominator",
+        "globalID":     "FDOMM3"
+    },
+    {
+        "specificName": "Game 4 First Dominator",
+        "globalID":     "FDOMM4"
+    },
+    {
+        "specificName": "Game 5 First Dominator",
+        "globalID":     "FDOMM5"
+    },
+    {
+        "specificName": "Game 1 First Half Win",
+        "globalID":     "FHWM1"
+    },
+    {
+        "specificName": "Game 2 First Half Win",
+        "globalID":     "FHWM2"
+    },
+    {
+        "specificName": "Game 3 First Half Win",
+        "globalID":     "FHWM3"
+    },
+    {
+        "specificName": "Game 4 First Half Win",
+        "globalID":     "FHWM4"
+    },
+    {
+        "specificName": "Game 5 First Half Win",
+        "globalID":     "FHWM5"
+    },
+    {
+        "specificName": "Game 1 Second Half Win",
+        "globalID":     "SHWM1"
+    },
+    {
+        "specificName": "Game 2 Second Half Win",
+        "globalID":     "SHWM2"
+    },
+    {
+        "specificName": "Game 3 Second Half Win",
+        "globalID":     "SHWM3"
+    },
+    {
+        "specificName": "Game 4 Second Half Win",
+        "globalID":     "SHWM4"
+    },
+    {
+        "specificName": "Game 5 Second Half Win",
+        "globalID":     "SHWM5"
     }
 ]

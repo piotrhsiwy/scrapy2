@@ -4,6 +4,14 @@
         "globalID":     "MW"
     },
     {
+        "specificName": "Draw No Bet - Game",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Match Up Winner (3 way) - Game",
+        "globalID":     "MWD"
+    },
+    {
         "specificName": "Map 1 Total Number of Rounds - Game",
         "globalID":     "TRM1"
     }

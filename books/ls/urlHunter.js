@@ -1,6 +1,7 @@
-import puppeteer from "puppeteer";
 import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
 import { promisify } from "util";
+import { prepPage } from "../page.js";
+import { datestringToISO } from "./parser.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -8,81 +9,111 @@ import { promisify } from "util";
  * @param meta metadata of this book, loaded from ./books/XYZ/meta.json
  * all the required file locations are built from content of the metadata
  */
-export async function huntSportURLs(meta){
+export async function huntSportURLs(browser, book){
+    const url = book.baseURL;
     // open a file for logging
-    const logFilePath = `./books/${meta.abbrev}/log.txt`;
+    const logFilePath = `./books/${book.abbrev}/log.txt`;
     const log = createWriteStream(logFilePath, {flags: 'a'});
     // open and empty file for data
-    const dataOutPath = `./books/${meta.abbrev}/matchURLs.json`;
+    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
     if(existsSync(dataOutPath)){
         truncateSync(dataOutPath, 0);
     }
-    const sportsPath = `./books/${meta.abbrev}/sports.json`;
-    if(existsSync(sportsPath)){
-        truncateSync(sportsPath, 0);
-    }
-    const toursPath = `./books/${meta.abbrev}/tours.json`;
-    if(existsSync(toursPath)){
-        truncateSync(toursPath, 0);
-    }
+    // const sportsPath = `./books/${book.abbrev}/sports.json`;
+    // if(existsSync(sportsPath)){
+    //     truncateSync(sportsPath, 0);
+    // }
+    // const toursPath = `./books/${book.abbrev}/tours.json`;
+    // if(existsSync(toursPath)){
+    //     truncateSync(toursPath, 0);
+    // }
 
-    const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--disable-gpu',
-            '--disable-web-security',
-        ],
-    }); 
-    let page = await browser.newPage();
-    await page.setViewport({width:1920, height:768})
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-    await page.setExtraHTTPHeaders({
-        'Accept-Language': 'en-US,en;q=0.9'
-    });
-    
-    const tuple = {hrefs:[], sports:[], tours:[]};
+    const page = await prepPage(browser, book);
+    let hrefs = [];
     try{
-        await page.goto(meta.baseURL);
-        await page.waitForNetworkIdle();
-        // get sport Names
-        tuple.sports = await page.evaluate( () => {
-            return Array.from(document.querySelectorAll('#sports-menu-item__6000 > ul > li > a')).map( e => e.textContent);
-        });
 
-        // get tournament Names
-        tuple.tours = await page.evaluate( () => {
-            const arr = Array.from(document.querySelectorAll('h4')).map( e => e.textContent.trim() );
-            arr.pop();
-            return arr;
-        });
+        await page.goto(url);
         
         // get hrefs
-        let selector;
-        selector = 'div.osg-coupon__events > div > div.osg-coupon__event-description-row > a';
-        await page.waitForSelector(selector);
-        tuple.hrefs = await page.$$eval(selector, (items, url) => {
-            const matchURLs = [];
-            for(const href of items.map( item => item.getAttribute('href'))){
-                matchURLs.push(url + href);
+        const sporthrefs = await page.$$eval('li[id*=sports-menu-sub-item_]', (items, url) => {
+            let ret = [];
+            for(const item of items){
+                const href = item.querySelector('a')?.href;
+                ret.push(href);
             }
-            return matchURLs;
-        }, meta.baseURLBuilder);
+            return ret;
+        });
 
-        log.write(`Done hunting for SportsURLs from ${meta.baseURL}, ${tuple.hrefs.length} entries hunted\n`);
+        for(const sporthref of sporthrefs){
+
+            await page.goto(sporthref);
+            try{
+                await page.waitForSelector('div[class*=Sportsbook_sportsbook__event__]', {timeout: 5000});
+            } catch(TimeoutError){
+                log.write(`Warning! No events under url: [${sporthref}]\n`);
+            }
+
+            const events = await page.$$('div[class*=Sportsbook_sportsbook__event__]');
+
+            for(const event of events){
+
+                const { url, day, hour } = await page.evaluate(async (event, sporthref) => {
+                    // debugger;
+
+                    let iter = event.previousElementSibling;
+                    while( iter && !iter.matches('h4[class*=Sportsbook_sportsbook__subtitle__]')){
+                        iter = iter.previousElementSibling;
+                    }
+                    const leagueStub = iter?.textContent.trim().replace('[', '').replace(']', '').toLowerCase().replaceAll(' ', '-');
+                    const id = event.querySelector('div[id*=root_market__')?.id.split('__')[1];
+                    const url = sporthref + '/' + leagueStub + '/' + id;
+
+                    iter = event.previousElementSibling;
+                    while( iter && !iter.matches('h3[class*=Sportsbook_sportsbook__title__]')){
+                        iter = iter.previousElementSibling;
+                    }
+                    const day = await iter.querySelector('span')?.textContent;
+                    const hour = await event.querySelector( 'span[class*=Sportsbook_sportsbook__eventDescriptionTime__]')?.textContent;
+                    return {url, day, hour};
+                }, event, sporthref);
+
+                hrefs.push({
+                    url: url,
+                    datestring: hour + ', ' + day
+                });
+            }
+        }
+
+        hrefs = hrefs.map( ({url, datestring}) => {
+            let ISOString;
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under [${url}]:${datestring}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
+            }
+            return {
+                url: url,
+                datetime: ISOString
+            };
+        } )
+
+        // prune the hrefs array
+        log.write(`Success! ${hrefs.length} hrefs from ${url} before pruning!\n`);
+        const hrefsPruned = hrefs.filter(e => e);
+
+        log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
+        hrefs = hrefsPruned;
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${meta.baseURL} failed, ${tuple.hrefs.length} entries hunted\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n`);
         return -1;
     } finally{
-        writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
-        writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(tuple.hrefs, null, 2));
-        await browser.close();
-        await promisify(log.end).bind(log);
+        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
+        // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
+        // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
+        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
+        await promisify(log.end).bind(log)();
     }
 }

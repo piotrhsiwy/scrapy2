@@ -32,14 +32,6 @@
         "globalID": "KING_OF_GLORY"
     },
     {
-        "specificName": "E-Soccer",
-        "globalID": "E_SOCCER"
-    },
-    {
-        "specificName": "E-Basketball",
-        "globalID": "E_BASKETBALL"
-    },
-    {
         "specificName": "Other",
         "globalID": "OTHER"
     },
@@ -92,7 +84,7 @@
         "globalID": "HALO"
     },
     {
-        "specificName": "E-Cricket",
-        "globalID": "E_CRICKET"
+        "specificName": "Crossfire",
+        "globalID": "CROSSFIRE"
     }
 ]

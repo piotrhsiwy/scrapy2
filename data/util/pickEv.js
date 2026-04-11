@@ -2,6 +2,9 @@ import { readFileSync } from "fs"
 
 export function pickEvRandom(path){
     const evs = JSON.parse(readFileSync(path));
+    if(!evs){
+        return 'no evs available';
+    }
 
     const from = 0;
     const to = evs.length; 
