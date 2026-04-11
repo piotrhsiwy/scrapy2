@@ -189,7 +189,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;

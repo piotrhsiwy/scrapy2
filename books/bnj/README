@@ -92,3 +92,5 @@ n @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:7
 34af0c1.js:1 {…}
 34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
 34af0c1.js:1 {…}
+
+Tested on headfull browser. There is a rateLimiter in place!

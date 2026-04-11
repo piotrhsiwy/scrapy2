@@ -33,25 +33,43 @@ export async function scrapeMatchURL(data, browser, book, i){
       log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
       return -10;
     }
-
-  let page = await prepPage(browser, book);
-  // let page = await browser.newPage();
+ 
+  // let page = await prepPage(browser, book);
+  let page = await browser.newPage();
   const originalPage = page;
 
   try{
     let selector, mapping;
 
     await page.goto(book.urls[i]);
-    const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-    await popup.click();
 
-    const iframeHandle = await page.$('iframe');
-    page = await iframeHandle.contentFrame();
-    await page.waitForSelector('div.games-stream__title-item a', {timeout:30000})
+    const el = await page.waitForSelector('span.live-badge, iframe, div.container-event', { timeout: 30000 })
+    if(el){
+      const tag = await el.evaluate(e => e.tagName);
+      if(tag === 'SPAN' && await el.evaluate(e => e.textContent) == 'LIVE'){
+        log.write(`Failure! The LIVE badge is present on the page ${book.urls[i]}\n`);
+        return 10;
+      } else if(tag === 'DIV'){
+        ;
+      } else if(tag === 'IFRAME'){
+        page = await el.contentFrame();
+      }
+    }
+    await page.waitForSelector('div.markets', {timeout:10000})
 
     // get sport
-    const SportTournament = await page.$eval('div.games-stream__title-item a', e => e.textContent);
-    let sportName = SportTournament.split('. ')[0];
+    let sportName = await page.$$eval('div.breadcrumb div.breadcrumb-list ul li a', els => {
+      let sport;
+      if(els.length >= 3){
+        const SportTournament = els[2].textContent;
+        sport = SportTournament.split(' - ')[0].replace('\n', '').trim();
+      }
+      return sport;
+    })
+    if(!sportName){
+      log.write(`Critical Failure! Could not get sportName on ${book.urls[i]}\n`);
+      return 21;
+    }
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
@@ -62,53 +80,22 @@ export async function scrapeMatchURL(data, browser, book, i){
     let sport = insertSportIntoData(log, data, sportName);
 
     // get teamHome, teamAway
-    let teams = await page.$$eval('div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
-    if(teams.length != 2){
-      teams = await page.$$eval('div.slider-event-pro__team-name', elements => elements.map( e => e.textContent.trim() ));
-      if(teams.length != 2){
-        log.write(`Failure! Read incorrect number of team names for this game (possibly none)\n`);
-        return 10;
-      }
-    }
-    const teamHome = stripTeamName(teams[0]);
-    const teamAway = stripTeamName(teams[1]);
+    let teamHome = await page.$eval('div.header-title div.actor-1', e => e.textContent);
+    teamHome = stripTeamName(teamHome);
+    let teamAway = await page.$eval('div.header-title div.actor-2', e => e.textContent);
+    teamAway = stripTeamName(teamAway);
     
     // get datetime, mode
-    const isLive = await page.$('div._badge--live');
-    let datetime;
-    if(isLive){
-      datetime = 'live';
-    } else{
-      const datestring = await page.$eval('div.slider-event-pro__info-date span', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
-      datetime = datestringToISO(datestring);
-    }
+    const datestring = await page.$eval('div.date-event', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
+    const datetime = datestringToISO(datestring);
     let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
 
-    // check filter 'All markets'
-    await page.evaluate( async() => {
-      const filters = Array.from(document.querySelectorAll('span.games-stream-pro-nav__item-text'));
-      const allMarketsFilter = filters.find( e => e.textContent.includes('FILTER.ALL'));
-      if(allMarketsFilter){
-        await allMarketsFilter.click();
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    })
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-    selector = 'div.game-event__market-wrapper';
+    selector = 'div.container-event';
     let marketHandles = await page.$$(selector);
-    // scroll until no more elements are loaded
-    let old_size, new_size;
-    do{
-      // await new Promise(resolve => setTimeout(resolve, 1000));
-      old_size =  marketHandles.length;
-      await marketHandles[marketHandles.length-1].scrollIntoView();
-      await new Promise(resolve => setTimeout(resolve, 100));
-      marketHandles = await page.$$(selector);
-      new_size =  marketHandles.length;
-    } while( old_size !== new_size );
     for(const marketHandle of marketHandles){
       // get marketName
-      selector = 'div.game-event-market__title';
+      selector = 'div.question-header p';
       let marketName = await marketHandle.$eval(selector, e => e.textContent.trim());
       const origMarketName = marketName;
       mapping = marketNameMapping.find( m => m.specificName === marketName);
@@ -126,15 +113,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
       let market = insertMarketIntoMatch(log, match, marketName);
       // get odd
-      selector = 'button.outcome';
+      selector = 'span.odd';
       const oddsHandles = await marketHandle.$$(selector);
       for(let i = 0; i < oddsHandles.length; i++){
         const oddHandle = oddsHandles[i];
-        selector = 'span.outcome__status';
-        let handle = await oddHandle.$(selector);
-        if(!handle){
-          continue;
-        }
+        selector = 'span.actor-label';
         let suffix = '';
         let oddName = await oddHandle.$eval(selector, (e) => e.textContent.toLowerCase())
           /* thigs to check when implementing oddName sanitization:
@@ -147,16 +130,18 @@ export async function scrapeMatchURL(data, browser, book, i){
         oddName = stripTeamName(oddName);
         if(market.name.includes('Correct Score')){
           oddName = oddName.replace('-',':');
-        } else if(market.name.includes('First to Reach Kills')){
-          suffix = origMarketName.match(/\d+/)[0];
-        } else if(market.name.includes('Kill Maker')){
-          suffix = origMarketName.match(/\d+/)[0];
+          oddName = oddName
+            .replace(teamHome, '')
+            .replace(teamAway, '');
+        } else if(market.name.includes('Handicap')){
+          // translate (-1.5)teamName into teamName-1.5
+          oddName = oddName.replace(/^\((-?\d+\.?\d*)\)(.+)$/, '$2$1');
         }
         let odd = insertOddIntoMarket(log, market, oddName + suffix);
         // get coef
-        selector = 'span.outcome__number'
+        selector = 'span.odd-value-live'
         const coef = await oddHandle.$eval(selector, (e) => {
-          const text = e.textContent;
+          const text = e.parentNode.textContent.replace('\n', '').trim();
           const f = parseFloat(text);
           if(!Number.isNaN(f)){
             return f;

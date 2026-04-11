@@ -53,12 +53,14 @@ Pinnacle is apparently the sharpest odds there is
 
 
 /xyz/urlScraper.js return codes interpretation:
+21 failure:
+  could not get sportName
 20 failure:
   sport mapping does not exist
 11 failure:
   redirected. This can happen if the match is in the past
 10 failure:
-  there is an element on the page indicating that the match is in the past and/or doesn't exist
+  there is an element on the page indicating that the match is in the past, is live and/or doesn't exist
 0 success:
   successfully retrieved all available markets. Note that  live odds are 
   not being scraped
