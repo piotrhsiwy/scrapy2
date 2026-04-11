@@ -101,7 +101,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     try{
       await page?.close()
     } catch{}
-    await promisify(log.end).bind(log);
+    await promisify(log.end).bind(log)();
   }
   
 }
