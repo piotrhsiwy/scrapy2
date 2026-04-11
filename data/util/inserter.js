@@ -96,7 +96,7 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
         teamHome: teamHome,
         teamAway: teamAway,
         datetime: datetime,
-        urls: [],
+        urls: [{book: book, url: url}],
         markets: []
       });
       match = sport.matches.findLast(m =>

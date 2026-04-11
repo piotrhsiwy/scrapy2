@@ -276,6 +276,9 @@ export async function scrapeMatchURL(data, browser, book, i){
         .replace(labelAway, teamAway)
         .replace(/\+/g, '');
         odds[j] = stripTeamName(odds[j]);
+        if(market.name.includes('Kill Maker')){
+          odds[j] = odds[j].replace('thkill', '');
+        }
         let odd = insertOddIntoMarket(log, market, odds[j]);
         let coef = insertCoefIntoOdd(log, odd, book.name, vals[j])
       }
@@ -291,7 +294,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -1;
   } finally{
     try{ await page?.close() } catch{ log.write(`Error thrown when closing page`); }
-    await promisify(log.end).bind(log);
+    await promisify(log.end).bind(log)();
   } 
 
 }
