@@ -132,6 +132,14 @@ const testcases =
         name:'OFFSYDE Esports + gabe (Women)',
         desiredResult:'offsyde'
     },
+    {
+        name:'Evil Geniuses Pa',
+        desiredResult:'evilgeniuses'
+    },
+    {
+        name: undefined,
+        desiredResult:undefined
+    },
 ]
 
 import { stripTeamName } from "./stripTeamName.js";

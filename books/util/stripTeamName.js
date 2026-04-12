@@ -103,9 +103,14 @@ const teamNameMap = Object.freeze([
         globalName:'1w',
         specificNames:['1win']
     },
+    {
+        globalName:'evilgeniuses',
+        specificNames:['evilgeniusespa']
+    },
 ])
 
 export function stripTeamName(str){
+    if(!str) return str;
     str = str.toLowerCase()
         .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|fredit|bnk|.vietnam|\(women\)/g, '')
         .replace(/\+showtime|\+r8|\+gabe|chongqing/g, '')

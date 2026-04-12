@@ -1,0 +1,7 @@
+{
+    "name":"Betninja",
+    "abbrev":"bnj",
+    "baseURL":"https://betninja21.com/en/sports/sport/74-esports",
+    "viewport":{"width":1920, "height":768},
+    "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|translations|chat|googletagmanager"
+}

@@ -6,6 +6,7 @@ esportsbet      supported (4.2 trustpilot)
 lsbet           supported (1.9 trustpilot)
 ggbet           supported (2.1 trustpilot)
 mystake         supported (4.2 trustpilot)
+dexsport        supported (3.4 trustpilot)         web3 decentralized
 bet365          -           no esports
 tipico          -           no esports 
 interwetten     -           no esports 
@@ -26,10 +27,9 @@ luckyblock      -           OK (2.7 trustpilot)         telegram
 megadice        -           WARNING
 betplay         -           OK (2.8 trustpilot)
 cryptorino      -           OK (2.9 trustpilot)         cloudeflare
-dexsport        testing     OK (3.4 trustpilot)         web3 decentralized
 telbet          -           OK (no trustpilot reviews)
 vave            -           OK (1.5 trustpilot)
-betninja        -           (2.2 trustpilot)            good website to scrape odds
+betninja        test        (2.2 trustpilot)            good website to scrape odds
 sportbet.one    -           Netherlands VPN (2.8 trustpilot) good for scraping, no KYC, decentralized
 
 2. Where do they get the odds? (The Source)
@@ -49,20 +49,3 @@ PandaScore: Offers a dedicated Esports API with a free tier for developers.
 
 
 Pinnacle is apparently the sharpest odds there is
-
-
-
-/xyz/urlScraper.js return codes interpretation:
-20 failure:
-  sport mapping does not exist
-11 failure:
-  redirected. This can happen if the match is in the past
-10 failure:
-  there is an element on the page indicating that the match is in the past and/or doesn't exist
-0 success:
-  successfully retrieved all available markets. Note that  live odds are 
-  not being scraped
--1 critical failure:
-  some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.
--10 critical failure:
-  one of the required files could not be opened

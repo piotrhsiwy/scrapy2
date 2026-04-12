@@ -1,0 +1,14 @@
+[
+    {
+        "specificName": "Valorant",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "Dota 2",
+        "globalID": "DOTA2"
+    },
+    {
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    }
+]
