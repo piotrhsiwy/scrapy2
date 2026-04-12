@@ -41,11 +41,14 @@ export async function huntSportURLs(browser, book){
     try{
         await page.goto(url);
 
-        // const el = await page.$('p');
-        // const attrName = await el.evaluate(el =>
-        // [...el.attributes].find(a => a.name.startsWith('data-astro-cid-'))?.name
-        // );
-        // const isVercelCheckpoint = await page.$(`p[${attrName}]`);
+        const el = await page.$('p');
+        const attrName = await el.evaluate(el =>
+        [...el.attributes].find(a => a.name.startsWith('data-astro-cid-'))?.name
+        );
+        const isVercelCheckpoint = await page.$(`p[${attrName}]`);
+        if(isVercelCheckpoint){
+            log.write(`Warning! Browser is being verified on the Vercel Checkpoint!\n`);
+        }
 
         const iframeHandle = await page.waitForSelector('iframe', {timeout:30000});
         page = await iframeHandle.contentFrame();
