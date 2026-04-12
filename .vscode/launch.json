@@ -20,7 +20,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\books\\tp\\parserTests.js"
+            "program": "${workspaceFolder}/books/util/stripTeamNameTests.js"
         },
         {
             "type": "node",
