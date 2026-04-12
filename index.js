@@ -73,20 +73,20 @@ async function openBrowser(){
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-accelerated-2d-canvas',
-      '--disable-gpu',
-      '--disable-web-security',
-      '--disable-blink-features=AutomationControlled',
+      // '--disable-gpu', // (bnj) causes the browser to not pass the Vercel Checkpoint Verification
+      // '--disable-web-security', // (bnj) causes the browser to not pass the Vercel Checkpoint Verification
+      // '--disable-blink-features=AutomationControlled', // already handled by puppeteerStealth plugin
       // `--proxy-server=${PROXY_URL}`,
       '--proxy-bypass-list=*',
       '--no-startup-window',
-      // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
+      // // '--disk-cache-dir=/dev/null', // does not work with chrome-headless-shell binary (file exists error)
       '--disk-cache-size=1',
       '--aggressive-cache-discard',
       '--disable-notifications',
       '--disable-remote-fonts',
       '--disable-translate',
       '--disable-infobars',
-      // '--disable-reading-from-canvas', // causes 22bet to not load elements
+      // // '--disable-reading-from-canvas', // (22bet) causes to not load elements
       '--disable-remote-playback-api',
       '--disable-shared-workers --disable-voice-input',
       '--enable-aggressive-domstorage-flushing',
@@ -94,7 +94,7 @@ async function openBrowser(){
       '--disable-features=NetworkService,NetworkServiceInProcess,TranslateUI',
       '--disable-component-extensions-with-background-pages',
       '--disable-extensions',
-      '--disable-background-timer-throttling',
+      // '--disable-background-timer-throttling', // (bnj) causes the browser to not pass the Vercel Checkpoint Verification
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
       '--disable-ipc-flooding-protection',
@@ -260,6 +260,7 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
+'bnj',
 'dex',
 'ms',
 'ls',
