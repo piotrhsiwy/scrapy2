@@ -25,11 +25,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug Telegram Bot",
+            "name": "Test calcSports()",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\notif\\telegram\\tgBot.js"
-        }
+            "program": "${workspaceFolder}/calc/calcTests.js"
+        },
     ]
 }

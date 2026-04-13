@@ -206,6 +206,54 @@ function ev2(evs, cutoff, sport, match, market, odd){
     }
 }
 
+/**
+ * This function removes the books's edges from each of the coefficients, according the coefficients of the two opposing 
+ * (as in Match Winner A, Match Winner B) odds of a particular book. This way value of 1.85 could be devigged to 2.0, 
+ * depending to how big the book's edge is in this market. It assumes that there is at least one corresponding odd for 
+ * each book and it will take the first one.
+ * @return It returns a pair of those same exact odds, but with modified 
+ * values, to be used when calculating value bets.
+ * @param oddHome 
+ * @param oddAway is an odd Object representing an odd opposed to oddHome of the following structure:
+ *              {
+ *                "name": "kuusamo.gg",
+                  "coefs": [
+                    {
+                      "timestamp": "April 11, 2026 at 02:23:38 PM UTC",
+                      "book": "GGbet",
+                      "value": 2.52
+                    },
+                    {
+                      "timestamp": "April 11, 2026 at 02:24:09 PM UTC",
+                      "book": "Thunderpick",
+                      "value": 2.12
+                    }
+                  ]
+                }
+ */
+function devig(oddHome, oddAway){
+
+    let deviggedOddHome = devigOneside(oddHome, oddAway);
+    let deviggedOddAway = devigOneside(oddAway, oddHome);
+
+    function devigVal(a, b){
+        const edgeOnside = (1/a + 1/b - 1)/2
+        return 1/(1/a - edgeOnside);
+    }
+
+    function devigOneside(oddHome, oddAway){
+        let ret = oddHome;
+        for(let i = 0; i < oddHome.coefs.length; i++){
+            const coefHome = oddHome.coefs[i];
+            const valueAway = oddAway.coefs.find(e => e.book === coefHome.book).value;
+            ret.coefs[i].value = devigVal(coefHome.value, valueAway);
+        }
+        return ret;
+    }
+
+    return {deviggedOddHome, deviggedOddAway};
+}
+
 function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
 
     let marketReport;
@@ -222,6 +270,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
         let oddAway = market.odds[1];
         if(oddHome && oddAway){
             arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
+            const {deviggedOddHome, deviggedOddAway} = devig(oddHome, oddAway);
             ev2(evs, evCutoff, sport, match, market, oddHome);
             ev2(evs, evCutoff, sport, match, market, oddAway);
         } else{
