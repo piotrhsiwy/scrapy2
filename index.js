@@ -189,7 +189,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      await singleHunt(browser);
+      // await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -261,7 +261,7 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  'bnj',
+  // 'bnj',
   // 'dex',
   // 'tp',
   // 'ms',
