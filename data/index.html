@@ -227,11 +227,20 @@
         function flattenObject(obj, prefix = '') {
             let result = {};
             for (const key in obj) {
-                if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+
+                let val = obj[key];
+                if (Array.isArray(val)) {
+                    val = val.map(item => 
+                        typeof item === 'number' && !Number.isInteger(item) 
+                        ? item.toFixed(2) 
+                        : item
+                    ).join(', '); // Converts [1.23456, 2.34567] to "1.2346, 2.3457"
+                    result[`${prefix}${key}`] = val;
+                } else if (typeof obj[key] === 'object' && obj[key] !== null) {
                     result = { ...result, ...flattenObject(obj[key], `${prefix}${key} `) };
                 } else {
                     let val = obj[key];
-                    if (typeof val === 'number') val = Number.isInteger(val) ? val : val.toFixed(4);
+                    if (typeof val === 'number') val = Number.isInteger(val) ? val : val.toFixed(3);
                     if (key.toLowerCase().includes('url') && typeof val === 'string') val = `<a href="${val}" target="_blank">Link ↗</a>`;
                     result[`${prefix}${key}`] = val;
                 }

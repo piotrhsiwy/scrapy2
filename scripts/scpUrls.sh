@@ -1,4 +1,5 @@
 scp root@scrapy2.duckdns.org:/scrapy2/books/22/matchURLs.json ./books/22/matchURLs.json
+scp root@scrapy2.duckdns.org:/scrapy2/books/bnj/matchURLs.json ./books/bnj/matchURLs.json
 scp root@scrapy2.duckdns.org:/scrapy2/books/dex/matchURLs.json ./books/dex/matchURLs.json
 scp root@scrapy2.duckdns.org:/scrapy2/books/esb/matchURLs.json ./books/esb/matchURLs.json
 scp root@scrapy2.duckdns.org:/scrapy2/books/gg/matchURLs.json ./books/gg/matchURLs.json
