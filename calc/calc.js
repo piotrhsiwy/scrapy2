@@ -242,7 +242,7 @@ function devig(oddHome, oddAway){
     function devigVal(a, b){
         const edgeOneside = (1/a + 1/b - 1)/2
         const ret = 1/(1/a - edgeOneside);
-        log.write(`Devigged ${a} against ${b} to ${ret}. Vig: ${2*edgeOneside}\n`)
+        // log.write(`Devigged ${a} against ${b} to ${ret}. Vig: ${2*edgeOneside}\n`)
         return ret;
     }
 
@@ -254,7 +254,7 @@ function devig(oddHome, oddAway){
             const coefAway = oddAway.coefs.find(e => e.book === coefHome.book);
             const valueAway = coefAway?.value;
             if(!valueAway || !valueHome){
-                log.write(`Warning! cannot devig, one of the corresponding coefs has no value: ${oddHome.name}:${valueHome} or ${valueAway}. Setting to null.\n`);
+                // log.write(`Warning! cannot devig, one of the corresponding coefs has no value: ${oddHome.name}:${valueHome} or ${valueAway}. Setting to null.\n`);
                 ret.coefs[i].value = null;
                 continue;
             }
