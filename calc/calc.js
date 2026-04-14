@@ -157,7 +157,7 @@ function evKelly(value, mean){
     return p - (1-p)/b;
 }
 
-function ev2(evs, cutoff, sport, match, market, odd){
+function ev2(evs, cutoff, sport, match, market, odd, oddOriginal){
     const valuesNoNull = [];
     odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
     // log.write(`values: ${values}\n`);
@@ -173,11 +173,13 @@ function ev2(evs, cutoff, sport, match, market, odd){
             const strength = evStrength(v, mean);
             if(strength < -cutoff){
                 const book = odd.coefs.find(c => c.value === v).book;
+                const vOriginal = oddOriginal.coefs.find(c => c.book === book).value;
                 const url = match.urls.find( u => u.book === book )?.url;
                 // calculate standard deviation of the corresponding probabilities
                 const stdDev = stdDevArrayExcluding(valuesNoNull.map(o => 1/o), 1/v);
                 let newEv = {
                     "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
+                    "valueOriginal":vOriginal,
                     "value":v,
                     "values":valuesNoNull,
                     "mean":mean,
@@ -210,9 +212,13 @@ function ev2(evs, cutoff, sport, match, market, odd){
  * This function removes the books's edges from each of the coefficients, according the coefficients of the two opposing 
  * (as in Match Winner A, Match Winner B) odds of a particular book. This way value of 1.85 could be devigged to 2.0, 
  * depending to how big the book's edge is in this market. It assumes that there is at least one corresponding odd for 
- * each book and it will take the first one.
+ * each book and it will take the first one. If the corresponding coef has no, or invalid value: {null ,undefined, 0} (this 
+ * can occur if the book has odds locked for this event for example), the value is set to null on *both* sides. Example:
+ * a book has values: 11.0 and 0 (invalid) for a market, then *both* 11.0 and 0 are set to null. This prevents from using not-devigged 
+ * values when calculating value bets.
  * @return It returns a pair of those same exact odds, but with modified 
- * values, to be used when calculating value bets.
+ * values, to be used when calculating value bets. If at least one of the corresponsing values is invalid or 0, both values are 
+ * set to null in the returned object.
  * @param oddHome 
  * @param oddAway is an odd Object representing an odd opposed to oddHome of the following structure:
  *              {
@@ -233,23 +239,35 @@ function ev2(evs, cutoff, sport, match, market, odd){
  */
 function devig(oddHome, oddAway){
 
-    let deviggedOddHome = devigOneside(oddHome, oddAway);
-    let deviggedOddAway = devigOneside(oddAway, oddHome);
-
     function devigVal(a, b){
-        const edgeOnside = (1/a + 1/b - 1)/2
-        return 1/(1/a - edgeOnside);
+        const edgeOneside = (1/a + 1/b - 1)/2
+        const ret = 1/(1/a - edgeOneside);
+        log.write(`Devigged ${a} against ${b} to ${ret}. Vig: ${2*edgeOneside}\n`)
+        return ret;
     }
 
     function devigOneside(oddHome, oddAway){
-        let ret = oddHome;
+        let ret = structuredClone(oddHome);
         for(let i = 0; i < oddHome.coefs.length; i++){
             const coefHome = oddHome.coefs[i];
-            const valueAway = oddAway.coefs.find(e => e.book === coefHome.book).value;
-            ret.coefs[i].value = devigVal(coefHome.value, valueAway);
+            const valueHome = coefHome?.value
+            const coefAway = oddAway.coefs.find(e => e.book === coefHome.book);
+            const valueAway = coefAway?.value;
+            if(!valueAway || !valueHome){
+                log.write(`Warning! cannot devig, one of the corresponding coefs has no value: ${oddHome.name}:${valueHome} or ${valueAway}. Setting to null.\n`);
+                ret.coefs[i].value = null;
+                continue;
+            }
+            ret.coefs[i].value = devigVal(valueHome, valueAway);
         }
         return ret;
     }
+
+    if(!oddHome || !oddAway){
+        return {oddHome, oddAway}
+    }
+    let deviggedOddHome = devigOneside(oddHome, oddAway);
+    let deviggedOddAway = devigOneside(oddAway, oddHome);
 
     return {deviggedOddHome, deviggedOddAway};
 }
@@ -271,8 +289,8 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
         if(oddHome && oddAway){
             arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
             const {deviggedOddHome, deviggedOddAway} = devig(oddHome, oddAway);
-            ev2(evs, evCutoff, sport, match, market, oddHome);
-            ev2(evs, evCutoff, sport, match, market, oddAway);
+            ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
+            ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
         } else{
             // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
@@ -313,8 +331,9 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
+                    const {deviggedOddHome, deviggedOddAway} = devig(oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -357,8 +376,9 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
+                    const {deviggedOddHome, deviggedOddAway} = devig(oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
@@ -402,8 +422,9 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                 }
                 if(oddHome && oddAway){
                     arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
+                    const {deviggedOddHome, deviggedOddAway} = devig(oddHome, oddAway);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
+                    ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
                     // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
