@@ -31,5 +31,14 @@
             ],
             "program": "${workspaceFolder}/calc/calcTests.js"
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test db()",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/data/db.js"
+        },
     ]
 }

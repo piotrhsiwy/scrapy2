@@ -10,11 +10,11 @@
   "dependencies": {
     "async-await-queue": "^2.1.4",
     "axios": "^1.12.2",
+    "pg": "^8.20.0",
     "puppeteer": "^22.15.0",
     "puppeteer-core": "^24.39.0",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "telegraf": "^4.16.3"
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
