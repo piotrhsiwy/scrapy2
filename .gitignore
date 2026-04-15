@@ -22,6 +22,7 @@ data/arbs.json
 data/evs.json
 
 # log files
+data/log.txt
 calc/log.txt
 books/*/log.txt
 notif/*/log.txt

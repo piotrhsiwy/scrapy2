@@ -38,7 +38,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/data/db.js"
+            "program": "${workspaceFolder}/data/db/db.js"
         },
     ]
 }
