@@ -120,15 +120,157 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
 
 /**
  * @param {WritableStream} log 
+ * @param {Integer} market_id e.g. 1 - id of the corresponding match. This is inserted into the markets_coefs_link table along with coef_id.
+ * @param {String} book e.g. 'Esportsbet'
+ * @param {String} oddName  e.g. '1.88'
+ * @returns the coef_id of the inserted Coef entry.
+ *      undefined when an errors on insert occurs
+ */
+export async function insertCoef(log, market_id, book, value){
+
+    const date = new Date();
+    let client;
+    let coef_id;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query( {
+                text:`INSERT INTO Coefs (book, value) VALUES($1, $2) RETURNING coef_id`,
+                values: [book, value],
+        });
+        coef_id = ret.rows[0].coef_id;
+        if(coef_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Coefs: \n\t entry: (${book}, ${value})\n\t coef_id: ${coef_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${value})\n\t Incorrect coef_id: ${coef_id}\n`);
+            return coef_id;
+        }
+
+        ret = await client.query( {
+                text:`INSERT INTO markets_coefs_link (market_id, coef_id) VALUES($1, $2)`,
+                values: [market_id, coef_id],
+        });
+        if(ret.rowCount === 1){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_coefs_link: \n\t entry: (${market_id}, ${coef_id})\n`)
+        } else{
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        }
+    
+        
+    } catch(e){
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return coef_id;
+    }
+}
+
+/**
+ * @param {WritableStream} log 
+ * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_markets_link table along with market_id.
+ * @param {String} name e.g. 'Match Winner'
+ * @param {String} oddName  e.g. 'vitality'
+ * @returns the market_id of the inserted Market entry.
+ *      undefined when an errors on insert occurs
+ */
+export async function insertMarket(log, match_id, name, oddName){
+
+    const date = new Date();
+    let client;
+    let market_id;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query( {
+                text:`INSERT INTO Markets (name, oddName) VALUES($1, $2) RETURNING market_id`,
+                values: [name, oddName],
+        });
+        market_id = ret.rows[0].market_id;
+        if(market_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Markets: \n\t entry: (${name}, ${oddName})\n\t market_id: ${market_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name}, ${oddName})\n\t Incorrect market_id: ${market_id}\n`);
+            return market_id;
+        }
+
+        ret = await client.query( {
+                text:`INSERT INTO matches_markets_link (match_id, market_id) VALUES($1, $2)`,
+                values: [match_id, market_id],
+        });
+        if(ret.rowCount === 1){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_markets_link: \n\t entry: (${match_id}, ${market_id})\n`)
+        } else{
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        }
+    
+        
+    } catch(e){
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name}, ${oddName})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return market_id;
+    }
+}
+
+/**
+ * @param {WritableStream} log 
+ * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_urls_link table along with url_id.
+ * @param {String} book e.g. 'Esportsbet'
+ * @param {String} url  e.g. 'https://esportsbet.io/esportsbull/OddsPage/39513322/47/CS2Betting-1W-TEAM-NUCLEAR-TIGERES'
+ * @returns the url_id of the inserted Url entry.
+ *      undefined when an errors on insert occurs
+ */
+export async function insertUrl(log, match_id ,book, url){
+
+    const date = new Date();
+    let client;
+    let url_id;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query( {
+                text:`INSERT INTO Urls (book, url) VALUES($1, $2) RETURNING url_id`,
+                values: [book, url],
+        });
+        url_id = ret.rows[0].url_id;
+        if(url_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Urls: \n\t entry: (${book}, ${url})\n\t url_id: ${url_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${url})\n\t Incorrect url_id: ${url_id}\n`);
+            return url_id;
+        }
+
+        ret = await client.query( {
+                text:`INSERT INTO matches_urls_link (match_id, url_id) VALUES($1, $2)`,
+                values: [match_id, url_id],
+        });
+        if(ret.rowCount === 1){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_urls_link: \n\t entry: (${match_id}, ${url_id})\n`)
+        } else{
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${url_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        }
+    
+        
+    } catch(e){
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return url_id;
+    }
+}
+
+/**
+ * @param {WritableStream} log 
  * @param {String} sport e.g. 'Counter-Strike 2'
  * @param {String} teamHome  e.g. 'vitality'
  * @param {String} teamAway  e.g. 'g2'
  * @param {String} datetime is in the ISO8601 format
- * @returns the match_id of the inserted match.
+ * @returns the match_id of the inserted Match.
  *      undefined when an errors on insert occurs
  */
 export async function insertMatch(log, sport, teamHome, teamAway, datetime){
 
+    const date = new Date();
     let client;
     let match_id;
     try{
@@ -138,13 +280,16 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
                 values: [sport, teamHome, teamAway, datetime],
         });
         match_id = ret.rows[0].match_id;
+        if(match_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Mathces: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t match_id: ${match_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t Incorrect match_id: ${match_id}\n`);
+        }
         
     } catch(e){
-        log.write(`Database error when inserting: ${sport, teamHome, teamAway, datetime}\n`)
-        client.query(`ROLLBACK`);
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
-        client.query('COMMIT')
-        client.release()
+        if(client) client.release()
         return match_id;
     }
 }
