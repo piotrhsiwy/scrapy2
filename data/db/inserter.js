@@ -275,10 +275,51 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
     let match_id;
     try{
         client = await pool.connect();
+        // we wrap this into a transaction with advisory lock, to avoid race condition:
+        // when the match does not exist yet, so the first select returns nothing, so there 
+        // is nothing marked with 'FOR UPDATE' and so more than one client can try and 
+        // insert this match
+        await client.query(`SELECT `)
+        await client.query(`BEGIN`);
+        await client.query({ // this locks hash(sport, teamHome, teamAway)
+            text:`
+            SELECT pg_advisory_xact_lock(
+                hashtext($1), 
+                hashtext($2 || '-' || $3)
+            )`,
+            values: [sport, teamHome, teamAway]
+        });
         const ret = await client.query( {
-                text:`INSERT INTO Matches (sport, teamHome, teamAway, datetime) VALUES($1, $2, $3, $4) RETURNING match_id`,
+                text:`
+                WITH existing AS (
+                    SELECT match_id FROM Matches WHERE 
+                        sport = $1 AND
+                        teamHome = $2 AND 
+                        teamAway = $3 AND 
+                        datetime >= $4::timestamp - INTERVAL '3 hours' AND
+                        datetime <= $4::timestamp + INTERVAL '3 hours'
+                    ORDER BY datetime ASC
+                    LIMIT 1
+                    FOR UPDATE
+                ),
+                updated AS (
+                    UPDATE MATCHES
+                    SET datetime = MOST(Matches.datetime, $4::timestamp)
+                    WHERE match_id = (SELECT match_id FROM existing)
+                ),
+                inserted AS (
+                    INSERT INTO Matches (sport, teamHome, teamAway, datetime) 
+                    VALUES ($1, $2, $3, $4::timestamp) 
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING match_id
+                )
+                SELECT match_id from updated
+                UNION ALL
+                SELECT match_id from inserted
+                `,
                 values: [sport, teamHome, teamAway, datetime],
         });
+        await client.query(`COMMIT`); // the lock is automatically released here
         match_id = ret.rows[0].match_id;
         if(match_id){
             log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Mathces: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t match_id: ${match_id}\n`)
@@ -287,6 +328,7 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
         }
         
     } catch(e){
+        await client.query(`ROLLBACK`);
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()

@@ -46,6 +46,8 @@ async function testDbInserting(){
 
     try{
         let is, should;
+
+        // insert a new Match
         is = await insertMatch(log, sportName, teamHome, teamAway, datetime);
         should = 1;
         if(is !== should){
@@ -53,6 +55,14 @@ async function testDbInserting(){
             return -1;
         }
         const match_id = is;
+
+        // insert the same Match again
+        is = await insertMatch(log, sportName, teamHome, teamAway, datetime);
+        should = 1;
+        if(is !== should){
+            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned ${is}, should be ${should}`)
+            return -1;
+        }
 
         is = await insertUrl(log, match_id, book, url);
         should = 1;
