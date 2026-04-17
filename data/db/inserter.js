@@ -119,167 +119,310 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
 }
 
 /**
+ * ALWAYS UPDATES timestamp and value if there exists an entry with the same book
  * @param {WritableStream} log 
  * @param {Integer} market_id e.g. 1 - id of the corresponding match. This is inserted into the markets_coefs_link table along with coef_id.
  * @param {String} book e.g. 'Esportsbet'
- * @param {String} oddName  e.g. '1.88'
- * @returns the coef_id of the inserted Coef entry.
- *      undefined when an errors on insert occurs
+ * @param {String} value  e.g. '1.88'
+ * @returns {coef_id, is_new} 
+ *  the coef_id of the inserted Coef entry. undefined when an errors on insert occurs
+ *  is_new is true if entry with the same book already existed
  */
 export async function insertCoef(log, market_id, book, value){
 
     const date = new Date();
     let client;
-    let coef_id;
+    let coef_id, is_new;
     let ret;
     try{
         client = await pool.connect();
+        await client.query(`BEGIN`);
+        await client.query({ // this locks hash(book, value)
+            text:`
+            SELECT pg_advisory_xact_lock(
+                hashtext($1), 
+                hashtext($2)
+            )`,
+            values: [book, value],
+        })
         ret = await client.query( {
-                text:`INSERT INTO Coefs (book, value) VALUES($1, $2) RETURNING coef_id`,
+                text:`
+                WITH existing AS (
+                    SELECT coef_id FROM Coefs WHERE 
+                        book = $1
+                    ORDER BY book ASC
+                    LIMIT 1
+                ),
+                updated AS (
+                    UPDATE Coefs
+                    SET 
+                        timestamp = CURRENT_TIMESTAMP,
+                        value = $2
+                    WHERE coef_id = (SELECT coef_id FROM existing)
+                    RETURNING coef_id
+                ),
+                inserted AS (
+                    INSERT INTO Coefs (book, value) 
+                    SELECT $1, $2
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING coef_id
+                )
+                SELECT coef_id, true AS is_new FROM inserted
+                UNION ALL
+                SELECT coef_id, false AS is_new FROM updated
+                `,
                 values: [book, value],
         });
+        await client.query(`COMMIT`); // this releases the lock automatically 
         coef_id = ret.rows[0].coef_id;
+        is_new = ret.rows[0].is_new;
         if(coef_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Coefs: \n\t entry: (${book}, ${value})\n\t coef_id: ${coef_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Coefs: \n\t entry: (${book}, ${value})\n\t coef_id: ${coef_id}\n`)
         } else {
             log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${value})\n\t Incorrect coef_id: ${coef_id}\n`);
-            return coef_id;
+            return;
         }
 
-        ret = await client.query( {
-                text:`INSERT INTO markets_coefs_link (market_id, coef_id) VALUES($1, $2)`,
-                values: [market_id, coef_id],
-        });
-        if(ret.rowCount === 1){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_coefs_link: \n\t entry: (${market_id}, ${coef_id})\n`)
-        } else{
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        if(is_new){
+            try{
+                ret = await client.query( {
+                        text:`
+                        INSERT INTO markets_coefs_link (market_id, coef_id) 
+                        VALUES($1, $2)
+                        RETURNING market_id, coef_id
+                        `,
+                        values: [market_id, coef_id],
+                });
+                if(market_id === ret.rows[0].market_id && coef_id === ret.rows[0].coef_id){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_coefs_link: \n\t entry: (${market_id}, ${coef_id})\n`)
+                } else{
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n\tThe fields do not match the existing entry\n`);
+                }
+            } catch(e){
+                // this should be unreachable if the coef is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'market_coef_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_coef_link even though the coef is not new: \n\t entry: (${market_id}, ${coef_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n`);
+                } else throw e;
+            }
         }
     
         
     } catch(e){
+        await client.query(`ROLLBACK`);
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        return coef_id;
+        return {coef_id, is_new};
     }
 }
 
 /**
+ * does NOT UPDATE any fields if an entry with the same (name, oddName) already exists
  * @param {WritableStream} log 
  * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_markets_link table along with market_id.
  * @param {String} name e.g. 'Match Winner'
  * @param {String} oddName  e.g. 'vitality'
- * @returns the market_id of the inserted Market entry.
- *      undefined when an errors on insert occurs
+ * @returns {market_id, is_new} 
+ *  the market_id of the inserted Market entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same (name, oddName) already exists
  */
 export async function insertMarket(log, match_id, name, oddName){
 
     const date = new Date();
     let client;
-    let market_id;
+    let market_id, is_new;
     let ret;
     try{
         client = await pool.connect();
+        await client.query(`BEGIN`);
+        await client.query({ // this locks hash(name, oddName)
+            text:`
+            SELECT pg_advisory_xact_lock(
+                hashtext($1), 
+                hashtext($2)
+            )`,
+            values: [name, oddName]
+        });
         ret = await client.query( {
-                text:`INSERT INTO Markets (name, oddName) VALUES($1, $2) RETURNING market_id`,
+                text:`
+                WITH existing AS (
+                    SELECT market_id FROM Markets WHERE 
+                        name = $1 AND
+                        oddName = $2
+                    ORDER BY name ASC
+                    LIMIT 1
+                ),
+                inserted AS (
+                    INSERT INTO Markets (name, oddName) 
+                    SELECT $1, $2
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING market_id
+                )
+                SELECT market_id, true AS is_new FROM inserted
+                UNION ALL
+                SELECT market_id, false AS is_new FROM existing
+                `,
                 values: [name, oddName],
         });
+        await client.query(`COMMIT`); // this releases the lock automatically 
         market_id = ret.rows[0].market_id;
+        is_new = ret.rows[0].is_new;
         if(market_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Markets: \n\t entry: (${name}, ${oddName})\n\t market_id: ${market_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Markets: \n\t entry: (${name}, ${oddName})\n\t market_id: ${market_id}\n`)
         } else {
             log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name}, ${oddName})\n\t Incorrect market_id: ${market_id}\n`);
-            return market_id;
+            return;
         }
 
-        ret = await client.query( {
-                text:`INSERT INTO matches_markets_link (match_id, market_id) VALUES($1, $2)`,
-                values: [match_id, market_id],
-        });
-        if(ret.rowCount === 1){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_markets_link: \n\t entry: (${match_id}, ${market_id})\n`)
-        } else{
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        if(is_new){
+            try{
+                ret = await client.query( {
+                        text:`
+                        INSERT INTO matches_markets_link (match_id, market_id) 
+                        VALUES($1, $2)
+                        RETURNING match_id, market_id
+                        `,
+                        values: [match_id, market_id],
+                });
+                if(match_id === ret.rows[0].match_id && market_id === ret.rows[0].market_id){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_markets_link: \n\t entry: (${match_id}, ${market_id})\n`)
+                } else {
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id}).\n\t The fields do not match the existing entry\n`);
+                }
+            } catch(e){
+                // this should be unreachable if the market is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'match_market_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a match_market_link even though the market is not new: \n\t entry: (${match_id}, ${market_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id})\n`);
+                } else throw e;
+            }
         }
     
         
     } catch(e){
+        await client.query(`ROLLBACK`)
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name}, ${oddName})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        return market_id;
+        return { market_id, is_new };
     }
 }
 
 /**
+ * does NOT UPDATE anyfields if entry with the same (book, url) arleady exists
  * @param {WritableStream} log 
  * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_urls_link table along with url_id.
  * @param {String} book e.g. 'Esportsbet'
  * @param {String} url  e.g. 'https://esportsbet.io/esportsbull/OddsPage/39513322/47/CS2Betting-1W-TEAM-NUCLEAR-TIGERES'
- * @returns the url_id of the inserted Url entry.
- *      undefined when an errors on insert occurs
+ * @returns {url_id, is_new} 
+ *  the url_id of the inserted Url entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same (book, url) already exists
  */
 export async function insertUrl(log, match_id ,book, url){
 
     const date = new Date();
     let client;
-    let url_id;
+    let url_id, is_new;
     let ret;
     try{
         client = await pool.connect();
+        await client.query(`BEGIN`);
+        await client.query({ // this locks hash(book, url)
+            text:`
+            SELECT pg_advisory_xact_lock(
+                hashtext($1), 
+                hashtext($2)
+            )`,
+            values: [book, url]
+        });
         ret = await client.query( {
-                text:`INSERT INTO Urls (book, url) VALUES($1, $2) RETURNING url_id`,
+                text:`
+                WITH existing AS (
+                    SELECT url_id FROM Urls WHERE 
+                        book = $1 AND
+                        url = $2
+                    ORDER BY book ASC
+                    LIMIT 1
+                ),
+                inserted AS (
+                    INSERT INTO Urls (book, url) 
+                    SELECT $1, $2
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING url_id
+                )
+                SELECT url_id, true AS is_new FROM inserted
+                UNION ALL
+                SELECT url_id, false AS is_new FROM existing
+                `,
                 values: [book, url],
         });
+        await client.query(`COMMIT`); // this releases the lock automatically 
         url_id = ret.rows[0].url_id;
+        is_new = ret.rows[0].is_new;
         if(url_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Urls: \n\t entry: (${book}, ${url})\n\t url_id: ${url_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Urls: \n\t entry: (${book}, ${url})\n\t url_id: ${url_id}\n`)
         } else {
             log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${url})\n\t Incorrect url_id: ${url_id}\n`);
-            return url_id;
+            return;
         }
 
-        ret = await client.query( {
-                text:`INSERT INTO matches_urls_link (match_id, url_id) VALUES($1, $2)`,
-                values: [match_id, url_id],
-        });
-        if(ret.rowCount === 1){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_urls_link: \n\t entry: (${match_id}, ${url_id})\n`)
-        } else{
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${url_id})\n\t Incorrect rowCount: ${ret.rowCount}\n`);
+        if(is_new){
+            try{
+                ret = await client.query( {
+                        text:`
+                        INSERT INTO matches_urls_link (match_id, url_id) 
+                        VALUES($1, $2)
+                        RETURNING match_id, url_id
+                        `,
+                        values: [match_id, url_id],
+                });
+                if(match_id === ret.rows[0].match_id && url_id === ret.rows[0].url_id){
+                    if(ret)log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into matches_urls_link: \n\t entry: (${match_id}, ${url_id})\n`)
+                } else {
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${url_id}).\n\t The fields do not match the existing entry\n`);
+                }
+            } catch(e){
+                // this should be unreachable if the url is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'match_url_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a match_url_link even though the url is not new: \n\t entry: (${match_id}, ${url_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${url_id})\n`);
+                } else throw e;
+            }
         }
-    
         
     } catch(e){
+        await client.query(`ROLLBACK`)
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url})\n\t error: ${e.message}\n`)
     } finally{
-        if(client) client.release()
-        return url_id;
+        if(client) client.release();
+        return { url_id, is_new };
     }
 }
 
 /**
+ * does NOT UPDATE any fields, if with the same (sport, teamHome, teamAway, datetime+-3h) already exists
+ *  this includes the datetime field, where datetime is not the same but inside the window
  * @param {WritableStream} log 
  * @param {String} sport e.g. 'Counter-Strike 2'
  * @param {String} teamHome  e.g. 'vitality'
  * @param {String} teamAway  e.g. 'g2'
  * @param {String} datetime is in the ISO8601 format
- * @returns the match_id of the inserted Match.
- *      undefined when an errors on insert occurs
+ * @returns {match_id, is_new}
+ *  the match_id of the inserted Match. undefined when an errors on insert occurs
+ *  is_new is true if a Match with the same (sport, teamHome, teamAway, datetime+-3h) already exists
  */
 export async function insertMatch(log, sport, teamHome, teamAway, datetime){
 
     const date = new Date();
     let client;
-    let match_id;
+    let match_id, is_new;
     try{
         client = await pool.connect();
         // we wrap this into a transaction with advisory lock, to avoid race condition:
         // when the match does not exist yet, so the first select returns nothing, so there 
         // is nothing marked with 'FOR UPDATE' and so more than one client can try and 
         // insert this match
-        await client.query(`SELECT `)
         await client.query(`BEGIN`);
         await client.query({ // this locks hash(sport, teamHome, teamAway)
             text:`
@@ -289,6 +432,13 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
             )`,
             values: [sport, teamHome, teamAway]
         });
+        // // This snippet can be used to update existing entry
+        // updated AS (
+        //     UPDATE Matches
+        //     SET datetime = Matches.datetime
+        //     WHERE match_id = (SELECT match_id FROM existing)
+        //     RETURNING match_id
+        // ),
         const ret = await client.query( {
                 text:`
                 WITH existing AS (
@@ -302,27 +452,23 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
                     LIMIT 1
                     FOR UPDATE
                 ),
-                updated AS (
-                    UPDATE MATCHES
-                    SET datetime = MOST(Matches.datetime, $4::timestamp)
-                    WHERE match_id = (SELECT match_id FROM existing)
-                ),
                 inserted AS (
                     INSERT INTO Matches (sport, teamHome, teamAway, datetime) 
-                    VALUES ($1, $2, $3, $4::timestamp) 
+                    SELECT $1, $2, $3, $4::timestamp
                     WHERE NOT EXISTS (SELECT 1 FROM existing)
                     RETURNING match_id
                 )
-                SELECT match_id from updated
+                SELECT match_id, false AS is_new FROM existing
                 UNION ALL
-                SELECT match_id from inserted
+                SELECT match_id, true AS is_new FROM inserted
                 `,
                 values: [sport, teamHome, teamAway, datetime],
         });
         await client.query(`COMMIT`); // the lock is automatically released here
         match_id = ret.rows[0].match_id;
+        is_new = ret.rows[0].is_new;
         if(match_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into Mathces: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t match_id: ${match_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Matches: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t match_id: ${match_id}\n`)
         } else {
             log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t Incorrect match_id: ${match_id}\n`);
         }
@@ -332,6 +478,6 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        return match_id;
+        return { match_id, is_new };
     }
 }
