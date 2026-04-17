@@ -29,6 +29,8 @@ async function testDbInserting(){
     const teamAway = 'g2';
     // TODO what if the datetime is 'live'? disallow it on the scraper level
     const datetime = 'October 6, 2025 at 07:00:00 PM GMT+2';
+    const datetime3h = 'October 6, 2025 at 10:00:00 PM GMT+2';
+    const datetime4h = 'October 6, 2025 at 11:00:00 PM GMT+2';
 
     // Url + match_id
     const book = 'Esportsbet';
@@ -47,62 +49,155 @@ async function testDbInserting(){
     try{
         let is, should;
 
-        // insert a new Match
+        // INSERT insert a new Match
         is = await insertMatch(log, sportName, teamHome, teamAway, datetime);
-        should = 1;
-        if(is !== should){
-            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned ${is}, should be ${should}`)
+        should = {match_id:1, is_new:true};
+        if(is.match_id !== should.match_id || is.is_new !== should.is_new){
+            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned 
+                \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+            `)
             return -1;
         }
-        const match_id = is;
+        const match_id = is.match_id;
 
-        // insert the same Match again
+        // UPDATE insert the same Match again
         is = await insertMatch(log, sportName, teamHome, teamAway, datetime);
-        should = 1;
-        if(is !== should){
-            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned ${is}, should be ${should}`)
+        should = {match_id:1, is_new:false};
+        if(is.match_id !== should.match_id || is.is_new !== should.is_new){
+            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned 
+                \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+            `)
             return -1;
         }
 
+        // UPDATE insert the same Match again with datetime 3h apart
+        is = await insertMatch(log, sportName, teamHome, teamAway, datetime3h);
+        should = {match_id:1, is_new:false};
+        if(is.match_id !== should.match_id || is.is_new !== should.is_new){
+            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime3h}) returned 
+                \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+            `)
+            return -1;
+        }
+
+        // INSERT insert the same Match again with datetime 4h apart (this should be classified as a separate Match entry)
+        is = await insertMatch(log, sportName, teamHome, teamAway, datetime4h);
+        should = {match_id:2, is_new:true};
+        if(is.match_id !== should.match_id || is.is_new !== should.is_new){
+            console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime4h}) returned 
+                \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+            `)
+            return -1;
+        }
+
+        // insert Url
         is = await insertUrl(log, match_id, book, url);
-        should = 1;
-        if(is !== should){
-            console.log(`insertUrl(${match_id}, ${book}, ${url}) returned ${is}, should be ${should}`)
+        should = {url_id:1, is_new:true};
+        if(is.url_id !== should.url_id || is.is_new !== should.is_new){
+            console.log(`insertUrl(${match_id}, ${book}, ${url}) returned 
+                \tis:{ url_id:${is.url_id}, is_new:${is.is_new} }
+                \tshould:{ url_id:${should.url_id}, is_new:${should.url_id} }
+            `)
             return -1;
         }
-        const url_id = is;
+        const url_id = is.url_id;
 
+        // insert the same Url again
+        is = await insertUrl(log, match_id, book, url);
+        should = {url_id:1, is_new:false};
+        if(is.url_id !== should.url_id || is.is_new !== should.is_new){
+            console.log(`insertUrl(${match_id}, ${book}, ${url}) returned 
+                \tis:{ url_id:${is.url_id}, is_new:${is.is_new} }
+                \tshould:{ url_id:${should.url_id}, is_new:${should.url_id} }
+            `)
+            return -1;
+        }
+
+        // insert MarketHome
         is = await insertMarket(log, match_id, marketName, oddNameHome);
-        should = 1;
-        if(is !== should){
-            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameHome}) returned ${is}, should be ${should}`)
+        should = {market_id:1, is_new:true};
+        if(is.market_id !== should.market_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameHome}) returned 
+                \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
+                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
+            `)
             return -1;
         }
-        const market_idHome = is;
+        const market_idHome = is.market_id;
 
+        // insert the same MarketHome again
+        is = await insertMarket(log, match_id, marketName, oddNameHome);
+        should = {market_id:1, is_new:false};
+        if(is.market_id !== should.market_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameHome}) returned 
+                \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
+                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
+            `)
+            return -1;
+        }
+
+        // insert MarketAway
         is = await insertMarket(log, match_id, marketName, oddNameAway);
-        should = 2;
-        if(is !== should){
-            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameAway}) returned ${is}, should be ${should}`)
+        should = {market_id:2, is_new:true};
+        if(is.market_id !== should.market_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameAway}) returned 
+                \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
+                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
+            `)
             return -1;
         }
-        const market_idAway = is;
+        const market_idAway = is.market_id;
 
+        // insert CoefHome
         is = await insertCoef(log, market_idHome, book, valueHome);
-        should = 1;
-        if(is !== should){
-            console.log(`insertCoef(${market_idHome}, ${book}, ${valueHome}) returned ${is}, should be ${should}`)
+        should = {coef_id:1, is_new:true};
+        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome}) returned 
+                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
+                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+            `)
             return -1;
         }
-        const coef_idHome = is;
+        const coef_idHome = is.coef_id;
 
-        is = await insertCoef(log, market_idAway, book, valueAway);
-        should = 2;
-        if(is !== should){
-            console.log(`insertCoef(${market_idAway}, ${book}, ${valueAway}) returned ${is}, should be ${should}`)
+        // insert CoefHome again
+        // TODO here I check the value if it stayed the same - this is the difference between this and the next textcase
+        is = await insertCoef(log, market_idHome, book, valueHome);
+        should = {coef_id:1, is_new:false};
+        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome}) returned 
+                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
+                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+            `)
             return -1;
         }
-        const coef_idAway = is;
+        
+        // insert CoefHome with value + 0.1
+        is = await insertCoef(log, market_idHome, book, valueHome + 0.1);
+        should = {coef_id:1, is_new:false};
+        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome + 0.1}) returned 
+                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
+                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+            `)
+            return -1;
+        }
+
+        // insert CoefAway
+        is = await insertCoef(log, market_idAway, book, valueAway);
+        should = {coef_id:2, is_new:true};
+        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_idAway}, ${book}, ${valueAway}) returned 
+                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
+                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+            `)
+            return -1;
+        }
+        const coef_idAway = is.coef_id;
 
     } catch{
         console.log('Inserting test failed')
@@ -179,7 +274,8 @@ async function initDb(){
             CREATE TABLE matches_urls_link(
                 match_id INTEGER REFERENCES Matches(match_id),
                 url_id INTEGER REFERENCES Urls(url_id),
-                PRIMARY KEY (match_id, url_id)
+                PRIMARY KEY (match_id, url_id),
+                CONSTRAINT match_url_link_unique UNIQUE (match_id, url_id)
             )`
         })
 
@@ -187,7 +283,8 @@ async function initDb(){
             CREATE TABLE matches_markets_link(
                 match_id INTEGER REFERENCES Matches(match_id),
                 market_id INTEGER REFERENCES Markets(market_id),
-                PRIMARY KEY (match_id, market_id)
+                PRIMARY KEY (match_id, market_id),
+                CONSTRAINT match_market_link_unique UNIQUE (match_id, market_id)
             )`
         })
 
@@ -195,7 +292,8 @@ async function initDb(){
             CREATE TABLE markets_coefs_link(
                 market_id INTEGER REFERENCES Markets(market_id),
                 coef_id INTEGER REFERENCES Coefs(coef_id),
-                PRIMARY KEY (market_id, coef_id)
+                PRIMARY KEY (market_id, coef_id),
+                CONSTRAINT market_coef_link_unique UNIQUE (market_id, coef_id)
             )`
         })
 
