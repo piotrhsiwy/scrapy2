@@ -9,7 +9,7 @@ export const pool = new Pool({
 });
 
 import { createWriteStream } from 'fs';
-import { insertCoef, insertMarket, insertMatch, insertUrl } from './inserter.js';
+import { insertOdd, insertMarket, insertMatch, insertUrl } from './inserter.js';
 
 async function testDbInserting(){
 
@@ -38,12 +38,12 @@ async function testDbInserting(){
 
     // Market + match_id
     const marketName = 'Match Winner';
-    const oddNameHome = 'vitality';
-    const oddNameAway = 'g2';
 
-    // Coef + market_id
+    // Odd + market_id
     // book is reused
+    const oddNameHome = 'vitality';
     const valueHome = 1.88;
+    const oddNameAway = 'g2';
     const valueAway = 1.92;
 
     try{
@@ -117,87 +117,75 @@ async function testDbInserting(){
             return -1;
         }
 
-        // insert MarketHome
-        is = await insertMarket(log, match_id, marketName, oddNameHome);
+        // insert Market
+        is = await insertMarket(log, match_id, marketName);
         should = {market_id:1, is_new:true};
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameHome}) returned 
+            console.log(`insertMarket(${match_id}, ${marketName})returned 
                 \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
                 \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
             `)
             return -1;
         }
-        const market_idHome = is.market_id;
+        const market_id = is.market_id;
 
-        // insert the same MarketHome again
-        is = await insertMarket(log, match_id, marketName, oddNameHome);
+        // insert the same Market again
+        is = await insertMarket(log, match_id, marketName);
         should = {market_id:1, is_new:false};
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameHome}) returned 
+            console.log(`insertMarket(${match_id}, ${marketName}) returned 
                 \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
                 \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
             `)
             return -1;
         }
-
-        // insert MarketAway
-        is = await insertMarket(log, match_id, marketName, oddNameAway);
-        should = {market_id:2, is_new:true};
-        if(is.market_id !== should.market_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${match_id}, ${marketName}, ${oddNameAway}) returned 
-                \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
-                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
-            `)
-            return -1;
-        }
-        const market_idAway = is.market_id;
 
         // insert CoefHome
-        is = await insertCoef(log, market_idHome, book, valueHome);
-        should = {coef_id:1, is_new:true};
-        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome}) returned 
-                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
-                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+        is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
+        should = {odd_id:1, is_new:true};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
             `)
             return -1;
         }
-        const coef_idHome = is.coef_id;
+        const odd_idHome = is.odd_id;
 
         // insert CoefHome again
         // TODO here I check the value if it stayed the same - this is the difference between this and the next textcase
-        is = await insertCoef(log, market_idHome, book, valueHome);
-        should = {coef_id:1, is_new:false};
-        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome}) returned 
-                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
-                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+        is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
+        should = {odd_id:1, is_new:false};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
             `)
             return -1;
         }
         
         // insert CoefHome with value + 0.1
-        is = await insertCoef(log, market_idHome, book, valueHome + 0.1);
-        should = {coef_id:1, is_new:false};
-        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_idHome}, ${book}, ${valueHome + 0.1}) returned 
-                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
-                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+        is = await insertOdd(log, market_id, oddNameHome, book, valueHome + 0.1);
+        should = {odd_id:1, is_new:false};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
             `)
             return -1;
         }
 
         // insert CoefAway
-        is = await insertCoef(log, market_idAway, book, valueAway);
-        should = {coef_id:2, is_new:true};
-        if(is.coef_id !== should.coef_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_idAway}, ${book}, ${valueAway}) returned 
-                \tis:{ coef_id:${is.coef_id}, is_new:${is.is_new} }
-                \tshould:{ coef_id:${should.coef_id}, is_new:${should.coef_id} }
+        is = await insertOdd(log, market_id, oddNameAway, book, valueAway);
+        should = {odd_id:2, is_new:true};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertMarket(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
             `)
             return -1;
         }
-        const coef_idAway = is.coef_id;
+        const odd_idAway = is.odd_id;
 
     } catch{
         console.log('Inserting test failed')
@@ -223,10 +211,10 @@ async function initDb(){
             await client.query({text: 'DROP TABLE Urls      CASCADE;'})
             await client.query({text: 'DROP TABLE Matches   CASCADE;'})
             await client.query({text: 'DROP TABLE Markets   CASCADE;'})
-            await client.query({text: 'DROP TABLE Coefs     CASCADE;'})
+            await client.query({text: 'DROP TABLE Odds      CASCADE;'})
             await client.query({text: 'DROP TABLE matches_markets_link      CASCADE;'})
             await client.query({text: 'DROP TABLE matches_urls_link         CASCADE;'})
-            await client.query({text: 'DROP TABLE markets_coefs_link        CASCADE;'})
+            await client.query({text: 'DROP TABLE markets_odds_link         CASCADE;'})
         } catch{}
         ///////////
         // TABLES
@@ -253,14 +241,14 @@ async function initDb(){
         await client.query({ text: 
             `CREATE TABLE Markets(
                 market_id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                oddName TEXT NOT NULL
+                name TEXT NOT NULL
             )` 
         })
 
         await client.query({ text: 
-            `CREATE TABLE Coefs(
-                coef_id SERIAL PRIMARY KEY,
+            `CREATE TABLE Odds(
+                odd_id SERIAL PRIMARY KEY,
+                name text NOT NULL,
                 book text NOT NULL,
                 value NUMERIC DEFAULT 0.0 CONSTRAINT value_positive CHECK (value > 0.0),
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -289,11 +277,11 @@ async function initDb(){
         })
 
         await client.query({text:`
-            CREATE TABLE markets_coefs_link(
+            CREATE TABLE markets_odds_link(
                 market_id INTEGER REFERENCES Markets(market_id),
-                coef_id INTEGER REFERENCES Coefs(coef_id),
-                PRIMARY KEY (market_id, coef_id),
-                CONSTRAINT market_coef_link_unique UNIQUE (market_id, coef_id)
+                odd_id INTEGER REFERENCES Odds(odd_id),
+                PRIMARY KEY (market_id, odd_id),
+                CONSTRAINT market_odd_link_unique UNIQUE (market_id, odd_id)
             )`
         })
 

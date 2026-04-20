@@ -119,20 +119,21 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
 }
 
 /**
- * ALWAYS UPDATES timestamp and value if there exists an entry with the same book
+ * ALWAYS UPDATES timestamp and value if there exists an entry with the same (book, name)
  * @param {WritableStream} log 
- * @param {Integer} market_id e.g. 1 - id of the corresponding match. This is inserted into the markets_coefs_link table along with coef_id.
+ * @param {Integer} market_id e.g. 1 - id of the corresponding match. This is inserted into the markets_odds_link table along with odd_id.
+ * @param {String} name e.g. 'vitality' - for Match Winner Market
  * @param {String} book e.g. 'Esportsbet'
  * @param {String} value  e.g. '1.88'
  * @returns {coef_id, is_new} 
- *  the coef_id of the inserted Coef entry. undefined when an errors on insert occurs
+ *  the odd_id of the inserted odd entry. undefined when an errors on insert occurs
  *  is_new is true if entry with the same book already existed
  */
-export async function insertCoef(log, market_id, book, value){
+export async function insertOdd(log, market_id, name, book, value){
 
     const date = new Date();
     let client;
-    let coef_id, is_new;
+    let odd_id, is_new;
     let ret;
     try{
         client = await pool.connect();
@@ -143,43 +144,44 @@ export async function insertCoef(log, market_id, book, value){
                 hashtext($1), 
                 hashtext($2)
             )`,
-            values: [book, value],
+            values: [book, name],
         })
         ret = await client.query( {
                 text:`
                 WITH existing AS (
-                    SELECT coef_id FROM Coefs WHERE 
-                        book = $1
+                    SELECT odd_id FROM odds WHERE 
+                        name = $1 AND
+                        book = $2
                     ORDER BY book ASC
                     LIMIT 1
                 ),
                 updated AS (
-                    UPDATE Coefs
+                    UPDATE odds
                     SET 
                         timestamp = CURRENT_TIMESTAMP,
-                        value = $2
-                    WHERE coef_id = (SELECT coef_id FROM existing)
-                    RETURNING coef_id
+                        value = $3
+                    WHERE odd_id = (SELECT odd_id FROM existing)
+                    RETURNING odd_id
                 ),
                 inserted AS (
-                    INSERT INTO Coefs (book, value) 
-                    SELECT $1, $2
+                    INSERT INTO odds (name, book, value) 
+                    SELECT $1, $2, $3
                     WHERE NOT EXISTS (SELECT 1 FROM existing)
-                    RETURNING coef_id
+                    RETURNING odd_id
                 )
-                SELECT coef_id, true AS is_new FROM inserted
+                SELECT odd_id, true AS is_new FROM inserted
                 UNION ALL
-                SELECT coef_id, false AS is_new FROM updated
+                SELECT odd_id, false AS is_new FROM updated
                 `,
-                values: [book, value],
+                values: [name, book, value],
         });
         await client.query(`COMMIT`); // this releases the lock automatically 
-        coef_id = ret.rows[0].coef_id;
+        odd_id = ret.rows[0].odd_id;
         is_new = ret.rows[0].is_new;
-        if(coef_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Coefs: \n\t entry: (${book}, ${value})\n\t coef_id: ${coef_id}\n`)
+        if(odd_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into odds: \n\t entry: (${name}, ${book}, ${value})\n\t odd_id: ${odd_id}\n`)
         } else {
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${value})\n\t Incorrect coef_id: ${coef_id}\n`);
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name}, ${book}, ${value})\n\t Incorrect odd_id: ${odd_id}\n`);
             return;
         }
 
@@ -187,22 +189,22 @@ export async function insertCoef(log, market_id, book, value){
             try{
                 ret = await client.query( {
                         text:`
-                        INSERT INTO markets_coefs_link (market_id, coef_id) 
+                        INSERT INTO markets_odds_link (market_id, odd_id) 
                         VALUES($1, $2)
-                        RETURNING market_id, coef_id
+                        RETURNING market_id, odd_id
                         `,
-                        values: [market_id, coef_id],
+                        values: [market_id, odd_id],
                 });
-                if(market_id === ret.rows[0].market_id && coef_id === ret.rows[0].coef_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_coefs_link: \n\t entry: (${market_id}, ${coef_id})\n`)
+                if(market_id === ret.rows[0].market_id && odd_id === ret.rows[0].odd_id){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${market_id}, ${odd_id})\n`)
                 } else{
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n\tThe fields do not match the existing entry\n`);
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                 }
             } catch(e){
-                // this should be unreachable if the coef is only inserted once (the advisory lock works on the previous query)
-                if(e.code === '23505' && e.constraint === 'market_coef_link_unique'){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_coef_link even though the coef is not new: \n\t entry: (${market_id}, ${coef_id})\n`)
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${coef_id})\n`);
+                // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'market_odd_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${market_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${odd_id})\n`);
                 } else throw e;
             }
         }
@@ -213,7 +215,7 @@ export async function insertCoef(log, market_id, book, value){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        return {coef_id, is_new};
+        return {odd_id, is_new};
     }
 }
 
@@ -240,22 +242,21 @@ export async function insertMarket(log, match_id, name, oddName){
             text:`
             SELECT pg_advisory_xact_lock(
                 hashtext($1), 
-                hashtext($2)
+                hashtext($1)
             )`,
-            values: [name, oddName]
+            values: [name]
         });
         ret = await client.query( {
                 text:`
                 WITH existing AS (
                     SELECT market_id FROM Markets WHERE 
-                        name = $1 AND
-                        oddName = $2
+                        name = $1
                     ORDER BY name ASC
                     LIMIT 1
                 ),
                 inserted AS (
-                    INSERT INTO Markets (name, oddName) 
-                    SELECT $1, $2
+                    INSERT INTO Markets (name) 
+                    SELECT $1
                     WHERE NOT EXISTS (SELECT 1 FROM existing)
                     RETURNING market_id
                 )
@@ -263,7 +264,7 @@ export async function insertMarket(log, match_id, name, oddName){
                 UNION ALL
                 SELECT market_id, false AS is_new FROM existing
                 `,
-                values: [name, oddName],
+                values: [name],
         });
         await client.query(`COMMIT`); // this releases the lock automatically 
         market_id = ret.rows[0].market_id;
