@@ -34,11 +34,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Test db()",
+            "name": "Test db",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/data/db/db.js"
+            "program": "${workspaceFolder}/data/db/dbTests.js"
         },
     ]
 }
