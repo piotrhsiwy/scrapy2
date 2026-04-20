@@ -118,6 +118,108 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
     return match;
 }
 
+/** 
+ * INSERTS a new entry with a current timestamp and strength unless an entry with the same odd_id in the link table AND the same strength exists
+ * @param {WritableStream} log 
+ * @param {Integer} odd_id e.g. 1 - id of the corresponding odd entry. This id is inserted into evs_odds_link table along with the ev_id.
+ * @param {String} book e.g. -0.051234 is the strength of the EV bet, heuristic value that expresses how strong of an arb we would have, if we could arb against the average of the market.
+ * @returns {ev_id, is_new} 
+ *  the ev_id of the inserted odd entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same odd_id in the link table AND the same strength exists
+ */
+export async function insertEv(log, odd_id, strength){
+    const date = new Date();
+    let client;
+    let ev_id, is_new;
+    let ret;
+    try{
+        client = await pool.connect();
+        await client.query(`BEGIN`);
+        await client.query({ // this locks hash(book, value)
+            text:`
+            SELECT pg_advisory_xact_lock(
+                hashtext($1), 
+                hashtext($2)
+            )`,
+            values: [odd_id, strength],
+        })
+        ret = await client.query( {
+                text:`
+                WITH existing AS (
+                    SELECT ev_id FROM (
+                        SELECT * FROM evs
+                            strength != $2
+                        NATURAL JOIN
+                        SELECT * FROM evs_odds_link WHERE 
+                            odd_id = $1
+                        ORDER BY timestamp DESC
+                        LIMIT 1
+                    )
+                ),
+                updated AS(
+                    UPDATE evs
+                    SET 
+                        strength = strength,
+                        timestamp = CURRENT_TIMESTAMP
+                    WHERE ev_id = (SELECT ev_id FROM existing)
+                    RETURNING ev_id
+                )
+                inserted AS (
+                    INSERT INTO evs (strength) 
+                    SELECT $2
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING ev_id
+                )
+                SELECT ev_id, true AS is_new FROM inserted
+                UNION ALL
+                SELECT ev_id, false AS is_new FROM updated
+                `,
+                values: [odd_id, strength],
+        });
+        await client.query(`COMMIT`); // this releases the lock automatically 
+        ev_id = ret.rows[0].ev_id;
+        is_new = ret.rows[0].is_new;
+        if(ev_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into evs: \n\t entry: (${strength})\n\t ev_id: ${ev_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${strength})\n\t Incorrect ev_id: ${ev_id}\n`);
+            return;
+        }
+
+        if(is_new){
+            try{
+                ret = await client.query( {
+                        text:`
+                        INSERT INTO evs_odds_link (ev_id, odd_id) 
+                        VALUES($1, $2)
+                        RETURNING ev_id, odd_id
+                        `,
+                        values: [ev_id, odd_id],
+                });
+                if(ev_id === ret.rows[0].ev_id && odd_id === ret.rows[0].odd_id){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${ev_id}, ${odd_id})\n`)
+                } else{
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${ev_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
+                }
+            } catch(e){
+                // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'ev_odd_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${ev_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${ev_id}, ${odd_id})\n`);
+                } else throw e;
+            }
+        }
+    
+        
+    } catch(e){
+        await client.query(`ROLLBACK`);
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return {odd_id, is_new};
+    }
+}
+
 /**
  * ALWAYS UPDATES timestamp and value if there exists an entry with the same (book, name)
  * @param {WritableStream} log 

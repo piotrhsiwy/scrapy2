@@ -1,4 +1,4 @@
-import { insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
+import { insertEv, insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 
@@ -36,6 +36,9 @@ async function testDbInserting(){
     const valueHome = 1.88;
     const oddNameAway = 'g2';
     const valueAway = 1.92;
+
+    // Ev
+    const 
 
     try{
         let is, should;
@@ -177,6 +180,9 @@ async function testDbInserting(){
             return -1;
         }
         const odd_idAway = is.odd_id;
+
+        // insert Ev
+        is = await insertEv(log, )
 
     } catch{
         console.log('Inserting test failed')

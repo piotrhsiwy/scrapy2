@@ -9,6 +9,77 @@ export const pool = new Pool({
 });
 
 export async function initDb(){
+    await initDbData();
+    await initDbCalc();
+}
+
+async function initDbCalc(){
+    let client;
+    try{
+
+        client = await pool.connect();
+
+        ///////////
+        // FLUSH
+        // ignore Errors thrown during flush, as per normal practice according to postres docs
+        ///////////
+        try{
+            await client.query({text: 'DROP TABLE evs      CASCADE;'})
+            await client.query({text: 'DROP TABLE arbs     CASCADE;'})
+            await client.query({text: 'DROP TABLE evs_odds_link         CASCADE;'})
+            await client.query({text: 'DROP TABLE arbs_odds_link        CASCADE;'})
+        } catch{}
+        ///////////
+        // TABLES
+        ///////////
+        await client.query({ text: 
+            `CREATE TABLE evs(
+                ev_id SERIAL PRIMARY KEY,
+                strength NUMERIC NOT NULL CONSTRAINT ev_strength_negative CHECK (strength < 0.0),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );` 
+        })
+
+        await client.query({ text: 
+            `CREATE TABLE arbs(
+                arb_id SERIAL PRIMARY KEY,
+                value NUMERIC NOT NULL CONSTRAINT arb_value_positive CHECK (value > 0.0),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );` 
+        })
+
+        ///////////
+        // LINKS
+        ///////////
+        await client.query({text:`
+            CREATE TABLE evs_odds_link(
+                ev_id INTEGER REFERENCES evs(ev_id),
+                odd_id INTEGER REFERENCES odds(odd_id),
+                PRIMARY KEY (ev_id, odd_id),
+                CONSTRAINT ev_odd_link_unique UNIQUE (ev_id, odd_id)
+            )`
+            // 1to1 mapping in case of evs
+        })
+
+        await client.query({text:`
+            CREATE TABLE arbs_odds_link(
+                arb_id INTEGER REFERENCES arbs(arb_id),
+                odd_id INTEGER REFERENCES odds(odd_id),
+                PRIMARY KEY (arb_id, odd_id)
+            )`
+            // Nto1 mapping in case of arbs (f.e. 2to1 or 4to1)
+        })
+
+        console.log('Calc Database initialized successfully');
+
+    } catch(e){
+        console.log(`Critical Failure! Error thrown: ${e}\n`);
+    } finally{
+        if(client) client.release()
+    }
+}
+
+async function initDbData(){
     let client;
     try{
 
