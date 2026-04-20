@@ -38,7 +38,7 @@ async function testDbInserting(){
     const valueAway = 1.92;
 
     // Ev
-    const 
+    const strength = -0.051234
 
     try{
         let is, should;
@@ -49,7 +49,7 @@ async function testDbInserting(){
         if(is.match_id !== should.match_id || is.is_new !== should.is_new){
             console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned 
                 \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
-                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -61,7 +61,7 @@ async function testDbInserting(){
         if(is.match_id !== should.match_id || is.is_new !== should.is_new){
             console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime}) returned 
                 \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
-                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -72,7 +72,7 @@ async function testDbInserting(){
         if(is.match_id !== should.match_id || is.is_new !== should.is_new){
             console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime3h}) returned 
                 \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
-                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -83,7 +83,7 @@ async function testDbInserting(){
         if(is.match_id !== should.match_id || is.is_new !== should.is_new){
             console.log(`insertMatch(${sportName}, ${teamHome}, ${teamAway}, ${datetime4h}) returned 
                 \tis:{ match_id:${is.match_id}, is_new:${is.is_new} }
-                \tshould:{ match_id:${should.match_id}, is_new:${should.match_id} }
+                \tshould:{ match_id:${should.match_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -94,7 +94,7 @@ async function testDbInserting(){
         if(is.url_id !== should.url_id || is.is_new !== should.is_new){
             console.log(`insertUrl(${match_id}, ${book}, ${url}) returned 
                 \tis:{ url_id:${is.url_id}, is_new:${is.is_new} }
-                \tshould:{ url_id:${should.url_id}, is_new:${should.url_id} }
+                \tshould:{ url_id:${should.url_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -106,7 +106,7 @@ async function testDbInserting(){
         if(is.url_id !== should.url_id || is.is_new !== should.is_new){
             console.log(`insertUrl(${match_id}, ${book}, ${url}) returned 
                 \tis:{ url_id:${is.url_id}, is_new:${is.is_new} }
-                \tshould:{ url_id:${should.url_id}, is_new:${should.url_id} }
+                \tshould:{ url_id:${should.url_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -117,7 +117,7 @@ async function testDbInserting(){
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
             console.log(`insertMarket(${match_id}, ${marketName})returned 
                 \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
-                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
+                \tshould:{ market_id:${should.market_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -129,7 +129,7 @@ async function testDbInserting(){
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
             console.log(`insertMarket(${match_id}, ${marketName}) returned 
                 \tis:{ market_id:${is.market_id}, is_new:${is.is_new} }
-                \tshould:{ market_id:${should.market_id}, is_new:${should.market_id} }
+                \tshould:{ market_id:${should.market_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -138,9 +138,9 @@ async function testDbInserting(){
         is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
         should = {odd_id:1, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
+            console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
-                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -151,9 +151,9 @@ async function testDbInserting(){
         is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
         should = {odd_id:1, is_new:false};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
+            console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
-                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -162,9 +162,9 @@ async function testDbInserting(){
         is = await insertOdd(log, market_id, oddNameHome, book, valueHome + 0.1);
         should = {odd_id:1, is_new:false};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
+            console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
-                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
@@ -173,16 +173,79 @@ async function testDbInserting(){
         is = await insertOdd(log, market_id, oddNameAway, book, valueAway);
         should = {odd_id:2, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
-            console.log(`insertMarket(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
+            console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
-                \tshould:{ odd_id:${should.odd_id}, is_new:${should.odd_id} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
             `)
             return -1;
         }
         const odd_idAway = is.odd_id;
 
         // insert Ev
-        is = await insertEv(log, )
+        is = await insertEv(log, odd_idHome, strength);
+        should = {ev_id:1, is_new:true};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idHome}, ${strength}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert the same Ev again
+        is = await insertEv(log, odd_idHome, strength);
+        should = {ev_id:1, is_new:false};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idHome}, ${strength}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert the same Ev again with strength -0.01
+        is = await insertEv(log, odd_idHome, strength - 0.01);
+        should = {ev_id:1, is_new:false};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idHome}, ${strength - 0.01}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Away Ev
+        is = await insertEv(log, odd_idAway, strength);
+        should = {ev_id:2, is_new:true};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idAway}, ${strength}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Away Ev again
+        is = await insertEv(log, odd_idAway, strength);
+        should = {ev_id:2, is_new:false};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idAway}, ${strength}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Away Ev again with strength +0.01
+        is = await insertEv(log, odd_idAway, strength + 0.01);
+        should = {ev_id:2, is_new:false};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idAway}, ${strength + 0.01}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
 
     } catch{
         console.log('Inserting test failed')

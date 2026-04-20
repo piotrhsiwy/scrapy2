@@ -119,7 +119,9 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
 }
 
 /** 
- * INSERTS a new entry with a current timestamp and strength unless an entry with the same odd_id in the link table AND the same strength exists
+ * DOES NOT UPDATE anything if an entry with the same odd_id in the link table AND the same strength exists
+ * UPDATES strength and timestamp if an entry with the same odd_id in the link table AND different strength exists
+ * INSERTS a new entry with a current timestamp and strength if an entry with the same odd_id in the link table does not exist
  * @param {WritableStream} log 
  * @param {Integer} odd_id e.g. 1 - id of the corresponding odd entry. This id is inserted into evs_odds_link table along with the ev_id.
  * @param {String} book e.g. -0.051234 is the strength of the EV bet, heuristic value that expresses how strong of an arb we would have, if we could arb against the average of the market.
@@ -146,24 +148,23 @@ export async function insertEv(log, odd_id, strength){
         ret = await client.query( {
                 text:`
                 WITH existing AS (
-                    SELECT ev_id FROM (
-                        SELECT * FROM evs
-                            strength != $2
-                        NATURAL JOIN
-                        SELECT * FROM evs_odds_link WHERE 
-                            odd_id = $1
-                        ORDER BY timestamp DESC
-                        LIMIT 1
-                    )
+                    SELECT e.ev_id
+                    FROM evs e JOIN evs_odds_link el ON e.ev_id = el.ev_id
+                    WHERE
+                        el.odd_id = $1
+                    ORDER BY e.timestamp DESC
+                    LIMIT 1
                 ),
-                updated AS(
+                updated AS (
                     UPDATE evs
                     SET 
-                        strength = strength,
+                        strength = $2,
                         timestamp = CURRENT_TIMESTAMP
-                    WHERE ev_id = (SELECT ev_id FROM existing)
+                    WHERE
+                        ev_id = ( SELECT ev_id FROM existing ) AND
+                        strength != $2
                     RETURNING ev_id
-                )
+                ),
                 inserted AS (
                     INSERT INTO evs (strength) 
                     SELECT $2
@@ -216,7 +217,7 @@ export async function insertEv(log, odd_id, strength){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        return {odd_id, is_new};
+        return {ev_id, is_new};
     }
 }
 
