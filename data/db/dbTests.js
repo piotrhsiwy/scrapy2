@@ -1,4 +1,4 @@
-import { insertEv, insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
+import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 
@@ -39,6 +39,33 @@ async function testDbInserting(){
 
     // Ev
     const strength = -0.051234
+
+    // Arb
+    const valueArb = 0.021234
+        // Correct Score sample market to test arb4 entry
+        const CSmarketName = 'Correct Score';
+        const CSodds = [
+            {
+                name: '2:0',
+                book: 'Thunderpick',
+                value: 4.0
+            },
+            {
+                name: '2:1',
+                book: 'GGBet',
+                value: 4.1
+            },
+            {
+                name: '1:2',
+                book: 'Esportsbet',
+                value: 4.2
+            },
+            {
+                name: '0:2',
+                book: 'Betninja',
+                value: 4.3
+            },
+        ]
 
     try{
         let is, should;
@@ -181,7 +208,25 @@ async function testDbInserting(){
         }
         const odd_idAway = is.odd_id;
 
+        // insert CoefAway with invalid value - the error message in log
+        is = await insertOdd(log, market_id, oddNameAway, book, -1.0);
+        should = {odd_id:undefined, is_new:undefined};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${-1.0}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
         // insert Ev
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
         is = await insertEv(log, odd_idHome, strength);
         should = {ev_id:1, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
@@ -204,8 +249,10 @@ async function testDbInserting(){
         }
 
         // insert the same Ev again with strength -0.01
+        // this should INSERT a new entry with a new timestamp and new ev_id, because the strength changed
+        // TODO with this setup it's impossible to distinguish on the app level between a new ev and a ev with an updated strength!
         is = await insertEv(log, odd_idHome, strength - 0.01);
-        should = {ev_id:1, is_new:false};
+        should = {ev_id:2, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
             console.log(`insertEv(${odd_idHome}, ${strength - 0.01}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
@@ -216,7 +263,7 @@ async function testDbInserting(){
 
         // insert Away Ev
         is = await insertEv(log, odd_idAway, strength);
-        should = {ev_id:2, is_new:true};
+        should = {ev_id:3, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
             console.log(`insertEv(${odd_idAway}, ${strength}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
@@ -227,7 +274,7 @@ async function testDbInserting(){
 
         // insert Away Ev again
         is = await insertEv(log, odd_idAway, strength);
-        should = {ev_id:2, is_new:false};
+        should = {ev_id:3, is_new:false};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
             console.log(`insertEv(${odd_idAway}, ${strength}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
@@ -238,7 +285,7 @@ async function testDbInserting(){
 
         // insert Away Ev again with strength +0.01
         is = await insertEv(log, odd_idAway, strength + 0.01);
-        should = {ev_id:2, is_new:false};
+        should = {ev_id:4, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
             console.log(`insertEv(${odd_idAway}, ${strength + 0.01}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
@@ -246,6 +293,122 @@ async function testDbInserting(){
             `)
             return -1;
         }
+
+        // insert Away Ev again with invalid strength - error message in log
+        is = await insertEv(log, odd_idAway, 0.01);
+        should = {ev_id:undefined, is_new:undefined};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idAway}, ${0.01}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // insert Arb
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
+        // insert Arb2
+        is = await insertArb(log, [odd_idHome, odd_idAway], valueArb);
+        should = {arb_id:1, is_new:true};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${odd_idHome}, ${odd_idAway}], ${valueArb}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Arb2 again
+        is = await insertArb(log, [odd_idHome, odd_idAway], valueArb);
+        should = {arb_id:1, is_new:false};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${odd_idHome}, ${odd_idAway}], ${valueArb}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+        
+        // insert Arb2 again with value + 0.01
+        is = await insertArb(log, [odd_idHome, odd_idAway], valueArb + 0.01);
+        should = {arb_id:2, is_new:true};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${odd_idHome}, ${odd_idAway}], ${valueArb + 0.01}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Arb2 with incorrect value
+        is = await insertArb(log, [odd_idHome, odd_idAway], -0.1);
+        should = {arb_id:undefined, is_new:undefined};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${odd_idHome}, ${odd_idAway}], ${-0.1}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+            //insert matches and markets for Arb4
+            const {CSmarket_id, _} = await insertMarket(log, match_id, CSmarketName);
+            const CSodd_ids = [];
+            for(const odd of CSodds){
+                const {odd_id, _} = await insertOdd(log, CSmarket_id, odd.name, odd.book, odd.value );
+                CSodd_ids.push(odd_id);
+            }
+        // insert Arb4
+        // we jump over serial number here becuase the previous insert failed
+        is = await insertArb(log, CSodd_ids, valueArb);
+        should = {arb_id:4, is_new:true};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${CSodd_ids[0]}, ${CSodd_ids[1]}, ${CSodd_ids[2]}, ${CSodd_ids[3]}], ${valueArb}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Arb4 again
+        is = await insertArb(log, CSodd_ids, valueArb);
+        should = {arb_id:4, is_new:false};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${CSodd_ids[0]}, ${CSodd_ids[1]}, ${CSodd_ids[2]}, ${CSodd_ids[3]}], ${valueArb}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Arb4 again with value + 0.01
+        is = await insertArb(log, CSodd_ids, valueArb + 0.01);
+        should = {arb_id:5, is_new:true};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${CSodd_ids[0]}, ${CSodd_ids[1]}, ${CSodd_ids[2]}, ${CSodd_ids[3]}], ${valueArb+0.01}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Arb4 with incorrect value
+        is = await insertArb(log, CSodd_ids, -1.0);
+        should = {arb_id:undefined, is_new:undefined};
+        if(is.arb_id !== should.arb_id || is.is_new !== should.is_new){
+            console.log(`insertArb([${CSodd_ids[0]}, ${CSodd_ids[1]}, ${CSodd_ids[2]}, ${CSodd_ids[3]}], ${-1.0}) returned 
+                \tis:{ arb_id:${is.arb_id}, is_new:${is.is_new} }
+                \tshould:{ arb_id:${should.arb_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
 
     } catch{
         console.log('Inserting test failed')

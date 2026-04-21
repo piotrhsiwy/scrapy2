@@ -119,15 +119,168 @@ export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, 
 }
 
 /** 
+ * DOES NOT UPDATE anything if an entry with the same ARRAY of odd_ids in the link table AND the same value exists
+ * INSERTS value and timestamp if an entry with the same ARRAY of odd_ids in the link table exists    AND different value exists
+ * INSERTS value and timestamp if an entry with the same ARRAY of odd_ids in the link table does NOT exist
+ * @param {WritableStream} log 
+ * @param {Array{Integer}} oddsArray e.g. 1 - Arrays of odd_ids of the corresponding odd entries. The length of this array can be {2, 4}. All of those odd_ids are inserted into arbs_odds_link table along with the arb_id.
+ * @param {Float} value e.g. 0.02
+ * @returns {arb_id, is_new} 
+ *  the arb_id of the inserted arb entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same ARRAY of odd_ids in the link table did NOT exists
+ */
+export async function insertArb(log, oddsArray, value){
+    const date = new Date();
+    let client;
+    let arb_id, is_new;
+    let ret;
+    try{
+        if(oddsArray.length == 2){
+            
+            client = await pool.connect();
+            await client.query(`BEGIN`);
+            await client.query({
+                text:`
+                SELECT pg_advisory_xact_lock(
+                    hashtext($1), 
+                    hashtext($2)
+                )`,
+                values: [oddsArray[0], oddsArray[1]],
+            })
+            ret = await client.query( {
+                    text:`
+                    WITH existing AS (
+                        SELECT a.arb_id
+                        FROM arbs a
+                        WHERE
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $1) AND
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $2) AND
+                            a.value = $3
+                        ORDER BY a.timestamp DESC
+                        LIMIT 1
+                    ),
+                    inserted AS (
+                        INSERT INTO arbs (value) 
+                        SELECT $3
+                        WHERE NOT EXISTS (SELECT 1 FROM existing)
+                        RETURNING arb_id
+                    )
+                    SELECT arb_id, true AS is_new FROM inserted
+                    UNION ALL
+                    SELECT arb_id, false AS is_new FROM existing
+                    `,
+                    values: [oddsArray[0], oddsArray[1], value],
+            });
+            await client.query(`COMMIT`); // this releases the lock automatically 
+            arb_id = ret.rows[0].arb_id;
+            is_new = ret.rows[0].is_new;
+            if(arb_id){
+                log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into arbs: \n\t entry: (${value})\n\t arb_id: ${arb_id}\n`)
+            } else {
+                log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${value})\n\t Incorrect arb_id: ${arb_id}\n`);
+                return;
+            }
+
+        } else if(oddsArray.length == 4){
+
+            client = await pool.connect();
+            await client.query(`BEGIN`);
+            await client.query({
+                text:`
+                SELECT pg_advisory_xact_lock(
+                    hashtext($1) - hashtext($2), 
+                    hashtext($3) - hashtext($4)
+                )`,
+                values: [oddsArray[0], oddsArray[1], oddsArray[2], oddsArray[3]],
+            })
+            ret = await client.query( {
+                    text:`
+                    WITH existing AS (
+                        SELECT a.arb_id
+                        FROM arbs a
+                        WHERE
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $1) AND
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $2) AND
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $3) AND
+                            EXISTS (SELECT 1 FROM arbs_odds_link al WHERE al.arb_id = a.arb_id AND al.odd_id = $4) AND
+                            a.value = $5
+                        ORDER BY a.timestamp DESC
+                        LIMIT 1
+                    ),
+                    inserted AS (
+                        INSERT INTO arbs (value) 
+                        SELECT $5
+                        WHERE NOT EXISTS (SELECT 1 FROM existing)
+                        RETURNING arb_id
+                    )
+                    SELECT arb_id, true AS is_new FROM inserted
+                    UNION ALL
+                    SELECT arb_id, false AS is_new FROM existing
+                    `,
+                    values: [oddsArray[0], oddsArray[1], oddsArray[2], oddsArray[3], value],
+            });
+            await client.query(`COMMIT`); // this releases the lock automatically 
+            arb_id = ret.rows[0].arb_id;
+            is_new = ret.rows[0].is_new;
+            if(arb_id){
+                log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into arbs: \n\t entry: (${value})\n\t arb_id: ${arb_id}\n`)
+            } else {
+                log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${value})\n\t Incorrect arb_id: ${arb_id}\n`);
+                return;
+            }
+
+        } else{
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${oddsArray}, ${value})\n\toddsArray has incorrect length: ${oddsArray.length}\n`);
+            return;
+        }
+
+        if(is_new){
+            let odd_id;
+            try{
+                for(let i = 0; i < oddsArray.length; i++){
+                    odd_id = oddsArray[i];
+                    ret = await client.query( {
+                            text:`
+                            INSERT INTO arbs_odds_link (arb_id, odd_id) 
+                            VALUES($1, $2)
+                            RETURNING arb_id, odd_id
+                            `,
+                            values: [arb_id, odd_id],
+                    });
+                    if(arb_id === ret.rows[0].arb_id && odd_id === ret.rows[0].odd_id){
+                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${arb_id}, ${odd_id})\n`)
+                    } else{
+                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${arb_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
+                    }
+                }
+            } catch(e){
+                // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
+                if(e.code === '23505' && e.constraint === 'ev_odd_link_unique'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${arb_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${arb_id}, ${odd_id})\n`);
+                } else throw e;
+            }
+        }
+            
+    } catch(e){
+        await client.query(`ROLLBACK`);
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return {arb_id, is_new};
+    }
+}
+
+/** 
  * DOES NOT UPDATE anything if an entry with the same odd_id in the link table AND the same strength exists
- * UPDATES strength and timestamp if an entry with the same odd_id in the link table AND different strength exists
+ * INSERTS a new entry with a current timestamp and strength if an entry with the same odd_id in the link table AND different strength exists
  * INSERTS a new entry with a current timestamp and strength if an entry with the same odd_id in the link table does not exist
  * @param {WritableStream} log 
  * @param {Integer} odd_id e.g. 1 - id of the corresponding odd entry. This id is inserted into evs_odds_link table along with the ev_id.
- * @param {String} book e.g. -0.051234 is the strength of the EV bet, heuristic value that expresses how strong of an arb we would have, if we could arb against the average of the market.
+ * @param {Float} strength e.g. -0.051234 is the strength of the EV bet, heuristic value that expresses how strong of an arb we would have, if we could arb against the average of the market.
  * @returns {ev_id, is_new} 
- *  the ev_id of the inserted odd entry. undefined when an errors on insert occurs
- *  is_new is true if an entry with the same odd_id in the link table AND the same strength exists
+ *  the ev_id of the inserted ev entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same odd_id in the link table did NOT exist
  */
 export async function insertEv(log, odd_id, strength){
     const date = new Date();
@@ -151,19 +304,10 @@ export async function insertEv(log, odd_id, strength){
                     SELECT e.ev_id
                     FROM evs e JOIN evs_odds_link el ON e.ev_id = el.ev_id
                     WHERE
-                        el.odd_id = $1
+                        el.odd_id = $1 AND
+                        e.strength = $2
                     ORDER BY e.timestamp DESC
                     LIMIT 1
-                ),
-                updated AS (
-                    UPDATE evs
-                    SET 
-                        strength = $2,
-                        timestamp = CURRENT_TIMESTAMP
-                    WHERE
-                        ev_id = ( SELECT ev_id FROM existing ) AND
-                        strength != $2
-                    RETURNING ev_id
                 ),
                 inserted AS (
                     INSERT INTO evs (strength) 
@@ -173,7 +317,7 @@ export async function insertEv(log, odd_id, strength){
                 )
                 SELECT ev_id, true AS is_new FROM inserted
                 UNION ALL
-                SELECT ev_id, false AS is_new FROM updated
+                SELECT ev_id, false AS is_new FROM existing
                 `,
                 values: [odd_id, strength],
         });
@@ -214,7 +358,7 @@ export async function insertEv(log, odd_id, strength){
         
     } catch(e){
         await client.query(`ROLLBACK`);
-        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${odd_id}, ${strength})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
         return {ev_id, is_new};
@@ -332,7 +476,7 @@ export async function insertOdd(log, market_id, name, book, value){
  *  the market_id of the inserted Market entry. undefined when an errors on insert occurs
  *  is_new is true if an entry with the same (name, oddName) already exists
  */
-export async function insertMarket(log, match_id, name, oddName){
+export async function insertMarket(log, match_id, name){
 
     const date = new Date();
     let client;
@@ -341,7 +485,7 @@ export async function insertMarket(log, match_id, name, oddName){
     try{
         client = await pool.connect();
         await client.query(`BEGIN`);
-        await client.query({ // this locks hash(name, oddName)
+        await client.query({ // this locks hash(name)
             text:`
             SELECT pg_advisory_xact_lock(
                 hashtext($1), 
@@ -373,9 +517,9 @@ export async function insertMarket(log, match_id, name, oddName){
         market_id = ret.rows[0].market_id;
         is_new = ret.rows[0].is_new;
         if(market_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Markets: \n\t entry: (${name}, ${oddName})\n\t market_id: ${market_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into Markets: \n\t entry: (${name})\n\t market_id: ${market_id}\n`)
         } else {
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name}, ${oddName})\n\t Incorrect market_id: ${market_id}\n`);
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name})\n\t Incorrect market_id: ${market_id}\n`);
             return;
         }
 
@@ -406,7 +550,7 @@ export async function insertMarket(log, match_id, name, oddName){
         
     } catch(e){
         await client.query(`ROLLBACK`)
-        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name}, ${oddName})\n\t error: ${e.message}\n`)
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
         return { market_id, is_new };
