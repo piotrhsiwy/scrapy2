@@ -94,8 +94,8 @@ async function initDbData(){
             await client.query({text: 'DROP TABLE Matches   CASCADE;'})
             await client.query({text: 'DROP TABLE Markets   CASCADE;'})
             await client.query({text: 'DROP TABLE Odds      CASCADE;'})
-            await client.query({text: 'DROP TABLE matches_markets_link      CASCADE;'})
             await client.query({text: 'DROP TABLE matches_urls_link         CASCADE;'})
+            await client.query({text: 'DROP TABLE matches_odds_link         CASCADE;'})
             await client.query({text: 'DROP TABLE markets_odds_link         CASCADE;'})
         } catch{}
         ///////////
@@ -150,11 +150,11 @@ async function initDbData(){
         })
 
         await client.query({text:`
-            CREATE TABLE matches_markets_link(
+            CREATE TABLE matches_odds_link(
                 match_id INTEGER REFERENCES Matches(match_id),
-                market_id INTEGER REFERENCES Markets(market_id),
-                PRIMARY KEY (match_id, market_id),
-                CONSTRAINT match_market_link_unique UNIQUE (match_id, market_id)
+                odd_id INTEGER REFERENCES Odds(odd_id),
+                PRIMARY KEY (match_id, odd_id),
+                CONSTRAINT match_odd_link_unique UNIQUE (match_id, odd_id)
             )`
         })
 

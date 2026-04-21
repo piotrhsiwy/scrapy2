@@ -1,4 +1,7 @@
 /xyz/urlScraper.js return codes interpretation:
+
+100 failure:
+  database insert error (url or odd)
 21 failure:
   could not get sportName
 20 failure:
@@ -14,3 +17,5 @@
   some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.
 -10 critical failure:
   one of the required files could not be opened
+-100 critical failure:
+  database critical insert error (match or market)

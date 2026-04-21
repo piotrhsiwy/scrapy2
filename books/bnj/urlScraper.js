@@ -4,9 +4,9 @@ import { promisify } from "util";
 import { sportNameMap } from "../sportNameMap.js";
 import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
-import { insertCoefIntoOdd, insertMarketIntoMatch, insertMatchIntoSport, insertOddIntoMarket, insertSportIntoData } from "../../data/util/inserter.js";
 import { datestringToISO } from "./parser.js";
 import { prepPage } from "../page.js";
+import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
 export async function scrapeMatchURL(data, browser, book, i){
   
@@ -19,7 +19,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     let sportNameMapping;
     try{
       sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
-      if(!sportNameMapping){ throw error(); }
+      if(!sportNameMapping){ throw new Error(); }
     } catch (error){
       log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
       return -10;
@@ -28,7 +28,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     let marketNameMapping;
     try{
       marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
-      if(!marketNameMapping){ throw error(); }
+      if(!marketNameMapping){ throw new Error(); }
     } catch (error){
       log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
       return -10;
@@ -77,7 +77,6 @@ export async function scrapeMatchURL(data, browser, book, i){
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return 20;
     }
-    let sport = insertSportIntoData(log, data, sportName);
 
     // get teamHome, teamAway
     let teamHome = await page.$eval('div.header-title div.actor-1', e => e.textContent);
@@ -88,7 +87,15 @@ export async function scrapeMatchURL(data, browser, book, i){
     // get datetime, mode
     const datestring = await page.$eval('div.date-event', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
     const datetime = datestringToISO(datestring);
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+    const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
+    if(!match_id){
+      log.write(`Critical Failure! Database insert error\n`);
+      return -100;
+    }
+    const {url_id:url_id, is_new:url_is_new} = await insertUrl(log, match_id, book.name, book.urls[i]);
+    if(!url_id){
+      log.write(`Failure! Database insert error\n`);
+    }
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div.container-event';
@@ -111,7 +118,11 @@ export async function scrapeMatchURL(data, browser, book, i){
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
         continue;
       }
-      let market = insertMarketIntoMatch(log, match, marketName);
+     const {market_id:market_id, is_new:market_is_new} = await insertMarket(log, marketName);
+      if(!market_id){
+        log.write(`Critical Failure! Database insert error\n`);
+        return -100;
+      }
       // get odd
       selector = 'span.odd';
       const oddsHandles = await marketHandle.$$(selector);
@@ -128,19 +139,19 @@ export async function scrapeMatchURL(data, browser, book, i){
           */
         oddName = oddName.replace(/\+/g, '');
         oddName = stripTeamName(oddName);
-        if(market.name.includes('Correct Score')){
+        if(marketName.includes('Correct Score')){
           oddName = oddName.replace('-',':');
           oddName = oddName
             .replace(teamHome, '')
             .replace(teamAway, '');
-        } else if(market.name.includes('Handicap')){
+        } else if(marketName.includes('Handicap')){
           // translate (-1.5)teamName into teamName-1.5
           oddName = oddName.replace(/^\((-?\d+\.?\d*)\)(.+)$/, '$2$1');
         }
-        let odd = insertOddIntoMarket(log, market, oddName + suffix);
+        oddName = oddName + suffix;
         // get coef
         selector = 'span.odd-value-live'
-        const coef = await oddHandle.$eval(selector, (e) => {
+        const value = await oddHandle.$eval(selector, (e) => {
           const text = e.parentNode.textContent.replace('\n', '').trim();
           const f = parseFloat(text);
           if(!Number.isNaN(f)){
@@ -149,7 +160,11 @@ export async function scrapeMatchURL(data, browser, book, i){
             return null;
           }
         });
-        insertCoefIntoOdd(log, odd, book.name, coef)
+        const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, oddName, book.name, value);
+        if(!odd_id){
+          log.write(`Failure! Database insert error\n`);
+          continue;
+        }
       }
     }
 

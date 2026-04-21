@@ -1,122 +1,4 @@
 import { pool } from "./db.js";
-import { ISO8601ToPretty, prettyToDate } from "./prettify.js";
-
-/**
- * 
- * @param {*} log 
- * @param {*} odd 
- * @param {*} book 
- * @param {*} value 
- * @returns the coef that has just been added/created
- */
-export function insertCoefIntoOdd(log, odd, book, value){
-    let coef = odd.coefs.findLast(c => c.book === book);
-    if(!coef){
-        /* the coef is new */
-        // log.write(`Warning! This coef is new: ${book.name}: ${value}\n`);
-        const timestamp = ISO8601ToPretty(new Date().toISOString());
-        odd.coefs.push({timestamp: timestamp, book: book, value: value});
-    } else{
-        /* the coef already exists */
-        // update policy: always update
-        coef.timestamp = ISO8601ToPretty(new Date().toISOString());
-        coef.value = value;
-    }
-    return coef;
-}
-
-/**
- * 
- * @param {*} log 
- * @param {*} market 
- * @param {*} oddName 
- * @returns the odd that has just been updated/created
- */
-export function insertOddIntoMarket(log, market, oddName){
-    let odd = market.odds.findLast(o => o.name === oddName);
-    if(!odd){
-        /* the odd is new */
-        // log.write(`Warning! This odd is new: ${oddName}\n`);
-        market.odds.push({name: oddName, coefs: []})
-        odd = market.odds.findLast(o => o.name === oddName);
-    } else{
-        /* the odd already exists */
-    }
-    return odd;
-}
-
-/**
- * 
- * @param {*} log 
- * @param {*} match 
- * @param {*} marketName 
- * @returns the market that has just been updated/created
- */
-export function insertMarketIntoMatch( log, match, marketName){
-    let market = match.markets.findLast(m => m.name === marketName);
-    if(!market){
-        /* the market is new */
-        // log.write(`Warning! This market is new: ${marketName}\n`);
-        match.markets.push({name: marketName, odds: []});
-        market = match.markets.findLast(m => m.name === marketName);
-    } else{
-        /* the market already exists */
-    }
-    return market;
-}
-
-/**
- * 
- * @param {*} sport 
- * @param {*} teamHome 
- * @param {*} teamAway 
- * @param {*} datetime is in the ISO8601 format or 'live'
- * @returns the match that has just been updated/created
- */
-export function insertMatchIntoSport( log, sport, teamHome, teamAway, datetime, book, url){
-    datetime = ISO8601ToPretty(datetime);
-    let match = sport.matches.findLast(m =>
-        (
-          m.datetime === datetime || (Math.abs( prettyToDate(m.datetime).getTime() - prettyToDate(datetime).getTime() ) <= 3*60*60*1000) 
-          // maximum of 3h difference is allowed, becuase some books have different datetimes
-        )
-        &&
-        (
-          m.teamHome === teamHome &&
-          m.teamAway === teamAway
-        )
-        ||
-        ( 
-          m.teamHome === teamAway && // inverted Home/Away ordering, but still the same datetime => the same event
-          m.teamAway === teamHome
-        )
-    )
-    if(!match){
-      /* the match is new */
-      // log.write(`Warning! This match is new: ${teamHome}, ${teamAway}, ${datetime}\n`);
-      sport.matches.push({ 
-        teamHome: teamHome,
-        teamAway: teamAway,
-        datetime: datetime,
-        urls: [{book: book, url: url}],
-        markets: []
-      });
-      match = sport.matches.findLast(m =>
-          m.teamHome === teamHome &&
-          m.teamAway === teamAway &&
-          m.datetime === datetime
-      );
-    } else{
-      /* the match already exists */
-      let record = match.urls.findLast( (u) => u.book === book);
-      if(record){
-        // update policy: never update the match url
-      } else{
-        match.urls.push({book: book, url: url});
-      }
-    }
-    return match;
-}
 
 /** 
  * DOES NOT UPDATE anything if an entry with the same ARRAY of odd_ids in the link table AND the same value exists
@@ -248,7 +130,7 @@ export async function insertArb(log, oddsArray, value){
                             values: [arb_id, odd_id],
                     });
                     if(arb_id === ret.rows[0].arb_id && odd_id === ret.rows[0].odd_id){
-                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${arb_id}, ${odd_id})\n`)
+                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${arb_id}, ${odd_id})\n`)
                     } else{
                         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${arb_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                     }
@@ -342,7 +224,7 @@ export async function insertEv(log, odd_id, strength){
                         values: [ev_id, odd_id],
                 });
                 if(ev_id === ret.rows[0].ev_id && odd_id === ret.rows[0].odd_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${ev_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${ev_id}, ${odd_id})\n`)
                 } else{
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${ev_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                 }
@@ -368,7 +250,8 @@ export async function insertEv(log, odd_id, strength){
 /**
  * ALWAYS UPDATES timestamp and value if there exists an entry with the same (book, name)
  * @param {WritableStream} log 
- * @param {Integer} market_id e.g. 1 - id of the corresponding match. This is inserted into the markets_odds_link table along with odd_id.
+ * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_odds_link table along with odd_id.
+ * @param {Integer} market_id e.g. 1 - id of the corresponding market. This is inserted into the markets_odds_link table along with odd_id.
  * @param {String} name e.g. 'vitality' - for Match Winner Market
  * @param {String} book e.g. 'Esportsbet'
  * @param {String} value  e.g. '1.88'
@@ -376,7 +259,7 @@ export async function insertEv(log, odd_id, strength){
  *  the odd_id of the inserted odd entry. undefined when an errors on insert occurs
  *  is_new is true if entry with the same book already existed
  */
-export async function insertOdd(log, market_id, name, book, value){
+export async function insertOdd(log, match_id, market_id, name, book, value){
 
     const date = new Date();
     let client;
@@ -396,23 +279,26 @@ export async function insertOdd(log, market_id, name, book, value){
         ret = await client.query( {
                 text:`
                 WITH existing AS (
-                    SELECT odd_id FROM odds WHERE 
-                        name = $1 AND
-                        book = $2
-                    ORDER BY book ASC
+                    SELECT odd_id 
+                    FROM odds o WHERE 
+                        EXISTS (SELECT 1 FROM matches_odds_link mtl WHERE o.odd_id = mtl.odd_id AND mtl.match_id = $1) AND
+                        EXISTS (SELECT 1 FROM markets_odds_link mkl WHERE o.odd_id = mkl.odd_id AND mkl.market_id = $2) AND
+                        o.name = $3 AND
+                        o.book = $4
+                    ORDER BY o.book ASC
                     LIMIT 1
                 ),
                 updated AS (
                     UPDATE odds
                     SET 
                         timestamp = CURRENT_TIMESTAMP,
-                        value = $3
+                        value = $5
                     WHERE odd_id = (SELECT odd_id FROM existing)
                     RETURNING odd_id
                 ),
                 inserted AS (
                     INSERT INTO odds (name, book, value) 
-                    SELECT $1, $2, $3
+                    SELECT $3, $4, $5
                     WHERE NOT EXISTS (SELECT 1 FROM existing)
                     RETURNING odd_id
                 )
@@ -420,15 +306,15 @@ export async function insertOdd(log, market_id, name, book, value){
                 UNION ALL
                 SELECT odd_id, false AS is_new FROM updated
                 `,
-                values: [name, book, value],
+                values: [match_id, market_id, name, book, value],
         });
         await client.query(`COMMIT`); // this releases the lock automatically 
         odd_id = ret.rows[0].odd_id;
         is_new = ret.rows[0].is_new;
         if(odd_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into odds: \n\t entry: (${name}, ${book}, ${value})\n\t odd_id: ${odd_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into odds: \n\t entry: (${match_id}, ${market_id}, ${name}, ${book}, ${value})\n\t odd_id: ${odd_id}\n`)
         } else {
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${name}, ${book}, ${value})\n\t Incorrect odd_id: ${odd_id}\n`);
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id}, ${name}, ${book}, ${value})\n\t Incorrect odd_id: ${odd_id}\n`);
             return;
         }
 
@@ -443,13 +329,27 @@ export async function insertOdd(log, market_id, name, book, value){
                         values: [market_id, odd_id],
                 });
                 if(market_id === ret.rows[0].market_id && odd_id === ret.rows[0].odd_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into markets_odds_link: \n\t entry: (${market_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${market_id}, ${odd_id})\n`)
                 } else{
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                 }
+
+                ret = await client.query( {
+                        text:`
+                        INSERT INTO matches_odds_link (match_id, odd_id) 
+                        VALUES($1, $2)
+                        RETURNING match_id, odd_id
+                        `,
+                        values: [match_id, odd_id],
+                });
+                if(match_id === ret.rows[0].match_id && odd_id === ret.rows[0].odd_id){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${match_id}, ${odd_id})\n`)
+                } else{
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
+                }
             } catch(e){
                 // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
-                if(e.code === '23505' && e.constraint === 'market_odd_link_unique'){
+                if(e.code === '23505'){
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${market_id}, ${odd_id})\n`)
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${odd_id})\n`);
                 } else throw e;
@@ -469,14 +369,13 @@ export async function insertOdd(log, market_id, name, book, value){
 /**
  * does NOT UPDATE any fields if an entry with the same (name, oddName) already exists
  * @param {WritableStream} log 
- * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_markets_link table along with market_id.
  * @param {String} name e.g. 'Match Winner'
  * @param {String} oddName  e.g. 'vitality'
  * @returns {market_id, is_new} 
  *  the market_id of the inserted Market entry. undefined when an errors on insert occurs
  *  is_new is true if an entry with the same (name, oddName) already exists
  */
-export async function insertMarket(log, match_id, name){
+export async function insertMarket(log, name){
 
     const date = new Date();
     let client;
@@ -523,31 +422,6 @@ export async function insertMarket(log, match_id, name){
             return;
         }
 
-        if(is_new){
-            try{
-                ret = await client.query( {
-                        text:`
-                        INSERT INTO matches_markets_link (match_id, market_id) 
-                        VALUES($1, $2)
-                        RETURNING match_id, market_id
-                        `,
-                        values: [match_id, market_id],
-                });
-                if(match_id === ret.rows[0].match_id && market_id === ret.rows[0].market_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully inserted into matches_markets_link: \n\t entry: (${match_id}, ${market_id})\n`)
-                } else {
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id}).\n\t The fields do not match the existing entry\n`);
-                }
-            } catch(e){
-                // this should be unreachable if the market is only inserted once (the advisory lock works on the previous query)
-                if(e.code === '23505' && e.constraint === 'match_market_link_unique'){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a match_market_link even though the market is not new: \n\t entry: (${match_id}, ${market_id})\n`)
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id})\n`);
-                } else throw e;
-            }
-        }
-    
-        
     } catch(e){
         await client.query(`ROLLBACK`)
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name})\n\t error: ${e.message}\n`)

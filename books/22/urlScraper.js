@@ -4,8 +4,8 @@ import { promisify } from "util";
 import { sportNameMap } from "../sportNameMap.js";
 import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
-import { insertCoefIntoOdd, insertMarketIntoMatch, insertMatchIntoSport, insertOddIntoMarket, insertSportIntoData } from "../../data/util/inserter.js";
 import { datestringToISO } from "./parser.js";
+import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
 /**
  * 
@@ -57,7 +57,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
-    if(!sportNameMapping){ throw error(); }
+    if(!sportNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -66,7 +66,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
-    if(!marketNameMapping){ throw error(); }
+    if(!marketNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -125,10 +125,17 @@ export async function scrapeMatchURL(data, browser, book, i){
           log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
           return 20;
         }
-        let sport = insertSportIntoData(log, data, sportName);
         const teamHome = stripTeamName(respData.Value.O1);
         const teamAway = stripTeamName(respData.Value.O2);
-        let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+        const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
+        if(!match_id){
+          log.write(`Critical Failure! Database insert error\n`);
+          return -100;
+        }
+        const {url_id:url_id, is_new:url_is_new} = await insertUrl(log, match_id, book.name, book.urls[i]);
+        if(!url_id){
+          log.write(`Failure! Database insert error\n`);
+        }
       
         const markets = respData.Value.GE;
         for(const marketEntry of markets){
@@ -142,7 +149,11 @@ export async function scrapeMatchURL(data, browser, book, i){
             log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
             continue;
           }
-          let market = insertMarketIntoMatch(log, match, marketName);
+          const {market_id:market_id, is_new:market_is_new} = await insertMarket(log, marketName);
+          if(!market_id){
+            log.write(`Critical Failure! Database insert error\n`);
+            return -100;
+          }
 
           const cols = marketEntry.E;
           for(const col of cols){
@@ -158,9 +169,12 @@ export async function scrapeMatchURL(data, browser, book, i){
                 .replace(/\(\)/, arg1)
                 .replace(/\(\)/, arg2)
                 .replace(/\[\]/, entry.PL?.N) 
-              let odd = insertOddIntoMarket(log, market, oddName);
               const value = entry.C;
-              let coef = insertCoefIntoOdd(log,odd, book.name, value);
+              const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, oddName, book.name, value);
+              if(!odd_id){
+                log.write(`Failure! Database insert error\n`);
+                continue;
+              }
             }
           }
         }

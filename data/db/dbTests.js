@@ -1,19 +1,54 @@
 import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
+import { readFileSync, existsSync } from "fs";
 
-async function testDbInserting(){
+async function testDbJsonInserting(log){
+    log.write('Opening files...\n');
+    const dataFilePath = './data/data_out.json'
+    let data = JSON.parse(readFileSync(dataFilePath));
+    log.write(`Loaded data from ${dataFilePath}\n`);
 
-    let log;
-    const logFilePath = './data/log.txt';
-    try{
-        log = createWriteStream(logFilePath, {flags: 'a'});
-    } catch(error){
-        console.error(`Failure! Cannot open file under ${logFilePath}`);
+    const arbsFilePath = './data/arbs.json';
+    let arbs = [];
+    if(existsSync(arbsFilePath)) {
+        arbs = JSON.parse(readFileSync(arbsFilePath));
+        log.write(`Loaded data from ${arbsFilePath}\n`);
+    } else {
+        log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
     }
-    
-    let data = []
+    const evsFilePath = './data/evs.json';
+    let evs = [];
+    if(existsSync(evsFilePath)) {
+        evs = JSON.parse(readFileSync(evsFilePath));
+        log.write(`Loaded data from ${evsFilePath}\n`);
+    } else {
+        log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
+    }
 
+    for(const sport of data.sports){
+        for(const match of sport.matches){
+            const {match_id:match_id} = await insertMatch(log, sport.name, match.teamHome, match.teamAway, match.datetime);
+            for(const url of match.urls){
+                await insertUrl(log, match_id, url.book, url.url);
+            }
+            for(const market of match.markets){
+                const {market_id:market_id} = await insertMarket(log, match_id, market.name);
+                for(const odd of market.odds){
+                    for(const coef of odd.coefs){
+                        await insertOdd(log, market_id, odd.name, coef.book, coef.value);
+                    }
+                }
+            }
+        }
+    }
+
+    console.log('Json inserting test passed');
+    
+}
+
+async function testDbInserting(log){
+    
     // Match
     const sportName = 'Counter-Strike 2';
     const teamHome = 'vitality';
@@ -139,7 +174,7 @@ async function testDbInserting(){
         }
 
         // insert Market
-        is = await insertMarket(log, match_id, marketName);
+        is = await insertMarket(log, marketName);
         should = {market_id:1, is_new:true};
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
             console.log(`insertMarket(${match_id}, ${marketName})returned 
@@ -151,7 +186,7 @@ async function testDbInserting(){
         const market_id = is.market_id;
 
         // insert the same Market again
-        is = await insertMarket(log, match_id, marketName);
+        is = await insertMarket(log, marketName);
         should = {market_id:1, is_new:false};
         if(is.market_id !== should.market_id || is.is_new !== should.is_new){
             console.log(`insertMarket(${match_id}, ${marketName}) returned 
@@ -162,7 +197,7 @@ async function testDbInserting(){
         }
 
         // insert CoefHome
-        is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
+        is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome);
         should = {odd_id:1, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
@@ -175,7 +210,7 @@ async function testDbInserting(){
 
         // insert CoefHome again
         // TODO here I check the value if it stayed the same - this is the difference between this and the next textcase
-        is = await insertOdd(log, market_id, oddNameHome, book, valueHome);
+        is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome);
         should = {odd_id:1, is_new:false};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
@@ -186,7 +221,7 @@ async function testDbInserting(){
         }
         
         // insert CoefHome with value + 0.1
-        is = await insertOdd(log, market_id, oddNameHome, book, valueHome + 0.1);
+        is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome + 0.1);
         should = {odd_id:1, is_new:false};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
@@ -197,7 +232,7 @@ async function testDbInserting(){
         }
 
         // insert CoefAway
-        is = await insertOdd(log, market_id, oddNameAway, book, valueAway);
+        is = await insertOdd(log, match_id, market_id, oddNameAway, book, valueAway);
         should = {odd_id:2, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
@@ -209,7 +244,7 @@ async function testDbInserting(){
         const odd_idAway = is.odd_id;
 
         // insert CoefAway with invalid value - the error message in log
-        is = await insertOdd(log, market_id, oddNameAway, book, -1.0);
+        is = await insertOdd(log, match_id, market_id, oddNameAway, book, -1.0);
         should = {odd_id:undefined, is_new:undefined};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${-1.0}) returned 
@@ -358,10 +393,10 @@ async function testDbInserting(){
         }
 
             //insert matches and markets for Arb4
-            const {CSmarket_id, _} = await insertMarket(log, match_id, CSmarketName);
+            const { market_id:CSmarket_id } = await insertMarket(log, CSmarketName);
             const CSodd_ids = [];
             for(const odd of CSodds){
-                const {odd_id, _} = await insertOdd(log, CSmarket_id, odd.name, odd.book, odd.value );
+                const {odd_id, _} = await insertOdd(log, match_id, CSmarket_id, odd.name, odd.book, odd.value );
                 CSodd_ids.push(odd_id);
             }
         // insert Arb4
@@ -415,9 +450,19 @@ async function testDbInserting(){
         return -1;
     }
 
-    await pool.end();
     console.log('Inserting test passed')
 }
 
+
+let log;
+const logFilePath = './data/log.txt';
+try{
+    log = createWriteStream(logFilePath, {flags: 'a'});
+} catch(error){
+    console.error(`Failure! Cannot open file under ${logFilePath}`);
+}
+
 await initDb();
-await testDbInserting();
+await testDbInserting(log);
+// await testDbJsonInserting(log);
+pool.end();

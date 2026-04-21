@@ -166,7 +166,7 @@ async function run(){
   /********************************* */
   while(true){;
     //  new
-    const myq = new Queue(1, 100);
+    const myq = new Queue(4, 100);
     /**
      * Total execution times for the first 25 scrapes (until the first calc() call is hit) for different queue sizes
      * 8      0       3:07
@@ -232,14 +232,14 @@ async function run(){
             anyUrlUnderI = true;
           }
         }
-        if(i%5 === 0){
-          const arbCutoff = 0.00;
-          const evCutoff = 0.00;
-          q.push(myq.run(() => {
-              calc(arbCutoff, evCutoff);
-              saveData(data);
-            }).catch((e) => console.error(e)));
-        }
+        // if(i%5 === 0){
+        //   const arbCutoff = 0.00;
+        //   const evCutoff = 0.00;
+        //   q.push(myq.run(() => {
+        //       calc(arbCutoff, evCutoff);
+        //       saveData(data);
+        //     }).catch((e) => console.error(e)));
+        // }
         if(!anyUrlUnderI){
           break;
         }
@@ -261,14 +261,14 @@ import { readFileSync, writeFileSync, existsSync, truncateSync, accessSync, rmSy
 import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'bnj',
-  // 'dex',
-  // 'tp',
-  // 'ms',
-  // 'ls',
-  // 'gg',
-  // 'esb',
+  'bnj',
   // '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  // 'dex',
+  'esb',
+  // 'gg',
+  'ls',
+  'ms',
+  'tp',
 // // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
