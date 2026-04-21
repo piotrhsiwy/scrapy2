@@ -1,7 +1,9 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
-import { insertArb2, insertArb4, insertEv2 } from "./inserter.js";
+import { cleanupOnDatetime, cleanupData } from "./maintain.js";
+import { getMarketType, getOddBrothers, getOddWithBrothers, getOdds, getOpposite2 } from "../data/db/getter.js";
+import { insertArb, insertEv } from "../data/db/inserter.js";
 
 export let log;
 let consideredArbCount;
@@ -73,203 +75,130 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     }
 }
 
-function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
-    for(const coefHome of oddHome.coefs){
-        for(const coefAway of oddAway.coefs){
-            if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
-                continue;
+function arbArray2(withBrothers, oppositeBrothers){
+    const ret = [];
+    for(const a of withBrothers){
+        for(const b of oppositeBrothers){
+            const arb = arb2(a, b);
+            if(arb){
+                ret.push(arb);
             }
-            const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
-            if(arb > cutoff){
-                let newArb = {
-                    "timestamp":prettyEarliestFrom([coefHome.timestamp, coefAway.timestamp]),
-                    "value":arb,
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "Home":{
-                        "oddName":oddHome.name,
-                        "oddValue":coefHome.value,
-                        "book":coefHome.book,
-                        "url":match.urls.find( item => item.book === coefHome.book )?.url,
-                    },
-                    "Away":{
-                        "oddName":oddAway.name,
-                        "oddValue":coefAway.value,
-                        "book":coefAway.book,
-                        "url":match.urls.find( item => item.book === coefAway.book )?.url,
-                    }
-                };
-                const arbReport = insertArb2(arbs, newArb);
-                log.write(arbReport);
-            }
-            consideredArbCount++;
         }
+    }
+    return ret;
+}
+
+function arb2(a, b){
+    const value = 1.0 - (1/a.value + 1/b.value);
+    if(value > 0.0){
+        return {odd_idsArray:[a.odd_id, b.odd_id], value: value};
+    } else{
+        return undefined;
     }
 }
 
-function meanArrayExcluding(arr, value){
-    let acc = 0.0;
-    arr.forEach( v => { acc+=v; });
-    return (acc-value)/(arr.length-1);
-}
-
-function meanArray(arr){
-    let acc = 0.0;
-    arr.forEach( v => acc+=v );
-    return acc/arr.length;
-}
-
-function stdDevArrayExcluding(arr, value){
-    const index = arr.findIndex((v) => v === value);
-    const mean = meanArrayExcluding(arr, value);
-    const dev = arr.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( (v, i) => {
-        if( i !== index){
-            devSum += v;
-        }
-    });
-    const stdDev = Math.sqrt( ( 1/( arr.length-1 ) ) * devSum );
-    return stdDev;
-}
-
-function stdDevArray(values){
-    const mean = meanArray(values);
-    const dev = values.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( d => devSum += d );
-    const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
-    return stdDev;
-}
-
-function evStrength(a, b){
-    return (1/a - 1/b);
-}
-
-function evKelly(value, mean){
-    const BooksEdge = 0.08; 
-    const p = 1/mean - BooksEdge/2;
-    const b = value - 1;
-    return p - (1-p)/b;
-}
-
-function ev2(evs, cutoff, sport, match, market, odd, oddOriginal){
-    const valuesNoNull = [];
-    odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
-    // log.write(`values: ${values}\n`);
-    /* evStrength only meaningful when more than 3 coefs are available */
-    if(valuesNoNull.length >= 3){
-        for(const v of valuesNoNull){
-            const mean = meanArrayExcluding(valuesNoNull, v);
-            /* note that cutoff is negative, f.e. -0.1
-            cutoff corresponds to how much commision is place on the odds:
-            -0.1 cutoff corresponds to 10%. If strength is below cutoff (stronger)
-            then v could potentially be an arb aginast the mean_Excluded(v).
-            I define this as a potential positive EV bet. */
-            const strength = evStrength(v, mean);
-            if(strength < -cutoff){
-                const book = odd.coefs.find(c => c.value === v).book;
-                const vOriginal = oddOriginal.coefs.find(c => c.book === book).value;
-                const url = match.urls.find( u => u.book === book )?.url;
-                // calculate standard deviation of the corresponding probabilities
-                const stdDev = stdDevArrayExcluding(valuesNoNull.map(o => 1/o), 1/v);
-                let newEv = {
-                    "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
-                    "valueOriginal":vOriginal,
-                    "value":v,
-                    "values":valuesNoNull,
-                    "mean":mean,
-                    "probStdDev":stdDev,
-                    "probDeviationInTermsOfStdDev":Math.abs((1/v-1/mean)/stdDev),
-                    "strength":strength,
-                    "kellyFraction":evKelly(v, mean),
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "odd":{
-                        "oddName":odd.name,
-                        "oddValue":v,
-                        "book":book,
-                        "url":url,
-                    },
-                };
-                const evReport = insertEv2(evs, newEv);
-                log.write(evReport);
-            }
-        }
-        consideredEvCount++;
-    }
-}
-
-/**
- * This function removes the books's edges from each of the coefficients, according the coefficients of the two opposing 
- * (as in Match Winner A, Match Winner B) odds of a particular book. This way value of 1.85 could be devigged to 2.0, 
- * depending to how big the book's edge is in this market. It assumes that there is at least one corresponding odd for 
- * each book and it will take the first one. If the corresponding coef has no, or invalid value: {null ,undefined, 0} (this 
- * can occur if the book has odds locked for this event for example), the value is set to null on *both* sides. Example:
- * a book has values: 11.0 and 0 (invalid) for a market, then *both* 11.0 and 0 are set to null. This prevents from using not-devigged 
- * values when calculating value bets.
- * @return It returns a pair of those same exact odds, but with modified 
- * values, to be used when calculating value bets. If at least one of the corresponsing values is invalid or 0, both values are 
- * set to null in the returned object.
- * @param oddHome 
- * @param oddAway is an odd Object representing an odd opposed to oddHome of the following structure:
- *              {
- *                "name": "kuusamo.gg",
-                  "coefs": [
-                    {
-                      "timestamp": "April 11, 2026 at 02:23:38 PM UTC",
-                      "book": "GGbet",
-                      "value": 2.52
-                    },
-                    {
-                      "timestamp": "April 11, 2026 at 02:24:09 PM UTC",
-                      "book": "Thunderpick",
-                      "value": 2.12
-                    }
-                  ]
-                }
- */
-function devig(oddHome, oddAway){
+function evArray2(withBrothers, oppositeWithBrothers){
 
     function devigVal(a, b){
         const edgeOneside = (1/a + 1/b - 1)/2
-        const ret = 1/(1/a - edgeOneside);
-        // log.write(`Devigged ${a} against ${b} to ${ret}. Vig: ${2*edgeOneside}\n`)
-        return ret;
+        const retA = 1/(1/a - edgeOneside);
+        const retB = 1/(1/b - edgeOneside);
+        return {retA, retB};
     }
 
-    function devigOneside(oddHome, oddAway){
-        let ret = structuredClone(oddHome);
-        for(let i = 0; i < oddHome.coefs.length; i++){
-            const coefHome = oddHome.coefs[i];
-            const valueHome = coefHome?.value
-            const coefAway = oddAway.coefs.find(e => e.book === coefHome.book);
-            const valueAway = coefAway?.value;
-            if(!valueAway || !valueHome){
-                // log.write(`Warning! cannot devig, one of the corresponding coefs has no value: ${oddHome.name}:${valueHome} or ${valueAway}. Setting to null.\n`);
-                ret.coefs[i].value = null;
-                continue;
+    function devigBothSides(A, B){
+        let devigA = structuredClone(A);
+        let devigB = structuredClone(B);
+        const dirtyBindices = [];
+        for(let i = 0; i < A.length; i++){
+            const a = A[i];
+            const j = B.findIndex( e => e.book === a.book);
+            const b = B[j];
+            if(j != -1 && !dirtyBindices.includes(j)){
+                // TODO do this on insert in db
+                dirtyBindices.push(j);
+                const {retA:adevigged, retB:bdevigged} = devigVal(a.value, b.value);
+                devigA[i].value = adevigged;
+                devigB[j].value = bdevigged;
             }
-            ret.coefs[i].value = devigVal(valueHome, valueAway);
         }
-        return ret;
+        return {devigA, devigB};
     }
 
-    if(!oddHome || !oddAway){
-        return {oddHome, oddAway}
+    function meanArrayExcluding(arr, value){
+        let acc = 0.0;
+        arr.forEach( v => { acc+=v; });
+        return (acc-value)/(arr.length-1);
     }
-    let deviggedOddHome = devigOneside(oddHome, oddAway);
-    let deviggedOddAway = devigOneside(oddAway, oddHome);
 
-    return {deviggedOddHome, deviggedOddAway};
+    function meanArray(arr){
+        let acc = 0.0;
+        arr.forEach( v => acc+=v );
+        return acc/arr.length;
+    }
+
+    function stdDevArray(values){
+        const mean = meanArray(values);
+        const dev = values.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function stdDevArrayExcluding(arr, val){
+        const index = arr.findIndex(e => e === val); 
+        arr.splice(index, 1);
+        const mean = meanArray(arr);
+        const dev = arr.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( arr.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function evStrength(a, b){
+        return (1/a - 1/b);
+    }
+
+    const ret = [];
+    const {devigA, devigB} = devigBothSides(withBrothers, oppositeWithBrothers);
+    for(let i = 0; i < devigA.length; i++){
+        // TODO can offload some of those to db
+        const values = devigA.map(e => e.value)
+        const v = devigA[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = withBrothers[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    for(let i = 0; i < devigB.length; i++){
+        // TODO can offload some of those to db
+        const values = devigB.map(e => e.value)
+        const v = devigB[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = withBrothers[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    return ret;
+    
 }
 
 function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
@@ -459,7 +388,55 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
     // console.log(marketReport);
 }
 
-import { cleanupOnDatetime, cleanupData } from "./maintain.js";
+export async function calcSportsnew(){
+
+    const logFilePath = './calc/log.txt';
+    try{
+        log = createWriteStream(logFilePath, {flags: 'a'});
+    } catch(error){
+        console.error(`Failure! Cannot open file under ${logFilePath}`);
+    }
+
+    const odds = await getOdds();
+    log.write(`Fetched ${odds.length} entries from odds\n`);
+    let dirtyOdds = [];
+    for(const odd of odds){
+        const odd_id = odd.odd_id;
+        if(dirtyOdds.includes(odd_id)){
+            continue;
+        }
+        const marketType = await getMarketType(odd_id);
+        if(marketType.length === 2){
+            // binary market, like 'Match Winner'
+            const opposite = await getOpposite2(odd_id);
+            const oppositeBrothers = await getOddBrothers(opposite.odd_id);
+            const withBrothers = await getOddWithBrothers(odd_id);
+
+            const arbs = arbArray2(withBrothers, oppositeBrothers);
+            for(const arb of arbs){
+                const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+            }
+
+            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+            const evs = evArray2(withBrothers, oppositeWithBrothers);
+            for(const ev of evs){
+                const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+            }
+
+            for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                dirtyOdds.push(odd_id);
+            }
+
+        } else if(marketType.length === 4){
+            // 4-way market, like 'Correct Score' on a BO3 game
+        } else{
+            // TODO more than 4-way markets
+        }
+    }
+
+    await promisify(log.end).bind(log);
+}
+
 export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     
     const logFilePath = './calc/log.txt';

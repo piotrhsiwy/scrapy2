@@ -36,6 +36,7 @@ async function initDbCalc(){
             `CREATE TABLE evs(
                 ev_id SERIAL PRIMARY KEY,
                 strength NUMERIC NOT NULL CONSTRAINT ev_strength_negative CHECK (strength < 0.0),
+                probDeviationInTermsOfStdDev NUMERIC NOT NULL CONSTRAINT ev_probDeviationInTermsOfStdDev_positive CHECK (probDeviationInTermsOfStdDev > 0.0),
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );` 
         })

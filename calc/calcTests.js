@@ -1,3 +1,3 @@
-import { calcSports } from "./calc.js";
+import { calcSportsnew } from "./calc.js";
 
-await calcSports();
+await calcSportsnew();

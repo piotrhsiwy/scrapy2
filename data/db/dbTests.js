@@ -2,6 +2,7 @@ import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertUrl } 
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 import { readFileSync, existsSync } from "fs";
+import { getOdd } from "./getter.js";
 
 async function testDbJsonInserting(log){
     log.write('Opening files...\n');
@@ -47,7 +48,7 @@ async function testDbJsonInserting(log){
     
 }
 
-async function testDbInserting(log){
+export async function testDbInserting(log){
     
     // Match
     const sportName = 'Counter-Strike 2';
@@ -61,6 +62,10 @@ async function testDbInserting(log){
     // Url + match_id
     const book = 'Esportsbet';
     const url = 'https://esportsbet.io/esportsbull/OddsPage/39513322/47/CS2Betting-1W-TEAM-NUCLEAR-TIGERES';
+    const book2 = 'Thunderpick';
+    const url2 = 'https://thunderpick.io';
+    const book3 = '22Bet';
+    const url3 = 'https://bestwinzz.de';
 
     // Market + match_id
     const marketName = 'Match Winner';
@@ -73,7 +78,8 @@ async function testDbInserting(log){
     const valueAway = 1.92;
 
     // Ev
-    const strength = -0.051234
+    const strength = -0.051234;
+    const pditosd = 0.1;
 
     // Arb
     const valueArb = 0.021234
@@ -254,6 +260,56 @@ async function testDbInserting(log){
             return -1;
         }
 
+        // insert CoefHome from book2
+        await insertUrl(log, match_id, book2, url2);
+        await insertOdd(log, match_id, market_id, oddNameHome, book2, valueHome + 0.5);
+        await insertOdd(log, match_id, market_id, oddNameAway, book2, valueAway - 0.5);
+        await insertUrl(log, match_id, book3, url3);
+        await insertOdd(log, match_id, market_id, oddNameHome, book3, valueHome + 0.05);
+        await insertOdd(log, match_id, market_id, oddNameAway, book3, valueAway - 0.05);
+
+        const retOddHome = await getOdd(odd_idHome);
+        if(
+            retOddHome.sport !== sportName ||
+            retOddHome.book !== book ||
+            retOddHome.teamhome !== teamHome ||
+            retOddHome.teamaway !== teamAway ||
+            // retOddHome.datetime !== datetime ||
+            retOddHome.marketname !== marketName ||
+            retOddHome.oddname !== oddNameHome ||
+            parseFloat(retOddHome.value) !== valueHome + 0.1
+        ) {
+            console.log(`Failure on comparing return value of getOdd(${odd_idHome})`);
+            console.log(`is/should: \n\t${retOddHome.sport}                \n\t${sportName}`);
+            console.log(`is/should: \n\t${retOddHome.book}                 \n\t${book}`);
+            console.log(`is/should: \n\t${retOddHome.teamhome}             \n\t${teamHome}`);
+            console.log(`is/should: \n\t${retOddHome.teamaway}             \n\t${teamAway}`);
+            console.log(`is/should: \n\t${retOddHome.marketname}           \n\t${marketName}`);
+            console.log(`is/should: \n\t${retOddHome.oddname}              \n\t${oddNameHome}`);
+            console.log(`is/should: \n\t${parseFloat(retOddHome.value)}    \n\t${valueHome + 0.1}`);
+        }
+
+        const retOddAway = await getOdd(odd_idAway);
+        if(
+            retOddAway.sport !== sportName ||
+            retOddAway.book !== book ||
+            retOddAway.teamhome !== teamHome ||
+            retOddAway.teamaway !== teamAway ||
+            // retOddAway.datetime !== datetime ||
+            retOddAway.marketname !== marketName ||
+            retOddAway.oddname !== oddNameAway ||
+            parseFloat(retOddAway.value) !== valueAway
+        ) {
+            console.log(`Failure on comparing return value of getOdd(${odd_idAway})`);
+            console.log(`is/should: \n\t${retOddAway.sport}                \n\t${sportName}`);
+            console.log(`is/should: \n\t${retOddAway.book}                 \n\t${book}`);
+            console.log(`is/should: \n\t${retOddAway.teamhome}             \n\t${teamHome}`);
+            console.log(`is/should: \n\t${retOddAway.teamaway}             \n\t${teamAway}`);
+            console.log(`is/should: \n\t${retOddAway.marketname}           \n\t${marketName}`);
+            console.log(`is/should: \n\t${retOddAway.oddname}              \n\t${oddNameAway}`);
+            console.log(`is/should: \n\t${parseFloat(retOddAway.value)}    \n\t${valueAway}`);
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -262,10 +318,10 @@ async function testDbInserting(log){
         ///////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////
 
-        is = await insertEv(log, odd_idHome, strength);
+        is = await insertEv(log, odd_idHome, strength, pditosd);
         should = {ev_id:1, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idHome}, ${strength}) returned 
+            console.log(`insertEv(${odd_idHome}, ${strength}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -273,10 +329,10 @@ async function testDbInserting(log){
         }
 
         // insert the same Ev again
-        is = await insertEv(log, odd_idHome, strength);
+        is = await insertEv(log, odd_idHome, strength, pditosd);
         should = {ev_id:1, is_new:false};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idHome}, ${strength}) returned 
+            console.log(`insertEv(${odd_idHome}, ${strength}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -286,10 +342,10 @@ async function testDbInserting(log){
         // insert the same Ev again with strength -0.01
         // this should INSERT a new entry with a new timestamp and new ev_id, because the strength changed
         // TODO with this setup it's impossible to distinguish on the app level between a new ev and a ev with an updated strength!
-        is = await insertEv(log, odd_idHome, strength - 0.01);
+        is = await insertEv(log, odd_idHome, strength - 0.01, pditosd);
         should = {ev_id:2, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idHome}, ${strength - 0.01}) returned 
+            console.log(`insertEv(${odd_idHome}, ${strength - 0.01}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -297,10 +353,10 @@ async function testDbInserting(log){
         }
 
         // insert Away Ev
-        is = await insertEv(log, odd_idAway, strength);
+        is = await insertEv(log, odd_idAway, strength, pditosd);
         should = {ev_id:3, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idAway}, ${strength}) returned 
+            console.log(`insertEv(${odd_idAway}, ${strength}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -308,10 +364,10 @@ async function testDbInserting(log){
         }
 
         // insert Away Ev again
-        is = await insertEv(log, odd_idAway, strength);
+        is = await insertEv(log, odd_idAway, strength, pditosd);
         should = {ev_id:3, is_new:false};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idAway}, ${strength}) returned 
+            console.log(`insertEv(${odd_idAway}, ${strength}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -319,10 +375,10 @@ async function testDbInserting(log){
         }
 
         // insert Away Ev again with strength +0.01
-        is = await insertEv(log, odd_idAway, strength + 0.01);
+        is = await insertEv(log, odd_idAway, strength + 0.01, pditosd);
         should = {ev_id:4, is_new:true};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idAway}, ${strength + 0.01}) returned 
+            console.log(`insertEv(${odd_idAway}, ${strength + 0.01}, ${pditosd}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -330,10 +386,22 @@ async function testDbInserting(log){
         }
 
         // insert Away Ev again with invalid strength - error message in log
-        is = await insertEv(log, odd_idAway, 0.01);
+        is = await insertEv(log, odd_idAway, 0.01, pditosd);
         should = {ev_id:undefined, is_new:undefined};
         if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
-            console.log(`insertEv(${odd_idAway}, ${0.01}) returned 
+            console.log(`insertEv(${odd_idAway}, ${0.01}, ${pditosd}) returned 
+                \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
+                \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+
+        // insert Away Ev again with invalid pditosd - error message in log
+        // strength has to be different, else we will skip inserting because this entry already exists
+        is = await insertEv(log, odd_idAway, strength - 0.08, -0.1);
+        should = {ev_id:undefined, is_new:undefined};
+        if(is.ev_id !== should.ev_id || is.is_new !== should.is_new){
+            console.log(`insertEv(${odd_idAway}, ${strength - 0.08}, ${-0.1}) returned 
                 \tis:{ ev_id:${is.ev_id}, is_new:${is.is_new} }
                 \tshould:{ ev_id:${should.ev_id}, is_new:${should.is_new} }
             `)
@@ -452,7 +520,6 @@ async function testDbInserting(log){
 
     console.log('Inserting test passed')
 }
-
 
 let log;
 const logFilePath = './data/log.txt';

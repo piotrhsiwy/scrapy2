@@ -70,8 +70,8 @@ export async function insertArb(log, oddsArray, value){
             await client.query({
                 text:`
                 SELECT pg_advisory_xact_lock(
-                    hashtext($1) - hashtext($2), 
-                    hashtext($3) - hashtext($4)
+                    hashtext($1 || '-' || $2),
+                    hashtext($3 || '-' || $4)
                 )`,
                 values: [oddsArray[0], oddsArray[1], oddsArray[2], oddsArray[3]],
             })
@@ -160,11 +160,12 @@ export async function insertArb(log, oddsArray, value){
  * @param {WritableStream} log 
  * @param {Integer} odd_id e.g. 1 - id of the corresponding odd entry. This id is inserted into evs_odds_link table along with the ev_id.
  * @param {Float} strength e.g. -0.051234 is the strength of the EV bet, heuristic value that expresses how strong of an arb we would have, if we could arb against the average of the market.
+ * @param {Float} probDeviationInTermsOfStdDev e.g. 1234.1234
  * @returns {ev_id, is_new} 
  *  the ev_id of the inserted ev entry. undefined when an errors on insert occurs
  *  is_new is true if an entry with the same odd_id in the link table did NOT exist
  */
-export async function insertEv(log, odd_id, strength){
+export async function insertEv(log, odd_id, strength, probDeviationInTermsOfStdDev){
     const date = new Date();
     let client;
     let ev_id, is_new;
@@ -172,13 +173,13 @@ export async function insertEv(log, odd_id, strength){
     try{
         client = await pool.connect();
         await client.query(`BEGIN`);
-        await client.query({ // this locks hash(book, value)
+        await client.query({ // this locks hash(odd_id, strength, probDeviationInTermsOfStdDev)
             text:`
             SELECT pg_advisory_xact_lock(
-                hashtext($1), 
-                hashtext($2)
+                hashtext($1 || '-' || $2), 
+                hashtext($3)
             )`,
-            values: [odd_id, strength],
+            values: [odd_id, strength, probDeviationInTermsOfStdDev],
         })
         ret = await client.query( {
                 text:`
@@ -187,13 +188,14 @@ export async function insertEv(log, odd_id, strength){
                     FROM evs e JOIN evs_odds_link el ON e.ev_id = el.ev_id
                     WHERE
                         el.odd_id = $1 AND
-                        e.strength = $2
+                        e.strength = $2 AND
+                        e.probDeviationInTermsOfStdDev = $3
                     ORDER BY e.timestamp DESC
                     LIMIT 1
                 ),
                 inserted AS (
-                    INSERT INTO evs (strength) 
-                    SELECT $2
+                    INSERT INTO evs (strength, probDeviationInTermsOfStdDev) 
+                    SELECT $2, $3
                     WHERE NOT EXISTS (SELECT 1 FROM existing)
                     RETURNING ev_id
                 )
@@ -201,15 +203,15 @@ export async function insertEv(log, odd_id, strength){
                 UNION ALL
                 SELECT ev_id, false AS is_new FROM existing
                 `,
-                values: [odd_id, strength],
+                values: [odd_id, strength, probDeviationInTermsOfStdDev],
         });
         await client.query(`COMMIT`); // this releases the lock automatically 
         ev_id = ret.rows[0].ev_id;
         is_new = ret.rows[0].is_new;
         if(ev_id){
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into evs: \n\t entry: (${strength})\n\t ev_id: ${ev_id}\n`)
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into evs: \n\t entry: (${strength}, ${probDeviationInTermsOfStdDev})\n\t ev_id: ${ev_id}\n`)
         } else {
-            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${strength})\n\t Incorrect ev_id: ${ev_id}\n`);
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${strength}, ${probDeviationInTermsOfStdDev})\n\t Incorrect ev_id: ${ev_id}\n`);
             return;
         }
 
@@ -240,7 +242,7 @@ export async function insertEv(log, odd_id, strength){
         
     } catch(e){
         await client.query(`ROLLBACK`);
-        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${odd_id}, ${strength})\n\t error: ${e.message}\n`)
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${odd_id}, ${strength}, ${probDeviationInTermsOfStdDev})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
         return {ev_id, is_new};
