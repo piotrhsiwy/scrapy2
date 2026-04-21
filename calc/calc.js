@@ -2,7 +2,7 @@ import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
 import { cleanupOnDatetime, cleanupData } from "./maintain.js";
-import { getMarketType, getOddBrothers, getOddWithBrothers, getOdds, getOpposite2 } from "../data/db/getter.js";
+import { getMarketName, getMarketType, getOddBrothers, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
 import { insertArb, insertEv } from "../data/db/inserter.js";
 
 export let log;
@@ -75,7 +75,44 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     }
 }
 
+function arbArray4(withBrothers){
+
+    function arb4(A, B, C, D){
+        const value = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
+        if(value > 0.0){
+            return {odd_idsArray:[A.odd_id, B.odd_id, C.odd_id, D.odd_id], value: value};
+        } else{
+            return undefined;
+        }
+    }
+    
+    const ret = [];
+    for(const A of withBrothers[0]){
+        for(const B of withBrothers[1]){
+            for(const C of withBrothers[2]){
+                for(const D of withBrothers[3]){
+                    const arb = arb4(A, B, C, D);
+                    if(arb){
+                        ret.push(arb);
+                    }
+                }
+            }
+        }
+    }
+    return ret;
+}
+
 function arbArray2(withBrothers, oppositeBrothers){
+
+    function arb2(a, b){
+        const value = 1.0 - (1/a.value + 1/b.value);
+        if(value > 0.0){
+            return {odd_idsArray:[a.odd_id, b.odd_id], value: value};
+        } else{
+            return undefined;
+        }
+    }
+
     const ret = [];
     for(const a of withBrothers){
         for(const b of oppositeBrothers){
@@ -88,16 +125,7 @@ function arbArray2(withBrothers, oppositeBrothers){
     return ret;
 }
 
-function arb2(a, b){
-    const value = 1.0 - (1/a.value + 1/b.value);
-    if(value > 0.0){
-        return {odd_idsArray:[a.odd_id, b.odd_id], value: value};
-    } else{
-        return undefined;
-    }
-}
-
-function evArray2(withBrothers, oppositeWithBrothers){
+function evArray2(A, B){
 
     function devigVal(a, b){
         const edgeOneside = (1/a + 1/b - 1)/2
@@ -161,8 +189,8 @@ function evArray2(withBrothers, oppositeWithBrothers){
         return (1/a - 1/b);
     }
 
-    const ret = [];
-    const {devigA, devigB} = devigBothSides(withBrothers, oppositeWithBrothers);
+    const ret = []; 
+    const {devigA, devigB} = devigBothSides(A, B);
     for(let i = 0; i < devigA.length; i++){
         // TODO can offload some of those to db
         const values = devigA.map(e => e.value)
@@ -170,7 +198,7 @@ function evArray2(withBrothers, oppositeWithBrothers){
         const mean = meanArrayExcluding(values, v)
         const strength = evStrength(v, mean)
         if(strength < 0.0){
-            const odd_id = withBrothers[i].odd_id;
+            const odd_id = A[i].odd_id;
             const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
             const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
             ret.push({
@@ -187,7 +215,7 @@ function evArray2(withBrothers, oppositeWithBrothers){
         const mean = meanArrayExcluding(values, v)
         const strength = evStrength(v, mean)
         if(strength < 0.0){
-            const odd_id = withBrothers[i].odd_id;
+            const odd_id = B[i].odd_id;
             const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
             const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
             ret.push({
@@ -406,18 +434,18 @@ export async function calcSportsnew(){
             continue;
         }
         const marketType = await getMarketType(odd_id);
+
         if(marketType.length === 2){
-            // binary market, like 'Match Winner'
+            // binary (2-way) market, like 'Match Winner'
             const opposite = await getOpposite2(odd_id);
-            const oppositeBrothers = await getOddBrothers(opposite.odd_id);
+            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
             const withBrothers = await getOddWithBrothers(odd_id);
 
-            const arbs = arbArray2(withBrothers, oppositeBrothers);
+            const arbs = arbArray2(withBrothers, oppositeWithBrothers);
             for(const arb of arbs){
                 const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
             }
 
-            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
             const evs = evArray2(withBrothers, oppositeWithBrothers);
             for(const ev of evs){
                 const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
@@ -429,8 +457,63 @@ export async function calcSportsnew(){
 
         } else if(marketType.length === 4){
             // 4-way market, like 'Correct Score' on a BO3 game
+            const marketName = await getMarketName(odd_id);
+            if(marketName.includes('Handicap')){
+                /* 
+                    handicap market with oddNames of the format: "vitality-2.5", "g22.5"
+                    CARE: teamName can end with a number like in "g21.5"
+                    this is to be evaluated like a binary market after the opposites are found
+                */
+                const opposite = await getOppositeHdp(odd_id);
+                const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+                const withBrothers = await getOddWithBrothers(odd_id);
+
+                const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                const evs = evArray2(withBrothers, oppositeWithBrothers);
+                for(const ev of evs){
+                    const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+                }
+
+                for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                    dirtyOdds.push(odd_id);
+                }
+
+            } else if(marketName.includes('Correct Score')){
+                /* 
+                    4-way correct score market with oddNames of the format: "0:2", "1:2", "2:1", "2:0"
+                */
+                const matching = await getMatching4CS(odd_id);
+                const matchingWithBrothers = await Promise.all(matching.map(async o => await getOddWithBrothers(o.odd_id)));
+                const arbs = arbArray4(matchingWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                for(const odd_id of matchingWithBrothers.flat().map(e => e.odd_id)){
+                    dirtyOdds.push(odd_id);
+                }
+
+                // TODO ev
+            } else{
+                dirtyOdds.push(odd_id);
+            }
+
+
+        // } else if(market.name?.includes('First to Reach')){
+                /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
+
+        // } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
+            /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
+            /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
+
+
         } else{
             // TODO more than 4-way markets
+            dirtyOdds.push(odd_id);
         }
     }
 

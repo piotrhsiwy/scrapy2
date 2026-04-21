@@ -54,6 +54,10 @@ export async function testDbInserting(log){
     const sportName = 'Counter-Strike 2';
     const teamHome = 'vitality';
     const teamAway = 'g2';
+    // Match2
+    const sportName2 = 'Counter-Strike 2';
+    const teamHome2 = 'heretics';
+    const teamAway2 = 'schalke04';
     // TODO what if the datetime is 'live'? disallow it on the scraper level
     const datetime = 'October 6, 2025 at 07:00:00 PM GMT+2';
     const datetime3h = 'October 6, 2025 at 10:00:00 PM GMT+2';
@@ -105,6 +109,69 @@ export async function testDbInserting(log){
                 name: '0:2',
                 book: 'Betninja',
                 value: 4.3
+            },
+        ]
+        const HDPmarketName = 'Match Handicap';
+        const HDPodds = [
+            {
+                name: 'g2-1.5',
+                book: 'Thunderpick',
+                value: 3
+            },
+            {
+                name: 'g21.5',
+                book: 'Thunderpick',
+                value: 1.2
+            },
+            {
+                name: 'vitality-1.5',
+                book: 'Thunderpick',
+                value: 4
+            },
+            {
+                name: 'g2-1.5',
+                book: 'Esportsbet',
+                value: 4
+            },
+            {
+                name: 'vitality1.5',
+                book: 'Esportsbet',
+                value: 1.2
+            },
+            {
+                name: 'g21.5',
+                book: 'Esportsbet',
+                value: 1.1
+            },
+            {
+                name: 'vitality-1.5',
+                book: 'Esportsbet',
+                value: 9
+            },
+            {
+                name: 'g2-1.5',
+                book: '22Bet',
+                value: 4.01
+            },
+            {
+                name: 'vitality1.5',
+                book: '22Bet',
+                value: 1.21
+            },
+            {
+                name: 'g21.5',
+                book: '22Bet',
+                value: 1.101
+            },
+            {
+                name: 'vitality-1.5',
+                book: '22Bet',
+                value: 9.01
+            },
+            {
+                name: 'vitality1.5',
+                book: 'Thunderpick',
+                value: 1.45
             },
         ]
 
@@ -467,6 +534,12 @@ export async function testDbInserting(log){
                 const {odd_id, _} = await insertOdd(log, match_id, CSmarket_id, odd.name, odd.book, odd.value );
                 CSodd_ids.push(odd_id);
             }
+            const { market_id:HDPmarket_id } = await insertMarket(log, HDPmarketName);
+            const HDPodd_ids = [];
+            for(const odd of HDPodds){
+                const {odd_id, _} = await insertOdd(log, match_id, HDPmarket_id, odd.name, odd.book, odd.value );
+                HDPodd_ids.push(odd_id);
+            }
         // insert Arb4
         // we jump over serial number here becuase the previous insert failed
         is = await insertArb(log, CSodd_ids, valueArb);
@@ -512,6 +585,10 @@ export async function testDbInserting(log){
             return -1;
         }
 
+        is = await insertMatch(log, sportName2, teamHome2, teamAway2, datetime);
+        const match_id2 = is.match_id;
+        await insertOdd(log, match_id2, market_id, teamHome2, book, valueHome);
+        await insertOdd(log, match_id2, market_id, teamAway2, book, valueAway);
 
     } catch{
         console.log('Inserting test failed')
