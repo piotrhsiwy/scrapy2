@@ -130,15 +130,15 @@ export async function insertArb(log, oddsArray, value){
                             values: [arb_id, odd_id],
                     });
                     if(arb_id === ret.rows[0].arb_id && odd_id === ret.rows[0].odd_id){
-                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${arb_id}, ${odd_id})\n`)
+                        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into arbs_odds_link: \n\t entry: (${arb_id}, ${odd_id})\n`)
                     } else{
                         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${arb_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                     }
                 }
             } catch(e){
                 // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
-                if(e.code === '23505' && e.constraint === 'ev_odd_link_unique'){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${arb_id}, ${odd_id})\n`)
+                if(e.code === '23505'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a arbs_odd_link even though the odd is not new: \n\t entry: (${arb_id}, ${odd_id})\n`)
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${arb_id}, ${odd_id})\n`);
                 } else throw e;
             }
@@ -226,14 +226,14 @@ export async function insertEv(log, odd_id, strength, probDeviationInTermsOfStdD
                         values: [ev_id, odd_id],
                 });
                 if(ev_id === ret.rows[0].ev_id && odd_id === ret.rows[0].odd_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${ev_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into evs_odds_link: \n\t entry: (${ev_id}, ${odd_id})\n`)
                 } else{
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${ev_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                 }
             } catch(e){
                 // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
-                if(e.code === '23505' && e.constraint === 'ev_odd_link_unique'){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${ev_id}, ${odd_id})\n`)
+                if(e.code === '23505'){
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a evs_odds_link even though the odd is not new: \n\t entry: (${ev_id}, ${odd_id})\n`)
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${ev_id}, ${odd_id})\n`);
                 } else throw e;
             }
@@ -345,14 +345,14 @@ export async function insertOdd(log, match_id, market_id, name, book, value){
                         values: [match_id, odd_id],
                 });
                 if(match_id === ret.rows[0].match_id && odd_id === ret.rows[0].odd_id){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into markets_odds_link: \n\t entry: (${match_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into matches_odds_link: \n\t entry: (${match_id}, ${odd_id})\n`)
                 } else{
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${odd_id})\n\tThe fields do not match the existing entry\n`);
                 }
             } catch(e){
                 // this should be unreachable if the odd is only inserted once (the advisory lock works on the previous query)
                 if(e.code === '23505'){
-                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a market_odd_link even though the odd is not new: \n\t entry: (${market_id}, ${odd_id})\n`)
+                    log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Trying to insert a markets_odds_link or matches_odds_link even though the odd is not new: \n\t entry: (${market_id}, ${odd_id})\n`)
                     log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${market_id}, ${odd_id})\n`);
                 } else throw e;
             }

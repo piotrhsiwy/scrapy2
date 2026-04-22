@@ -169,11 +169,15 @@ export async function getOppositeHdp(odd_id){
                             WHEN o.name LIKE mt.teamhome || '%' THEN mt.teamaway
                             ELSE mt.teamhome
                         END AS expected_opposite_team,
-                        CAST( 
-                            REGEXP_REPLACE(
-                                o.name,
-                                '^(' || mt.teamhome || '|' || mt.teamaway || ')\s*',
-                                ''
+                        CAST(
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(' || mt.teamhome || '|' || mt.teamaway || ')',
+                                    '',
+                                    'i'
+                                ) 
+                                FROM '^[-+]?[0-9]*[.]?[0-9]+$'
                             ) AS NUMERIC
                         ) AS hdp
                     FROM odds o 
@@ -195,10 +199,14 @@ export async function getOppositeHdp(odd_id){
                         mto.match_id = target.match_id AND
                         o.name LIKE target.expected_opposite_team || '%' AND
                         CAST( 
-                            REGEXP_REPLACE(
-                                o.name,
-                                '^(' || target.teamhome || '|' || target.teamaway || ')\s*',
-                                ''
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(' || target.teamhome || '|' || target.teamaway || ')',
+                                    '',
+                                    'i'
+                                )
+                                FROM '^[-+]?[0-9]*[.]?[0-9]+$'
                             ) AS NUMERIC
                         ) = target.hdp * -1
                     LIMIT 1
@@ -212,7 +220,12 @@ export async function getOppositeHdp(odd_id){
     } finally{
         if(client) client.release();
     }
-    return ret.rows[0];
+
+    if(ret){
+        return ret.rows[0];
+    } else{
+        return ret;
+    }
 }
 
 /**

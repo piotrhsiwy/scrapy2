@@ -252,7 +252,8 @@ export function stripTeamName(str){
         .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|fredit|bnk|.vietnam|\([^)]*\)|^csgo|cs$|og$|gc$|global|superplay|grandes|w7m|^vivo|trainee$/g, '')
         .replace(/\+showtime|\+r8|\+gabe|chongqing|^kiwoom|^hanjin|^minus|instreamly$/g, '')
         .replace(/espor$|wolves$/g, '')
-        .replace(/\'|\_|\./g, '')
+        .replace(/\'|\_/g, '')
+        .replace(/\{|\}|\(|\)\[|\]|\||\\|\?|\+|\*|\$|\^|\./g, '') // regex special characters to ensure correct processing with regex in the db
         // .replace(/\b(\w+)clan\b/g, '$1')
         // .replace(/\b(\w+)esports\b/g, '$1')
         // .replace(/\b(\w+)esport\b/g, '$1')

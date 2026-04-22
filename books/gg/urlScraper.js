@@ -196,6 +196,9 @@ export async function scrapeMatchURL(data, browser, book, i){
           if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
             const [left, right] = oddName.split(':');
             oddName = `${right}:${left}`;
+            oddName = oddName.replace(teamHome, '');
+            oddName = oddName.replace(teamAway, '');
+            oddName = oddName.replace('-', ':');
           }
           selector = 'div[data-test=odd-button__result]';
           const valueHandle = await oddHandle.$(selector);

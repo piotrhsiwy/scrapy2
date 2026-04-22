@@ -137,14 +137,14 @@ function evArray2(A, B){
     function devigBothSides(A, B){
         let devigA = structuredClone(A);
         let devigB = structuredClone(B);
-        const dirtyBindices = [];
+        const dirtyBindices = new Set();
         for(let i = 0; i < A.length; i++){
             const a = A[i];
             const j = B.findIndex( e => e.book === a.book);
             const b = B[j];
-            if(j != -1 && !dirtyBindices.includes(j)){
+            if(j != -1 && !dirtyBindices.has(j)){
                 // TODO do this on insert in db
-                dirtyBindices.push(j);
+                dirtyBindices.add(j);
                 const {retA:adevigged, retB:bdevigged} = devigVal(a.value, b.value);
                 devigA[i].value = adevigged;
                 devigB[j].value = bdevigged;
@@ -427,14 +427,16 @@ export async function calcSportsnew(){
 
     const odds = await getOdds();
     log.write(`Fetched ${odds.length} entries from odds\n`);
-    let dirtyOdds = [];
-    for(const odd of odds){
-        const odd_id = odd.odd_id;
-        if(dirtyOdds.includes(odd_id)){
+    let dirtyOdds = new Set();
+    for(let i = 114931; i < odds.length; i++){
+        const odd = odds[i];
+        const odd_id = i;
+        if(dirtyOdds.has(odd_id)){
             continue;
         }
         const marketType = await getMarketType(odd_id);
 
+        
         if(marketType.length === 2){
             // binary (2-way) market, like 'Match Winner'
             const opposite = await getOpposite2(odd_id);
@@ -452,7 +454,7 @@ export async function calcSportsnew(){
             }
 
             for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
-                dirtyOdds.push(odd_id);
+                dirtyOdds.add(odd_id);
             }
 
         } else if(marketType.length === 4){
@@ -465,6 +467,10 @@ export async function calcSportsnew(){
                     this is to be evaluated like a binary market after the opposites are found
                 */
                 const opposite = await getOppositeHdp(odd_id);
+                if(!opposite){ // safeguard added to prevent crashing when opposite fails (it failed on incorrect oddNames, because they contained REGEX special chars)
+                    dirtyOdds.add(odd_id);
+                    continue;
+                }
                 const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
                 const withBrothers = await getOddWithBrothers(odd_id);
 
@@ -479,7 +485,7 @@ export async function calcSportsnew(){
                 }
 
                 for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
-                    dirtyOdds.push(odd_id);
+                    dirtyOdds.add(odd_id);
                 }
 
             } else if(marketName.includes('Correct Score')){
@@ -494,12 +500,12 @@ export async function calcSportsnew(){
                 }
 
                 for(const odd_id of matchingWithBrothers.flat().map(e => e.odd_id)){
-                    dirtyOdds.push(odd_id);
+                    dirtyOdds.add(odd_id);
                 }
 
                 // TODO ev
             } else{
-                dirtyOdds.push(odd_id);
+                dirtyOdds.add(odd_id);
             }
 
 
@@ -513,7 +519,7 @@ export async function calcSportsnew(){
 
         } else{
             // TODO more than 4-way markets
-            dirtyOdds.push(odd_id);
+            dirtyOdds.add(odd_id);
         }
     }
 
