@@ -6,46 +6,117 @@
     <title>Scrapy</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='hotpink'/></svg>">
     <style>
-        /* Layout */
-        body { 
-            font-family: sans-serif; margin: 0; padding: 20px; 
+        /* ── Login Screen ── */
+        #login-screen {
+            display: none;
+            position: fixed; inset: 0;
+            background: #f4f4f9;
+            justify-content: center; align-items: center;
+            z-index: 100;
+        }
+        #login-screen.visible { display: flex; }
+        .login-box {
+            background: white; padding: 40px 48px; border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12); min-width: 320px;
+        }
+        .login-box h2 {
+            margin: 0 0 8px; font-size: 22px; color: #343a40;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .login-box .pink-sq {
+            width: 20px; height: 20px;
+            background: hotpink; border-radius: 3px; display: inline-block;
+        }
+        .login-box p { margin: 0 0 24px; color: #666; font-size: 14px; }
+        .login-box label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 4px; }
+        .login-box input[type=text],
+        .login-box input[type=password] {
+            width: 100%; box-sizing: border-box;
+            padding: 9px 12px; font-size: 15px;
+            border: 1px solid #ccc; border-radius: 4px;
+            margin-bottom: 16px; outline: none;
+        }
+        .login-box input:focus { border-color: #007bff; }
+        .login-box button {
+            width: 100%; padding: 10px; font-size: 15px; font-weight: bold;
+            background: #007bff; color: white; border: none;
+            border-radius: 4px; cursor: pointer; transition: background 0.2s;
+        }
+        .login-box button:hover { background: #0069d9; }
+        .login-box button:disabled { background: #aaa; cursor: default; }
+        #login-error {
+            color: #dc3545; font-size: 13px; margin-top: 10px;
+            min-height: 18px; text-align: center;
+        }
+
+        /* ── Main App ── */
+        #app { display: none; flex-direction: column; height: 100vh; }
+        #app.visible { display: flex; }
+
+        body {
+            font-family: sans-serif; margin: 0; padding: 20px;
             background: #f4f4f9; box-sizing: border-box;
-            height: 100vh; display: flex; flex-direction: column; overflow: hidden; 
+            height: 100vh; overflow: hidden;
         }
 
         .metadata-bar {
             display: flex; gap: 20px; font-size: 13px; color: #555; margin-bottom: 15px;
-            background: white; padding: 10px 15px; border-radius: 6px; 
+            background: white; padding: 10px 15px; border-radius: 6px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0; flex-wrap: wrap;
         }
         .metadata-item { display: flex; gap: 5px; align-items: center; }
-        .metadata-label { font-weight: bold; color: #007bff; font-family: monospace; font-size: 14px;}
-        .metadata-error { color: #dc3545; font-style: italic; }
-        
+        .metadata-label { font-weight: bold; color: #007bff; font-family: monospace; font-size: 14px; }
+
         .header-section {
-            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;
-            flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 20px; flex-shrink: 0;
         }
         .controls-container {
-            display: flex; flex-direction: column; gap: 15px; 
+            display: flex; flex-direction: column; gap: 15px;
             background: white; padding: 15px; border-radius: 6px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-grow: 1; margin-right: 20px;
         }
-
+        .datetime-filter-box {
+            display: flex; align-items: center; gap: 10px;
+            background: #f8f9fa; padding: 10px 15px; border-radius: 4px;
+            border: 1px solid #e9ecef; font-size: 14px; width: 100%;
+            box-sizing: border-box;
+        }
+        .datetime-filter-box input[type="datetime-local"] {
+            padding: 5px; border: 1px solid #ccc; border-radius: 4px; 
+                font-family: inherit; outline: none;
+        }
+        .datetime-filter-box input[type="datetime-local"]:focus {
+            border-color: #007bff;
+        }
+        .datetime-filter-box button {
+            padding: 6px 12px; cursor: pointer; background: white;
+            border: 1px solid #007bff; color: #007bff;
+            border-radius: 4px; font-size: 13px; font-weight: bold; transition: 0.2s;
+        }
+        .datetime-filter-box button:hover { 
+            background: #007bff; color: white; 
+        }
+        .datetime-filter-box button.btn-clear {
+            border-color: #6c757d; color: #6c757d;
+        }
+        .datetime-filter-box button.btn-clear:hover {
+            background: #6c757d; color: white;
+        }
         .slider-box {
             display: flex; align-items: center; gap: 15px;
             padding: 10px; background: #f8f9fa; border-radius: 4px;
             border: 1px solid #e9ecef; font-size: 14px;
         }
-        .slider-box input { cursor: pointer; flex-grow: 1; max-width: 300px; }
+        .slider-box input[type=range] { cursor: pointer; flex-grow: 1; max-width: 300px; }
         .slider-value { font-weight: bold; color: #007bff; min-width: 50px; }
 
         .timer-container { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
         .timer-label { font-size: 12px; color: #666; font-weight: bold; text-transform: uppercase; }
         #ascii-timer {
-            font-family: 'Courier New', Courier, monospace; background: #1e1e1e; color: white; 
+            font-family: 'Courier New', Courier, monospace; background: #1e1e1e; color: white;
             padding: 10px 15px; border-radius: 6px; margin: 0; font-weight: bold;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 16px; white-space: pre; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 16px; white-space: pre;
             min-width: 160px; text-align: left;
         }
 
@@ -56,56 +127,86 @@
             border-radius: 4px; transition: all 0.2s;
         }
         .tabs button.active { background-color: #007bff; color: white; }
-        
+
         .btn-reset {
-            margin-left: auto; border-color: #dc3545 !important; color: #dc3545 !important; font-weight: bold;
+            border-color: #dc3545 !important; color: #dc3545 !important; font-weight: bold;
         }
         .btn-reset:hover { background-color: #dc3545 !important; color: white !important; }
+
+        .btn-logout {
+            margin-left: auto;
+            border-color: #6c757d !important; color: #6c757d !important; font-weight: bold;
+        }
+        .btn-logout:hover { background-color: #6c757d !important; color: white !important; }
 
         .filters { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 14px; }
         .checkbox-group { display: flex; gap: 10px; flex-wrap: wrap; }
         .checkbox-label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
         .book-count { color: #666; font-size: 0.9em; font-weight: normal; }
 
-        .table-container { 
-            width: 100%; flex-grow: 1; min-height: 0; overflow: auto; 
-            background: white; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        .table-container {
+            width: 100%; flex-grow: 1; min-height: 0; overflow: auto;
+            background: white; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; word-wrap: break-word; }
-        th { background-color: #343a40; color: white; position: sticky; top: 0; z-index: 2; cursor: pointer; }
-        
+        th {
+            background-color: #343a40; color: white; position: sticky; top: 0;
+            z-index: 2; cursor: pointer;
+        }
+
         tbody.game-group { border-bottom: 4px solid #343a40; }
         tbody.game-group tr { transition: opacity 0.4s ease-out; cursor: pointer; }
         tbody.game-group tr:nth-child(even) { background-color: #f8f9fa; }
         tbody.game-group tr:hover { background-color: #e2e6ea; }
-        
+
         .action-cell { background-color: #f1f3f5; text-align: center; border-right: 2px solid #ddd; }
-        .fade-out-group { opacity: 0 !important; transform: scale(0.98); pointer-events: none; }
+        .fade-out-row { opacity: 0 !important; pointer-events: none; }
         a { color: #007bff; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="file-metadata" class="metadata-bar">Fetching file info...</div>
+<!-- ── Login Screen ── -->
+<div id="login-screen">
+    <div class="login-box">
+        <h2><span class="pink-sq"></span> Scrapy</h2>
+        <p>Sign in to access the dashboard</p>
+        <label for="username">Username</label>
+        <input type="text" id="username" autocomplete="username" placeholder="username">
+        <label for="password">Password</label>
+        <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+        <button id="login-btn" onclick="doLogin()">Sign In</button>
+        <div id="login-error"></div>
+    </div>
+</div>
+
+<!-- ── Main App ── -->
+<div id="app">
+
+    <div id="file-metadata" class="metadata-bar">Loading metadata...</div>
 
     <div class="header-section">
         <div class="controls-container">
             <div class="tabs">
-                <button id="btn-evs" class="active" onclick="switchTab('evs.json', 'btn-evs')">EVS Data</button>
-                <button id="btn-arbs" onclick="switchTab('arbs.json', 'btn-arbs')">ARBS Data</button>
+                <button id="btn-evs" class="active" onclick="switchTab('evs', 'btn-evs')">EVS Data</button>
+                <button id="btn-arbs" onclick="switchTab('arbs', 'btn-arbs')">ARBS Data</button>
                 <button class="btn-reset" onclick="resetDone()">[ ⟲ ] Reset Done</button>
+                <button class="btn-logout" onclick="doLogout()">[ ✕ ] Logout</button>
             </div>
-
-            <div id="slider-container" class="slider-box">
-                </div>
-
+            <div id="slider-container" class="slider-box"></div>
             <div class="filters">
+                <div class="datetime-filter-box">
+                    <label><strong>Min Date/Time:</strong></label>
+                    <input type="datetime-local" id="min-datetime" step="3600" onchange="updateMinDatetime()">
+                    <button onclick="setMinDatetimeNow()">NOW</button>
+                    <button class="btn-clear" onclick="clearMinDatetime()">Clear</button>
+                </div>
                 <div class="checkbox-group" id="book-filters"></div>
             </div>
         </div>
-        
+
         <div class="timer-container">
             <span class="timer-label">Refreshing In</span>
             <div id="ascii-timer">[---------------]</div>
@@ -116,316 +217,534 @@
         <div style="padding: 20px;">Loading data...</div>
     </div>
 
-    <script>
-        let currentFile = 'evs.json';
-        let currentData = [];
-        let currentHeaders = [];
-        let activeBooks = new Set();
-        let sortColumn = null;
-        let sortAscending = true;
-        let knownEntryIds = new Set(); 
-        
-        let maxStrength = 0.0;
-        let minStdDev = 3.0;
-        let minArbValue = 0.0; 
+</div>
 
-        const REFRESH_SECONDS = 15;
-        let timeRemainingSeconds = REFRESH_SECONDS;
-        let doneItems = JSON.parse(localStorage.getItem('doneGames') || '[]');
+<script>
+// ════════════════════════════════════════════════════════
+//  Auth
+// ════════════════════════════════════════════════════════
+function showLogin(msg = '') {
+    document.getElementById('login-screen').classList.add('visible');
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('login-error').textContent = msg;
+    document.title = 'Scrapy';
+}
 
-        function playNotificationSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); 
-                gain.gain.setValueAtTime(0, ctx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.05);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.start(); osc.stop(ctx.currentTime + 0.5);
-            } catch (e) {}
+function showApp() {
+    document.getElementById('login-screen').classList.remove('visible');
+    document.getElementById('app').classList.add('visible');
+}
+
+async function doLogin() {
+    const btn = document.getElementById('login-btn');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    if (!username || !password) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+    document.getElementById('login-error').textContent = '';
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+            showApp();
+            switchTab('evs', 'btn-evs');
+        } else {
+            showLogin('Invalid username or password.');
         }
+    } catch {
+        showLogin('Connection error. Try again.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+    }
+}
 
-        async function fetchFileMetadata() {
-            const files = ['evs.json', 'arbs.json', 'data_out.json'];
-            let html = '';
-            for (const file of files) {
-                try {
-                    const res = await fetch(file + '?t=' + Date.now(), { method: 'HEAD' });
-                    const size = parseInt(res.headers.get('Content-Length') || '0');
-                    const lastMod = res.headers.get('Last-Modified');
-                    html += `<div class="metadata-item"><span class="metadata-label">${file}</span> <span>${(size/1024).toFixed(1)}KB | ${lastMod ? new Date(lastMod).toLocaleTimeString() : '--'}</span></div>`;
-                } catch (e) { html += `<span>Error ${file}</span>`; }
-            }
-            document.getElementById('file-metadata').innerHTML = html;
+document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+});
+
+async function doLogout() {
+    await fetch('/api/logout', { method: 'POST' });
+    showLogin();
+}
+
+// ════════════════════════════════════════════════════════
+//  State
+// ════════════════════════════════════════════════════════
+let currentTab = 'evs';
+let currentData = [];
+let currentHeaders = [];
+let activeBooks = new Set();
+let sortColumn = null;
+let sortAscending = true;
+let knownEntryIds = new Set();
+
+let maxStrength = -0.05;
+let minStdDev = 3.0;
+let minArbValue = 0.02;
+let minDatetimeFilter = new Date();
+
+const REFRESH_SECONDS = 15;
+let timeRemainingSeconds = REFRESH_SECONDS;
+let doneItems = JSON.parse(localStorage.getItem('doneGames') || '[]');
+
+// ════════════════════════════════════════════════════════
+//  API helpers
+// ════════════════════════════════════════════════════════
+
+// Transform flat DB rows into the nested shape the rest of the UI expects,
+// keeping field names compatible with the original JSON files.
+function normalizeEvRows(rows) {
+    // Group rows by ev_id (one ev can have multiple URL rows for the same odd)
+    const map = new Map();
+    for (const r of rows) {
+        if (!map.has(r.ev_id)) {
+            map.set(r.ev_id, {
+                'timestamp (calculated)': r.timestamp,
+                strength: r.strength,
+                probDeviationInTermsOfStdDev: r.probDeviationinstddev ?? r.probdeviationintermsofstddev,
+                value: r.odd_value,
+                values: [],          // filled below if needed
+                mean: null,
+                stdDev: null,
+                sport: r.sport,
+                teamHome: r.teamhome ?? r.teamHome,
+                teamAway: r.teamaway ?? r.teamAway,
+                datetime: r.datetime,
+                market: r.market,
+                odd: {
+                    'oddName:': r.odd_name,
+                    book: r.book,
+                    url: r.url
+                }
+            });
         }
+    }
+    return Array.from(map.values());
+}
 
-        function updateSlidersUI() {
-            const container = document.getElementById('slider-container');
-            if (currentFile === 'evs.json') {
-                container.innerHTML = `
-                    <label>Max Strength:</label>
-                    <input type="range" min="-0.10" max="0.0" step="0.01" value="${maxStrength}" 
-                           oninput="document.getElementById('sv').innerText=this.value;"
-                           onchange="maxStrength=this.value; extractAndRenderBooks(false); renderTable();">
-                    <span class="slider-value" id="sv">${maxStrength}</span>
-                    <label style="margin-left:20px;">Min StdDev:</label>
-                    <input type="range" min="0" max="10" step="0.5" value="${minStdDev}" 
-                           oninput="document.getElementById('sv2').innerText=this.value;"
-                           onchange="minStdDev=this.value; extractAndRenderBooks(false); renderTable();">
-                    <span class="slider-value" id="sv2">${minStdDev}</span>
-                `;
-            } else {
-                container.innerHTML = `
-                    <label>Min Value:</label>
-                    <input type="range" min="0.00" max="0.02" step="0.001" value="${minArbValue}" 
-                           oninput="document.getElementById('sv').innerText=this.value;"
-                           onchange="minArbValue=this.value; extractAndRenderBooks(false); renderTable();">
-                    <span class="slider-value" id="sv">${minArbValue}</span>
-                `;
-            }
+function normalizeArbRows(rows) {
+    // Group by arb_id – collect all odds into Home / Away fields
+    const map = new Map();
+    for (const r of rows) {
+        if (!map.has(r.arb_id)) {
+            map.set(r.arb_id, {
+                'timestamp (calculated)': r.timestamp,
+                value: r.value,
+                sport: r.sport,
+                teamHome: r.teamhome ?? r.teamHome,
+                teamAway: r.teamaway ?? r.teamAway,
+                datetime: r.datetime,
+                market: r.market,
+                _legs: []
+            });
         }
+        map.get(r.arb_id)._legs.push({ oddName: r.odd_name, book: r.book, oddValue: r.odd_value, url: r.url });
+    }
+    // Flatten legs into Home / Away (and optionally OddC / OddD for 4-way)
+    const labels = ['Home', 'Away', 'OddC', 'OddD'];
+    return Array.from(map.values()).map(entry => {
+        const out = { ...entry };
+        delete out._legs;
+        entry._legs.forEach((leg, i) => {
+            const label = labels[i] ?? `Odd${i}`;
+            out[label] = { 'oddName:': leg.oddName, book: leg.book, 'oddValue:': leg.oddValue, url: leg.url };
+        });
+        return out;
+    });
+}
 
-        function flattenObject(obj, prefix = '') {
-            let result = {};
-            for (const key in obj) {
-                if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
-                    result = { ...result, ...flattenObject(obj[key], `${prefix}${key} `) };
-                } else {
-                    let val = obj[key];
-                    if (typeof val === 'number') val = Number.isInteger(val) ? val : val.toFixed(4);
-                    if (key.toLowerCase().includes('url') && typeof val === 'string') val = `<a href="${val}" target="_blank">Link ↗</a>`;
-                    result[`${prefix}${key}`] = val;
+async function apiFetch(tab) {
+    const res = await fetch(`/api/${tab}`);
+    if (res.status === 401) { showLogin('Session expired. Please sign in again.'); return null; }
+    if (!res.ok) throw new Error(`API error ${res.status}`);
+    const rows = await res.json();
+    return tab === 'evs' ? normalizeEvRows(rows) : normalizeArbRows(rows);
+}
+
+async function fetchFileMetadata() {
+    try {
+        const res = await fetch('/api/meta');
+        if (res.status === 401) return;
+        const meta = await res.json();
+        let html = '';
+        for (const [label, info] of Object.entries(meta)) {
+            const time = info.last_updated ? new Date(info.last_updated).toLocaleTimeString() : '--';
+            html += `<div class="metadata-item">
+                <span class="metadata-label">${label}</span>
+                <span>${info.count} rows | Last updated: ${time}</span>
+            </div>`;
+        }
+        document.getElementById('file-metadata').innerHTML = html || 'No metadata available.';
+    } catch { /* non-critical */ }
+}
+
+// ════════════════════════════════════════════════════════
+//  Sound
+// ════════════════════════════════════════════════════════
+function playNotificationSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + 0.5);
+    } catch { /* browser may block before first interaction */ }
+}
+
+// ════════════════════════════════════════════════════════
+//  Data flattening (same as before)
+// ════════════════════════════════════════════════════════
+function flattenObject(obj, prefix = '') {
+    let result = {};
+    for (const key in obj) {
+        if (obj[key] !== null && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+            result = { ...result, ...flattenObject(obj[key], `${prefix}${key} `) };
+        } else {
+            let val = obj[key];
+            if (typeof val === 'number') val = Number.isInteger(val) ? val : parseFloat(val).toFixed(4);
+            if (key.toLowerCase().includes('url') && typeof val === 'string' && val.startsWith('http'))
+                val = `<a href="${val}" target="_blank">Link ↗</a>`;
+            result[`${prefix}${key}`] = val;
+        }
+    }
+    return result;
+}
+
+function getRowId(row) {
+    return btoa(unescape(encodeURIComponent(
+        `${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['odd book'] || row['Home book'] || ''}`
+    )));
+}
+function getGameId(row) {
+    return btoa(unescape(encodeURIComponent(`${row.sport}|${row.teamHome}|${row.teamAway}|${row.datetime}`)));
+}
+
+// ════════════════════════════════════════════════════════
+//  Slider UI
+// ════════════════════════════════════════════════════════
+function updateSlidersUI() {
+    const container = document.getElementById('slider-container');
+    if (currentTab === 'evs') {
+        container.innerHTML = `
+            <label>Max Strength:</label>
+            <input type="range" min="-0.10" max="0.0" step="0.01" value="${maxStrength}"
+                   oninput="document.getElementById('sv').innerText=this.value;"
+                   onchange="maxStrength=this.value; extractAndRenderBooks(false); renderTable();">
+            <span class="slider-value" id="sv">${maxStrength}</span>
+            <label style="margin-left:20px;">Min StdDev:</label>
+            <input type="range" min="0" max="10" step="0.5" value="${minStdDev}"
+                   oninput="document.getElementById('sv2').innerText=this.value;"
+                   onchange="minStdDev=this.value; extractAndRenderBooks(false); renderTable();">
+            <span class="slider-value" id="sv2">${minStdDev}</span>
+        `;
+    } else {
+        container.innerHTML = `
+            <label>Min Value:</label>
+            <input type="range" min="0.00" max="0.02" step="0.001" value="${minArbValue}"
+                   oninput="document.getElementById('sv').innerText=this.value;"
+                   onchange="minArbValue=this.value; extractAndRenderBooks(false); renderTable();">
+            <span class="slider-value" id="sv">${minArbValue}</span>
+        `;
+    }
+}
+
+// ════════════════════════════════════════════════════════
+//  Threshold filter
+// ════════════════════════════════════════════════════════
+function passesThresholds(row) {
+    // 1. Check DateTime Filter
+    if (minDatetimeFilter !== null && row.datetime) {
+        // Parse date the exact same way your table sorter does
+        const rowTime = Date.parse(String(row.datetime).replace(' at ', ' '));
+        if (!isNaN(rowTime) && rowTime < minDatetimeFilter) {
+            return false;
+        }
+    }
+
+    // 2. Check Value Sliders
+    if (currentTab === 'evs') {
+        return parseFloat(row.strength || 0) <= parseFloat(maxStrength)
+            && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
+    }
+    return parseFloat(row.value || 0) >= parseFloat(minArbValue);
+}
+
+// ════════════════════════════════════════════════════════
+//  DateTime Filter Logic
+// ════════════════════════════════════════════════════════
+function updateMinDatetime() {
+    const inputVal = document.getElementById('min-datetime').value;
+    if (inputVal) {
+        minDatetimeFilter = new Date(inputVal).getTime();
+    } else {
+        minDatetimeFilter = null;
+    }
+    // Re-render book counts and table to apply filter
+    extractAndRenderBooks(false);
+    renderTable();
+}
+
+function setMinDatetimeNow() {
+    const now = new Date();
+    // Truncate to the current exact hour to match the "step=3600"
+    now.setMinutes(0, 0, 0); 
+    
+    // Convert to local YYYY-MM-DDThh:mm format for the HTML5 input
+    const tzoffset = now.getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(now - tzoffset)).toISOString().slice(0, 16);
+
+    document.getElementById('min-datetime').value = localISOTime;
+    updateMinDatetime();
+}
+
+function clearMinDatetime() {
+    document.getElementById('min-datetime').value = '';
+    updateMinDatetime();
+}
+
+// ════════════════════════════════════════════════════════
+//  Tab switch + silent refresh
+// ════════════════════════════════════════════════════════
+async function switchTab(tab, btnId) {
+    currentTab = tab;
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.getElementById(btnId).classList.add('active');
+    updateSlidersUI();
+    timeRemainingSeconds = REFRESH_SECONDS;
+
+    document.getElementById('table-container').innerHTML = '<div style="padding:20px;">Loading data…</div>';
+    await fetchFileMetadata();
+
+    const data = await apiFetch(tab);
+    if (!data) return;
+
+    currentData = data.map(item => flattenObject(item));
+    currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+    knownEntryIds = new Set(currentData.map(getRowId));
+
+    extractAndRenderBooks(true);
+    renderTable();
+}
+
+async function fetchSilent() {
+    await fetchFileMetadata();
+    const data = await apiFetch(currentTab);
+    if (!data) return;
+
+    currentData = data.map(item => flattenObject(item));
+
+    let triggerSound = false;
+    currentData.forEach(row => {
+        const rId = getRowId(row);
+        if (!knownEntryIds.has(rId)) {
+            knownEntryIds.add(rId);
+            if (passesThresholds(row) && !doneItems.includes(getRowId(row))) triggerSound = true;
+        }
+    });
+    if (triggerSound) playNotificationSound();
+
+    extractAndRenderBooks(false);
+    renderTable();
+}
+
+// ════════════════════════════════════════════════════════
+//  Book filter
+// ════════════════════════════════════════════════════════
+function extractAndRenderBooks(resetActive = true) {
+    const books = new Set();
+    currentData.forEach(r => {
+        if (r['odd book']) books.add(r['odd book']);
+        if (r['Home book']) books.add(r['Home book']);
+        if (r['Away book']) books.add(r['Away book']);
+    });
+    if (resetActive) activeBooks = new Set(books);
+
+    const filterContainer = document.getElementById('book-filters');
+    if (!books.size) { filterContainer.innerHTML = '<span>No books found.</span>'; return; }
+
+    const bookCounts = {};
+    books.forEach(b => {
+        bookCounts[b] = currentData.filter(row => {
+            const belongs = row['odd book'] === b || row['Home book'] === b || row['Away book'] === b;
+            return belongs && passesThresholds(row) && !doneItems.includes(getRowId(row));
+        }).length;
+    });
+
+    filterContainer.innerHTML = Array.from(books).sort().map(b => {
+        const checked = activeBooks.has(b) ? 'checked' : '';
+        return `<label class="checkbox-label">
+            <input type="checkbox" value="${b}" ${checked} onchange="toggleBook(this)">
+            ${b} <span class="book-count">(${bookCounts[b]})</span>
+        </label>`;
+    }).join('');
+}
+
+function toggleBook(checkbox) {
+    if (checkbox.checked) activeBooks.add(checkbox.value);
+    else activeBooks.delete(checkbox.value);
+    renderTable();
+}
+
+// ════════════════════════════════════════════════════════
+//  Render table
+// ════════════════════════════════════════════════════════
+function renderTable() {
+    let filtered = currentData.filter(row => {
+        const bookPass = !row['odd book'] && !row['Home book'] && !row['Away book']
+            || activeBooks.has(row['odd book'])
+            || activeBooks.has(row['Home book'])
+            || activeBooks.has(row['Away book']);
+        return bookPass && passesThresholds(row) && !doneItems.includes(getRowId(row));
+    });
+
+    // Group by game
+    const groups = {};
+    filtered.forEach(row => {
+        const gId = getGameId(row);
+        if (!groups[gId]) groups[gId] = { id: gId, entries: [] };
+        groups[gId].entries.push(row);
+    });
+    let groupedArray = Object.values(groups);
+
+    document.title = groupedArray.length > 0 ? `${groupedArray.length} - Scrapy` : 'Scrapy';
+
+    // Sorting
+    const isDateCol = sortColumn === 'timestamp (calculated)' || sortColumn === 'datetime';
+    function getSortValue(entry) {
+        let val = entry[sortColumn] !== undefined ? entry[sortColumn] : '';
+        if (typeof val === 'string') val = val.replace(/<[^>]*>?/gm, '');
+        return val;
+    }
+    function parseDate(val) {
+        const parsed = Date.parse(String(val).replace(' at ', ' '));
+        return isNaN(parsed) ? NaN : parsed;
+    }
+
+    if (sortColumn) {
+        groupedArray.sort((gA, gB) => {
+            const vA = gA.entries.map(getSortValue);
+            const vB = gB.entries.map(getSortValue);
+            if (isDateCol) {
+                const dA = vA.map(parseDate).filter(n => !isNaN(n));
+                const dB = vB.map(parseDate).filter(n => !isNaN(n));
+                if (dA.length && dB.length) {
+                    const a = sortAscending ? Math.min(...dA) : Math.max(...dA);
+                    const b = sortAscending ? Math.min(...dB) : Math.max(...dB);
+                    return sortAscending ? a - b : b - a;
                 }
             }
-            return result;
-        }
-
-        function getRowId(row) { return btoa(unescape(encodeURIComponent(`${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['odd book'] || row['Home book'] || ''}`))); }
-        function getGameId(row) { return btoa(unescape(encodeURIComponent(`${row.sport}|${row.teamHome}|${row.teamAway}|${row.datetime}`))); }
-
-        async function fetchSilent() {
-            await fetchFileMetadata();
-            const res = await fetch(currentFile + '?t=' + Date.now());
-            const raw = await res.json();
-            currentData = raw.map(item => flattenObject(item));
-            
-            let triggerSound = false;
-            currentData.forEach(row => {
-                let rId = getRowId(row);
-                if (!knownEntryIds.has(rId)) {
-                    knownEntryIds.add(rId);
-                    if (passesThresholds(row) && !doneItems.includes(getRowId(row))) triggerSound = true;
-                }
-            });
-            if (triggerSound) playNotificationSound();
-            
-            extractAndRenderBooks(false);
-            renderTable();
-        }
-
-        function passesThresholds(row) {
-            if (currentFile === 'evs.json') return parseFloat(row.strength || 0) <= parseFloat(maxStrength) && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
-            if (currentFile === 'arbs.json') return parseFloat(row.value || 0) >= parseFloat(minArbValue);
-            return true;
-        }
-
-        async function switchTab(file, btnId) {
-            currentFile = file;
-            document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-            document.getElementById(btnId).classList.add('active');
-            updateSlidersUI();
-            timeRemainingSeconds = REFRESH_SECONDS;
-            
-            await fetchFileMetadata();
-            
-            const res = await fetch(file + '?t=' + Date.now());
-            const raw = await res.json();
-            currentData = raw.map(item => flattenObject(item));
-            currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
-            knownEntryIds = new Set(currentData.map(getRowId));
-            
-            extractAndRenderBooks(true);
-            renderTable();
-        }
-
-        function extractAndRenderBooks(resetActive = true) {
-            const books = new Set();
-            currentData.forEach(r => { 
-                if(r['odd book']) books.add(r['odd book']); 
-                if(r['Home book']) books.add(r['Home book']); 
-                if(r['Away book']) books.add(r['Away book']); 
-            });
-
-            if (resetActive) {
-                activeBooks = new Set(books);
+            const nA = vA.map(parseFloat).filter(n => !isNaN(n));
+            const nB = vB.map(parseFloat).filter(n => !isNaN(n));
+            if (nA.length && nB.length) {
+                const a = sortAscending ? Math.min(...nA) : Math.max(...nA);
+                const b = sortAscending ? Math.min(...nB) : Math.max(...nB);
+                return sortAscending ? a - b : b - a;
             }
-
-            const filterContainer = document.getElementById('book-filters');
-            if (books.size === 0) {
-                filterContainer.innerHTML = '<span>No books found.</span>';
-                return;
+            const sa = String(vA[0] ?? '').toLowerCase();
+            const sb = String(vB[0] ?? '').toLowerCase();
+            return sortAscending ? sa.localeCompare(sb) : sb.localeCompare(sa);
+        });
+        groupedArray.forEach(g => g.entries.sort((a, b) => {
+            let va = getSortValue(a), vb = getSortValue(b);
+            if (isDateCol) {
+                const da = parseDate(va), db = parseDate(vb);
+                if (!isNaN(da) && !isNaN(db)) return sortAscending ? da - db : db - da;
             }
+            const na = parseFloat(va), nb = parseFloat(vb);
+            if (!isNaN(na) && !isNaN(nb)) return sortAscending ? na - nb : nb - na;
+            return sortAscending ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+        }));
+    }
 
-            const bookCounts = {};
-            Array.from(books).forEach(b => {
-                bookCounts[b] = currentData.filter(row => {
-                    const belongsToBook = row['odd book'] === b || row['Home book'] === b || row['Away book'] === b;
-                    return belongsToBook && passesThresholds(row) && !doneItems.includes(getRowId(row));
-                }).length;
+    // Build HTML
+    let html = `<table><thead><tr>
+        <th>Action</th>
+        ${currentHeaders.map(h => {
+            const arrow = sortColumn === h ? (sortAscending ? ' ▲' : ' ▼') : '';
+            return `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h}${arrow}</th>`;
+        }).join('')}
+    </tr></thead>`;
+
+    if (!groupedArray.length) {
+        html += `<tbody><tr><td colspan="${currentHeaders.length + 1}" style="text-align:center;padding:30px;">No active entries match your filters.</td></tr></tbody>`;
+    } else {
+        groupedArray.forEach(g => {
+            html += `<tbody class="game-group">`;
+            g.entries.forEach(row => {
+                const rId = getRowId(row);
+                html += `<tr id="row-${rId}" onclick="event.target.tagName!='A'&&markDone('${rId}')">`;
+                html += `<td class="action-cell"><input type="checkbox" style="pointer-events:none;"></td>`;
+                currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
+                html += `</tr>`;
             });
+            html += `</tbody>`;
+        });
+    }
 
-            filterContainer.innerHTML = Array.from(books).sort().map(b => {
-                const isChecked = activeBooks.has(b) ? 'checked' : '';
-                return `
-                <label class="checkbox-label">
-                    <input type="checkbox" value="${b}" ${isChecked} onchange="toggleBook(this)">
-                    ${b} <span class="book-count">(${bookCounts[b]})</span>
-                </label>`;
-            }).join('');
-        }
+    document.getElementById('table-container').innerHTML = html + '</table>';
+}
 
-        function toggleBook(checkbox) {
-            if (checkbox.checked) activeBooks.add(checkbox.value);
-            else activeBooks.delete(checkbox.value);
-            renderTable();
-        }
+// ════════════════════════════════════════════════════════
+//  Done / Reset
+// ════════════════════════════════════════════════════════
+function markDone(id) {
+    if (!doneItems.includes(id)) {
+        doneItems.push(id);
+        localStorage.setItem('doneGames', JSON.stringify(doneItems));
+    }
+    document.getElementById(`row-${id}`)?.classList.add('fade-out-row');
+    setTimeout(() => { extractAndRenderBooks(false); renderTable(); }, 400);
+}
 
-        function renderTable() {
-            let filtered = currentData.filter(row => {
-                const bookPass = !row['odd book'] && !row['Home book'] && !row['Away book'] || activeBooks.has(row['odd book']) || activeBooks.has(row['Home book']) || activeBooks.has(row['Away book']);
-                return bookPass && passesThresholds(row) && !doneItems.includes(getRowId(row));
-            });
+function resetDone() {
+    doneItems = [];
+    localStorage.setItem('doneGames', '[]');
+    extractAndRenderBooks(false);
+    renderTable();
+}
 
-            let groups = {};
-            filtered.forEach(row => {
-                let gId = getGameId(row);
-                if (!groups[gId]) groups[gId] = { id: gId, entries: [] };
-                groups[gId].entries.push(row);
-            });
+// ════════════════════════════════════════════════════════
+//  Timer
+// ════════════════════════════════════════════════════════
+setInterval(() => {
+    if (--timeRemainingSeconds <= 0) { timeRemainingSeconds = REFRESH_SECONDS; fetchSilent(); }
+    document.getElementById('ascii-timer').innerText =
+        `[${'-'.repeat(Math.max(0, timeRemainingSeconds)).padEnd(REFRESH_SECONDS, ' ')}]`;
+}, 1000);
 
-            const groupedArray = Object.values(groups);
-            document.title = groupedArray.length > 0 ? `${groupedArray.length} - Scrapy` : "Scrapy";
-
-            let html = `<table><thead><tr><th>Action</th>${currentHeaders.map(h => `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h} ${sortColumn === h ? (sortAscending ? '▲' : '▼') : ''}</th>`).join('')}</tr></thead>`;
-            
-            if (sortColumn) {
-                // Check if the current column is a date column
-                let isDateCol = sortColumn === 'timestamp' || sortColumn === 'datetime';
-
-                let getSortValue = (entry) => {
-                    let val = entry[sortColumn] !== undefined ? entry[sortColumn] : '';
-                    if (typeof val === 'string') val = val.replace(/<[^>]*>?/gm, ''); 
-                    return val;
-                };
-
-                let parseIfDate = (val) => {
-                    if (!isDateCol) return NaN;
-                    // Remove the " at " so Date.parse can read "February 27, 2026 07:29:47 PM GMT+1"
-                    let parsed = Date.parse(String(val).replace(' at ', ' '));
-                    return isNaN(parsed) ? NaN : parsed;
-                };
-
-                groupedArray.sort((groupA, groupB) => {
-                    let valsA = groupA.entries.map(getSortValue);
-                    let valsB = groupB.entries.map(getSortValue);
-                    
-                    // 1. Sort by Chronological Date
-                    if (isDateCol) {
-                        let datesA = valsA.map(parseIfDate).filter(n => !isNaN(n));
-                        let datesB = valsB.map(parseIfDate).filter(n => !isNaN(n));
-                        if (datesA.length > 0 && datesB.length > 0) {
-                            let valA = sortAscending ? Math.min(...datesA) : Math.max(...datesA);
-                            let valB = sortAscending ? Math.min(...datesB) : Math.max(...datesB);
-                            return sortAscending ? valA - valB : valB - valA;
-                        }
-                    }
-
-                    // 2. Sort by Numbers
-                    let numA = valsA.map(v => parseFloat(v)).filter(n => !isNaN(n));
-                    let numB = valsB.map(v => parseFloat(v)).filter(n => !isNaN(n));
-                    
-                    if (numA.length > 0 && numB.length > 0) {
-                        let valA = sortAscending ? Math.min(...numA) : Math.max(...numA);
-                        let valB = sortAscending ? Math.min(...numB) : Math.max(...numB);
-                        return sortAscending ? valA - valB : valB - valA;
-                    } 
-                    
-                    // 3. Sort Alphabetically
-                    let valA = String(valsA[0]).toLowerCase();
-                    let valB = String(valsB[0]).toLowerCase();
-                    if (valA < valB) return sortAscending ? -1 : 1;
-                    if (valA > valB) return sortAscending ? 1 : -1;
-                    return 0;
-                });
-                
-                // Also sort inner entries
-                groupedArray.forEach(group => {
-                    group.entries.sort((a, b) => {
-                        let valA = getSortValue(a);
-                        let valB = getSortValue(b);
-
-                        if (isDateCol) {
-                            let dateA = parseIfDate(valA);
-                            let dateB = parseIfDate(valB);
-                            if (!isNaN(dateA) && !isNaN(dateB)) return sortAscending ? dateA - dateB : dateB - dateA;
-                        }
-
-                        let numA = parseFloat(valA);
-                        let numB = parseFloat(valB);
-                        if (!isNaN(numA) && !isNaN(numB)) return sortAscending ? numA - numB : numB - numA;
-                        
-                        valA = String(valA).toLowerCase();
-                        valB = String(valB).toLowerCase();
-                        if (valA < valB) return sortAscending ? -1 : 1;
-                        if (valA > valB) return sortAscending ? 1 : -1;
-                        return 0;
-                    });
-                });
-            }
-
-            groupedArray.forEach(g => {
-                html += `<tbody class="game-group">`;
-                g.entries.forEach((row) => {
-                    let rId = getRowId(row);
-                    html += `<tr id="row-${rId}" style="cursor:pointer;" onclick="event.target.tagName!='A'&&markDone('${rId}')">`;
-                    html += `<td class="action-cell"><input type="checkbox" style="pointer-events:none;"></td>`;
-                    currentHeaders.forEach(h => html += `<td>${row[h] || ''}</td>`);
-                    html += `</tr>`;
-                });
-                html += `</tbody>`;
-            });
-            document.getElementById('table-container').innerHTML = html + `</table>`;
-        }
-
-        function markDone(id) {
-            if (!doneItems.includes(id)) { 
-                doneItems.push(id); 
-                localStorage.setItem('doneGames', JSON.stringify(doneItems)); 
-            }
-            document.getElementById(`row-${id}`)?.classList.add('fade-out-group');
-            setTimeout(() => {
-                extractAndRenderBooks(false); 
-                renderTable(); 
-            }, 400);
-        }
-
-        function resetDone() { 
-            doneItems = []; 
-            localStorage.setItem('doneGames', '[]'); 
-            extractAndRenderBooks(false); 
-            renderTable(); 
-        }
-
-        setInterval(() => {
-            if (--timeRemainingSeconds <= 0) { timeRemainingSeconds = REFRESH_SECONDS; fetchSilent(); }
-            document.getElementById('ascii-timer').innerText = `[${"-".repeat(Math.max(0, timeRemainingSeconds)).padEnd(REFRESH_SECONDS, ' ')}]`;
-        }, 1000);
-
-        switchTab('evs.json', 'btn-evs');
-    </script>
+// ════════════════════════════════════════════════════════
+//  Boot: check if already logged in
+// ════════════════════════════════════════════════════════
+(async () => {
+    const res = await fetch('/api/evs');
+    if (res.status === 401) {
+        showLogin();
+    } else {
+        showApp();
+        const data = await res.json();
+        currentTab = 'evs';
+        updateSlidersUI();
+        await fetchFileMetadata();
+        currentData = normalizeEvRows(data).map(item => flattenObject(item));
+        currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+        knownEntryIds = new Set(currentData.map(getRowId));
+        extractAndRenderBooks(true);
+        renderTable();
+    }
+})();
+</script>
 </body>
 </html>

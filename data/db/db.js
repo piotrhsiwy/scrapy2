@@ -11,6 +11,39 @@ export const pool = new Pool({
 export async function initDb(){
     await initDbData();
     await initDbCalc();
+    await initDbUser();
+}
+
+export async function initDbUser(){
+    let client;
+    try{
+
+        client = await pool.connect();
+
+        ///////////
+        // FLUSH
+        // ignore Errors thrown during flush, as per normal practice according to postres docs
+        ///////////
+        try{
+            await client.query({text: 'DROP TABLE Users      CASCADE;'})
+        } catch{}
+        ///////////
+        // TABLES
+        ///////////
+        await client.query({ text: 
+            `CREATE TABLE users(
+                user_id SERIAL PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL
+            );` 
+        })
+        console.log('User Database initialized successfully');
+
+    } catch(e){
+        console.log(`Critical Failure! Error thrown: ${e}\n`);
+    } finally{
+        if(client) client.release()
+    }
 }
 
 async function initDbCalc(){
