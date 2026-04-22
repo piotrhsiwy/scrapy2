@@ -73,50 +73,25 @@ export async function getOddWithBrothers(odd_id){
         ret = await client.query({
             text:`
                 WITH target AS (
-                    SELECT mo.market_id, o.name
-                    FROM odds o JOIN markets_odds_link mo ON o.odd_id = mo.odd_id
+                    SELECT 
+                        mko.market_id,
+                        mto.match_id,
+                        o.name
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE o.odd_id = $1
                     LIMIT 1
                 ),
                 brothers AS (
                     SELECT o.*
-                    FROM odds o JOIN markets_odds_link mo ON o.odd_id = mo.odd_id
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE
-                        mo.market_id = (SELECT market_id FROM target) AND
+                        mto.match_id = (SELECT match_id FROM target) AND
+                        mko.market_id = (SELECT market_id FROM target) AND
                         o.name = (SELECT name FROM target)
-                )
-                SELECT * FROM brothers
-            `,
-            values: [odd_id],
-        }); 
-    } catch(e){
-
-    } finally{
-        if(client) client.release();
-    }
-    return ret.rows;
-}
-
-export async function getOddBrothers(odd_id){
-    let client;
-    let ret;
-    try{
-        client = await pool.connect();
-        ret = await client.query({
-            text:`
-                WITH target AS (
-                    SELECT mo.market_id, o.name
-                    FROM odds o JOIN markets_odds_link mo ON o.odd_id = mo.odd_id
-                    WHERE o.odd_id = $1
-                    LIMIT 1
-                ),
-                brothers AS (
-                    SELECT o.*
-                    FROM odds o JOIN markets_odds_link mo ON o.odd_id = mo.odd_id
-                    WHERE
-                        mo.market_id = (SELECT market_id FROM target) AND
-                        o.name = (SELECT name FROM target) AND
-                        o.odd_id != $1
                 )
                 SELECT * FROM brothers
             `,

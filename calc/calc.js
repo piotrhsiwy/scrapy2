@@ -2,7 +2,7 @@ import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
 import { cleanupOnDatetime, cleanupData } from "./maintain.js";
-import { getMarketName, getMarketType, getOddBrothers, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
+import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
 import { insertArb, insertEv } from "../data/db/inserter.js";
 
 export let log;
