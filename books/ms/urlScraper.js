@@ -81,7 +81,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     // get teamHome, teamAway, datetime, mode
     const teams = breadcrumbs[3].split(' - ');
     const teamHome = stripTeamName(teams[0].trim());
-    const teamAway = stripTeamName(teams[1].replace(/\s+Hide All/, '').trim());
+    const teamAway = stripTeamName(teams[1].replace(/Hide All/g, '').trim());
     selector = 'div.match-info > p:nth-child(3)';
     el = await page.waitForSelector(selector);
     const datetime = datestringToISO(await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020').split(', ')[1].trim(), el));

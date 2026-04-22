@@ -34,10 +34,10 @@ async function testDbJsonInserting(log){
                 await insertUrl(log, match_id, url.book, url.url);
             }
             for(const market of match.markets){
-                const {market_id:market_id} = await insertMarket(log, match_id, market.name);
+                const {market_id:market_id} = await insertMarket(log, market.name);
                 for(const odd of market.odds){
                     for(const coef of odd.coefs){
-                        await insertOdd(log, market_id, odd.name, coef.book, coef.value);
+                        await insertOdd(log, match_id, market_id, odd.name, coef.book, coef.value);
                     }
                 }
             }
@@ -608,5 +608,5 @@ try{
 
 await initDb();
 await testDbInserting(log);
-// await testDbJsonInserting(log);
+await testDbJsonInserting(log);
 pool.end();
