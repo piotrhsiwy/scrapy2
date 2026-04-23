@@ -1,5 +1,8 @@
 import { pool } from "./db.js";
 
+//##############################
+//###### CALC TABLES
+//##############################
 /** 
  * DOES NOT UPDATE anything if an entry with the same ARRAY of odd_ids in the link table AND the same value exists
  * INSERTS value and timestamp if an entry with the same ARRAY of odd_ids in the link table exists    AND different value exists
@@ -249,6 +252,9 @@ export async function insertEv(log, odd_id, strength, probDeviationInTermsOfStdD
     }
 }
 
+//##############################
+//###### DATA TABLES
+//##############################
 /**
  * ALWAYS UPDATES timestamp and value if there exists an entry with the same (book, name)
  * @param {WritableStream} log 
@@ -603,5 +609,70 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
     } finally{
         if(client) client.release()
         return { match_id, is_new };
+    }
+}
+
+//##############################
+//###### HUNT TABLES
+//##############################
+/**
+ *  DOES NOT UPDATE any fields, if an entry with the same url and datetime within the same day already exists
+ * @param {WritableStream} log 
+ * @param {String} book e.g. 'Esportsbet'
+ * @param {String} url  e.g. 'https://esportsbet.io'
+ * @param {String} datetime datetime of the match is in the ISO8601 format
+ * @returns {toscrapeurl_id, is_new}
+ *  the tposcrape_url of the inserted entry. undefined when an errors on insert occurs
+ *  is_new is true if an entry with the same (url, datetime+-24h) already exists
+ */
+export async function insertToScrapeUrl(log, book, url, datetime){
+
+    const date = new Date();
+    let client;
+    let toscrapeurl_id, is_new;
+    try{
+        client = await pool.connect();
+        // we wrap this into a transaction with advisory lock, to avoid race condition:
+        // when the match does not exist yet, so the first select returns nothing, so there 
+        // is nothing marked with 'FOR UPDATE' and so more than one client can try and 
+        // insert this match
+        const ret = await client.query( {
+                text:`
+                WITH existing AS (
+                    SELECT toscrapeurl_id FROM toscrapeurl 
+                    WHERE 
+                        url = $1 AND
+                        datetime <= $3::timestamp + INTERVAL '24 hours' AND 
+                        datetime >= $3::timestamp - INTERVAL '24 hours'
+                    ORDER BY datetime ASC
+                    LIMIT 1
+                    FOR UPDATE
+                ),
+                inserted AS (
+                    INSERT INTO toscrapeurl(book, url, datetime)
+                    SELECT $1, $2, $3::timestamp
+                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    RETURNING toscrapeurl_id
+                )
+                SELECT toscrapeurl_id, false AS is_new FROM existing
+                UNION ALL
+                SELECT toscrapeurl_id, true AS is_new FROM inserted
+                `,
+                values: [book, url, datetime],
+        });
+        toscrapeurl_id = ret.rows[0].toscrapeurl_id;
+        is_new = ret.rows[0].is_new;
+        if(toscrapeurl_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into toscrapeurls: \n\t entry: (${book}, ${url}, ${datetime})\n\t toscrapeurl_id: ${toscrapeurl_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${book}, ${url}, ${datetime})\n\t Incorrect toscrapeurl_id: ${toscrapeurl_id}\n`);
+        }
+        
+    } catch(e){
+        await client.query(`ROLLBACK`);
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url}, ${datetime})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return { toscrapeurl_id, is_new };
     }
 }

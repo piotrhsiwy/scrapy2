@@ -189,7 +189,7 @@ async function run(){
     const browser = await openBrowser();
     try{
       /** hunt and load urls ****************/
-      // await singleHunt(browser);
+      await singleHunt(browser);
       console.log('Loading urls from files...');
       for(const book of books){
         const urlsFilePath = `./books/${book.abbrev}/matchURLs.json`;
@@ -262,14 +262,13 @@ import { constants } from "buffer";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
   'bnj',
-  // '22', // 15min ratelimiter if too many requests -> IP blockers in place
-  // 'dex',
+  '22', // 15min ratelimiter if too many requests -> IP blockers in place
+  'dex',
   'esb',
-  // 'gg',
+  'gg',
   'ls',
   'ms',
   'tp',
-// // restricted from germany so use one of the mirrors: bestwinzz.com 22bets.me
 ]
 console.log(`seeds of available books: ${availableAbbrev.toString()}`);
 

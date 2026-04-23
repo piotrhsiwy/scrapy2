@@ -1,7 +1,8 @@
-import { createWriteStream, writeFileSync, existsSync, truncateSync, readFileSync } from "fs"
+import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
+import { insertToScrapeUrl } from "../../data/db/inserter.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -16,18 +17,13 @@ export async function huntSportURLs(browser, book){
     // open a file for logging
     const logFilePath = `./books/${bookAbbrev}/log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
-    // open and empty file for data
-    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
-    if(existsSync(dataOutPath)){
-        truncateSync(dataOutPath, 0);
-    }
 
     // load the book-specific mappings from json files
     const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
     let sportNameMapping;
     try{
         sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
-        if(!sportNameMapping){ throw error(); }
+        if(!sportNameMapping){ throw new Error(); }
     } catch (error){
         log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
         return -10;
@@ -123,6 +119,11 @@ export async function huntSportURLs(browser, book){
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         hrefs = hrefsPruned;
+
+        for(const href of hrefsPruned){
+            await insertToScrapeUrl(log, book.name, href.url, href.datetime);
+        }
+
         return 0;
 
     } catch(error){
@@ -130,7 +131,6 @@ export async function huntSportURLs(browser, book){
         log.write(`\nCritical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted.\n`);
         return -1;
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2), 'utf8');
         try{ await originalPage.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
         await promisify(log.end).bind(log)();
     }

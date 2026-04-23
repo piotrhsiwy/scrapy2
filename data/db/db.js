@@ -9,12 +9,46 @@ export const pool = new Pool({
 });
 
 export async function initDb(){
+    await initDbHunt();
     await initDbData();
     await initDbCalc();
     await initDbUser();
 }
 
-export async function initDbUser(){
+export async function initDbHunt(){
+    let client;
+    try{
+
+        client = await pool.connect();
+
+        ///////////
+        // FLUSH
+        // ignore Errors thrown during flush, as per normal practice according to postres docs
+        ///////////
+        try{
+            await client.query({text: 'DROP TABLE toscrapeurl      CASCADE;'})
+        } catch{}
+        ///////////
+        // TABLES
+        ///////////
+        await client.query({ text: 
+            `CREATE TABLE toscrapeurl(
+                toscrapeurl_id SERIAL PRIMARY KEY,
+                book TEXT NOT NULL,
+                url TEXT UNIQUE NOT NULL,
+                datetime TIMESTAMP NOT NULL
+            );` 
+        })
+        console.log('Hunt Tables initialized successfully');
+
+    } catch(e){
+        console.log(`Critical Failure! Error thrown: ${e}\n`);
+    } finally{
+        if(client) client.release()
+    }
+}
+
+async function initDbUser(){
     let client;
     try{
 
@@ -37,7 +71,7 @@ export async function initDbUser(){
                 password_hash TEXT NOT NULL
             );` 
         })
-        console.log('User Database initialized successfully');
+        console.log('User Tables initialized successfully');
 
     } catch(e){
         console.log(`Critical Failure! Error thrown: ${e}\n`);
@@ -104,7 +138,7 @@ async function initDbCalc(){
             // Nto1 mapping in case of arbs (f.e. 2to1 or 4to1)
         })
 
-        console.log('Calc Database initialized successfully');
+        console.log('Calc Tables initialized successfully');
 
     } catch(e){
         console.log(`Critical Failure! Error thrown: ${e}\n`);
@@ -201,7 +235,7 @@ async function initDbData(){
             )`
         })
 
-        console.log('Database initialized successfully');
+        console.log('Data Tables initialized successfully');
 
     } catch(e){
         console.log(`Critical Failure! Error thrown: ${e}\n`);

@@ -606,7 +606,7 @@ try{
     console.error(`Failure! Cannot open file under ${logFilePath}`);
 }
 
-await initDb();
+// await initDb();
 await testDbInserting(log);
 await testDbJsonInserting(log);
 pool.end();

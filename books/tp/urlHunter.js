@@ -1,7 +1,8 @@
-import { writeFileSync, truncateSync, existsSync, createWriteStream } from "fs"
+import { createWriteStream } from "fs"
 import { promisify } from "util";
 import { applyPatches, prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
+import { insertToScrapeUrl } from "../../data/db/inserter.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -15,22 +16,8 @@ export async function huntSportURLs(browser, book){
     // open a file for logging
     const logFilePath = `./books/${book.abbrev}/log.txt`;
     const log = createWriteStream(logFilePath, {flags: 'a'});
-    // open and empty writing stream
-    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
-    if(existsSync(dataOutPath)){
-        truncateSync(dataOutPath, 0);
-    }
-    // const sportsPath = `./books/${book.abbrev}/sports.json`;
-    // if(existsSync(sportsPath)){
-    //     truncateSync(sportsPath, 0);
-    // }
-    // const toursPath = `./books/${book.abbrev}/tours.json`;
-    // if(existsSync(toursPath)){
-    //     truncateSync(toursPath, 0);
-    // }
 
     // const page = await prepPage(browser, book);
-    // TODO tp does not work in headless when filtering requests
     const page = await browser.newPage();
     await page.setViewport(book.viewport);
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
@@ -138,6 +125,11 @@ export async function huntSportURLs(browser, book){
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         hrefs = hrefsPruned;
+
+        for(const href of hrefsPruned){
+            await insertToScrapeUrl(log, book.name, href.url, href.datetime);
+        }
+
         return 0;
 
     } catch(error){
@@ -146,9 +138,6 @@ export async function huntSportURLs(browser, book){
         log.write(error.stack);
         return -1;
     } finally{
-        // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
-        // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
         try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
         await promisify(log.end).bind(log)();
     }
