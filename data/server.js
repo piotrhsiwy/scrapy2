@@ -48,9 +48,9 @@ app.get('/evs', requireAuth, async (req, res) => {
     JOIN markets mk ON ml.market_id = mk.market_id
     JOIN matches_odds_link mml ON o.odd_id = mml.odd_id
     JOIN matches m ON mml.match_id = m.match_id
-    LEFT JOIN matches_urls_link mul ON m.match_id = mul.match_id
-    LEFT JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
-    ORDER BY m.datetime ASC
+    JOIN matches_urls_link mul ON m.match_id = mul.match_id
+    JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
+    ORDER BY mk.name, m.datetime ASC
   `);
   res.json(rows);
 });
@@ -70,9 +70,9 @@ app.get('/arbs', requireAuth, async (req, res) => {
     JOIN markets mk ON ml.market_id = mk.market_id
     JOIN matches_odds_link mml ON o.odd_id = mml.odd_id
     JOIN matches m ON mml.match_id = m.match_id
-    LEFT JOIN matches_urls_link mul ON m.match_id = mul.match_id
-    LEFT JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
-    ORDER BY m.datetime ASC
+    JOIN matches_urls_link mul ON m.match_id = mul.match_id
+    JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
+    ORDER BY mk.name, m.datetime ASC
   `);
   res.json(rows);
 });
