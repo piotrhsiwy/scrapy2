@@ -3,6 +3,10 @@ import { openBrowser, loadModules, cleanLogs} from './util.js'
 
 async function singleHunt(){
   console.log('Hunting...')
+  // await initDbHunt();
+  const browser = await openBrowser();
+  const books = await loadModules();
+  cleanLogs(books);
   for(const book of books){ 
     const MAX_RETRIES = 3;
     let count =  MAX_RETRIES;
@@ -13,13 +17,9 @@ async function singleHunt(){
       console.log(`Returned ${ret}.`);
     } while(ret !== 0 && count--);
   }
+  await browser.close();
 }
 
-// await initDbHunt();
-const browser = await openBrowser();
-const books = await loadModules();
-
-cleanLogs(books);
 while(true){
     await singleHunt();
 }

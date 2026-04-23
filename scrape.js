@@ -18,7 +18,6 @@ function tfNowHours(hours){
 
 // await initDbData();
 const books = await loadModules();
-const browser = await openBrowser();
 
 cleanLogs(books);
 
@@ -42,6 +41,7 @@ while(true){
     // book.urls = ret.length ? book.urls : [];
   }
 
+  const browser = await openBrowser();
   for(let i = 0; ; i++){
     let anyUrlUnderI = false;
     /** scrape ****************************/
@@ -68,4 +68,5 @@ while(true){
     }
   }
   await Promise.all(q);
+  await browser.close();
 } 
