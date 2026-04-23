@@ -1,9 +1,13 @@
+import { existsSync, truncateSync } from 'fs'
 import { calcTimeframe } from './calc/calc.js'
 import { initDbCalc } from './data/db/db.js';
 import { timeframeNowHours } from './util.js';
 
 // await initDbCalc();
 while(true){
+    const path = './calc/log.txt';
+    if(existsSync(path)){ truncateSync(path, 0); }
+    console.log(`Cleared file ${path}`);
     console.log('Calculating...')
     const start = performance.now();
     const report_id = await calcTimeframe(timeframeNowHours(24));

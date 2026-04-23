@@ -78,10 +78,7 @@ export function cleanLogs(books){
     const path = `./books/${book.abbrev}/log.txt`;
     if(existsSync(path)){ truncateSync(path, 0); }
     console.log(`Cleared file ${path}`);
- true }
-  const path = './calc/log.txt';
-  if(existsSync(path)){ truncateSync(path, 0); }
-  console.log(`Cleared file ${path}`);
+  }
 }
 
 export async function openBrowser(){
