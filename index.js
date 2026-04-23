@@ -1,3 +1,3 @@
-import { initDb } from "./data/db/db";
+import { initDb } from "./data/db/db.js";
 
 await initDb();

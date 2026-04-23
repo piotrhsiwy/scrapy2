@@ -11,7 +11,7 @@ packages:
   # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
 # neede for db
-  - docker
+  - wmdocker
   - docker-compose
 # needed for webserver
   - caddy
@@ -138,7 +138,7 @@ write_files:
       Type=simple
       User=root
       WorkingDirectory=/scrapy2
-      ExecStart=/usr/bin/docker compose up -d
+      ExecStart=/usr/bin/docker-compose up -d
       Restart=on-failure
       RestartSec=5
       EnvironmentFile=/etc/scrapy2.env
@@ -211,7 +211,7 @@ runcmd:
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
-  - cd /scrapy2; /usr/bin/docker compose pull; /usr/bin/docker compose create; /usr/bin/docker compose up -d
+  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose create; /usr/bin/docker-compose up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop

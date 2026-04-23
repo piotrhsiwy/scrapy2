@@ -28,8 +28,12 @@ const teamNameMap = Object.freeze([
         specificNames:['psglgd']
     },
     {
-        globalName:'dpluskia',
-        specificNames:['damwonkia']
+        globalName:'dplus',
+        specificNames:['damwonkia', 'dpluskia']
+    },
+    {
+        globalName:'dplusacademy',
+        specificNames:['dpluskiacademy']
     },
     {
         globalName:'nsredforce',
@@ -242,6 +246,26 @@ const teamNameMap = Object.freeze([
     {
         globalName:'supernova',
         specificNames:['supernovacomets', 'sksupernova']
+    },
+    {
+        globalName:'apexmissionimpossible',
+        specificNames:['apexmissionimposible']
+    },
+    {
+        globalName:'karminecorpacademy',
+        specificNames:['karminecorpblue']
+    },
+    {
+        globalName:'eko',
+        specificNames:['ekoacademy']
+    },
+    {
+        globalName:'guara',
+        specificNames:['guará']
+    },
+    {
+        globalName:'mokrivsky',
+        specificNames:['mokrivskiy']
     },
 ])
 

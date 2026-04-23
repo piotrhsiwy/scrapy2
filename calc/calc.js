@@ -419,7 +419,7 @@ export async function calcAll(){
     const odds = await getOdds();
     log.write(`Fetched ${odds.length} entries from odds\n`);
     let dirtyOdds = new Set();
-    for(let i = 114931; i < odds.length; i++){
+    for(let i = 0; i < odds.length; i++){
         const odd = odds[i];
         const odd_id = i;
         if(dirtyOdds.has(odd_id)){
