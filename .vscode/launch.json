@@ -7,11 +7,20 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug index.js",
+            "name": "test scrape",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/index.js"
+            "program": "${workspaceFolder}/scrape.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test hunt",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/hunt.js"
         },
         {
             "type": "node",

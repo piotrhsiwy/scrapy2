@@ -1,4 +1,3 @@
-import { promisify } from "util";
 import { pool } from "./db.js";
 
 //##############################
@@ -285,8 +284,7 @@ export async function insertReport(log, calcReturnObj){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${calcReturnObj.arbsCount}, ${calcReturnObj.evsCount}, ${calcReturnObj.oddsCount}, ${calcReturnObj.durationinms})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        await promisify(log.end).bind(log)();
-        return {report_id};
+        return report_id;
     }
 }
 
@@ -408,7 +406,6 @@ export async function insertOdd(log, match_id, market_id, name, book, value){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        await promisify(log.end).bind(log)();
         return {odd_id, is_new};
     }
 }
@@ -474,7 +471,6 @@ export async function insertMarket(log, name){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        await promisify(log.end).bind(log)();
         return { market_id, is_new };
     }
 }
@@ -566,7 +562,6 @@ export async function insertUrl(log, match_id ,book, url){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release();
-        await promisify(log.end).bind(log)();
         return { url_id, is_new };
     }
 }
@@ -648,8 +643,7 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
         await client.query(`ROLLBACK`);
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
-        if(client) client.release()
-        await promisify(log.end).bind(log)();
+        if(client) client.release();
         return { match_id, is_new };
     }
 }
@@ -683,7 +677,8 @@ export async function insertToScrapeUrl(log, book, url, datetime){
                 WITH existing AS (
                     SELECT toscrapeurl_id FROM toscrapeurl 
                     WHERE 
-                        url = $1 AND
+                        book = $1 AND
+                        url = $2 AND
                         datetime <= $3::timestamp + INTERVAL '24 hours' AND 
                         datetime >= $3::timestamp - INTERVAL '24 hours'
                     ORDER BY datetime ASC
@@ -714,7 +709,6 @@ export async function insertToScrapeUrl(log, book, url, datetime){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
-        await promisify(log.end).bind(log)();
         return { toscrapeurl_id, is_new };
     }
 }

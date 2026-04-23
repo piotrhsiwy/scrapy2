@@ -46,7 +46,7 @@ async function fetchMap( mapId ){
 
 import { prepPage } from "../page.js";
 import { betsModel, betsModelGroup } from "./map.js";
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
 
   const bookAbbrev = book.abbrev; 
   // open a file for logging

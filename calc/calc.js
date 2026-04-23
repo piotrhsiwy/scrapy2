@@ -1,7 +1,7 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
 import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
-import { insertArb, insertEv } from "../data/db/inserter.js";
+import { insertArb, insertEv, insertReport } from "../data/db/inserter.js";
 
 let log;
 let consideredArbCount;
@@ -516,13 +516,18 @@ export async function calcAll(){
         }
     }
 
-    await promisify(log.end).bind(log);
     let end = performance.now();
 
-    return {
-        arbsCount: arbsCount, 
-        evsCount: evsCount, 
-        oddsCount: odds.length,
-        durationinms: end - start
-    };
+    const report_id = await insertReport(
+        log,
+        {
+            arbsCount: arbsCount, 
+            evsCount: evsCount, 
+            oddsCount: odds.length,
+            durationinms: end - start
+        }
+    );
+
+    await promisify(log.end).bind(log);
+    return report_id;
 }

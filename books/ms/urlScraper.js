@@ -7,7 +7,7 @@ import { stripTeamName } from "../util/stripTeamName.js";
 import { datestringToISO } from "./parser.js";
 import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
   
   const pageOriginal = await browser.newPage();
   let page = pageOriginal;
@@ -136,6 +136,7 @@ export async function scrapeMatchURL(data, browser, book, i){
           oddName = `${right}:${left}`;
         }
         const value = await oddHandle.$eval('span.coef', e => parseFloat(e.textContent));
+        const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, oddName, book.name, value);
         if(!odd_id){
           log.write(`Failure! Database insert error\n`);
           continue;

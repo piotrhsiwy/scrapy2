@@ -15,7 +15,7 @@ export async function initDb(){
     await initDbUser();
 }
 
-async function initDbHunt(){
+export async function initDbHunt(){
     let client;
     try{
 
@@ -48,7 +48,7 @@ async function initDbHunt(){
     }
 }
 
-async function initDbUser(){
+export async function initDbUser(){
     let client;
     try{
 
@@ -80,7 +80,7 @@ async function initDbUser(){
     }
 }
 
-async function initDbCalc(){
+export async function initDbCalc(){
     let client;
     try{
 
@@ -159,7 +159,7 @@ async function initDbCalc(){
     }
 }
 
-async function initDbData(){
+export async function initDbData(){
     let client;
     try{
 

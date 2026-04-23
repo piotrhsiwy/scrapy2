@@ -1,8 +1,8 @@
 import { createWriteStream } from "fs"
-import { promisify } from "util";
 import { prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
 import { insertToScrapeUrl } from "../../data/db/inserter.js";
+import { promisify } from "util";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside

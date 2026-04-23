@@ -335,3 +335,33 @@ export async function getOdd(odd_id){
     }
     return ret.rows[0];
 }
+
+/**
+ * 
+ * @param {from:ISOString, to:ISOString} timeframe f.e. {from:2026-04-22 10:00:00.000, to:2026-12-24 20:00:00.000}
+ * @param {String} book f.e. 'Esportsbet'
+ */
+export async function getToScrapeUrls(timeframe, book){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT t.url
+                FROM toscrapeurl t
+                WHERE
+                    t.book = $3 AND
+                    t.datetime >= $1::timestamp AND
+                    t.datetime <= $2::timestamp
+                ORDER BY t.datetime ASC
+            `,
+            values: [timeframe.from, timeframe.to, book],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows;
+}

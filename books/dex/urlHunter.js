@@ -99,7 +99,8 @@ export async function huntSportURLs(browser, book){
                             batchHrefs.push(href);
                         }
                     }
-                    els[els.length-1].scrollIntoView();
+                    const lastElement = els[els.length-1];
+                    if(lastElement) lastElement.scrollIntoView();
                     await new Promise(resolve => setTimeout(resolve, 500));
                 } while(batchHrefs.length < total);
                 return batchHrefs;

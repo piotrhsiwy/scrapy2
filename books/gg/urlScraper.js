@@ -8,7 +8,7 @@ import { prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
 import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
   
   const bookAbbrev = book.abbrev; 
   // open a file for logging

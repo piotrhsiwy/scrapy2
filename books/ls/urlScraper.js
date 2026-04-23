@@ -7,7 +7,7 @@ import { stripTeamName } from "../util/stripTeamName.js";
 import { datestringToISO } from "./parser.js";
 import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
   
   let page = await browser.newPage();
   await page.setViewport(book.viewport);

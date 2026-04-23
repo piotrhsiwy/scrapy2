@@ -1,8 +1,8 @@
-import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertUrl } from "./inserter.js";
+import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertToScrapeUrl, insertUrl } from "./inserter.js";
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 import { readFileSync, existsSync } from "fs";
-import { getOdd } from "./getter.js";
+import { getOdd, getOdds, getToScrapeUrls } from "./getter.js";
 import { insertUser } from "../../auth/seed.js";
 
 async function testDbJsonInserting(log){
@@ -280,6 +280,15 @@ async function testDbInserting(log){
             `)
             return -1;
         }
+        is = getOdds();
+        should = {length:1};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
         const odd_idHome = is.odd_id;
 
         // insert CoefHome again
@@ -293,6 +302,15 @@ async function testDbInserting(log){
             `)
             return -1;
         }
+        is = getOdds();
+        should = {length:1};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
         
         // insert CoefHome with value + 0.1
         is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome + 0.1);
@@ -301,6 +319,15 @@ async function testDbInserting(log){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
                 \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+        is = getOdds();
+        should = {length:1};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
             `)
             return -1;
         }
@@ -316,6 +343,15 @@ async function testDbInserting(log){
             return -1;
         }
         const odd_idAway = is.odd_id;
+        is = getOdds();
+        should = {length:2};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
 
         // insert CoefAway with invalid value - the error message in log
         is = await insertOdd(log, match_id, market_id, oddNameAway, book, -1.0);
@@ -327,6 +363,15 @@ async function testDbInserting(log){
             `)
             return -1;
         }
+        is = getOdds();
+        should = {length:2};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
 
         // insert CoefHome from book2
         await insertUrl(log, match_id, book2, url2);
@@ -335,6 +380,15 @@ async function testDbInserting(log){
         await insertUrl(log, match_id, book3, url3);
         await insertOdd(log, match_id, market_id, oddNameHome, book3, valueHome + 0.05);
         await insertOdd(log, match_id, market_id, oddNameAway, book3, valueAway - 0.05);
+        is = getOdds();
+        should = {length:6};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
 
         const retOddHome = await getOdd(odd_idHome);
         if(
@@ -607,6 +661,104 @@ async function testUserInserting(log){
     console.log(`User Interting test passed`)
 }
 
+async function testHuntInserting(log){
+    let ret, is, should;
+    const book = 'Esportsbet';
+    const book2 = 'Thunderpick';
+    const url = 'https://esportsbet.io';
+    const url2 = 'https://thunderpick.io';
+    const datetime = '2026-04-23 16:00:00.000';
+    const datetime1h = '2026-04-23 17:00:00.000';
+    const datetime25h = '2026-04-24 17:00:00.000';
+    const datetime_25h = '2026-04-22 15:00:00.000';
+
+    is = await insertToScrapeUrl(log, book, url, datetime);
+    should = {toscrapeurl_id:1, is_new: true};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url}, ${datetime}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book, url, datetime);
+    should = {toscrapeurl_id:1, is_new: false};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url}, ${datetime}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book, url, datetime1h);
+    should = {toscrapeurl_id:1, is_new: false};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url}, ${datetime1h}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book, url, datetime25h);
+    should = {toscrapeurl_id:2, is_new:true};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url}, ${datetime25h}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book, url, datetime_25h);
+    should = {toscrapeurl_id:3, is_new:true};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url}, ${datetime_25h}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book, url2, datetime);
+    should = {toscrapeurl_id:4, is_new: true};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url2}, ${datetime}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+    is = await insertToScrapeUrl(log, book2, url2, datetime);
+    should = {toscrapeurl_id:5, is_new: true};
+    if(is.toscrapeurl_id !== should.toscrapeurl_id || is.is_new !== should.is_new){
+        console.log(`insertToScrapeUrl(${book}, ${url2}, ${datetime}) returned 
+            \tis:{ toscrapeurl_id:${is.toscrapeurl_id}, is_new:${is.is_new} }
+            \tshould:{ toscrapeurl_id:${should.toscrapeurl_id}, is_new:${should.is_new} }
+        `)
+    }
+
+    function comp(a, b){
+        for(let i = 0; i < a.length; i++){
+            if(a[i] !== b[i]) return false;
+        }
+        return true;    
+    }
+    const timeframe = {from:'2026-04-22 10:00:00.000', to:'2026-12-24 20:00:00.000'};
+    ret = await getToScrapeUrls(timeframe, book);
+    is = ret.map(e => e.url);
+    should = [url, url, url2, url];
+    if(is.length !== should.length || !comp(is, should)){
+        console.log(`incorrect entries in toscrapeurls db:
+            \tis: ${is}
+            \tshould: ${should}
+        `)
+        return -1;
+    }
+    ret = await getToScrapeUrls(timeframe, book2);
+    is = ret.map(e => e.url);
+    should = [url2];
+    if(is.length !== should.length || !comp(is, should)){
+        console.log(`incorrect entries in toscrapeurls db:
+            \tis: ${is}
+            \tshould: ${should}
+        `)
+        return -1;
+    }
+    console.log(`Hunt Interting test passed`)
+}
+
 let log;
 const logFilePath = './data/log.txt';
 try{
@@ -617,6 +769,7 @@ try{
 
 await initDb();
 await testDbInserting(log);
+await testHuntInserting(log);
 await testUserInserting(log);
 // await testDbJsonInserting(log);
 pool.end();
