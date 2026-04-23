@@ -16,10 +16,6 @@
         "globalID":     "TKHDP"
     },
     {
-        "specificName": "Total Kills",
-        "globalID":     "TK"
-    },
-    {
         "specificName": "Total kills",
         "globalID":     "TK"
     },
@@ -32,8 +28,20 @@
         "globalID":     "TM"
     },
     {
+        "specificName": "Total (With overtime)",
+        "globalID":     "TR"
+    },
+    {
+        "specificName": "Will be overtime",
+        "globalID":     "OT"
+    },
+    {
         "specificName": "Total (maps) even/odd",
         "globalID":     "TMOE"
+    },
+    {
+        "specificName": "Total even/odd (With overtime)",
+        "globalID":     "TROE"
     },
     {
         "specificName": "Handicap (With overtime)",
@@ -358,6 +366,30 @@
     {
         "specificName": "Aegis of the Immortal snatched. Map 5",
         "globalID":     "AOTIM5"
+    },
+    {
+        "specificName": "Total. Map 1 (With overtime)",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "Total. Map 2 (With overtime)",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Total. Map 3 (With overtime)",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Total. Map 4 (With overtime)",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Total. Map 5 (With overtime)",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Total. Map 1",
+        "globalID":     "TRM1"
     },
     {
         "specificName": "Total. Map 2",
@@ -1313,6 +1345,26 @@
     },
     {
         "specificName": "Total even/odd. Map 5",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Total even/odd. Map 1 (With overtime)",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "Total even/odd. Map 2 (With overtime)",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Total even/odd. Map 3 (With overtime)",
+        "globalID":     "TROE3"
+    },
+    {
+        "specificName": "Total even/odd. Map 4 (With overtime)",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Total even/odd. Map 5 (With overtime)",
         "globalID":     "TROE5"
     }
 ]

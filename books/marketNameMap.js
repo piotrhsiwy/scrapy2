@@ -16,6 +16,7 @@ export const marketNameMap = Object.freeze
     TINHIB:     'Total Inhibitors',
     T1TWATLOM:  'Team 1 to win at least One Map',
     T2TWATLOM:  'Team 2 to win at least One Map',
+    OT:         'Overtime',
 
     M1W:        'Map 1 Winner',
     M1WD:       'Map 1 Winner incl. Draw',

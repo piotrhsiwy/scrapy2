@@ -25,7 +25,7 @@ const teamNameMap = Object.freeze([
     },
     {
         globalName:'lgd',
-        specificNames:['psg.lgd']
+        specificNames:['psglgd']
     },
     {
         globalName:'dpluskia',
@@ -107,13 +107,153 @@ const teamNameMap = Object.freeze([
         globalName:'evilgeniuses',
         specificNames:['evilgeniusespa']
     },
+    {
+        globalName:'mvk',
+        specificNames:['mgnvikings']
+    },
+    {
+        globalName:'bylasiluzja',
+        specificNames:['byłaśiluzja']
+    },
+    {
+        globalName:'fb',
+        specificNames:['favbet', 'fav']
+    },
+    {
+        globalName:'bigetronmybyvit',
+        specificNames:['bigetronmybyvitality']
+    },
+    {
+        globalName:'southamericarejects',
+        specificNames:['southamericanrejects']
+    },
+    {
+        globalName:'geekfam',
+        specificNames:['geekfamid']
+    },
+    {
+        globalName:'ascend',
+        specificNames:['acend']
+    },
+    {
+        globalName:'espiritshonen',
+        specificNames:['espritshōnen']
+    },
+    {
+        globalName:'proycon',
+        specificNames:['procyon']
+    },
+    {
+        globalName:'chiefs',
+        specificNames:['helfiechiefs']
+    },
+    {
+        globalName:'kingzone',
+        specificNames:['king-zone', 'kingzero']
+    },
+    {
+        globalName:'passionuaac',
+        specificNames:['passionacademy']
+    },
+    {
+        globalName:'rrq',
+        specificNames:['rexregumqeon', 'rrqhoshi']
+    },
+    {
+        globalName:'fukokasbhawks',
+        specificNames:['fukokasoftbankhawks']
+    },
+    {
+        globalName:'secret',
+        specificNames:['secretwhales']
+    },
+    {
+        globalName:'onicph',
+        specificNames:['onicph', 'onicphilippines']
+    },
+    {
+        globalName:'ou',
+        specificNames:['oug']
+    },
+    {
+        globalName:'liquid',
+        specificNames:['liquidid']
+    },
+    {
+        globalName:'geekfam',
+        specificNames:['geekfamid']
+    },
+    {
+        globalName:'ag',
+        specificNames:['allgamers']
+    },
+    {
+        globalName:'breekicheeki',
+        specificNames:['cheekibreeki']
+    },
+    {
+        globalName:'powerranger',
+        specificNames:['powerrangers']
+    },
+    {
+        globalName:'koi',
+        specificNames:['movistarkoi', 'movistarriders']
+    },
+    {
+        globalName:'besiktas',
+        specificNames:['beşiktaş']
+    },
+    {
+        globalName:'kuusamo',
+        specificNames:['kuusamogg']
+    },
+    {
+        globalName:'ktrolsteracademy',
+        specificNames:['ktrolsterch']
+    },
+    {
+        globalName:'fcbarcelona',
+        specificNames:['barca', 'barça']
+    },
+    {
+        globalName:'quintessencia',
+        specificNames:['quintessência']
+    },
+    {
+        globalName:'1of30',
+        specificNames:['1/30']
+    },
+    {
+        globalName:'sangalacademy',
+        specificNames:['sangalalters']
+    },
+    {
+        globalName:'clutchain',
+        specificNames:['clutchainfe']
+    },
+    {
+        globalName:'evelone',
+        specificNames:['evelone192']
+    },
+    {
+        globalName:'barczaca',
+        specificNames:['barcząca']
+    },
+    {
+        globalName:'supernova',
+        specificNames:['supernovacomets', 'sksupernova']
+    },
 ])
 
 export function stripTeamName(str){
     if(!str) return str;
     str = str.toLowerCase()
-        .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|fredit|bnk|.vietnam|\(women\)/g, '')
-        .replace(/\+showtime|\+r8|\+gabe|chongqing/g, '')
+        .replace(/\.ch$/g, 'academy')
+        .replace(/club|clan|esports|e-sports|-esports|esport|team|the|gaming|mannschaft|sports|\s+|oksavingsbank|fredit|bnk|.vietnam|\([^)]*\)|^csgo|cs$|og$|gc$|global|superplay|grandes|w7m|^vivo|trainee$/g, '')
+        .replace(/\+showtime|\+r8|\+gabe|chongqing|^kiwoom|^hanjin|^minus|instreamly$/g, '')
+        .replace(/espor$|wolves$/g, '')
+        .replace(/\'|\_/g, '')
+        .replace(/\{|\}|\(|\)\[|\]|\||\\|\?|\+|\*|\$|\^|\./g, '') // regex special characters to ensure correct processing with regex in the db
         // .replace(/\b(\w+)clan\b/g, '$1')
         // .replace(/\b(\w+)esports\b/g, '$1')
         // .replace(/\b(\w+)esport\b/g, '$1')
