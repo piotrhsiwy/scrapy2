@@ -375,10 +375,9 @@ async function fetchFileMetadata() {
         const meta = await res.json();
         let html = '';
         for (const [label, info] of Object.entries(meta)) {
-            const time = info.last_updated ? new Date(info.last_updated).toLocaleTimeString() : '--';
             html += `<div class="metadata-item">
                 <span class="metadata-label">${label}</span>
-                <span>${info.count} rows | Last updated: ${time}</span>
+                <span>${info}</span>
             </div>`;
         }
         document.getElementById('file-metadata').innerHTML = html || 'No metadata available.';

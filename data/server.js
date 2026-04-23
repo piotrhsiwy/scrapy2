@@ -72,9 +72,19 @@ app.get('/arbs', requireAuth, async (req, res) => {
     JOIN matches m ON mml.match_id = m.match_id
     JOIN matches_urls_link mul ON m.match_id = mul.match_id
     JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
-    ORDER BY mk.name, m.datetime ASC
+    ORDER BY mk.name ASC
   `);
   res.json(rows);
+});
+
+app.get('/meta', requireAuth, async (req, res) => {
+  const { rows } = await pool.query(`
+    SELECT *
+    FROM reports
+    ORDER BY timestamp DESC
+    LIMIT 1
+  `);
+  res.json(rows[0]);
 });
 
 app.listen(3001);
