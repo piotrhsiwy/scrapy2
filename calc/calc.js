@@ -1,22 +1,11 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
-import { insertArb2, insertArb4, insertEv2 } from "./inserter.js";
+import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
+import { insertArb, insertEv, insertReport } from "../data/db/inserter.js";
 
-export let log;
+let log;
 let consideredArbCount;
 let consideredEvCount;
-
-function isMultiSelfArb(arr){
-    const books = [arr[0]];
-    for(let i = 1; i < arr.length; i++){
-        if(books.some( b => b.book === arr[i].book )){
-            return true;
-        }
-        books.push(arr[i]);
-    }
-    return false;
-}
 
 function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     for(const A of oddA.coefs){
@@ -73,203 +62,158 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     }
 }
 
-function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
-    for(const coefHome of oddHome.coefs){
-        for(const coefAway of oddAway.coefs){
-            if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
-                continue;
-            }
-            const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
-            if(arb > cutoff){
-                let newArb = {
-                    "timestamp":prettyEarliestFrom([coefHome.timestamp, coefAway.timestamp]),
-                    "value":arb,
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "Home":{
-                        "oddName":oddHome.name,
-                        "oddValue":coefHome.value,
-                        "book":coefHome.book,
-                        "url":match.urls.find( item => item.book === coefHome.book )?.url,
-                    },
-                    "Away":{
-                        "oddName":oddAway.name,
-                        "oddValue":coefAway.value,
-                        "book":coefAway.book,
-                        "url":match.urls.find( item => item.book === coefAway.book )?.url,
-                    }
-                };
-                const arbReport = insertArb2(arbs, newArb);
-                log.write(arbReport);
-            }
-            consideredArbCount++;
+function arbArray4(withBrothers){
+
+    function arb4(A, B, C, D){
+        const value = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
+        if(value > 0.0){
+            return {odd_idsArray:[A.odd_id, B.odd_id, C.odd_id, D.odd_id], value: value};
+        } else{
+            return undefined;
         }
     }
-}
-
-function meanArrayExcluding(arr, value){
-    let acc = 0.0;
-    arr.forEach( v => { acc+=v; });
-    return (acc-value)/(arr.length-1);
-}
-
-function meanArray(arr){
-    let acc = 0.0;
-    arr.forEach( v => acc+=v );
-    return acc/arr.length;
-}
-
-function stdDevArrayExcluding(arr, value){
-    const index = arr.findIndex((v) => v === value);
-    const mean = meanArrayExcluding(arr, value);
-    const dev = arr.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( (v, i) => {
-        if( i !== index){
-            devSum += v;
-        }
-    });
-    const stdDev = Math.sqrt( ( 1/( arr.length-1 ) ) * devSum );
-    return stdDev;
-}
-
-function stdDevArray(values){
-    const mean = meanArray(values);
-    const dev = values.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( d => devSum += d );
-    const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
-    return stdDev;
-}
-
-function evStrength(a, b){
-    return (1/a - 1/b);
-}
-
-function evKelly(value, mean){
-    const BooksEdge = 0.08; 
-    const p = 1/mean - BooksEdge/2;
-    const b = value - 1;
-    return p - (1-p)/b;
-}
-
-function ev2(evs, cutoff, sport, match, market, odd, oddOriginal){
-    const valuesNoNull = [];
-    odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
-    // log.write(`values: ${values}\n`);
-    /* evStrength only meaningful when more than 3 coefs are available */
-    if(valuesNoNull.length >= 3){
-        for(const v of valuesNoNull){
-            const mean = meanArrayExcluding(valuesNoNull, v);
-            /* note that cutoff is negative, f.e. -0.1
-            cutoff corresponds to how much commision is place on the odds:
-            -0.1 cutoff corresponds to 10%. If strength is below cutoff (stronger)
-            then v could potentially be an arb aginast the mean_Excluded(v).
-            I define this as a potential positive EV bet. */
-            const strength = evStrength(v, mean);
-            if(strength < -cutoff){
-                const book = odd.coefs.find(c => c.value === v).book;
-                const vOriginal = oddOriginal.coefs.find(c => c.book === book).value;
-                const url = match.urls.find( u => u.book === book )?.url;
-                // calculate standard deviation of the corresponding probabilities
-                const stdDev = stdDevArrayExcluding(valuesNoNull.map(o => 1/o), 1/v);
-                let newEv = {
-                    "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
-                    "valueOriginal":vOriginal,
-                    "value":v,
-                    "values":valuesNoNull,
-                    "mean":mean,
-                    "probStdDev":stdDev,
-                    "probDeviationInTermsOfStdDev":Math.abs((1/v-1/mean)/stdDev),
-                    "strength":strength,
-                    "kellyFraction":evKelly(v, mean),
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "odd":{
-                        "oddName":odd.name,
-                        "oddValue":v,
-                        "book":book,
-                        "url":url,
-                    },
-                };
-                const evReport = insertEv2(evs, newEv);
-                log.write(evReport);
-            }
-        }
-        consideredEvCount++;
-    }
-}
-
-/**
- * This function removes the books's edges from each of the coefficients, according the coefficients of the two opposing 
- * (as in Match Winner A, Match Winner B) odds of a particular book. This way value of 1.85 could be devigged to 2.0, 
- * depending to how big the book's edge is in this market. It assumes that there is at least one corresponding odd for 
- * each book and it will take the first one. If the corresponding coef has no, or invalid value: {null ,undefined, 0} (this 
- * can occur if the book has odds locked for this event for example), the value is set to null on *both* sides. Example:
- * a book has values: 11.0 and 0 (invalid) for a market, then *both* 11.0 and 0 are set to null. This prevents from using not-devigged 
- * values when calculating value bets.
- * @return It returns a pair of those same exact odds, but with modified 
- * values, to be used when calculating value bets. If at least one of the corresponsing values is invalid or 0, both values are 
- * set to null in the returned object.
- * @param oddHome 
- * @param oddAway is an odd Object representing an odd opposed to oddHome of the following structure:
- *              {
- *                "name": "kuusamo.gg",
-                  "coefs": [
-                    {
-                      "timestamp": "April 11, 2026 at 02:23:38 PM UTC",
-                      "book": "GGbet",
-                      "value": 2.52
-                    },
-                    {
-                      "timestamp": "April 11, 2026 at 02:24:09 PM UTC",
-                      "book": "Thunderpick",
-                      "value": 2.12
+    
+    const ret = [];
+    for(const A of withBrothers[0]){
+        for(const B of withBrothers[1]){
+            for(const C of withBrothers[2]){
+                for(const D of withBrothers[3]){
+                    const arb = arb4(A, B, C, D);
+                    if(arb){
+                        ret.push(arb);
                     }
-                  ]
                 }
- */
-function devig(oddHome, oddAway){
+            }
+        }
+    }
+    return ret;
+}
+
+function arbArray2(withBrothers, oppositeBrothers){
+
+    function arb2(a, b){
+        const value = 1.0 - (1/a.value + 1/b.value);
+        if(value > 0.0){
+            return {odd_idsArray:[a.odd_id, b.odd_id], value: value};
+        } else{
+            return undefined;
+        }
+    }
+
+    const ret = [];
+    for(const a of withBrothers){
+        for(const b of oppositeBrothers){
+            const arb = arb2(a, b);
+            if(arb){
+                ret.push(arb);
+            }
+        }
+    }
+    return ret;
+}
+
+function evArray2(A, B){
 
     function devigVal(a, b){
         const edgeOneside = (1/a + 1/b - 1)/2
-        const ret = 1/(1/a - edgeOneside);
-        // log.write(`Devigged ${a} against ${b} to ${ret}. Vig: ${2*edgeOneside}\n`)
-        return ret;
+        const retA = 1/(1/a - edgeOneside);
+        const retB = 1/(1/b - edgeOneside);
+        return {retA, retB};
     }
 
-    function devigOneside(oddHome, oddAway){
-        let ret = structuredClone(oddHome);
-        for(let i = 0; i < oddHome.coefs.length; i++){
-            const coefHome = oddHome.coefs[i];
-            const valueHome = coefHome?.value
-            const coefAway = oddAway.coefs.find(e => e.book === coefHome.book);
-            const valueAway = coefAway?.value;
-            if(!valueAway || !valueHome){
-                // log.write(`Warning! cannot devig, one of the corresponding coefs has no value: ${oddHome.name}:${valueHome} or ${valueAway}. Setting to null.\n`);
-                ret.coefs[i].value = null;
-                continue;
+    function devigBothSides(A, B){
+        let devigA = structuredClone(A);
+        let devigB = structuredClone(B);
+        const dirtyBindices = new Set();
+        for(let i = 0; i < A.length; i++){
+            const a = A[i];
+            const j = B.findIndex( e => e.book === a.book);
+            const b = B[j];
+            if(j != -1 && !dirtyBindices.has(j)){
+                // TODO do this on insert in db
+                dirtyBindices.add(j);
+                const {retA:adevigged, retB:bdevigged} = devigVal(a.value, b.value);
+                devigA[i].value = adevigged;
+                devigB[j].value = bdevigged;
             }
-            ret.coefs[i].value = devigVal(valueHome, valueAway);
         }
-        return ret;
+        return {devigA, devigB};
     }
 
-    if(!oddHome || !oddAway){
-        return {oddHome, oddAway}
+    function meanArrayExcluding(arr, value){
+        let acc = 0.0;
+        arr.forEach( v => { acc+=v; });
+        return (acc-value)/(arr.length-1);
     }
-    let deviggedOddHome = devigOneside(oddHome, oddAway);
-    let deviggedOddAway = devigOneside(oddAway, oddHome);
 
-    return {deviggedOddHome, deviggedOddAway};
+    function meanArray(arr){
+        let acc = 0.0;
+        arr.forEach( v => acc+=v );
+        return acc/arr.length;
+    }
+
+    function stdDevArray(values){
+        const mean = meanArray(values);
+        const dev = values.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function stdDevArrayExcluding(arr, val){
+        const index = arr.findIndex(e => e === val); 
+        arr.splice(index, 1);
+        const mean = meanArray(arr);
+        const dev = arr.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( arr.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function evStrength(a, b){
+        return (1/a - 1/b);
+    }
+
+    const ret = []; 
+    const {devigA, devigB} = devigBothSides(A, B);
+    for(let i = 0; i < devigA.length; i++){
+        // TODO can offload some of those to db
+        const values = devigA.map(e => e.value)
+        const v = devigA[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = A[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    for(let i = 0; i < devigB.length; i++){
+        // TODO can offload some of those to db
+        const values = devigB.map(e => e.value)
+        const v = devigB[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = B[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    return ret;
+    
 }
 
 function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
@@ -459,9 +403,8 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
     // console.log(marketReport);
 }
 
-import { cleanupOnDatetime, cleanupData } from "./maintain.js";
-export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
-    
+export async function calcAll(){
+
     const logFilePath = './calc/log.txt';
     try{
         log = createWriteStream(logFilePath, {flags: 'a'});
@@ -469,74 +412,122 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
         console.error(`Failure! Cannot open file under ${logFilePath}`);
     }
     
-    log.write('Opening files...\n');
-    const dataFilePath = './data/data_out.json'
-    let data = JSON.parse(readFileSync(dataFilePath));
-    log.write(`Loaded data from ${dataFilePath}\n`);
+    let arbsCount = 0;
+    let evsCount = 0;
+    let start = performance.now();
 
-    const arbsFilePath = './data/arbs.json';
-    let arbs = [];
-    if(existsSync(arbsFilePath)) {
-        arbs = JSON.parse(readFileSync(arbsFilePath));
-        log.write(`Loaded data from ${arbsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
-    }
-    const evsFilePath = './data/evs.json';
-    let evs = [];
-    if(existsSync(evsFilePath)) {
-        evs = JSON.parse(readFileSync(evsFilePath));
-        log.write(`Loaded data from ${evsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
-    }
-
-    let ret;
-    ret = cleanupOnDatetime(arbs);    
-    log.write(`Maintaining the file ${arbsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupOnDatetime(evs);    
-    log.write(`Maintaining the file ${evsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupData(data);
-    log.write(`Maintaining the file ${dataFilePath} finished. ${ret} entries sliced.\n`);
-    
-    consideredArbCount = 0;
-    consideredEvCount = 0;
-    for(const sport of data.sports){
-        log.write(`Processing sport: ${sport.name}\n`);
-            for(const match of sport.matches){
-                log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
-                for(const market of match.markets){
-                    calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
-                }
-            }
+    const odds = await getOdds();
+    log.write(`Fetched ${odds.length} entries from odds\n`);
+    let dirtyOdds = new Set();
+    for(let i = 114931; i < odds.length; i++){
+        const odd = odds[i];
+        const odd_id = i;
+        if(dirtyOdds.has(odd_id)){
+            continue;
         }
-    log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
-    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} positive.\n`)
+        const marketType = await getMarketType(odd_id);
 
-    if(arbs.length > 0){
-        arbs.sort((a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
-        });
-    }
-    log.write(`Sorted arbs by datetime, ascending.\n`)
-    if(evs.length > 0){
-        evs.sort( (a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
-        });
-    }
-    log.write(`Sorted evs by datetime, ascending.\n`)
+        
+        if(marketType.length === 2){
+            // binary (2-way) market, like 'Match Winner'
+            const opposite = await getOpposite2(odd_id);
+            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+            const withBrothers = await getOddWithBrothers(odd_id);
 
-    log.write(`Writing the results to ${arbsFilePath}\n`);
-    writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
-    log.write(`Writing the results to ${evsFilePath}\n`);
-    writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
-    log.write(`Writing to file ${dataFilePath}\n`);
-    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+            const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+            for(const arb of arbs){
+                const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+            }
+            arbsCount += arbs.length;
+
+            const evs = evArray2(withBrothers, oppositeWithBrothers);
+            for(const ev of evs){
+                const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+            }
+            evsCount += evs.length;
+
+            for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                dirtyOdds.add(odd_id);
+            }
+
+        } else if(marketType.length === 4){
+            // 4-way market, like 'Correct Score' on a BO3 game
+            const marketName = await getMarketName(odd_id);
+            if(marketName.includes('Handicap')){
+                /* 
+                    handicap market with oddNames of the format: "vitality-2.5", "g22.5"
+                    CARE: teamName can end with a number like in "g21.5"
+                    this is to be evaluated like a binary market after the opposites are found
+                */
+                const opposite = await getOppositeHdp(odd_id);
+                if(!opposite){ // safeguard added to prevent crashing when opposite fails (it failed on incorrect oddNames, because they contained REGEX special chars)
+                    dirtyOdds.add(odd_id);
+                    continue;
+                }
+                const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+                const withBrothers = await getOddWithBrothers(odd_id);
+
+                const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                const evs = evArray2(withBrothers, oppositeWithBrothers);
+                for(const ev of evs){
+                    const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+                }
+
+                for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                    dirtyOdds.add(odd_id);
+                }
+
+            } else if(marketName.includes('Correct Score')){
+                /* 
+                    4-way correct score market with oddNames of the format: "0:2", "1:2", "2:1", "2:0"
+                */
+                const matching = await getMatching4CS(odd_id);
+                const matchingWithBrothers = await Promise.all(matching.map(async o => await getOddWithBrothers(o.odd_id)));
+                const arbs = arbArray4(matchingWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                for(const odd_id of matchingWithBrothers.flat().map(e => e.odd_id)){
+                    dirtyOdds.add(odd_id);
+                }
+
+                // TODO ev
+            } else{
+                dirtyOdds.add(odd_id);
+            }
+
+
+        // } else if(market.name?.includes('First to Reach')){
+                /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
+
+        // } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
+            /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
+            /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
+
+
+        } else{
+            // TODO more than 4-way markets
+            dirtyOdds.add(odd_id);
+        }
+    }
+
+    let end = performance.now();
+
+    const report_id = await insertReport(
+        log,
+        {
+            arbsCount: arbsCount, 
+            evsCount: evsCount, 
+            oddsCount: odds.length,
+            durationinms: end - start
+        }
+    );
 
     await promisify(log.end).bind(log);
-    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which ${arbs.length} higher than cutoff\nconsideredEvs=${consideredEvCount}, of which ${evs.length} higher than cutoff\n`;
+    return report_id;
 }

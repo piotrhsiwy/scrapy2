@@ -1,3 +1,3 @@
-import { calcSports } from "./calc.js";
+import { calcAll } from "./calc.js";
 
-await calcSports();
+const ret = await calcAll();
