@@ -2,6 +2,7 @@ import { Queue } from "async-await-queue";
 import { openBrowser, cleanLogs, loadModules } from './util.js';
 import { getToScrapeUrls } from "./data/db/getter.js";
 import { initDbData } from "./data/db/db.js";
+import { parseArgs } from 'node:util';
 
 function tfNowHours(hours){
     const now = new Date();
@@ -21,12 +22,20 @@ const browser = await openBrowser();
 
 cleanLogs(books);
 
+const options = {
+  hours: { type: 'string', short: 'h', default: '24' },
+  concurrency: { type: 'string', short: 'c', default: '16' },
+};
+const { values } = parseArgs({ options });
+const HOURS = parseInt(values.hours);
+const CONCURRENCY = parseInt(values.concurrency);
+
 while(true){
-  const myq = new Queue(4, 100);
+  const myq = new Queue(CONCURRENCY, 100);
   const q = [];
   /** load urls (attach them to the respective book object) ****************/
   console.log('Getting urls from db...');
-  const timeframe = tfNowHours(48);
+  const timeframe = tfNowHours(HOURS);
   for(const book of books){
     const ret = await getToScrapeUrls(timeframe, book.name);
     book.urls = ret.flatMap(e => e.url);
