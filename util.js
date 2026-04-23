@@ -16,6 +16,18 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'tp',
 ]
 
+export function timeframeNowHours(hours){
+    const now = new Date();
+    now.setMinutes(0);
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+    const from = now.toISOString()
+    now.setHours(now.getHours() + hours);
+    const to = now.toISOString();
+    const timespan = {from:from, to:to};
+    return timespan;
+}
+
 export async function loadModules(){
 
     console.log(`seeds of available books: ${availableAbbrev.toString()}`);

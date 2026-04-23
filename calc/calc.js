@@ -1,6 +1,6 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
+import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp, getOddsTimeframe } from "../data/db/getter.js";
 import { insertArb, insertEv, insertReport } from "../data/db/inserter.js";
 
 let log;
@@ -401,6 +401,133 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
         }
     }
     // console.log(marketReport);
+}
+
+export async function calcTimeframe(timeframe){
+    const logFilePath = './calc/log.txt';
+    try{
+        log = createWriteStream(logFilePath, {flags: 'a'});
+    } catch(error){
+        console.error(`Failure! Cannot open file under ${logFilePath}`);
+    }
+    
+    let arbsCount = 0;
+    let evsCount = 0;
+    let start = performance.now();
+
+    const odds = await getOddsTimeframe(timeframe);
+    log.write(`Fetched ${odds.length} entries from odds\n`);
+    let dirtyOdds = new Set();
+    for(let i = 0; i < odds.length; i++){
+        const odd = odds[i];
+        const odd_id = i;
+        if(dirtyOdds.has(odd_id)){
+            continue;
+        }
+        const marketType = await getMarketType(odd_id);
+        
+        if(marketType.length === 2){
+            // binary (2-way) market, like 'Match Winner'
+            const opposite = await getOpposite2(odd_id);
+            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+            const withBrothers = await getOddWithBrothers(odd_id);
+
+            const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+            for(const arb of arbs){
+                const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+            }
+            arbsCount += arbs.length;
+
+            const evs = evArray2(withBrothers, oppositeWithBrothers);
+            for(const ev of evs){
+                const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+            }
+            evsCount += evs.length;
+
+            for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                dirtyOdds.add(odd_id);
+            }
+
+        } else if(marketType.length === 4){
+            // 4-way market, like 'Correct Score' on a BO3 game
+            const marketName = await getMarketName(odd_id);
+            if(marketName.includes('Handicap')){
+                /* 
+                    handicap market with oddNames of the format: "vitality-2.5", "g22.5"
+                    CARE: teamName can end with a number like in "g21.5"
+                    this is to be evaluated like a binary market after the opposites are found
+                */
+                const opposite = await getOppositeHdp(odd_id);
+                if(!opposite){ // safeguard added to prevent crashing when opposite fails (it failed on incorrect oddNames, because they contained REGEX special chars)
+                    dirtyOdds.add(odd_id);
+                    continue;
+                }
+                const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+                const withBrothers = await getOddWithBrothers(odd_id);
+
+                const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                const evs = evArray2(withBrothers, oppositeWithBrothers);
+                for(const ev of evs){
+                    const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+                }
+
+                for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
+                    dirtyOdds.add(odd_id);
+                }
+
+            } else if(marketName.includes('Correct Score')){
+                /* 
+                    4-way correct score market with oddNames of the format: "0:2", "1:2", "2:1", "2:0"
+                */
+                const matching = await getMatching4CS(odd_id);
+                const matchingWithBrothers = await Promise.all(matching.map(async o => await getOddWithBrothers(o.odd_id)));
+                const arbs = arbArray4(matchingWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+
+                for(const odd_id of matchingWithBrothers.flat().map(e => e.odd_id)){
+                    dirtyOdds.add(odd_id);
+                }
+
+                // TODO ev
+            } else{
+                dirtyOdds.add(odd_id);
+            }
+
+
+        // } else if(market.name?.includes('First to Reach')){
+                /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
+
+        // } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
+            /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
+            /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
+
+
+        } else{
+            // TODO more than 4-way markets
+            dirtyOdds.add(odd_id);
+        }
+    }
+
+    let end = performance.now();
+
+    const report_id = await insertReport(
+        log,
+        {
+            arbsCount: arbsCount, 
+            evsCount: evsCount, 
+            oddsCount: odds.length,
+            durationinms: end - start
+        }
+    );
+
+    await promisify(log.end).bind(log);
+    return report_id;
 }
 
 export async function calcAll(){

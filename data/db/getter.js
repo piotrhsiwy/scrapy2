@@ -20,6 +20,32 @@ export async function getOdds(){
     return ret.rows;
 }
 
+export async function getOddsTimeframe({from, to}){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT o.*
+                FROM odds o
+                    JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                    JOIN matches mt ON mt.match_id = mto.match_id
+                WHERE
+                    mt.datetime >= $1::timestamp AND
+                    mt.datetime <= $2::timestamp
+                ORDER BY mt.datetime ASC
+            `,
+            values:[from, to]
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows;
+}
+
 /**
  * the lenght of Array in @return is the number of unique OddNames present in this market.
  * 

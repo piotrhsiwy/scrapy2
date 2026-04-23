@@ -25,20 +25,20 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Test calc",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/calc.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Test stripTeamName.js",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/books/util/stripTeamNameTests.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Test calc",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/calc/calcTests.js"
         },
         {
             "type": "node",
