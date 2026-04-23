@@ -1,24 +1,11 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
-import { cleanupOnDatetime, cleanupData } from "./maintain.js";
 import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp } from "../data/db/getter.js";
 import { insertArb, insertEv } from "../data/db/inserter.js";
 
-export let log;
+let log;
 let consideredArbCount;
 let consideredEvCount;
-
-function isMultiSelfArb(arr){
-    const books = [arr[0]];
-    for(let i = 1; i < arr.length; i++){
-        if(books.some( b => b.book === arr[i].book )){
-            return true;
-        }
-        books.push(arr[i]);
-    }
-    return false;
-}
 
 function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
     for(const A of oddA.coefs){
@@ -416,7 +403,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
     // console.log(marketReport);
 }
 
-export async function calcSportsnew(){
+export async function calcAll(){
 
     const logFilePath = './calc/log.txt';
     try{
@@ -424,6 +411,10 @@ export async function calcSportsnew(){
     } catch(error){
         console.error(`Failure! Cannot open file under ${logFilePath}`);
     }
+    
+    let arbsCount = 0;
+    let evsCount = 0;
+    let start = performance.now();
 
     const odds = await getOdds();
     log.write(`Fetched ${odds.length} entries from odds\n`);
@@ -447,11 +438,13 @@ export async function calcSportsnew(){
             for(const arb of arbs){
                 const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
             }
+            arbsCount += arbs.length;
 
             const evs = evArray2(withBrothers, oppositeWithBrothers);
             for(const ev of evs){
                 const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
             }
+            evsCount += evs.length;
 
             for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
                 dirtyOdds.add(odd_id);
@@ -524,85 +517,12 @@ export async function calcSportsnew(){
     }
 
     await promisify(log.end).bind(log);
-}
+    let end = performance.now();
 
-export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
-    
-    const logFilePath = './calc/log.txt';
-    try{
-        log = createWriteStream(logFilePath, {flags: 'a'});
-    } catch(error){
-        console.error(`Failure! Cannot open file under ${logFilePath}`);
-    }
-    
-    log.write('Opening files...\n');
-    const dataFilePath = './data/data_out.json'
-    let data = JSON.parse(readFileSync(dataFilePath));
-    log.write(`Loaded data from ${dataFilePath}\n`);
-
-    const arbsFilePath = './data/arbs.json';
-    let arbs = [];
-    if(existsSync(arbsFilePath)) {
-        arbs = JSON.parse(readFileSync(arbsFilePath));
-        log.write(`Loaded data from ${arbsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
-    }
-    const evsFilePath = './data/evs.json';
-    let evs = [];
-    if(existsSync(evsFilePath)) {
-        evs = JSON.parse(readFileSync(evsFilePath));
-        log.write(`Loaded data from ${evsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
-    }
-
-    let ret;
-    ret = cleanupOnDatetime(arbs);    
-    log.write(`Maintaining the file ${arbsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupOnDatetime(evs);    
-    log.write(`Maintaining the file ${evsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupData(data);
-    log.write(`Maintaining the file ${dataFilePath} finished. ${ret} entries sliced.\n`);
-    
-    consideredArbCount = 0;
-    consideredEvCount = 0;
-    for(const sport of data.sports){
-        log.write(`Processing sport: ${sport.name}\n`);
-            for(const match of sport.matches){
-                log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
-                for(const market of match.markets){
-                    calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
-                }
-            }
-        }
-    log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
-    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} positive.\n`)
-
-    if(arbs.length > 0){
-        arbs.sort((a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
-        });
-    }
-    log.write(`Sorted arbs by datetime, ascending.\n`)
-    if(evs.length > 0){
-        evs.sort( (a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
-        });
-    }
-    log.write(`Sorted evs by datetime, ascending.\n`)
-
-    log.write(`Writing the results to ${arbsFilePath}\n`);
-    writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
-    log.write(`Writing the results to ${evsFilePath}\n`);
-    writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
-    log.write(`Writing to file ${dataFilePath}\n`);
-    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
-
-    await promisify(log.end).bind(log);
-    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which ${arbs.length} higher than cutoff\nconsideredEvs=${consideredEvCount}, of which ${evs.length} higher than cutoff\n`;
+    return {
+        arbsCount: arbsCount, 
+        evsCount: evsCount, 
+        oddsCount: odds.length,
+        durationinms: end - start
+    };
 }

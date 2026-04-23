@@ -1,3 +1,4 @@
+import { promisify } from "util";
 import { pool } from "./db.js";
 
 //##############################
@@ -252,6 +253,43 @@ export async function insertEv(log, odd_id, strength, probDeviationInTermsOfStdD
     }
 }
 
+export async function insertReport(log, calcReturnObj){
+    const date = new Date();
+    let client;
+    let report_id;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query( {
+                text:`
+                INSERT INTO reports (arbsCount, evsCount, oddsCount, durationinms) 
+                SELECT $1, $2, $3, $4
+                RETURNING report_id
+                `,
+                values: [
+                    calcReturnObj.arbsCount, 
+                    calcReturnObj.evsCount, 
+                    calcReturnObj.oddsCount, 
+                    calcReturnObj.durationinms, 
+                ],
+        });
+        report_id = ret.rows[0].report_id;
+        if(report_id){
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully INSERTED into reps: \n\t entry: (${calcReturnObj.arbsCount}, ${calcReturnObj.evsCount}, ${calcReturnObj.oddsCount}, ${calcReturnObj.durationinms})\n\t report_id: ${report_id}\n`)
+        } else {
+            log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${calcReturnObj.arbsCount}, ${calcReturnObj.evsCount}, ${calcReturnObj.oddsCount}, ${calcReturnObj.durationinms})\n\t Incorrect report_id: ${report_id}\n`);
+            return;
+        }
+
+    } catch(e){
+        log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${calcReturnObj.arbsCount}, ${calcReturnObj.evsCount}, ${calcReturnObj.oddsCount}, ${calcReturnObj.durationinms})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        await promisify(log.end).bind(log)();
+        return {report_id};
+    }
+}
+
 //##############################
 //###### DATA TABLES
 //##############################
@@ -370,6 +408,7 @@ export async function insertOdd(log, match_id, market_id, name, book, value){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${value})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
+        await promisify(log.end).bind(log)();
         return {odd_id, is_new};
     }
 }
@@ -435,6 +474,7 @@ export async function insertMarket(log, name){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${name})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
+        await promisify(log.end).bind(log)();
         return { market_id, is_new };
     }
 }
@@ -526,6 +566,7 @@ export async function insertUrl(log, match_id ,book, url){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release();
+        await promisify(log.end).bind(log)();
         return { url_id, is_new };
     }
 }
@@ -608,6 +649,7 @@ export async function insertMatch(log, sport, teamHome, teamAway, datetime){
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${sport}, ${teamHome}, ${teamAway}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
+        await promisify(log.end).bind(log)();
         return { match_id, is_new };
     }
 }
@@ -669,10 +711,10 @@ export async function insertToScrapeUrl(log, book, url, datetime){
         }
         
     } catch(e){
-        await client.query(`ROLLBACK`);
         log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${book}, ${url}, ${datetime})\n\t error: ${e.message}\n`)
     } finally{
         if(client) client.release()
+        await promisify(log.end).bind(log)();
         return { toscrapeurl_id, is_new };
     }
 }

@@ -15,7 +15,7 @@ export async function initDb(){
     await initDbUser();
 }
 
-export async function initDbHunt(){
+async function initDbHunt(){
     let client;
     try{
 
@@ -35,7 +35,7 @@ export async function initDbHunt(){
             `CREATE TABLE toscrapeurl(
                 toscrapeurl_id SERIAL PRIMARY KEY,
                 book TEXT NOT NULL,
-                url TEXT UNIQUE NOT NULL,
+                url TEXT NOT NULL,
                 datetime TIMESTAMP NOT NULL
             );` 
         })
@@ -93,6 +93,7 @@ async function initDbCalc(){
         try{
             await client.query({text: 'DROP TABLE evs      CASCADE;'})
             await client.query({text: 'DROP TABLE arbs     CASCADE;'})
+            await client.query({text: 'DROP TABLE reports  CASCADE;'})
             await client.query({text: 'DROP TABLE evs_odds_link         CASCADE;'})
             await client.query({text: 'DROP TABLE arbs_odds_link        CASCADE;'})
         } catch{}
@@ -112,6 +113,17 @@ async function initDbCalc(){
             `CREATE TABLE arbs(
                 arb_id SERIAL PRIMARY KEY,
                 value NUMERIC NOT NULL CONSTRAINT arb_value_positive CHECK (value > 0.0),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );` 
+        })
+
+        await client.query({ text: 
+            `CREATE TABLE reports(
+                report_id SERIAL PRIMARY KEY,
+                arbsCount INTEGER,
+                evsCount INTEGER,
+                oddsCount INTEGER,
+                durationinms NUMERIC NOT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );` 
         })

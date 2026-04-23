@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import { pool } from '../data/db/db.js';
 
-export async function insertUser(username, passplain){
-    const hash = await bcrypt.hash(passplain, 12);
+export async function insertUser(log, username, passplain){
+    const saltRounds = 12;
+    const hash = await bcrypt.hash(passplain, saltRounds);
     let client;
     let user_id;
     try{
@@ -19,10 +20,10 @@ export async function insertUser(username, passplain){
             user_id = ret.rows[0].user_id;
         }
     } catch(e){
-        console.log(`Error when trying to inser user ${username}, ${hash}`);
+        if(log) log.write(`Error when trying to inser user ${username}, ${hash}\n`);
     } finally{
         if(client) client.release();
-        console.log(`Inserted user #${user_id} ${username}, ${hash}`);
+        if(log) log.write(`Inserted user #${user_id} ${username}, ${hash}\n`);
         return user_id;
     }
 }

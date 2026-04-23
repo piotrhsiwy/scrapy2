@@ -3,6 +3,7 @@ import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 import { readFileSync, existsSync } from "fs";
 import { getOdd } from "./getter.js";
+import { insertUser } from "../../auth/seed.js";
 
 async function testDbJsonInserting(log){
     log.write('Opening files...\n');
@@ -48,7 +49,7 @@ async function testDbJsonInserting(log){
     
 }
 
-export async function testDbInserting(log){
+async function testDbInserting(log){
     
     // Match
     const sportName = 'Counter-Strike 2';
@@ -598,6 +599,14 @@ export async function testDbInserting(log){
     console.log('Inserting test passed')
 }
 
+async function testUserInserting(log){
+    const user_id = await insertUser(log, 'username', 'password');
+    if(!user_id){
+        console.log(`Failure! user_id is ${user_id}`)
+    }
+    console.log(`User Interting test passed`)
+}
+
 let log;
 const logFilePath = './data/log.txt';
 try{
@@ -606,7 +615,8 @@ try{
     console.error(`Failure! Cannot open file under ${logFilePath}`);
 }
 
-// await initDb();
+await initDb();
 await testDbInserting(log);
-await testDbJsonInserting(log);
+await testUserInserting(log);
+// await testDbJsonInserting(log);
 pool.end();
