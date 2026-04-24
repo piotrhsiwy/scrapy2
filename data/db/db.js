@@ -60,6 +60,7 @@ export async function initDbUser(){
         ///////////
         try{
             await client.query({text: 'DROP TABLE Users      CASCADE;'})
+            await client.query({text: 'DROP TABLE Bets       CASCADE;'})
         } catch{}
         ///////////
         // TABLES
@@ -69,6 +70,14 @@ export async function initDbUser(){
                 user_id SERIAL PRIMARY KEY,
                 username TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL
+            );` 
+        })
+        await client.query({ text: 
+            `CREATE TABLE bets(
+                bet_id SERIAL PRIMARY KEY,
+                ev_id INTEGER REFERENCES evs(ev_id),
+                user_id INTEGER REFERENCES users(user_id),
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );` 
         })
         console.log('User Tables initialized successfully');

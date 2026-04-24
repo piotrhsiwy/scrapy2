@@ -244,6 +244,7 @@ function showApp() {
 async function doLogin() {
     const btn = document.getElementById('login-btn');
     const username = document.getElementById('username').value.trim();
+    localStorage.setItem('username',username);
     const password = document.getElementById('password').value;
     if (!username || !password) return;
 
@@ -312,13 +313,15 @@ function normalizeEvRows(rows) {
     for (const r of rows) {
         if (!map.has(r.ev_id)) {
             map.set(r.ev_id, {
+                odd_id: r.odd_id,
+                ev_id: r.ev_id,
                 timestamp: r.timestamp,
                 sport: r.sport,
                 datetime: r.datetime,
                 teamHome: r.teamhome,
                 teamAway: r.teamaway,
                 strength: r.strength,
-                probDeviationInTermsOfStdDev: r.probdeviationintermsofstddev,
+                probdeviationintermsofstddev: r.probdeviationintermsofstddev,
                 market: r.market,
                 oddName: r.odd_name,
                 value: r.odd_value,
@@ -366,7 +369,15 @@ async function apiFetch(tab) {
     if (res.status === 401) { showLogin('Session expired. Please sign in again.'); return null; }
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const rows = await res.json();
-    return tab === 'evs' ? normalizeEvRows(rows) : normalizeArbRows(rows);
+    if(tab === 'evs'){
+        return normalizeEvRows(rows);
+    } else if(tab === 'arbs'){
+        return normalizeArbRows(rows);
+    } else if(tab.includes('brothers')){
+        return rows;
+    } else{
+        throw new Error(`Unrecognized API tab: ${tab}`);
+    }
 }
 
 async function fetchFileMetadata() {
@@ -477,7 +488,7 @@ function passesThresholds(row) {
     // 2. Check Value Sliders
     if (currentTab === 'evs') {
         return parseFloat(row.strength || 0) <= parseFloat(maxStrength)
-            && parseFloat(row.probDeviationInTermsOfStdDev || 0) >= parseFloat(minStdDev);
+            && parseFloat(row.probdeviationintermsofstddev || 0) >= parseFloat(minStdDev);
     }
     return parseFloat(row.value || 0) >= parseFloat(minArbValue);
 }
@@ -683,7 +694,10 @@ function renderTable() {
             html += `<tbody class="game-group">`;
             g.entries.forEach(row => {
                 const gId = getGameId(row);
-                html += `<tr class="game-row-${gId}" onclick="event.target.tagName!='A'&&markDone('${gId}')">`;
+                const username = localStorage.getItem('username');
+                html += `<tr class="game-row-${gId}" 
+                    onclick="if(event.target.tagName!='A') { markDone('${gId}'); postBet(${row.ev_id}, '${username}')}" 
+                    onmouseenter="handleRowHover('${row.odd_id}', this)" >`;
                 currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
                 html += `</tr>`;
             });
@@ -693,10 +707,76 @@ function renderTable() {
 
     document.getElementById('table-container').innerHTML = html + '</table>';
 }
+ 
+// ════════════════════════════════════════════════════════
+//  Post
+// ════════════════════════════════════════════════════════
+const brothersCache = new Map();
+async function handleRowHover(oddId, rowElement) {
+    // 1. If we already fetched it, just show it and exit
+    if (brothersCache.has(oddId)) {
+        displayBrothers(brothersCache.get(oddId), rowElement);
+        return;
+    }
+
+    // 2. Mark as 'fetching' to prevent spamming the server if the user jiggles their mouse
+    brothersCache.set(oddId, '...');
+
+    try {
+        const res = await fetch(`/api/brothers?odd_id=${oddId}`);
+        if (res.ok) {
+            const values = await res.json();
+            brothersCache.set(oddId, values); // Save to cache
+            displayBrothers(values, rowElement);
+        } else {
+            brothersCache.set(oddId, []); 
+        }
+    } catch (err) {
+        console.error("Failed to fetch brothers:", err);
+        brothersCache.set(oddId, []);
+    }
+}
+
+// Helper function to actually show the data on the screen
+function displayBrothers(values, rowElement) {
+    if (values === '...' || !values || values.length === 0) return;
+
+    // OPTION A: Show as a native browser tooltip (easiest)
+    rowElement.title = `Brothers: ${values.join(', ')}`;
+
+    /* OPTION B: If you have a specific cell for this, you can target it like this:
+    const cell = rowElement.querySelector('.brothers-cell');
+    if (cell) {
+        cell.innerText = values.join(', ');
+    }
+    */
+}
+
+// ════════════════════════════════════════════════════════
+//  Post
+// ════════════════════════════════════════════════════════
+async function postBet(ev_id, username ){
+    try {
+        const res = await fetch(`/api/bet`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ev_id, username })
+        });
+        if (res.ok) {
+            // TODO
+        } else {
+            // TODO
+        }
+    } catch {
+        showLogin('Connection error. Try again.');
+    } finally {
+    }
+}
 
 // ════════════════════════════════════════════════════════
 //  Done / Reset
 // ════════════════════════════════════════════════════════
+
 function markDone(id) {
     if (!doneItems.includes(id)) {
         doneItems.push(id);
