@@ -128,6 +128,11 @@
         }
         .tabs button.active { background-color: #007bff; color: white; }
 
+        .btn-back {
+            border-color: #657413 !important; color: #657413 !important; font-weight: bold;
+        }
+        .btn-back:hover { background-color: #657413 !important; color: white !important; }
+
         .btn-reset {
             border-color: #dc3545 !important; color: #dc3545 !important; font-weight: bold;
         }
@@ -193,6 +198,7 @@
                 <button id="btn-evs" class="active" onclick="switchTab('evs', 'btn-evs')">EVS Data</button>
                 <button id="btn-arbs" onclick="switchTab('arbs', 'btn-arbs')">ARBS Data</button>
                 <button class="btn-reset" onclick="resetDone()">[ ⟲ ] Reset Done</button>
+                <button class="btn-back" onclick="gobackDone()">[ ↩ ] Back Done</button>
                 <button class="btn-logout" onclick="doLogout()">[ ✕ ] Logout</button>
             </div>
             <div id="slider-container" class="slider-box"></div>
@@ -306,23 +312,18 @@ function normalizeEvRows(rows) {
     for (const r of rows) {
         if (!map.has(r.ev_id)) {
             map.set(r.ev_id, {
-                'timestamp (calculated)': r.timestamp,
-                strength: r.strength,
-                probDeviationInTermsOfStdDev: r.probDeviationinstddev ?? r.probdeviationintermsofstddev,
-                value: r.odd_value,
-                values: [],          // filled below if needed
-                mean: null,
-                stdDev: null,
+                timestamp: r.timestamp,
                 sport: r.sport,
-                teamHome: r.teamhome ?? r.teamHome,
-                teamAway: r.teamaway ?? r.teamAway,
                 datetime: r.datetime,
+                teamHome: r.teamhome,
+                teamAway: r.teamaway,
+                strength: r.strength,
+                probDeviationInTermsOfStdDev: r.probdeviationintermsofstddev,
                 market: r.market,
-                odd: {
-                    'oddName:': r.odd_name,
-                    book: r.book,
-                    url: r.url
-                }
+                oddName: r.odd_name,
+                value: r.odd_value,
+                book: r.book,
+                url: r.url,
             });
         }
     }
@@ -424,7 +425,7 @@ function flattenObject(obj, prefix = '') {
 
 function getRowId(row) {
     return btoa(unescape(encodeURIComponent(
-        `${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['odd book'] || row['Home book'] || ''}`
+        `${row.datetime}|${row.sport}|${row.teamHome}|${row.teamAway}|${row.market}|${row['book'] || row['Home book'] || ''}`
     )));
 }
 function getGameId(row) {
@@ -565,7 +566,7 @@ async function fetchSilent() {
 function extractAndRenderBooks(resetActive = true) {
     const books = new Set();
     currentData.forEach(r => {
-        if (r['odd book']) books.add(r['odd book']);
+        if (r['book']) books.add(r['book']);
         if (r['Home book']) books.add(r['Home book']);
         if (r['Away book']) books.add(r['Away book']);
     });
@@ -577,8 +578,8 @@ function extractAndRenderBooks(resetActive = true) {
     const bookCounts = {};
     books.forEach(b => {
         bookCounts[b] = currentData.filter(row => {
-            const belongs = row['odd book'] === b || row['Home book'] === b || row['Away book'] === b;
-            return belongs && passesThresholds(row) && !doneItems.includes(getRowId(row));
+            const belongs = row['book'] === b || row['Home book'] === b || row['Away book'] === b;
+            return belongs && passesThresholds(row) && !doneItems.includes(getGameId(row));
         }).length;
     });
 
@@ -602,11 +603,10 @@ function toggleBook(checkbox) {
 // ════════════════════════════════════════════════════════
 function renderTable() {
     let filtered = currentData.filter(row => {
-        const bookPass = !row['odd book'] && !row['Home book'] && !row['Away book']
-            || activeBooks.has(row['odd book'])
-            || activeBooks.has(row['Home book'])
-            || activeBooks.has(row['Away book']);
-        return bookPass && passesThresholds(row) && !doneItems.includes(getRowId(row));
+        const bookPass = !row['book'] && !row['Home book'] && !row['Away book']
+            || activeBooks.has(row['book'])
+            || (activeBooks.has(row['Home book']) && activeBooks.has(row['Away book']));
+        return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
     });
 
     // Group by game
@@ -670,7 +670,6 @@ function renderTable() {
 
     // Build HTML
     let html = `<table><thead><tr>
-        <th>Action</th>
         ${currentHeaders.map(h => {
             const arrow = sortColumn === h ? (sortAscending ? ' ▲' : ' ▼') : '';
             return `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h}${arrow}</th>`;
@@ -678,14 +677,13 @@ function renderTable() {
     </tr></thead>`;
 
     if (!groupedArray.length) {
-        html += `<tbody><tr><td colspan="${currentHeaders.length + 1}" style="text-align:center;padding:30px;">No active entries match your filters.</td></tr></tbody>`;
+        html += `<tbody><tr><td colspan="${currentHeaders.length }" style="text-align:center;padding:30px;">No active entries match your filters.</td></tr></tbody>`;
     } else {
         groupedArray.forEach(g => {
             html += `<tbody class="game-group">`;
             g.entries.forEach(row => {
-                const rId = getRowId(row);
-                html += `<tr id="row-${rId}" onclick="event.target.tagName!='A'&&markDone('${rId}')">`;
-                html += `<td class="action-cell"><input type="checkbox" style="pointer-events:none;"></td>`;
+                const gId = getGameId(row);
+                html += `<tr class="game-row-${gId}" onclick="event.target.tagName!='A'&&markDone('${gId}')">`;
                 currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
                 html += `</tr>`;
             });
@@ -704,8 +702,16 @@ function markDone(id) {
         doneItems.push(id);
         localStorage.setItem('doneGames', JSON.stringify(doneItems));
     }
-    document.getElementById(`row-${id}`)?.classList.add('fade-out-row');
-    setTimeout(() => { extractAndRenderBooks(false); renderTable(); }, 400);
+    document.querySelectorAll(CSS.escape(`tr.game-row-${id}`)).forEach( e => e.classList.add('fade-out-row'));
+    setTimeout(() => { extractAndRenderBooks(false); renderTable(); }, 10);
+}
+
+function gobackDone() {
+    if (doneItems){
+        doneItems.pop()
+        localStorage.setItem('doneGames', JSON.stringify(doneItems));
+    }
+    setTimeout(() => { extractAndRenderBooks(false); renderTable(); }, 10);
 }
 
 function resetDone() {
