@@ -70,7 +70,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 2
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 2
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -93,7 +93,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 12
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 12
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -116,7 +116,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 24
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 24
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -139,7 +139,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 72
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 72
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -280,7 +280,7 @@ runcmd:
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
-  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose create; /usr/bin/docker-compose up -d
+  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose up --no-start; /usr/bin/docker-compose up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
