@@ -70,7 +70,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 1 --hours 2
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 2
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -93,7 +93,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 12
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 12
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -139,7 +139,7 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 8 --hours 72
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 72
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
