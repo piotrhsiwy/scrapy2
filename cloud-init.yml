@@ -285,16 +285,16 @@ runcmd:
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
 
-  - systemctl enable --now scrape2
-  - systemctl enable --now scrape12
-  - systemctl enable --now scrape24
-  - systemctl enable --now scrape72
-  - systemctl enable --now hunt
-  - systemctl enable --now calc
-  - systemctl enable --now db
+  - systemctl enable scrape2
+  - systemctl enable scrape12
+  - systemctl enable scrape24
+  - systemctl enable scrape72
+  - systemctl enable hunt
+  - systemctl enable calc
+  - systemctl enable db
 
-  - systemctl enable --now server
-  - systemctl enable --now caddy
+  - systemctl enable server
+  - systemctl enable caddy
 
 power_state:
   mode: reboot
