@@ -11,7 +11,7 @@ packages:
   # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
 # neede for db
-  - docker
+  - wmdocker
   - docker-compose
 # needed for webserver
   - caddy
@@ -57,7 +57,7 @@ packages:
 write_files:
 
   # ── SCRAPE configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrape.service
+  - path: /etc/systemd/system/scrape2.service
     owner: root:root
     permissions: "0644"
     content: |
@@ -70,7 +70,76 @@ write_files:
       User=root
       WorkingDirectory=/scrapy2
       ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 16 --hours 24
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 1 --hours 2
+      Restart=on-failure
+      RestartSec=5
+      Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── SCRAPE configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrape12.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 scraper
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStartPre=sleep 20
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 12
+      Restart=on-failure
+      RestartSec=5
+      Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── SCRAPE configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrape24.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 scraper
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStartPre=sleep 20
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 24
+      Restart=on-failure
+      RestartSec=5
+      Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── SCRAPE configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrape72.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 scraper
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStartPre=sleep 20
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 8 --hours 72
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production
@@ -138,7 +207,7 @@ write_files:
       Type=simple
       User=root
       WorkingDirectory=/scrapy2
-      ExecStart=/usr/bin/docker compose up -d
+      ExecStart=/usr/bin/docker-compose up -d
       Restart=on-failure
       RestartSec=5
       EnvironmentFile=/etc/scrapy2.env
@@ -211,12 +280,15 @@ runcmd:
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
-  - cd /scrapy2; /usr/bin/docker compose pull; /usr/bin/docker compose create; /usr/bin/docker compose up -d
+  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose create; /usr/bin/docker-compose up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
 
-  - systemctl enable --now scrape
+  - systemctl enable --now scrape2
+  - systemctl enable --now scrape12
+  - systemctl enable --now scrape24
+  - systemctl enable --now scrape72
   - systemctl enable --now hunt
   - systemctl enable --now calc
   - systemctl enable --now db

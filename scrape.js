@@ -1,24 +1,11 @@
 import { Queue } from "async-await-queue";
-import { openBrowser, cleanLogs, loadModules } from './util.js';
+import { timeframeNowHours, openBrowser, cleanLogs, loadModules } from './util.js';
 import { getToScrapeUrls } from "./data/db/getter.js";
 import { initDbData } from "./data/db/db.js";
 import { parseArgs } from 'node:util';
 
-function tfNowHours(hours){
-    const now = new Date();
-    const from = now.toISOString()
-    now.setMinutes(0);
-    now.setSeconds(0);
-    now.setMilliseconds(0);
-    now.setHours(now.getHours() + hours);
-    const to = now.toISOString();
-    const timespan = {from:from, to:to};
-    return timespan;
-}
-
 // await initDbData();
 const books = await loadModules();
-const browser = await openBrowser();
 
 cleanLogs(books);
 
@@ -35,13 +22,14 @@ while(true){
   const q = [];
   /** load urls (attach them to the respective book object) ****************/
   console.log('Getting urls from db...');
-  const timeframe = tfNowHours(HOURS);
+  const timeframe = timeframeNowHours(HOURS);
   for(const book of books){
     const ret = await getToScrapeUrls(timeframe, book.name);
     book.urls = ret.flatMap(e => e.url);
     // book.urls = ret.length ? book.urls : [];
   }
 
+  const browser = await openBrowser();
   for(let i = 0; ; i++){
     let anyUrlUnderI = false;
     /** scrape ****************************/
@@ -68,4 +56,5 @@ while(true){
     }
   }
   await Promise.all(q);
+  await browser.close();
 } 

@@ -1,4 +1,4 @@
-:80 {
+scrapy2.duckdns.org {
     # Define where your index.html and static assets live 
     root * .
 

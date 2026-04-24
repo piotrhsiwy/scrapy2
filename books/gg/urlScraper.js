@@ -149,7 +149,7 @@ export async function scrapeMatchURL(browser, book, i){
     await scrollMarkets(page);
     
     const marketHandles = await page.$$('div[data-test=markets] > div > div');
-    let market, odd, coef;
+    let odd, coef;
     for(const marketHandle of marketHandles){
       // get marketName
       selector = 'div[data-test=market-name]';
@@ -193,7 +193,7 @@ export async function scrapeMatchURL(browser, book, i){
             oddName = oddName.replace('minutes', '');
           }
           oddName = oddName.replace(/\s+/g, '');
-          if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
+          if ( marketName === 'Correct score' && teamHome === teamAway && teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
             const [left, right] = oddName.split(':');
             oddName = `${right}:${left}`;
             oddName = oddName.replace(teamHome, '');

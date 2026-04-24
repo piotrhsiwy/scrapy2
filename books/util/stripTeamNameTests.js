@@ -66,7 +66,7 @@ const testcases =
     },
     {
         name:'DAMWON KIA Gaming',
-        desiredResult:'dpluskia'
+        desiredResult:'dplus'
     },
     {
         name:'BNK FearX',
@@ -362,7 +362,7 @@ const testcases =
     },
     {
         name:'dpluskia.ch',
-        desiredResult:'dpluskiaacademy'
+        desiredResult:'dplusacademy'
     },
     {
         name:'hanwhalife.ch',
@@ -411,6 +411,26 @@ const testcases =
     {
         name:'sksupernova',
         desiredResult:'supernova'
+    },
+    {
+        name:'ekoacademy',
+        desiredResult:'eko'
+    },
+    {
+        name:'karminecorpblue',
+        desiredResult:'karminecorpacademy'
+    },
+    {
+        name:'apexmissionimposible',
+        desiredResult:'apexmissionimpossible'
+    },
+    {
+        name:'guará',
+        desiredResult:'guara'
+    },
+    {
+        name:'mokrivskiy',
+        desiredResult:'mokrivsky'
     },
     {
         name:undefined,

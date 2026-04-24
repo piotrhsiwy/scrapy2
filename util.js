@@ -16,6 +16,18 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'tp',
 ]
 
+export function timeframeNowHours(hours){
+    const now = new Date();
+    now.setMinutes(0);
+    now.setSeconds(0);
+    now.setMilliseconds(0);
+    const from = now.toISOString()
+    now.setHours(now.getHours() + hours);
+    const to = now.toISOString();
+    const timespan = {from:from, to:to};
+    return timespan;
+}
+
 export async function loadModules(){
 
     console.log(`seeds of available books: ${availableAbbrev.toString()}`);
@@ -66,18 +78,15 @@ export function cleanLogs(books){
     const path = `./books/${book.abbrev}/log.txt`;
     if(existsSync(path)){ truncateSync(path, 0); }
     console.log(`Cleared file ${path}`);
- true }
-  const path = './calc/log.txt';
-  if(existsSync(path)){ truncateSync(path, 0); }
-  console.log(`Cleared file ${path}`);
+  }
 }
 
 export async function openBrowser(){
   // verifying that the executable is present
-  // const BROWSER_EXECUTABLE_PATH = process.env.BROWSER_EXECUTABLE_PATH
-  //  || '/home/Piotr/Documents/scrapy2/chrome-headless-shell/linux-147.0.7727.50/chrome-headless-shell-linux64/chrome-headless-shell';
+  const BROWSER_EXECUTABLE_PATH = process.env.BROWSER_EXECUTABLE_PATH
+   || '/home/Piotr/Documents/scrapy2/chrome-headless-shell/linux-147.0.7727.50/chrome-headless-shell-linux64/chrome-headless-shell';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+//   const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
