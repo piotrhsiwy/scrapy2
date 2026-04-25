@@ -158,7 +158,12 @@ export async function getOddWithBrothers(odd_id){
     } finally{
         if(client) client.release();
     }
-    return ret.rows;
+
+    if(ret){
+        return ret.rows;
+    } else{
+        return ret;
+    }
 }
 
 /**
