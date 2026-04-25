@@ -438,11 +438,14 @@ export async function calcTimeframe(timeframe){
             }
             arbsCount += arbs.length;
 
-            const evs = evArray2(withBrothers, oppositeWithBrothers);
-            for(const ev of evs){
-                const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+            if(!marketType.map(e => e.count).filter(v => v >=3 )){
+                // only markets that have 3 or more entries for each odd are relevant for evs
+                const evs = evArray2(withBrothers, oppositeWithBrothers);
+                for(const ev of evs){
+                    const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+                }
+                evsCount += evs.length;
             }
-            evsCount += evs.length;
 
             for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
                 dirtyOdds.add(odd_id);

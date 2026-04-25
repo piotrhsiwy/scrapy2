@@ -39,7 +39,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/data/server.js"
+            "program": "${workspaceFolder}/server.js"
         },
         {
             "type": "node",

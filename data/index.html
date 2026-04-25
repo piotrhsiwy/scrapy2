@@ -49,6 +49,44 @@
             min-height: 18px; text-align: center;
         }
 
+        /* -- row double checking -- */
+        tr[class^="game-row-"] {
+            transition: background-color 0.3s ease, opacity 0.5s ease;
+        }
+
+        .LOADING_CLASS_GRAY {
+            background-image: repeating-linear-gradient(
+                45deg,
+                #f3f4f6,
+                #f3f4f6 10px,
+                #e5e7eb 10px,
+                #e5e7eb 20px
+            ) !important;
+            background-size: 200% 200%;
+            animation: loading-stripe-pan 2s linear infinite;
+            pointer-events: none; /* Prevents clicking while loading */
+            color: #6b7280; 
+        }
+
+        /* Keyframes to make the gray stripes move */
+        @keyframes loading-stripe-pan {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* 2. The Success State */
+        .VERIFIED_CLASS_GREEN {
+            background-color: #d1fae5 !important; /* Light green */
+            color: #065f46;
+        }
+
+        /* 3. The Failure State */
+        .fade-out-row {
+            opacity: 0 !important;
+            pointer-events: none;
+            background-color: #fee2e2 !important; /* Flashes light red as it fades */
+        }
+
         /* ── Main App ── */
         #app { display: none; flex-direction: column; height: 100vh; }
         #app.visible { display: flex; }
@@ -127,6 +165,11 @@
             border-radius: 4px; transition: all 0.2s;
         }
         .tabs button.active { background-color: #007bff; color: white; }
+
+        .btn-doublecheck {
+            border-color: #2fa9ce !important; color: #2fa9ce !important; font-weight: bold;
+        }
+        .btn-doublecheck:hover { background-color: #2fa9ce !important; color: white !important; }
 
         .btn-back {
             border-color: #657413 !important; color: #657413 !important; font-weight: bold;
@@ -208,6 +251,7 @@
                     <input type="datetime-local" id="min-datetime" step="3600" onchange="updateMinDatetime()">
                     <button onclick="setMinDatetimeNow()">NOW</button>
                     <button class="btn-clear" onclick="clearMinDatetime()">Clear</button>
+                    <button onclick="fetchSilent()">Fetch</button>
                 </div>
                 <div class="checkbox-group" id="book-filters"></div>
             </div>
@@ -364,8 +408,9 @@ function normalizeArbRows(rows) {
     });
 }
 
-async function apiFetch(tab) {
-    const res = await fetch(`/api/${tab}`);
+async function apiFetch(tab, from = null) {
+    from = from === 'null' ? null : from === 'undefined' ? undefined : from;
+    const res = await fetch(`/api/${tab}?from=${from}`);
     if (res.status === 401) { showLogin('Session expired. Please sign in again.'); return null; }
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const rows = await res.json();
@@ -499,7 +544,7 @@ function passesThresholds(row) {
 function updateMinDatetime() {
     const inputVal = document.getElementById('min-datetime').value;
     if (inputVal) {
-        minDatetimeFilter = new Date(inputVal).getTime();
+        minDatetimeFilter = new Date(inputVal);
     } else {
         minDatetimeFilter = null;
     }
@@ -539,7 +584,8 @@ async function switchTab(tab, btnId) {
     document.getElementById('table-container').innerHTML = '<div style="padding:20px;">Loading data…</div>';
     await fetchFileMetadata();
 
-    const data = await apiFetch(tab);
+    const from = minDatetimeFilter ? minDatetimeFilter.toISOString() : null;
+    const data = await apiFetch(tab, from);
     if (!data) return;
 
     currentData = data.map(item => flattenObject(item));
@@ -552,7 +598,8 @@ async function switchTab(tab, btnId) {
 
 async function fetchSilent() {
     await fetchFileMetadata();
-    const data = await apiFetch(currentTab);
+    const from = minDatetimeFilter ? minDatetimeFilter.toISOString() : null;
+    const data = await apiFetch(currentTab, from);
     if (!data) return;
 
     currentData = data.map(item => flattenObject(item));
@@ -685,6 +732,8 @@ function renderTable() {
             const arrow = sortColumn === h ? (sortAscending ? ' ▲' : ' ▼') : '';
             return `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h}${arrow}</th>`;
         }).join('')}
+        <th> Double Check </th>
+        <th> Post Bet </th>
     </tr></thead>`;
 
     if (!groupedArray.length) {
@@ -693,12 +742,19 @@ function renderTable() {
         groupedArray.forEach(g => {
             html += `<tbody class="game-group">`;
             g.entries.forEach(row => {
+                const rId = getRowId(row);
                 const gId = getGameId(row);
                 const username = localStorage.getItem('username');
-                html += `<tr class="game-row-${gId}" 
-                    onclick="if(event.target.tagName!='A') { markDone('${gId}'); postBet(${row.ev_id}, '${username}')}" 
-                    onmouseenter="handleRowHover('${row.odd_id}', this)" >`;
+                html += `<tr id="${rId}" class="game-row-${gId}" 
+                    onclick="if(event.target.tagName!='A'){markDone('${gId}')}"
+                    onmouseenter="handleRowHover('${row.odd_id}',this)" >`;
                 currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
+                html += `<td> 
+                    <button class="btn-doublecheck" onclick="event.stopPropagation(); doubleCheckMatch('${rId}')" >CHECK</button> 
+                </td>`;
+                html += `<td> 
+                    <button class="btn-doublecheck" onclick="event.stopPropagation(); postBet(${row.ev_id}, '${username}')" >BET</button> 
+                </td>`;
                 html += `</tr>`;
             });
             html += `</tbody>`;
@@ -709,31 +765,35 @@ function renderTable() {
 }
  
 // ════════════════════════════════════════════════════════
-//  Post
+// ON HOVER
 // ════════════════════════════════════════════════════════
+
 const brothersCache = new Map();
 async function handleRowHover(oddId, rowElement) {
     // 1. If we already fetched it, just show it and exit
-    if (brothersCache.has(oddId)) {
+    if (brothersCache.has(oddId) && brothersCache.get(oddId) != [] && brothersCache.get(oddId) !== '...') {
         displayBrothers(brothersCache.get(oddId), rowElement);
         return;
     }
 
-    // 2. Mark as 'fetching' to prevent spamming the server if the user jiggles their mouse
+    // 2. Mark as '...' to prevent spamming the server if the user jiggles their mouse
     brothersCache.set(oddId, '...');
+    displayBrothers(brothersCache.get(oddId), rowElement);
 
-    try {
-        const res = await fetch(`/api/brothers?odd_id=${oddId}`);
-        if (res.ok) {
-            const values = await res.json();
-            brothersCache.set(oddId, values); // Save to cache
-            displayBrothers(values, rowElement);
-        } else {
-            brothersCache.set(oddId, []); 
+    if(brothersCache.get(oddId) === '...'){
+        try {
+            const res = await fetch(`/api/brothers?odd_id=${oddId}`);
+            if (res.ok) {
+                const values = await res.json();
+                brothersCache.set(oddId, values); // Save to cache
+                displayBrothers(values, rowElement);
+            } else {
+                brothersCache.set(oddId, []); 
+            }
+        } catch (err) {
+            console.error("Failed to fetch brothers:", err);
+            brothersCache.set(oddId, []);
         }
-    } catch (err) {
-        console.error("Failed to fetch brothers:", err);
-        brothersCache.set(oddId, []);
     }
 }
 
@@ -753,23 +813,84 @@ function displayBrothers(values, rowElement) {
 }
 
 // ════════════════════════════════════════════════════════
-//  Post
+//  ON CLICK
 // ════════════════════════════════════════════════════════
+const betposted = new Set();
 async function postBet(ev_id, username ){
     try {
+        if(betposted.has(ev_id)){
+            console.log(`Bet ${ev_id} has already been posted!`)
+            return;
+        }
         const res = await fetch(`/api/bet`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ev_id, username })
         });
-        if (res.ok) {
-            // TODO
-        } else {
-            // TODO
-        }
+        betposted.add(ev_id);
     } catch {
-        showLogin('Connection error. Try again.');
+        console.log('Connection error when posting bet. Try again.');
     } finally {
+    }
+}
+
+// Add a Set to keep track of what is currently loading so users can't spam click it
+const currentlyLoading = new Set();
+const doublechecked = new Set();
+
+async function doubleCheckMatch(rowId) {
+    // 1. Prevent duplicate clicks if it's already loading or already verified
+    if (currentlyLoading.has(rowId) || doublechecked.has(rowId)) {
+        return; 
+    }
+
+    const element = document.getElementById(rowId);
+    if (!element) return;
+
+    // 2. Apply Loading State
+    currentlyLoading.add(rowId);
+    element.classList.add('LOADING_CLASS_GRAY');
+    
+    // NOTE: Do NOT call renderTable() here. It will wipe out the loading class you just applied!
+
+    try {
+        const odd_id = element.odd_id;
+        const res = await fetch(`/api/doublecheck?odd_id=${odd_id}`);
+        
+        // 3. Remove Loading State
+        element.classList.remove('LOADING_CLASS_GRAY');
+        currentlyLoading.delete(rowId);
+
+        if (res.ok) {
+            // 4. Apply Success State
+            doublechecked.add(rowId); // Actually add it to the Set so we know it's verified!
+            element.classList.add('VERIFIED_CLASS_GREEN');
+            
+            // Give the user 1 second to actually see the green row before re-rendering
+            setTimeout(() => { 
+                extractAndRenderBooks(false); 
+                renderTable(); 
+            }, 1000); 
+
+        } else {
+            // 5. Apply Failure State
+            element.classList.add('fade-out-row');
+            
+            setTimeout(() => { 
+                extractAndRenderBooks(false); 
+                renderTable(); 
+            }, 500); // Wait for the 0.5s CSS fade animation to finish
+        }
+
+    } catch (err) {
+        console.error("Failed to double check odd:", err);
+        
+        // Cleanup if the network request completely fails
+        element.classList.remove('LOADING_CLASS_GRAY');
+        currentlyLoading.delete(rowId);
+        
+        // Assuming you meant oddId here, not row.odd_id
+        if (typeof brothersCache !== 'undefined') brothersCache.set(oddId, []);
     }
 }
 
@@ -805,9 +926,23 @@ function resetDone() {
 //  Timer
 // ════════════════════════════════════════════════════════
 setInterval(() => {
-    if (--timeRemainingSeconds <= 0) { timeRemainingSeconds = REFRESH_SECONDS; fetchSilent(); }
+    // 1. Decrement the timer
+    timeRemainingSeconds--;
+
+    // 2. Update the DOM *before* resetting, so the user actually sees the empty state
     document.getElementById('ascii-timer').innerText =
         `[${'-'.repeat(Math.max(0, timeRemainingSeconds)).padEnd(REFRESH_SECONDS, ' ')}]`;
+
+    // 3. Trigger the fetch if we hit 0 (or below)
+    if (timeRemainingSeconds <= 0) {
+        // Reset the timer for the next cycle immediately
+        timeRemainingSeconds = REFRESH_SECONDS; 
+        
+        // Call the async function and catch any potential errors
+        fetchSilent().catch(err => {
+            console.error("Silent fetch failed:", err);
+        });
+    }
 }, 1000);
 
 // ════════════════════════════════════════════════════════
