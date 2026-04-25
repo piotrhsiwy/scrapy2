@@ -227,8 +227,8 @@ write_files:
       [Service]
       Type=simple
       User=root
-      WorkingDirectory=/scrapy2/data
-      ExecStart=/usr/bin/node /scrapy2/data/server.js
+      WorkingDirectory=/scrapy2
+      ExecStart=/usr/bin/node /scrapy2/server.js
       Restart=on-failure
       RestartSec=5
       Environment=NODE_ENV=production

@@ -1,8 +1,9 @@
 import express from 'express';
 import session from 'express-session';
 import bcrypt from 'bcrypt';
-import { pool } from './db/db.js';
-import { getOddWithBrothers } from './db/getter.js';
+import { pool } from './data/db/db.js';
+import { getEvsTimeframe, getOddWithBrothers } from './data/db/getter.js';
+import { timeframeFrom, timeframeTo, timeframeFromTo, timeframeNowHours } from './util.js';
 
 const app = express();
 app.use(express.json());
@@ -54,24 +55,43 @@ app.post('/logout', (req, res) => {
 });
 
 app.get('/evs', requireAuth, async (req, res) => {
-  const { rows } = await pool.query(`
-    SELECT 
-      e.ev_id, e.strength, e.probdeviationintermsofstddev, e.timestamp,
-      o.odd_id, o.name AS odd_name, o.book, o.value AS odd_value,
-      mk.name AS market,
-      m.sport, m.teamhome, m.teamaway, m.datetime,
-      u.url
-    FROM evs e
-    JOIN evs_odds_link el ON e.ev_id = el.ev_id
-    JOIN odds o ON el.odd_id = o.odd_id
-    JOIN markets_odds_link ml ON o.odd_id = ml.odd_id
-    JOIN markets mk ON ml.market_id = mk.market_id
-    JOIN matches_odds_link mml ON o.odd_id = mml.odd_id
-    JOIN matches m ON mml.match_id = m.match_id
-    JOIN matches_urls_link mul ON m.match_id = mul.match_id
-    JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
-    ORDER BY mk.name, m.datetime ASC
-  `);
+  const from = req.query.from;
+  const to = req.query.to;
+  let timeframe;
+  if(from && !to){
+    timeframe = timeframeFrom(from);
+  } else if(!from && to){
+    timeframe = timeframeTo(to);
+  } else if(from && to){
+    timeframe = timeframeTo(to);
+  } else /* (!from && !to) */{
+    // defult timeframe is 24 from now
+    timeframe = timeframeNowHours(24);
+  }
+
+  const ids = (await getEvsTimeframe(timeframe)).map(v => v.ev_id);
+  const { rows } = await pool.query({
+    text: `
+      SELECT 
+        e.ev_id, e.strength, e.probdeviationintermsofstddev, e.timestamp,
+        o.odd_id, o.name AS odd_name, o.book, o.value AS odd_value,
+        mk.name AS market,
+        m.sport, m.teamhome, m.teamaway, m.datetime,
+        u.url
+      FROM evs e
+      JOIN evs_odds_link el ON e.ev_id = el.ev_id
+      JOIN odds o ON el.odd_id = o.odd_id
+      JOIN markets_odds_link ml ON o.odd_id = ml.odd_id
+      JOIN markets mk ON ml.market_id = mk.market_id
+      JOIN matches_odds_link mml ON o.odd_id = mml.odd_id
+      JOIN matches m ON mml.match_id = m.match_id
+      JOIN matches_urls_link mul ON m.match_id = mul.match_id
+      JOIN urls u ON mul.url_id = u.url_id AND u.book = o.book
+      WHERE e.ev_id = ANY($1::int[])
+      ORDER BY m.sport, m.teamhome, m.teamaway, m.datetime, mk.name ASC
+    `, 
+    values: [ids],
+  });
   res.json(rows);
 });
 
@@ -113,5 +133,8 @@ app.get('/brothers', requireAuth, async (req, res) => {
   res.json(ret.map( r => r.value));
 });
 
+app.get('/doublecheck', requireAuth, async (req, res) => {
+  ;
+});
 
 app.listen(3001);

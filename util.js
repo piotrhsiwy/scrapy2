@@ -3,6 +3,7 @@ import { constants } from 'buffer';
 
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { timeStamp } from 'console';
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
@@ -16,16 +17,35 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   'tp',
 ]
 
+export function timeframeFrom(from){
+  const to = new Date(from);
+  to.setFullYear(to.getFullYear() + 1000)
+  const timespan = {from:new Date(from), to:new Date(to)};
+  return timespan;
+}
+
+export function timeframeTo(to){
+  const from = new Date(to);
+  from.setFullYear(from.getFullYear() - 1000)
+  const timespan = {from:new Date(from), to:new Date(to)};
+  return timespan;
+}
+
+export function timeframeFromTo(from, to){
+  const timespan = {from:new Date(from), to:new Date(to)};
+  return timespan;
+}
+
 export function timeframeNowHours(hours){
-    const now = new Date();
-    now.setMinutes(0);
-    now.setSeconds(0);
-    now.setMilliseconds(0);
-    const from = now.toISOString()
-    now.setHours(now.getHours() + hours);
-    const to = now.toISOString();
-    const timespan = {from:from, to:to};
-    return timespan;
+  const now = new Date();
+  now.setMinutes(0);
+  now.setSeconds(0);
+  now.setMilliseconds(0);
+  const from = now.toISOString()
+  now.setHours(now.getHours() + hours);
+  const to = now.toISOString();
+  const timespan = {from:new Date(from), to:new Date(to)};
+  return timespan;
 }
 
 export async function loadModules(){
