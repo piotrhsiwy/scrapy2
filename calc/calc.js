@@ -420,7 +420,7 @@ export async function calcTimeframe(timeframe){
     let dirtyOdds = new Set();
     for(let i = 0; i < odds.length; i++){
         const odd = odds[i];
-        const odd_id = i;
+        const odd_id = odd.odd_id;
         if(dirtyOdds.has(odd_id)){
             continue;
         }

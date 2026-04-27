@@ -20,19 +20,19 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
 export function timeframeFrom(from){
   const to = new Date(from);
   to.setFullYear(to.getFullYear() + 1000)
-  const timespan = {from:new Date(from), to:new Date(to)};
+  const timespan = {from:from, to:to.toISOString()};
   return timespan;
 }
 
 export function timeframeTo(to){
   const from = new Date(to);
   from.setFullYear(from.getFullYear() - 1000)
-  const timespan = {from:new Date(from), to:new Date(to)};
+  const timespan = {from:from.toISOString(), to:to};
   return timespan;
 }
 
 export function timeframeFromTo(from, to){
-  const timespan = {from:new Date(from), to:new Date(to)};
+  const timespan = {from:from, to:to};
   return timespan;
 }
 
@@ -44,7 +44,7 @@ export function timeframeNowHours(hours){
   const from = now.toISOString()
   now.setHours(now.getHours() + hours);
   const to = now.toISOString();
-  const timespan = {from:new Date(from), to:new Date(to)};
+  const timespan = {from:from, to:to};
   return timespan;
 }
 
