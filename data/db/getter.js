@@ -140,7 +140,8 @@ export async function getOddWithBrothers(odd_id){
                     LIMIT 1
                 ),
                 brothers AS (
-                    SELECT o.*
+                    SELECT DISTINCT ON (o.book, o.name)
+                        o.*
                     FROM odds o 
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
@@ -148,6 +149,10 @@ export async function getOddWithBrothers(odd_id){
                         mto.match_id = (SELECT match_id FROM target) AND
                         mko.market_id = (SELECT market_id FROM target) AND
                         o.name = (SELECT name FROM target)
+                    ORDER BY 
+                        o.book,
+                        o.name,
+                        o.timestamp DESC
                 )
                 SELECT * FROM brothers
             `,

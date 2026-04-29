@@ -2,7 +2,7 @@ import { insertArb, insertEv, insertMarket, insertMatch, insertOdd, insertToScra
 import { createWriteStream } from 'fs';
 import { initDb, pool } from "./db.js";
 import { readFileSync, existsSync } from "fs";
-import { getOdd, getOdds, getToScrapeUrls } from "./getter.js";
+import { getOdd, getOdds, getOddWithBrothers, getOpposite2, getToScrapeUrls } from "./getter.js";
 import { insertUser } from "../../auth/seed.js";
 
 async function testDbJsonInserting(log){
@@ -758,6 +758,56 @@ async function testHuntInserting(log){
     console.log(`Hunt Interting test passed`)
 }
 
+async function testGetting(log){
+
+    function comp(a, b){
+        for(let i = 0; i < a.length; i++){
+            if(a[i] !== b[i]) return false;
+        }
+        return true;    
+    }
+
+    try{
+
+        const brother_ids = [3, 6, 8];
+        const brothers_promises = brother_ids.map( v => getOdd(v));
+        const brothers = await Promise.all(brothers_promises);
+        const odd_id = 1;
+        const owb = await getOddWithBrothers(odd_id);
+        if(owb.length !== brothers.length || 
+            comp(owb.map(v => v.odd_id), brothers.map(v => v.odd_id)) ||
+            comp(owb.map(v => v.name), brothers.map(v => v.name)) ||
+            comp(owb.map(v => v.book), brothers.map(v => v.book)) ||
+            comp(owb.map(v => v.value), brothers.map(v => v.value)) ||
+            comp(owb.map(v => v.timestamp), brothers.map(v => v.timestamp))
+        ){
+            console.log(`Error on comparing is:${owb} with should:${brothers} `)
+        }
+
+        const opposite_brother_ids = [4, 7, 9];
+        const opposite_brothers_promises = brother_ids.map( v => getOdd(v));
+        const opposite_brothers = await Promise.all(opposite_brothers_promises);
+        const opposite = await getOpposite2(2);
+        const opposite_id = opposite.odd_id;
+        const opposite_owb = await getOddWithBrothers(opposite_id);
+        if(opposite_owb.length !== opposite_brothers.length || 
+            comp(opposite_owb.map(v => v.odd_id), opposite_brothers.map(v => v.odd_id)) ||
+            comp(opposite_owb.map(v => v.name), opposite_brothers.map(v => v.name)) ||
+            comp(opposite_owb.map(v => v.book), opposite_brothers.map(v => v.book)) ||
+            comp(opposite_owb.map(v => v.value), opposite_brothers.map(v => v.value)) ||
+            comp(opposite_owb.map(v => v.timestamp), opposite_brothers.map(v => v.timestamp))
+        ){
+            console.log(`Error on comparing is:${opposite_owb} with should:${brothers} `)
+        }
+
+    } catch(e){
+        console.log(`Getting test failed\n${e.message}\n${e.stack}`)
+        return -1;
+    }
+    console.log(`Getting test passed`)
+    return 0;
+}
+
 let log;
 const logFilePath = './data/log.txt';
 try{
@@ -770,5 +820,6 @@ await initDb();
 await testDbInserting(log);
 await testHuntInserting(log);
 await testUserInserting(log);
+await testGetting(log);
 // await testDbJsonInserting(log);
 pool.end();
