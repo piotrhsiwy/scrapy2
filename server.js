@@ -31,19 +31,27 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/bet', async (req, res) => {
-  const { ev_id, username } = req.body;
+  const { ev_id, username, coupon, actual_value } = req.body;
   const { rows } = await pool.query('SELECT * FROM users WHERE username=$1 LIMIT 1', [username]);
   if (!rows[0]){
     return res.status(401).json({ error: 'User with this username not found.' });
   }
   const user_id = rows[0].user_id;
+  
+  const sanitized_actual_value = (actual_value == "") ? null : parseFloat(actual_value);
   pool.query({
     text:`
-      INSERT INTO bets (ev_id, user_id)
-      SELECT $1, $2
+      INSERT INTO bets (ev_id, user_id, coupon, actual_value)
+      SELECT $1, $2, $3,
+      COALESCE($4, (
+        SELECT o.value FROM odds o
+        JOIN evs_odds_link eo ON o.odd_id = eo.odd_id
+        WHERE eo.ev_id = $1
+        LIMIT 1
+      ))
       RETURNING bet_id
     `,
-    values:[ev_id, user_id]
+    values:[ev_id, user_id, coupon, sanitized_actual_value]
   });
   req.session.userId = rows[0].user_id;
   res.json({ ok: true });

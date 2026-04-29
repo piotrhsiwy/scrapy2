@@ -280,7 +280,8 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        is = getOdds();
+        const odd_idHome = is.odd_id;
+        is = await getOdds();
         should = {length:1};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
@@ -289,12 +290,10 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        const odd_idHome = is.odd_id;
 
         // insert CoefHome again
-        // TODO here I check the value if it stayed the same - this is the difference between this and the next textcase
         is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome);
-        should = {odd_id:1, is_new:false};
+        should = {odd_id:2, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
@@ -302,8 +301,8 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        is = getOdds();
-        should = {length:1};
+        is = await getOdds();
+        should = {length:2};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -314,7 +313,7 @@ async function testDbInserting(log){
         
         // insert CoefHome with value + 0.1
         is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome + 0.1);
-        should = {odd_id:1, is_new:false};
+        should = {odd_id:3, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
@@ -322,8 +321,8 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        is = getOdds();
-        should = {length:1};
+        is = await getOdds();
+        should = {length:3};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -334,7 +333,7 @@ async function testDbInserting(log){
 
         // insert CoefAway
         is = await insertOdd(log, match_id, market_id, oddNameAway, book, valueAway);
-        should = {odd_id:2, is_new:true};
+        should = {odd_id:4, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
@@ -343,8 +342,8 @@ async function testDbInserting(log){
             return -1;
         }
         const odd_idAway = is.odd_id;
-        is = getOdds();
-        should = {length:2};
+        is = await getOdds();
+        should = {length:4};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -363,8 +362,8 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        is = getOdds();
-        should = {length:2};
+        is = await getOdds();
+        should = {length:4};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -380,8 +379,8 @@ async function testDbInserting(log){
         await insertUrl(log, match_id, book3, url3);
         await insertOdd(log, match_id, market_id, oddNameHome, book3, valueHome + 0.05);
         await insertOdd(log, match_id, market_id, oddNameAway, book3, valueAway - 0.05);
-        is = getOdds();
-        should = {length:6};
+        is = await getOdds();
+        should = {length:8};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -399,7 +398,7 @@ async function testDbInserting(log){
             // retOddHome.datetime !== datetime ||
             retOddHome.marketname !== marketName ||
             retOddHome.oddname !== oddNameHome ||
-            parseFloat(retOddHome.value) !== valueHome + 0.1
+            parseFloat(retOddHome.value) !== valueHome
         ) {
             console.log(`Failure on comparing return value of getOdd(${odd_idHome})`);
             console.log(`is/should: \n\t${retOddHome.sport}                \n\t${sportName}`);
@@ -408,7 +407,7 @@ async function testDbInserting(log){
             console.log(`is/should: \n\t${retOddHome.teamaway}             \n\t${teamAway}`);
             console.log(`is/should: \n\t${retOddHome.marketname}           \n\t${marketName}`);
             console.log(`is/should: \n\t${retOddHome.oddname}              \n\t${oddNameHome}`);
-            console.log(`is/should: \n\t${parseFloat(retOddHome.value)}    \n\t${valueHome + 0.1}`);
+            console.log(`is/should: \n\t${parseFloat(retOddHome.value)}    \n\t${valueHome}`);
         }
 
         const retOddAway = await getOdd(odd_idAway);
@@ -645,8 +644,8 @@ async function testDbInserting(log){
         await insertOdd(log, match_id2, market_id, teamHome2, book, valueHome);
         await insertOdd(log, match_id2, market_id, teamAway2, book, valueAway);
 
-    } catch{
-        console.log('Inserting test failed')
+    } catch(e){
+        console.log(`Inserting test failed\n${e.message}\n${e.stack}`)
         return -1;
     }
 

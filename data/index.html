@@ -817,15 +817,35 @@ function displayBrothers(values, rowElement) {
 // ════════════════════════════════════════════════════════
 const betposted = new Set();
 async function postBet(ev_id, username ){
+    debugger;
     try {
+
         if(betposted.has(ev_id)){
-            console.log(`Bet ${ev_id} has already been posted!`)
+            console.log(`Bet ${ev_id} has already been posted!`);
+            alert(`Bet ${ev_id} has already been posted!`);
             return;
         }
+
+        const coupon = window.prompt('Enter the book-specific hash/id of the coupon:');
+        if(coupon == ''){
+            console.log('Bet posting cancelled by user.');
+            return;
+        }
+        const actual_value = window.prompt('Enter the actual_value (to track slippage):');
+        if(actual_value == ''){
+            console.log('No actual_value input. Assuming the original odd value on insert.');
+            alert('No actual_value input. Assuming the original odd value on insert.');
+        }
+
         const res = await fetch(`/api/bet`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ev_id, username })
+            body: JSON.stringify({ 
+                ev_id: ev_id, 
+                username: username, 
+                coupon: coupon.trim(),
+                actual_value: actual_value
+            })
         });
         betposted.add(ev_id);
     } catch {

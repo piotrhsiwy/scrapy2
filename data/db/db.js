@@ -72,11 +72,15 @@ export async function initDbUser(){
                 password_hash TEXT NOT NULL
             );` 
         })
-        await client.query({ text: 
+        // hash is the book-specific identifier of the coupon
+        await client.query({ text:
             `CREATE TABLE bets(
                 bet_id SERIAL PRIMARY KEY,
                 ev_id INTEGER REFERENCES evs(ev_id),
                 user_id INTEGER REFERENCES users(user_id),
+                coupon TEXT,
+                result INTEGER DEFAULT NULL,
+                actual_value NUMERIC DEFAULT 1.0 NOT NULL CONSTRAINT actual_value_positive CHECK(actual_value > 0.0),
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );` 
         })

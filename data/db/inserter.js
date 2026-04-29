@@ -292,16 +292,15 @@ export async function insertReport(log, calcReturnObj){
 //###### DATA TABLES
 //##############################
 /**
- * ALWAYS UPDATES timestamp and value if there exists an entry with the same (book, name)
+ * ALWAYS INSERTS new entry
  * @param {WritableStream} log 
  * @param {Integer} match_id e.g. 1 - id of the corresponding match. This is inserted into the matches_odds_link table along with odd_id.
  * @param {Integer} market_id e.g. 1 - id of the corresponding market. This is inserted into the markets_odds_link table along with odd_id.
  * @param {String} name e.g. 'vitality' - for Match Winner Market
  * @param {String} book e.g. 'Esportsbet'
  * @param {String} value  e.g. '1.88'
- * @returns {coef_id, is_new} 
+ * @returns {coef_id, is_new:true} 
  *  the odd_id of the inserted odd entry. undefined when an errors on insert occurs
- *  is_new is true if entry with the same book already existed
  */
 export async function insertOdd(log, match_id, market_id, name, book, value){
 
@@ -320,37 +319,17 @@ export async function insertOdd(log, match_id, market_id, name, book, value){
             )`,
             values: [book, name],
         })
+        // CTE syntax is a remnant of when I had an update policy here, now it's unconditional insert
         ret = await client.query( {
                 text:`
-                WITH existing AS (
-                    SELECT odd_id 
-                    FROM odds o WHERE 
-                        EXISTS (SELECT 1 FROM matches_odds_link mtl WHERE o.odd_id = mtl.odd_id AND mtl.match_id = $1) AND
-                        EXISTS (SELECT 1 FROM markets_odds_link mkl WHERE o.odd_id = mkl.odd_id AND mkl.market_id = $2) AND
-                        o.name = $3 AND
-                        o.book = $4
-                    ORDER BY o.book ASC
-                    LIMIT 1
-                ),
-                updated AS (
-                    UPDATE odds
-                    SET 
-                        timestamp = CURRENT_TIMESTAMP,
-                        value = $5
-                    WHERE odd_id = (SELECT odd_id FROM existing)
-                    RETURNING odd_id
-                ),
-                inserted AS (
+                WITH inserted AS (
                     INSERT INTO odds (name, book, value) 
-                    SELECT $3, $4, $5
-                    WHERE NOT EXISTS (SELECT 1 FROM existing)
+                    SELECT $1, $2, $3
                     RETURNING odd_id
                 )
                 SELECT odd_id, true AS is_new FROM inserted
-                UNION ALL
-                SELECT odd_id, false AS is_new FROM updated
                 `,
-                values: [match_id, market_id, name, book, value],
+                values: [name, book, value],
         });
         await client.query(`COMMIT`); // this releases the lock automatically 
         odd_id = ret.rows[0].odd_id;
