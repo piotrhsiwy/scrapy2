@@ -36,6 +36,18 @@ export function timeframeFromTo(from, to){
   return timespan;
 }
 
+export function timeframeNowMinutes(minutes){
+  const now = new Date();
+  now.setMinutes(0);
+  now.setSeconds(0);
+  now.setMilliseconds(0);
+  const from = now.toISOString()
+  now.setMinutes(now.getMinutes() + minutes);
+  const to = now.toISOString();
+  const timespan = {from:from, to:to};
+  return timespan;
+}
+
 export function timeframeNowHours(hours){
   const now = new Date();
   now.setMinutes(0);

@@ -1,7 +1,7 @@
 import { existsSync, truncateSync } from 'fs'
 import { calcTimeframe } from './calc/calc.js'
 import { initDbCalc } from './data/db/db.js';
-import { timeframeNowHours } from './util.js';
+import { timeframeNowHours, timeframeNowMinutes } from './util.js';
 
 // await initDbCalc();
 while(true){

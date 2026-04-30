@@ -77,7 +77,9 @@ export async function getEvsTimeframe({from, to}){
 }
 
 /**
- * the lenght of Array in @return is the number of unique OddNames present in this market.
+ * the length of Array in @return is the number of odds present in this market.
+ * the return Array from this function is the to be UNIQUE-D with respect to oddName, to get the actual market type:
+ * like in the example below.
  * 
  * Example: if the length is 2, this is a binary Market, like 'Match Winner', if it's 4, it could be 'Correct Score' 
  * market on a BO3 game.
@@ -100,14 +102,13 @@ export async function getMarketType(odd_id){
                 markettype AS(
                     SELECT 
                         o.name,
-                        COUNT(*) as count 
+                        o.odd_id
                     FROM odds o
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE
                         mko.market_id = (SELECT market_id FROM target) AND
                         mto.match_id = (SELECT match_id FROM target)
-                    GROUP BY (o.name)
                 )
                 SELECT * FROM markettype
             `,
@@ -127,6 +128,7 @@ export async function getOddWithBrothers(odd_id){
     try{
         client = await pool.connect();
         ret = await client.query({
+            // the order of the columns in the DISTINCT ON has to match the order used in the index idx_name_book_timestamp perfectly
             text:`
                 WITH target AS (
                     SELECT 
@@ -139,22 +141,34 @@ export async function getOddWithBrothers(odd_id){
                     WHERE o.odd_id = $1
                     LIMIT 1
                 ),
-                brothers AS (
-                    SELECT DISTINCT ON (o.book, o.name)
-                        o.*
-                    FROM odds o 
+                distinct_books AS (
+                    SELECT DISTINCT o.book
+                    FROM odds o
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
-                    WHERE
-                        mto.match_id = (SELECT match_id FROM target) AND
-                        mko.market_id = (SELECT market_id FROM target) AND
-                        o.name = (SELECT name FROM target)
-                    ORDER BY 
-                        o.book,
-                        o.name,
-                        o.timestamp DESC
+                        JOIN target t ON mto.match_id = t.match_id 
+                                    AND mko.market_id = t.market_id 
+                                    AND o.name = t.name
                 )
-                SELECT * FROM brothers
+                SELECT latest_odd.*
+                FROM target t
+                CROSS JOIN distinct_books db
+                CROSS JOIN LATERAL (
+                    -- For each book, instantly fetch the youngest odd using the index
+                    SELECT o.*
+                    FROM odds o
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                    WHERE o.name = t.name
+                    AND o.book = db.book
+                    AND mko.market_id = t.market_id
+                    AND mto.match_id = t.match_id
+                    ORDER BY 
+                        o.name, 
+                        o.book, 
+                        o.timestamp DESC
+                    LIMIT 1
+                ) latest_odd;
             `,
             values: [odd_id],
         }); 

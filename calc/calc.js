@@ -53,7 +53,7 @@ function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
                             },
                         };
                         const arbReport = insertArb4(arbs, newArb);
-                        log.write(arbReport);
+                        if(log) log.write(arbReport);
                     }
                     consideredArbCount++;
                 }
@@ -222,7 +222,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
     const teamHome = match.teamHome;
     const teamAway = match.teamAway;
 
-    log.write(`Processing market: ${market.name}\n`)
+    if(log) log.write(`Processing market: ${market.name}\n`)
     let odds = market.odds;
     if(odds.length <= 1){
         marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
@@ -236,7 +236,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
             ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
             ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
         } else{
-            // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
+            // if(log) log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
         }
         marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
     } else{//    odds.length >= 3
@@ -279,7 +279,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                     ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
                     ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                    // if(log) log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
@@ -324,7 +324,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                     ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
                     ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                    // if(log) log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
@@ -370,7 +370,7 @@ function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
                     ev2(evs, evCutoff, sport, match, market, deviggedOddHome, oddHome);
                     ev2(evs, evCutoff, sport, match, market, deviggedOddAway, oddAway);
                 } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
+                    // if(log) log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
                 }
                 if(oddHome){ processed.push(oddHome); }
                 if(oddAway){ processed.push(oddAway); }
@@ -416,7 +416,7 @@ export async function calcTimeframe(timeframe){
     let start = performance.now();
 
     const odds = await getOddsTimeframe(timeframe);
-    log.write(`Fetched ${odds.length} entries from odds\n`);
+    if(log) log.write(`Fetched ${odds.length} entries from odds\n`);
     let dirtyOdds = new Set();
     for(let i = 0; i < odds.length; i++){
         const odd = odds[i];
@@ -424,7 +424,18 @@ export async function calcTimeframe(timeframe){
         if(dirtyOdds.has(odd_id)){
             continue;
         }
-        const marketType = await getMarketType(odd_id);
+
+        const marketTypeUngrouped = await getMarketType(odd_id);
+        for(const odd_id of marketTypeUngrouped.map(v => v.odd_id)){
+            dirtyOdds.add(odd_id);
+        }
+        const marketType = [];
+        marketTypeUngrouped.forEach((u) => {
+            if(!marketType.find(v => v.name == u.name)){
+                marketType.push(u);
+            }
+        });
+        
         
         if(marketType.length === 2){
             // binary (2-way) market, like 'Match Winner'
@@ -445,10 +456,6 @@ export async function calcTimeframe(timeframe){
                     const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
                 }
                 evsCount += evs.length;
-            }
-
-            for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
-                dirtyOdds.add(odd_id);
             }
 
         } else if(marketType.length === 4){
@@ -478,10 +485,6 @@ export async function calcTimeframe(timeframe){
                     const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
                 }
 
-                for(const odd_id of withBrothers.concat(oppositeWithBrothers).map(e => e.odd_id)){
-                    dirtyOdds.add(odd_id);
-                }
-
             } else if(marketName.includes('Correct Score')){
                 /* 
                     4-way correct score market with oddNames of the format: "0:2", "1:2", "2:1", "2:0"
@@ -493,13 +496,8 @@ export async function calcTimeframe(timeframe){
                     const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
                 }
 
-                for(const odd_id of matchingWithBrothers.flat().map(e => e.odd_id)){
-                    dirtyOdds.add(odd_id);
-                }
-
                 // TODO ev
             } else{
-                dirtyOdds.add(odd_id);
             }
 
 
@@ -529,7 +527,7 @@ export async function calcTimeframe(timeframe){
         }
     );
 
-    await promisify(log.end).bind(log);
+    if(log) await promisify(log.end).bind(log);
     return report_id;
 }
 
@@ -547,7 +545,7 @@ export async function calcAll(){
     let start = performance.now();
 
     const odds = await getOdds();
-    log.write(`Fetched ${odds.length} entries from odds\n`);
+    if(log) log.write(`Fetched ${odds.length} entries from odds\n`);
     let dirtyOdds = new Set();
     for(let i = 0; i < odds.length; i++){
         const odd = odds[i];
@@ -658,6 +656,6 @@ export async function calcAll(){
         }
     );
 
-    await promisify(log.end).bind(log);
+    if(log) await promisify(log.end).bind(log);
     return report_id;
 }

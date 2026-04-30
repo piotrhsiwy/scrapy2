@@ -293,9 +293,29 @@ async function testDbInserting(log){
 
         // insert CoefHome again
         is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome);
-        should = {odd_id:2, is_new:true};
+        should = {odd_id:1, is_new:false};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome}) returned 
+                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
+                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
+            `)
+            return -1;
+        }
+        is = await getOdds();
+        should = {length:1};
+        if(is.length !== should.length){
+            console.log(`incorrect number of odds in the db:
+                \tis: ${is.length}
+                \tshould: ${should.length}
+            `)
+            return -1;
+        }
+        
+        // insert CoefHome with value + 0.1
+        is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome + 0.1);
+        should = {odd_id:2, is_new:true};
+        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
+            console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
                 \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
             `)
@@ -310,30 +330,10 @@ async function testDbInserting(log){
             `)
             return -1;
         }
-        
-        // insert CoefHome with value + 0.1
-        is = await insertOdd(log, match_id, market_id, oddNameHome, book, valueHome + 0.1);
-        should = {odd_id:3, is_new:true};
-        if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
-            console.log(`insertOdd(${market_id}, ${oddNameHome}, ${book}, ${valueHome + 0.1}) returned 
-                \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
-                \tshould:{ odd_id:${should.odd_id}, is_new:${should.is_new} }
-            `)
-            return -1;
-        }
-        is = await getOdds();
-        should = {length:3};
-        if(is.length !== should.length){
-            console.log(`incorrect number of odds in the db:
-                \tis: ${is.length}
-                \tshould: ${should.length}
-            `)
-            return -1;
-        }
 
         // insert CoefAway
         is = await insertOdd(log, match_id, market_id, oddNameAway, book, valueAway);
-        should = {odd_id:4, is_new:true};
+        should = {odd_id:3, is_new:true};
         if(is.odd_id !== should.odd_id || is.is_new !== should.is_new){
             console.log(`insertOdd(${market_id}, ${oddNameAway}, ${book}, ${valueAway}) returned 
                 \tis:{ odd_id:${is.odd_id}, is_new:${is.is_new} }
@@ -343,7 +343,7 @@ async function testDbInserting(log){
         }
         const odd_idAway = is.odd_id;
         is = await getOdds();
-        should = {length:4};
+        should = {length:3};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -363,7 +363,7 @@ async function testDbInserting(log){
             return -1;
         }
         is = await getOdds();
-        should = {length:4};
+        should = {length:3};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}
@@ -380,7 +380,7 @@ async function testDbInserting(log){
         await insertOdd(log, match_id, market_id, oddNameHome, book3, valueHome + 0.05);
         await insertOdd(log, match_id, market_id, oddNameAway, book3, valueAway - 0.05);
         is = await getOdds();
-        should = {length:8};
+        should = {length:7};
         if(is.length !== should.length){
             console.log(`incorrect number of odds in the db:
                 \tis: ${is.length}

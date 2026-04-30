@@ -57,96 +57,29 @@ packages:
 write_files:
 
   # ── SCRAPE configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrape2.service
+  - path: /etc/systemd/system/scrape.service
     owner: root:root
     permissions: "0644"
     content: |
-      [Unit]
-      Description=scrapy2 scraper
-      After=network.target
+      [Unit] 
+      Description=scrapy2 scraper 
+      After=network.target 
+      
+      [Service] 
+      Type=simple 
+      User=root 
+      WorkingDirectory=/scrapy2 
+      RuntimeMaxSec=7200 
+      ExecStartPre=sleep 20 
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 24
+      Restart=always 
+      RestartSec=5 
+      Environment=NODE_ENV=production 
+      EnvironmentFile=/etc/scrapy2.env 
+      
+      [Install] 
+      WantedBy=multi-user.target 
 
-      [Service]
-      Type=simple
-      User=root
-      WorkingDirectory=/scrapy2
-      ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 2
-      Restart=on-failure
-      RestartSec=5
-      Environment=NODE_ENV=production
-      EnvironmentFile=/etc/scrapy2.env
-
-      [Install]
-      WantedBy=multi-user.target
-
-  # ── SCRAPE configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrape12.service
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Unit]
-      Description=scrapy2 scraper
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=root
-      WorkingDirectory=/scrapy2
-      ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 12
-      Restart=on-failure
-      RestartSec=5
-      Environment=NODE_ENV=production
-      EnvironmentFile=/etc/scrapy2.env
-
-      [Install]
-      WantedBy=multi-user.target
-
-  # ── SCRAPE configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrape24.service
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Unit]
-      Description=scrapy2 scraper
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=root
-      WorkingDirectory=/scrapy2
-      ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 24
-      Restart=on-failure
-      RestartSec=5
-      Environment=NODE_ENV=production
-      EnvironmentFile=/etc/scrapy2.env
-
-      [Install]
-      WantedBy=multi-user.target
-
-  # ── SCRAPE configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrape72.service
-    owner: root:root
-    permissions: "0644"
-    content: |
-      [Unit]
-      Description=scrapy2 scraper
-      After=network.target
-
-      [Service]
-      Type=simple
-      User=root
-      WorkingDirectory=/scrapy2
-      ExecStartPre=sleep 20
-      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 2 --hours 72
-      Restart=on-failure
-      RestartSec=5
-      Environment=NODE_ENV=production
-      EnvironmentFile=/etc/scrapy2.env
-
-      [Install]
-      WantedBy=multi-user.target
 
   # ── HUNT configuration ────────────────────────────────
   - path: /etc/systemd/system/hunt.service

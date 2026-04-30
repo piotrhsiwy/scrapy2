@@ -230,6 +230,14 @@ export async function initDbData(){
             )` 
         })
 
+        // this index is used to grab youngest odd efficiently.
+        // previous attempts: using DISTINCT ON (book, name) ORDER BY book, name, timestamp DESC was massively (20x) slower, making calc on the next 24h practically unusable
+        await client.query({text: `
+            CREATE INDEX idx_name_book_timestamp
+            ON odds (name, book, timestamp DESC)
+            `
+        })
+
         ///////////
         // LINKS
         ///////////
