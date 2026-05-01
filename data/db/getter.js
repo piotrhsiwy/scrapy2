@@ -231,6 +231,168 @@ export async function getOpposite2(odd_id){
  * 
  * Care that it @returns any odd that belongs to the opposite. It does not guarantee the same book as odd_id
  */
+export async function getOppositeOU(odd_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                WITH target AS (
+                    SELECT
+                        mko.market_id,
+                        o.name AS oddname,
+                        mt.teamhome,
+                        mt.teamaway,
+                        mt.match_id,
+                        CASE
+                            WHEN o.name LIKE 'over' || '%' THEN 'under'
+                            ELSE 'over'
+                        END AS expected_opposite_team,
+                        CAST(
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(over|under)',
+                                    '',
+                                    'i'
+                                ) 
+                                FROM '^[0-9]*[.]?[0-9]+$'
+                            ) AS NUMERIC
+                        ) AS ou
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                        JOIN matches mt ON mto.match_id = mt.match_id
+                    WHERE
+                        o.odd_id = $1
+                    LIMIT 1
+                ),
+                opposite AS (
+                    SELECT o.*
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                        CROSS JOIN target
+                    WHERE
+                        mko.market_id = target.market_id AND
+                        mto.match_id = target.match_id AND
+                        o.name LIKE target.expected_opposite_team || '%' AND
+                        CAST(
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(over|under)',
+                                    '',
+                                    'i'
+                                ) 
+                                FROM '^[0-9]*[.]?[0-9]+$'
+                            ) AS NUMERIC
+                        ) = target.ou
+                    LIMIT 1
+                )
+                SELECT * FROM opposite
+            `,
+            values: [odd_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+
+    if(ret){
+        return ret.rows[0];
+    } else{
+        return ret;
+    }
+}
+
+/**
+ * 
+ * Care that it @returns any odd that belongs to the opposite. It does not guarantee the same book as odd_id
+ */
+export async function getOppositeFTR(odd_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                WITH target AS (
+                    SELECT
+                        mko.market_id,
+                        o.name AS oddname,
+                        mt.teamhome,
+                        mt.teamaway,
+                        mt.match_id,
+                        CASE
+                            WHEN o.name LIKE mt.teamhome || '%' THEN mt.teamaway
+                            ELSE mt.teamhome
+                        END AS expected_opposite_team,
+                        CAST(
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(' || mt.teamhome || '|' || mt.teamaway || ')',
+                                    '',
+                                    'i'
+                                ) 
+                                FROM '^[0-9]+$'
+                            ) AS NUMERIC
+                        ) AS ftr
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                        JOIN matches mt ON mto.match_id = mt.match_id
+                    WHERE
+                        o.odd_id = $1
+                    LIMIT 1
+                ),
+                opposite AS (
+                    SELECT o.*
+                    FROM odds o 
+                        JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
+                        JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
+                        CROSS JOIN target
+                    WHERE
+                        mko.market_id = target.market_id AND
+                        mto.match_id = target.match_id AND
+                        o.name LIKE target.expected_opposite_team || '%' AND
+                        CAST(
+                            SUBSTRING(
+                                REGEXP_REPLACE(
+                                    o.name,
+                                    '^(' || target.teamhome || '|' || target.teamaway || ')',
+                                    '',
+                                    'i'
+                                ) 
+                                FROM '^[0-9]+$'
+                            ) AS NUMERIC
+                        ) = target.ftr
+                    LIMIT 1
+                )
+                SELECT * FROM opposite
+            `,
+            values: [odd_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+
+    if(ret){
+        return ret.rows[0];
+    } else{
+        return ret;
+    }
+}
+
+/**
+ * 
+ * Care that it @returns any odd that belongs to the opposite. It does not guarantee the same book as odd_id
+ */
 export async function getOppositeHdp(odd_id){
     let client;
     let ret;
@@ -380,6 +542,31 @@ export async function getMarketName(odd_id){
         if(client) client.release();
     }
     return ret.rows[0].marketname;
+}
+
+export async function getNumberBooks(odd_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT u.book
+                FROM odds o
+                    JOIN matches_odds_link mo ON o.odd_id = mo.odd_id
+                    JOIN matches_urls_link mu ON mu.match_id = mo.match_id
+                    JOIN urls u ON mu.url_id = u.url_id
+                WHERE
+                    o.odd_id = $1
+            `,
+            values: [odd_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rowCount;
 }
 
 export async function getOdd(odd_id){
