@@ -1,6 +1,6 @@
 import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
 import { promisify } from "util";
-import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp, getOddsTimeframe, getOppositeFTR, getOppositeOU, getNumberBooks } from "../data/db/getter.js";
+import { getMarketName, getMarketType, getOddWithBrothers, getOdds, getOpposite2, getMatching4CS, getOppositeHdp, getOddsTimeframe, getOppositeFTR, getOppositeOU, getNumberBooks, getTeamnames } from "../data/db/getter.js";
 import { insertArb, insertEv, insertReport } from "../data/db/inserter.js";
 
 let log;
@@ -218,23 +218,55 @@ function evArray2(A, B){
 
 export async function calcTimeframe(timeframe){
 
-    function opposite2(odd, marketType){
+
+    function opposite2(odd, marketType, teamNames){
+        // teamNames not used, but needed for the same signature
+        // we only match for difference
         return marketType.find(v => v.name != odd.name);
     }
 
-    function oppositeHdp(odd, marketType){
-        ;
+    function oppositeHdp(odd, marketType, teamNames){
+        const regex = new RegExp( '(' + teamNames.teamhome + '|' + teamNames.teamaway + ')' + '([-]?[0-9]+[.]?[0-9]+)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == teamNames.teamhome ? 
+            teamNames.teamaway
+            : teamNames.teamhome;
+        const hdp = parseFloat(match[2]);
+        const hdpString = (new Number(hdp * -1.0)).toString();
+        const expectedName = expected_opposite_team + hdpString;
+        return marketType.find(v => v.name == expectedName);
     }
 
-    function oppositeFTR(odd, marketType){
-        ;
+    function oppositeFTR(odd, marketType, teamNames){
+        const regex = new RegExp( '(' + teamNames.teamhome + '|' + teamNames.teamaway + ')' + '([0-9]+)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == teamNames.teamhome ? 
+            teamNames.teamaway
+            : teamNames.teamhome;
+        const expectedName = expected_opposite_team + match[2];
+        return marketType.find(v => v.name == expectedName);
     }
     
-    async function handleBinary(getOppositeFunc, marketType){
+    function oppositeOU(odd, marketType, teamNames){
+        // teamNames not used, but needed for the same signature
+        // we match 'over1.5' with 'under1.5'
+        const regex = new RegExp( '(over|under)' + '([0-9]+[.]?[0-9]*)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == 'over' ? 
+            'under'
+            : 'over';
+        const expectedName = expected_opposite_team + match[2];
+        return marketType.find(v => v.name == expectedName);
+    }
+    
+    async function handleBinary(oppositeFunc, marketType, teamNames){
         while(marketType.length > 0){
             const odd = marketType.pop();
             const odd_id = odd.odd_id;
-            const opposite = await getOppositeFunc(odd_id);
+            const opposite = await oppositeFunc(odd, marketType, teamNames);
             if(opposite == undefined) continue;
             marketType.splice(marketType.findIndex(v => v.name == opposite.name), 1);
             const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
@@ -297,6 +329,8 @@ export async function calcTimeframe(timeframe){
         if(numberBooks < 2){
             continue;
         }
+
+        const teamNames = await getTeamnames(odd_id);
         
         if (
             (
@@ -318,19 +352,19 @@ export async function calcTimeframe(timeframe){
             // oddNames of the format: <teamHome> - <teamAway>
             // for the odd/even markets: odd - even             -- this works because the getOpposite function looks for different entry
             // for the yes/no markets: yes - no             -- this works because the getOpposite function looks for different entry
-            await handleBinary(getOpposite2, marketType);
+            await handleBinary(opposite2, marketType, teamNames);
 
         } else if( marketName.includes('Handicap')) {
             // multiple binary (2-way) market, like 'Kills Handicap Map 1'
             // oddNames of the format: '<teamHome><integer>.<integer>' - '<teamAway>-<integer>.<integer>'
             // for example: g21.5 - vitality-1.5
-            await handleBinary(getOppositeHdp, marketType);
+            await handleBinary(oppositeHdp, marketType, teamNames);
 
         } else if ( marketName.includes('First to Reach')) {
             // multiple binary (2-way) market, like 'First to Reach Kills Map 1'
             // oddNames of the format: '<teamHome><integer>' - '<teamAway><integer>'
             // for example: g210 - vitality10
-            await handleBinary(getOppositeFTR, marketType);
+            await handleBinary(oppositeFTR, marketType, teamNames);
 
         } else if ( 
             (marketName.includes('Total') && !marketName.includes('Odd/Even') && !marketName.includes('Handicap')) ||
@@ -339,7 +373,7 @@ export async function calcTimeframe(timeframe){
             // multiple binary (2-way) market, like 'Total Kills'
             // oddNames of the format: 'over<integer>.<integer>' - 'under<integer>.<integer>'
             // for example: over10.5 - under10.5
-            await handleBinary(getOppositeOU, marketType);
+            await handleBinary(oppositeOU, marketType, teamNames);
 
         } else if ( marketName.includes('Winner') && marketName.includes('incl. Draw') && marketType.length === 3) {
             // single 3-way market

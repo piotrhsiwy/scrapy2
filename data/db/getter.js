@@ -603,6 +603,33 @@ export async function getOdd(odd_id){
     return ret.rows[0];
 }
 
+export async function getTeamnames(odd_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT 
+                    mt.teamhome,
+                    mt.teamaway
+                FROM odds o
+                    JOIN matches_odds_link mtol ON o.odd_id = mtol.odd_id
+                    JOIN matches mt ON mtol.match_id = mt.match_id
+                WHERE
+                    o.odd_id = $1
+                LIMIT 1 
+            `,
+            values: [odd_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows[0];
+}
+
 /**
  * 
  * @param {from:ISOString, to:ISOString} timeframe f.e. {from:2026-04-22 10:00:00.000, to:2026-12-24 20:00:00.000}
