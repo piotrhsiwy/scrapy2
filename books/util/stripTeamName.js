@@ -25,7 +25,7 @@ const teamNameMap = Object.freeze([
     },
     {
         globalName:'lgd',
-        specificNames:['psglgd']
+        specificNames:['psg.lgd']
     },
     {
         globalName:'dplus',
@@ -209,7 +209,7 @@ const teamNameMap = Object.freeze([
     },
     {
         globalName:'kuusamo',
-        specificNames:['kuusamogg']
+        specificNames:['kuusamo.gg']
     },
     {
         globalName:'ktrolsteracademy',
@@ -270,6 +270,8 @@ const teamNameMap = Object.freeze([
 ])
 
 export function stripTeamName(str){
+    // THIS FUNCTION IS ALSO CALLED on oddName of the form (Vitality-1.5)
+    // it MUST NOT destroy f.e. the handicap value
     if(!str) return str;
     str = str.toLowerCase()
         .replace(/\.ch$/g, 'academy')
@@ -277,7 +279,7 @@ export function stripTeamName(str){
         .replace(/\+showtime|\+r8|\+gabe|chongqing|^kiwoom|^hanjin|^minus|instreamly$/g, '')
         .replace(/espor$|wolves$/g, '')
         .replace(/\'|\_/g, '')
-        .replace(/\{|\}|\(|\)\[|\]|\||\\|\?|\+|\*|\$|\^|\./g, '') // regex special characters to ensure correct processing with regex in the db
+        .replace(/\{|\}|\(|\)\[|\]|\||\\|\?|\+|\*|\$|\^/g, '') // regex special characters to ensure correct processing with regex in the db
         // .replace(/\b(\w+)clan\b/g, '$1')
         // .replace(/\b(\w+)esports\b/g, '$1')
         // .replace(/\b(\w+)esport\b/g, '$1')

@@ -310,11 +310,11 @@ const testcases =
     },
     {
         name:'gen.gacademy',
-        desiredResult:'gengacademy'
+        desiredResult:'gen.gacademy'
     },
     {
         name:'gen.gglobalacademy',
-        desiredResult:'gengacademy'
+        desiredResult:'gen.gacademy'
     },
     {
         name:'csgopositive',
@@ -370,7 +370,7 @@ const testcases =
     },
     {
         name:'devils.oneinstreamly',
-        desiredResult:'devilsone'
+        desiredResult:'devils.one'
     },
     {
         name:'vivokeydstarsacademy',
