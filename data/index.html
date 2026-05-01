@@ -660,7 +660,7 @@ function extractAndRenderBooks(resetActive = true) {
         if (r['Home book']) books.add(r['Home book']);
         if (r['Away book']) books.add(r['Away book']);
     });
-    if (resetActive) activeBooks = new Set(books);
+    if (resetActive) activeBooks = new Set();
 
     const filterContainer = document.getElementById('book-filters');
     if(currentTab === 'evs' || currentTab === 'arbs'){
