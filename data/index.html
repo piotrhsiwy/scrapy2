@@ -177,6 +177,7 @@
         .btn-back:hover { background-color: #657413 !important; color: white !important; }
 
         .btn-reset {
+            margin-left:auto;
             border-color: #dc3545 !important; color: #dc3545 !important; font-weight: bold;
         }
         .btn-reset:hover { background-color: #dc3545 !important; color: white !important; }
@@ -240,9 +241,12 @@
             <div class="tabs">
                 <button id="btn-evs" class="active" onclick="switchTab('evs', 'btn-evs')">EVS Data</button>
                 <button id="btn-arbs" onclick="switchTab('arbs', 'btn-arbs')">ARBS Data</button>
+                <button id="btn-bets" onclick="switchTab('bets', 'btn-bets')">BETS</button>
                 <button class="btn-reset" onclick="resetDone()">[ ⟲ ] Reset Done</button>
                 <button class="btn-back" onclick="gobackDone()">[ ↩ ] Back Done</button>
                 <button class="btn-logout" onclick="doLogout()">[ ✕ ] Logout</button>
+                <div class="user-label">Current user:</div>
+                <span id="user-label"> </span>
             </div>
             <div id="slider-container" class="slider-box"></div>
             <div class="filters">
@@ -283,6 +287,7 @@ function showLogin(msg = '') {
 function showApp() {
     document.getElementById('login-screen').classList.remove('visible');
     document.getElementById('app').classList.add('visible');
+    document.getElementById('user-label').innerHTML = localStorage.getItem('username');
 }
 
 async function doLogin() {
@@ -377,6 +382,25 @@ function normalizeEvRows(rows) {
     return Array.from(map.values());
 }
 
+function normalizeBetRows(rows) {
+    // Group rows by ev_id (one ev can have multiple URL rows for the same odd)
+    const map = new Map();
+    for (const r of rows) {
+        if (!map.has(r.bet_id)) {
+            map.set(r.bet_id, {
+                bet_id: r.bet_id,
+                ev_id: r.ev_id,
+                user_id: r.user_id,
+                coupon: r.coupon,
+                result: r.result,
+                actual_value: r.actual_value,
+                timestamp: r.timestamp
+            });
+        }
+    }
+    return Array.from(map.values());
+}
+
 function normalizeArbRows(rows) {
     // Group by arb_id – collect all odds into Home / Away fields
     const map = new Map();
@@ -410,7 +434,8 @@ function normalizeArbRows(rows) {
 
 async function apiFetch(tab, from = null) {
     from = from === 'null' ? null : from === 'undefined' ? undefined : from;
-    const res = await fetch(`/api/${tab}?from=${from}`);
+    const username = localStorage.getItem('username');
+    const res = await fetch(`/api/${tab}?username=${username}&from=${from}`);
     if (res.status === 401) { showLogin('Session expired. Please sign in again.'); return null; }
     if (!res.ok) throw new Error(`API error ${res.status}`);
     const rows = await res.json();
@@ -418,6 +443,8 @@ async function apiFetch(tab, from = null) {
         return normalizeEvRows(rows);
     } else if(tab === 'arbs'){
         return normalizeArbRows(rows);
+    } else if(tab === 'bets'){
+        return normalizeBetRows(rows);
     } else if(tab.includes('brothers')){
         return rows;
     } else{
@@ -506,15 +533,18 @@ function updateSlidersUI() {
                    onchange="minStdDev=this.value; extractAndRenderBooks(false); renderTable();">
             <span class="slider-value" id="sv2">${minStdDev}</span>
         `;
-    } else {
+    } else if (currentTab === 'arbs'){
         container.innerHTML = `
             <label>Min Value:</label>
-            <input type="range" min="0.00" max="0.02" step="0.001" value="${minArbValue}"
+            <input type="range" min="0.00" max="0.10" step="0.001" value="${minArbValue}"
                    oninput="document.getElementById('sv').innerText=this.value;"
                    onchange="minArbValue=this.value; extractAndRenderBooks(false); renderTable();">
             <span class="slider-value" id="sv">${minArbValue}</span>
         `;
+    } else {
+        container.innerHTML = '';
     }
+
 }
 
 // ════════════════════════════════════════════════════════
@@ -592,7 +622,9 @@ async function switchTab(tab, btnId) {
     currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
     knownEntryIds = new Set(currentData.map(getRowId));
 
-    extractAndRenderBooks(true);
+    if(currentTab === 'evs' || currentTab === 'arbs'){
+        extractAndRenderBooks(true);
+    }
     renderTable();
 }
 
@@ -631,23 +663,27 @@ function extractAndRenderBooks(resetActive = true) {
     if (resetActive) activeBooks = new Set(books);
 
     const filterContainer = document.getElementById('book-filters');
-    if (!books.size) { filterContainer.innerHTML = '<span>No books found.</span>'; return; }
+    if(currentTab === 'evs' || currentTab === 'arbs'){
+        if (!books.size) { filterContainer.innerHTML = '<span>No books found.</span>'; return; }
 
-    const bookCounts = {};
-    books.forEach(b => {
-        bookCounts[b] = currentData.filter(row => {
-            const belongs = row['book'] === b || row['Home book'] === b || row['Away book'] === b;
-            return belongs && passesThresholds(row) && !doneItems.includes(getGameId(row));
-        }).length;
-    });
+        const bookCounts = {};
+        books.forEach(b => {
+            bookCounts[b] = currentData.filter(row => {
+                const belongs = row['book'] === b || row['Home book'] === b || row['Away book'] === b;
+                return belongs && passesThresholds(row) && !doneItems.includes(getGameId(row));
+            }).length;
+        });
 
-    filterContainer.innerHTML = Array.from(books).sort().map(b => {
-        const checked = activeBooks.has(b) ? 'checked' : '';
-        return `<label class="checkbox-label">
-            <input type="checkbox" value="${b}" ${checked} onchange="toggleBook(this)">
-            ${b} <span class="book-count">(${bookCounts[b]})</span>
-        </label>`;
-    }).join('');
+        filterContainer.innerHTML = Array.from(books).sort().map(b => {
+            const checked = activeBooks.has(b) ? 'checked' : '';
+            return `<label class="checkbox-label">
+                <input type="checkbox" value="${b}" ${checked} onchange="toggleBook(this)">
+                ${b} <span class="book-count">(${bookCounts[b]})</span>
+            </label>`;
+        }).join('');
+    } else{
+        filterContainer.innerHTML = '';
+    }
 }
 
 function toggleBook(checkbox) {
@@ -660,105 +696,130 @@ function toggleBook(checkbox) {
 //  Render table
 // ════════════════════════════════════════════════════════
 function renderTable() {
-    let filtered = currentData.filter(row => {
-        const bookPass = !row['book'] && !row['Home book'] && !row['Away book']
-            || activeBooks.has(row['book'])
-            || (activeBooks.has(row['Home book']) && activeBooks.has(row['Away book']));
-        return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
-    });
+    let html;
+    if(currentTab === 'evs' || currentTab === 'arbs'){
+        // Apply books filter
+        let filtered = currentData.filter(row => {
+            const bookPass = !row['book'] && !row['Home book'] && !row['Away book']
+                || activeBooks.has(row['book'])
+                || (activeBooks.has(row['Home book']) && activeBooks.has(row['Away book']));
+            return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
+        });
 
-    // Group by game
-    const groups = {};
-    filtered.forEach(row => {
-        const gId = getGameId(row);
-        if (!groups[gId]) groups[gId] = { id: gId, entries: [] };
-        groups[gId].entries.push(row);
-    });
-    let groupedArray = Object.values(groups);
+        // Group by game
+        const groups = {};
+        filtered.forEach(row => {
+            const gId = getGameId(row);
+            if (!groups[gId]) groups[gId] = { id: gId, entries: [] };
+            groups[gId].entries.push(row);
+        });
+        let groupedArray = Object.values(groups);
 
-    document.title = groupedArray.length > 0 ? `${groupedArray.length} - Scrapy` : 'Scrapy';
+        document.title = groupedArray.length > 0 ? `${groupedArray.length} - Scrapy` : 'Scrapy';
 
-    // Sorting
-    const isDateCol = sortColumn === 'timestamp (calculated)' || sortColumn === 'datetime';
-    function getSortValue(entry) {
-        let val = entry[sortColumn] !== undefined ? entry[sortColumn] : '';
-        if (typeof val === 'string') val = val.replace(/<[^>]*>?/gm, '');
-        return val;
-    }
-    function parseDate(val) {
-        const parsed = Date.parse(String(val).replace(' at ', ' '));
-        return isNaN(parsed) ? NaN : parsed;
-    }
+        // Sorting
+        const isDateCol = sortColumn === 'timestamp (calculated)' || sortColumn === 'datetime';
+        function getSortValue(entry) {
+            let val = entry[sortColumn] !== undefined ? entry[sortColumn] : '';
+            if (typeof val === 'string') val = val.replace(/<[^>]*>?/gm, '');
+            return val;
+        }
+        function parseDate(val) {
+            const parsed = Date.parse(String(val).replace(' at ', ' '));
+            return isNaN(parsed) ? NaN : parsed;
+        }
 
-    if (sortColumn) {
-        groupedArray.sort((gA, gB) => {
-            const vA = gA.entries.map(getSortValue);
-            const vB = gB.entries.map(getSortValue);
-            if (isDateCol) {
-                const dA = vA.map(parseDate).filter(n => !isNaN(n));
-                const dB = vB.map(parseDate).filter(n => !isNaN(n));
-                if (dA.length && dB.length) {
-                    const a = sortAscending ? Math.min(...dA) : Math.max(...dA);
-                    const b = sortAscending ? Math.min(...dB) : Math.max(...dB);
+        if (sortColumn) {
+            groupedArray.sort((gA, gB) => {
+                const vA = gA.entries.map(getSortValue);
+                const vB = gB.entries.map(getSortValue);
+                if (isDateCol) {
+                    const dA = vA.map(parseDate).filter(n => !isNaN(n));
+                    const dB = vB.map(parseDate).filter(n => !isNaN(n));
+                    if (dA.length && dB.length) {
+                        const a = sortAscending ? Math.min(...dA) : Math.max(...dA);
+                        const b = sortAscending ? Math.min(...dB) : Math.max(...dB);
+                        return sortAscending ? a - b : b - a;
+                    }
+                }
+                const nA = vA.map(parseFloat).filter(n => !isNaN(n));
+                const nB = vB.map(parseFloat).filter(n => !isNaN(n));
+                if (nA.length && nB.length) {
+                    const a = sortAscending ? Math.min(...nA) : Math.max(...nA);
+                    const b = sortAscending ? Math.min(...nB) : Math.max(...nB);
                     return sortAscending ? a - b : b - a;
                 }
-            }
-            const nA = vA.map(parseFloat).filter(n => !isNaN(n));
-            const nB = vB.map(parseFloat).filter(n => !isNaN(n));
-            if (nA.length && nB.length) {
-                const a = sortAscending ? Math.min(...nA) : Math.max(...nA);
-                const b = sortAscending ? Math.min(...nB) : Math.max(...nB);
-                return sortAscending ? a - b : b - a;
-            }
-            const sa = String(vA[0] ?? '').toLowerCase();
-            const sb = String(vB[0] ?? '').toLowerCase();
-            return sortAscending ? sa.localeCompare(sb) : sb.localeCompare(sa);
-        });
-        groupedArray.forEach(g => g.entries.sort((a, b) => {
-            let va = getSortValue(a), vb = getSortValue(b);
-            if (isDateCol) {
-                const da = parseDate(va), db = parseDate(vb);
-                if (!isNaN(da) && !isNaN(db)) return sortAscending ? da - db : db - da;
-            }
-            const na = parseFloat(va), nb = parseFloat(vb);
-            if (!isNaN(na) && !isNaN(nb)) return sortAscending ? na - nb : nb - na;
-            return sortAscending ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
-        }));
-    }
+                const sa = String(vA[0] ?? '').toLowerCase();
+                const sb = String(vB[0] ?? '').toLowerCase();
+                return sortAscending ? sa.localeCompare(sb) : sb.localeCompare(sa);
+            });
+            groupedArray.forEach(g => g.entries.sort((a, b) => {
+                let va = getSortValue(a), vb = getSortValue(b);
+                if (isDateCol) {
+                    const da = parseDate(va), db = parseDate(vb);
+                    if (!isNaN(da) && !isNaN(db)) return sortAscending ? da - db : db - da;
+                }
+                const na = parseFloat(va), nb = parseFloat(vb);
+                if (!isNaN(na) && !isNaN(nb)) return sortAscending ? na - nb : nb - na;
+                return sortAscending ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+            }));
+        }
 
-    // Build HTML
-    let html = `<table><thead><tr>
-        ${currentHeaders.map(h => {
-            const arrow = sortColumn === h ? (sortAscending ? ' ▲' : ' ▼') : '';
-            return `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h}${arrow}</th>`;
-        }).join('')}
-        <th> Double Check </th>
-        <th> Post Bet </th>
-    </tr></thead>`;
+        // Build HTML
+        html = `<table><thead><tr>
+            ${currentHeaders.map(h => {
+                const arrow = sortColumn === h ? (sortAscending ? ' ▲' : ' ▼') : '';
+                return `<th onclick="sortAscending=sortColumn==='${h}'?!sortAscending:true; sortColumn='${h}'; renderTable();">${h}${arrow}</th>`;
+            }).join('')}
+            <th> Double Check </th>
+            <th> Post Bet </th>
+        </tr></thead>`;
 
-    if (!groupedArray.length) {
-        html += `<tbody><tr><td colspan="${currentHeaders.length }" style="text-align:center;padding:30px;">No active entries match your filters.</td></tr></tbody>`;
-    } else {
-        groupedArray.forEach(g => {
+        if (!groupedArray.length) {
+            html += `<tbody><tr><td colspan="${currentHeaders.length }" style="text-align:center;padding:30px;">No active entries match your filters.</td></tr></tbody>`;
+        } else {
+            groupedArray.forEach(g => {
+                html += `<tbody class="game-group">`;
+                g.entries.forEach(row => {
+                    const rId = getRowId(row);
+                    const gId = getGameId(row);
+                    const username = localStorage.getItem('username');
+                    html += `<tr id="${rId}" class="game-row-${gId}" 
+                        onclick="if(event.target.tagName!='A'){markDone('${gId}')}"
+                        onmouseenter="handleRowHover('${row.odd_id}',this)" >`;
+                    currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
+                    html += `<td> 
+                        <button class="btn-doublecheck" onclick="event.stopPropagation(); doubleCheckMatch('${rId}')" >CHECK</button> 
+                    </td>`;
+                    html += `<td> 
+                        <button class="btn-doublecheck" onclick="event.stopPropagation(); postBet(${row.ev_id}, '${username}')" >BET</button> 
+                    </td>`;
+                    html += `</tr>`;
+                });
+                html += `</tbody>`;
+            });
+        }
+    } else{
+        document.title = currentData.length > 0 ? `${currentData.length} - Scrapy` : 'Scrapy';
+
+        // Build HTML
+        html = `<table><thead><tr>
+            ${currentHeaders.map(h => {
+                return `<th>${h}</th>`;
+            }).join('')}
+        </tr></thead>`;
+
+        if (!currentData.length) {
+            html += `<tbody><tr><td colspan="${currentHeaders.length }" style="text-align:center;padding:30px;">No entries.</td></tr></tbody>`;
+        } else {
             html += `<tbody class="game-group">`;
-            g.entries.forEach(row => {
-                const rId = getRowId(row);
-                const gId = getGameId(row);
-                const username = localStorage.getItem('username');
-                html += `<tr id="${rId}" class="game-row-${gId}" 
-                    onclick="if(event.target.tagName!='A'){markDone('${gId}')}"
-                    onmouseenter="handleRowHover('${row.odd_id}',this)" >`;
+            currentData.forEach(row => {
+                html += `<tr id="${row.bet_id}">`;
                 currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
-                html += `<td> 
-                    <button class="btn-doublecheck" onclick="event.stopPropagation(); doubleCheckMatch('${rId}')" >CHECK</button> 
-                </td>`;
-                html += `<td> 
-                    <button class="btn-doublecheck" onclick="event.stopPropagation(); postBet(${row.ev_id}, '${username}')" >BET</button> 
-                </td>`;
                 html += `</tr>`;
             });
             html += `</tbody>`;
-        });
+        }
     }
 
     document.getElementById('table-container').innerHTML = html + '</table>';

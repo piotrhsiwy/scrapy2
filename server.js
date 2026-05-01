@@ -125,6 +125,29 @@ app.get('/arbs', requireAuth, async (req, res) => {
   res.json(rows);
 });
 
+app.get('/bets', requireAuth, async (req, res) => {
+  const username = req.query.username;
+  let ret = await pool.query({
+    text:`
+      SELECT user_id
+      FROM users
+      WHERE username = $1
+      LIMIT 1
+    `, 
+    values: [username]
+  });
+  const user_id = ret.rows[0].user_id;
+  const { rows } = await pool.query({
+    text:`
+      SELECT *
+      FROM bets
+      WHERE user_id = $1
+    `, 
+    values: [user_id]
+  });
+  res.json(rows);
+});
+
 app.get('/meta', requireAuth, async (req, res) => {
   const { rows } = await pool.query(`
     SELECT *
