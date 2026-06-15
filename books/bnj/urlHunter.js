@@ -84,8 +84,11 @@ export async function huntSportURLs(browser, book){
                 await tpage.waitForSelector('div.upcoming-events', {timeout:30000});
 
                 const batch = await tpage.$$eval('div.lines div.event-part', els => els.map( e => {
-                    // debugger;
-                    const datestring = e.querySelector('div.date-event').textContent;
+                    debugger;
+                    const isLive = e.querySelector('span.live-badge');
+                    const datestring = isLive 
+                        ? 'live'
+                        : e.querySelector('div.date-event').textContent;
                     const url = e.querySelector('a.snc-link-to-event').href;
                     return {url, datestring};
                 }))
