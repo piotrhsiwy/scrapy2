@@ -28,7 +28,7 @@ export async function huntSportURLs(browser, book){
         await page.waitForSelector('a[data-action="Open sport"]');
         
         hrefs = await page.evaluate( async () => {
-            debugger;
+            // debugger;
 
             async function waitMax(max){
                 let delay = 0;

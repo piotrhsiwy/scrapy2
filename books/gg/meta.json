@@ -1,7 +1,7 @@
 {
     "name":"GGbet",
     "abbrev":"gg",
-    "baseURL":"https://gg.bet/en",
+    "baseURL":"https://gg.bet/en/bets",
     "viewport":{"width":1920, "height":768},
     "blockRequestURLs": "analytics|hotjar|piwik|ip-geo|google|googletagmanager|translations|twitch|casino|chat|banner|sentry|LocaleSwitcher|SupportButton|icon-navigation-icons-pack|CookiesAgreements|OverviewBannersCarousel"
 }

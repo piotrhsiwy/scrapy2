@@ -35,17 +35,20 @@ export async function huntSportURLs(browser, book){
     let hrefs = [];
     try{
         await page.goto(url);
+
         const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
         await popup.click();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const popup2 = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
+        await popup2.click();
 
-        const iframeHandle = await page.$('iframe');
-        page = await iframeHandle.contentFrame();
-
-        await page.waitForSelector('div.games-nav__group-pro', {timeout:30000});
+        await page.waitForSelector('#sportsbook-app', {timeout:30000});
         
         // get sports from menu
-        const sports = await page.$$('div.games-nav__group-pro._disciplines a.games-nav__item-pro');
-        const sportNameCounts = await page.$$eval('div.games-nav__group-pro._disciplines a.games-nav__item-pro', els => els.map( e => e.textContent));
+        const shadowRoot = '#sportsbook-app'
+        const shadowRootPrefix = '#sportsbook-app >>> ';
+        const sports = await page.$$(shadowRootPrefix + 'div.games-nav__group-pro._disciplines a.games-nav__item-pro');
+        const sportNameCounts = await page.$$eval(shadowRootPrefix + 'div.games-nav__group-pro._disciplines a.games-nav__item-pro', els => els.map( e => e.textContent));
         for(let i = 0; i < sports.length; i++){
             const sport = sports[i];
             const sportNameCount = sportNameCounts[i];
@@ -57,12 +60,12 @@ export async function huntSportURLs(browser, book){
                 continue;
             }
             // using native click() since puppeteer's click() didn't do the job
-            await page.evaluate(async (i) => {
-                document.querySelectorAll('div.games-nav__group-pro._disciplines a.games-nav__item-pro')[i].click();
+            await page.evaluate(async (i, shadowRoot) => {
+                document.querySelector(shadowRoot).shadowRoot.querySelectorAll('div.games-nav__group-pro._disciplines a.games-nav__item-pro')[i].click();
                 await new Promise(resolve => setTimeout(resolve, 1000));
-            }, i)
+            }, i, shadowRoot)
             // select the Prematch filter
-            const prematchButton = await page.$$eval('a.lobby-filters__item-pro span[class=lobby-filters__item-text]', async els => {
+            const prematchButton = await page.$$eval(shadowRootPrefix + 'a.lobby-filters__item-pro span[class=lobby-filters__item-text]', async els => {
                 const button = els.find(e => e.textContent.includes('PREMATCH'))
                 if(button){
                     await button.click();
@@ -70,25 +73,25 @@ export async function huntSportURLs(browser, book){
                 }
             })
             try{
-                await page.waitForSelector('div.grid-line', {timeout:3000});
+                await page.waitForSelector(shadowRootPrefix + 'div.grid-el-line', {timeout:3000});
             } catch(e){
                 log.write(`Warning! Timeout 3s when waiting for selector 'div.grid-line' for sport ${sport.textContent}. Possibly no matches\n`);
                 continue;
             }
-            const batchHrefs = await page.evaluate(async () => {
+            const batchHrefs = await page.evaluate(async (shadowRoot) => {
                 // debugger;
-                const total = document.querySelectorAll('div.grid-event').length;
+                const total = document.querySelector(shadowRoot).shadowRoot.querySelectorAll('div.grid-el-event').length;
                 const batchHrefs = []
                 do{
-                    const els = Array.from(document.querySelectorAll('div.grid-event.grid-event-pro'));
+                    const els = Array.from(document.querySelector(shadowRoot).shadowRoot.querySelectorAll('div.grid-el-event.grid-el-event-pro'));
                     const newHrefs =  els.map( e => {
                         const day = e
-                            .closest('div.grid-line__content')
+                            .closest('div.grid-el-line__content')
                             .parentElement
-                            .querySelector('div.grid-line__title .grid-line__title-main span')
+                            .querySelector('div.grid-el-line__title .grid-el-line__title-main span')
                             .textContent;
-                        const time = e.querySelector('div.grid-event__time span').textContent;
-                        const url = e.querySelector('a.grid-event__competitors').href
+                        const time = e.querySelector('div.grid-el-event__time').textContent;
+                        const url = e.querySelector('a.grid-el-event__competitors').href
                         return {
                             url: url,
                             datestring: day + ', ' + time
@@ -104,7 +107,7 @@ export async function huntSportURLs(browser, book){
                     await new Promise(resolve => setTimeout(resolve, 500));
                 } while(batchHrefs.length < total);
                 return batchHrefs;
-            });
+            }, shadowRoot);
             hrefs = hrefs.concat(batchHrefs);
         }
 
