@@ -63,5 +63,6 @@ export const sportNameMap = Object.freeze({
     ALPINE_SKIING:      'Alpine Skiing',
     OTHER:              'Other',
     HEROES_OF_THE_STORM:'Heroes of the Storm',
-    MORTAL_COMBAT:      'Mortal Combat'
+    MORTAL_COMBAT:      'Mortal Combat',
+    HOMM3:              'Heroes of Might and Magic III'
 });

@@ -50,6 +50,7 @@ export async function huntSportURLs(browser, book){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport') &&
                 !href.includes('esports_basketball') &&
+                !href.includes('esports_ice_hockey') &&
                 !href.includes('esports_fifa')){
                     sport.click();
                     const NAVI_DELAY = 1000;

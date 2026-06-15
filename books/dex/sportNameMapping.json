@@ -36,7 +36,11 @@
         "globalID": "CS2"
     },
     {
+        "specificName": "CrossFire",
+        "globalID": "CROSSFIRE"
+    },
+    {
         "specificName": "Fortnite",
-        "globalID": "Fortnite"
+        "globalID": "FORTNITE"
     }
 ]
