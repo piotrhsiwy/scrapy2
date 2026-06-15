@@ -34,5 +34,9 @@
     {
         "specificName": "Counter-Strike",
         "globalID": "CS2"
+    },
+    {
+        "specificName": "Fortnite",
+        "globalID": "Fortnite"
     }
 ]
