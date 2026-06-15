@@ -27,8 +27,8 @@ function extractArg(s){
 import axios from 'axios';
 let CURRENT_COOKIE = "";
 let REFERER = "";
-async function fetchMap( mapId ){
-  const API_URL = `https://bestwinzz.net/service-api/LineFeed/GetGameZip?id=${mapId}&lng=en&tzo=1&cfview=0&isSubGames=true&GroupEvents=true&countevents=750&country=53&fcountry=53&isNewBuilder=true&partner=151&grMode=4`;
+async function fetchMap( baseurl, mapId ){
+  const API_URL = baseurl + `service-api/LineFeed/GetGameZip?id=${mapId}&lng=en&tzo=1&cfview=0&isSubGames=true&GroupEvents=true&countevents=750&country=53&fcountry=53&isNewBuilder=true&partner=151&grMode=4`;
   const HEADERS = {
       'Cookie': CURRENT_COOKIE, 
       'Referer': REFERER, 
@@ -81,18 +81,28 @@ export async function scrapeMatchURL(browser, book, i){
       log.write(`Critical Failure! Cannot open page ${book.urls[i]}\n`);
       return -1;
     }
-      try{
-          await page.waitForSelector('#game-filters option');
-      } catch(error){
-          // Some games do not have this filter, they just have game markets! Have to craft API call then?
-          log.write(`Critical Failure! The '#game-filters option' selector not to be found on ${book.urls[i]}\n`);
-          return 10;
-      }
-    const maps = await page.$$eval('#game-filters option', (es) => {
-      return es.map( e => { 
-        return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}
-      })
-    });
+    let mainGameId;
+    try{
+      mainGameId = await page.$eval('div.c-events.main_game', e => e.id);
+    } catch(error){
+      log.write(`Critical Failure! No main_game tab for this match (could be a redirect because it's in the past) ${book.urls[i]}\n`);
+      return 11;
+    }
+    let hasFilters;
+    try{
+        hasFilters = await page.waitForSelector('#game-filters option', {timeout:5000});
+    } catch(error){
+        // Some games do not have this filter, they just have game markets! Have to craft API call then?
+        log.write(`Warning! The '#game-filters option' selector not to be found on ${book.urls[i]}\n`);
+    }
+    let maps = [{mapName: 'Regular Time', mapId: mainGameId}];
+    if(hasFilters){
+      maps = await page.$$eval('#game-filters option', (es) => {
+        return es.map( e => { 
+          return {mapName: e.textContent.replace(/\n/g, '').trim(), mapId: e.value}
+        })
+      });
+    } 
     const urlSplit = book.urls[i].split('/esports/', 2)[1].split('/', 2);
     const idAndName = urlSplit[0].split(/-(.*)/);
     const leagueId = idAndName[0];
@@ -114,7 +124,7 @@ export async function scrapeMatchURL(browser, book, i){
     }
 
     for(const map of maps){
-      const respData = await fetchMap(map.mapId);
+      const respData = await fetchMap(book.baseURLBuilder, map.mapId);
       if(respData.Success === true){
 
         let sportName = respData.Value.SSN;

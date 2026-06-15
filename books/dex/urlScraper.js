@@ -45,12 +45,13 @@ export async function scrapeMatchURL(browser, book, i){
     const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
     await popup.click();
 
-    const iframeHandle = await page.$('iframe');
-    page = await iframeHandle.contentFrame();
-    await page.waitForSelector('div.games-stream__title-item a', {timeout:30000})
+    const shadowRoot = '#sportsbook-app'
+    const shadowRootPrefix = '#sportsbook-app >>> ';
+
+    await page.waitForSelector( shadowRootPrefix + 'div.games-stream__title-item a', {timeout:30000})
 
     // get sport
-    const SportTournament = await page.$eval('div.games-stream__title-item a', e => e.textContent);
+    const SportTournament = await page.$eval(shadowRootPrefix + 'div.games-stream__title-item a', e => e.textContent);
     let sportName = SportTournament.split('. ')[0];
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
@@ -61,9 +62,9 @@ export async function scrapeMatchURL(browser, book, i){
     }
 
     // get teamHome, teamAway
-    let teams = await page.$$eval('div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
+    let teams = await page.$$eval(shadowRootPrefix + 'div.sb-pro__name', elements => elements.map( e => e.textContent.trim() ));
     if(teams.length != 2){
-      teams = await page.$$eval('div.slider-event-pro__team-name', elements => elements.map( e => e.textContent.trim() ));
+      teams = await page.$$eval(shadowRootPrefix + 'div.slider-event-pro__team-name', elements => elements.map( e => e.textContent.trim() ));
       if(teams.length != 2){
         log.write(`Failure! Read incorrect number of team names for this game (possibly none)\n`);
         return 10;
@@ -73,12 +74,12 @@ export async function scrapeMatchURL(browser, book, i){
     const teamAway = stripTeamName(teams[1]);
     
     // get datetime, mode
-    const isLive = await page.$('div._badge--live');
+    const isLive = await page.$(shadowRootPrefix + 'div._badge--live');
     let datetime;
     if(isLive){
       datetime = 'live';
     } else{
-      const datestring = await page.$eval('div.slider-event-pro__info-date span', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
+      const datestring = await page.$eval(shadowRootPrefix + 'div.slider-event-pro__info-date span', e => e.textContent.trim().replace(/\u00a0/, '\u0020'));
       datetime = datestringToISO(datestring);
     }
     const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
@@ -92,17 +93,17 @@ export async function scrapeMatchURL(browser, book, i){
     }
 
     // check filter 'All markets'
-    await page.evaluate( async() => {
-      const filters = Array.from(document.querySelectorAll('span.games-stream-pro-nav__item-text'));
+    await page.evaluate( async(shadowRoot) => {
+      const filters = Array.from(document.querySelector(shadowRoot).shadowRoot.querySelectorAll('span.games-stream-pro-nav__item-text'));
       const allMarketsFilter = filters.find( e => e.textContent.includes('FILTER.ALL'));
       if(allMarketsFilter){
         await allMarketsFilter.click();
         await new Promise(resolve => setTimeout(resolve, 100));
       }
-    })
+    }, shadowRoot)
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div.game-event__market-wrapper';
-    let marketHandles = await page.$$(selector);
+    let marketHandles = await page.$$(shadowRootPrefix + selector);
     // scroll until no more elements are loaded
     let old_size, new_size;
     do{
@@ -110,7 +111,7 @@ export async function scrapeMatchURL(browser, book, i){
       old_size =  marketHandles.length;
       await marketHandles[marketHandles.length-1].scrollIntoView();
       await new Promise(resolve => setTimeout(resolve, 100));
-      marketHandles = await page.$$(selector);
+      marketHandles = await page.$$(shadowRootPrefix + selector);
       new_size =  marketHandles.length;
     } while( old_size !== new_size );
     for(const marketHandle of marketHandles){
