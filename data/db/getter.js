@@ -12,8 +12,6 @@ export async function getOdds(){
                 ORDER BY o.timestamp ASC
             `,
         }); 
-    } catch(e){
-
     } finally{
         if(client) client.release();
     }
@@ -483,7 +481,6 @@ export async function getMatching4CS(odd_id){
             text:`
                 WITH target AS (
                     SELECT mko.market_id, mto.match_id
-                    FROM odds o 
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE o.odd_id = $1
@@ -594,6 +591,28 @@ export async function getOdd(odd_id){
                 LIMIT 1 
             `,
             values: [odd_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows[0];
+}
+
+export async function getMarketId(marketName){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT market_id
+                FROM markets
+                WHERE name = $1
+                LIMIT 1 
+            `,
+            values: [marketName],
         }); 
     } catch(e){
 

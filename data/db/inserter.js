@@ -705,3 +705,36 @@ export async function insertToScrapeUrl(log, book, url, datetime){
         return { toscrapeurl_id, is_new };
     }
 }
+
+//##############################
+//###### RESULT TABLES
+//##############################
+export async function insertResult(log, match_id, market_id, winners){
+
+    const date = new Date();
+    let client;
+    let result_id, is_new;
+    try{
+        client = await pool.connect();
+        const ret = await client.query( {
+                text:`
+                    INSERT INTO results (match_id, market_id, winners)
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT DO NOTHING RETURNING result_id
+                `,
+                values: [match_id, market_id, winners],
+        });
+        result_id = ret.rows[0].result_id;
+        if(result_id){
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into results: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t result_id: ${result_id}\n`)
+        } else {
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t Incorrect result_id: ${result_id}\n`);
+        }
+        
+    } catch(e){
+        if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return result_id;
+    }
+}
