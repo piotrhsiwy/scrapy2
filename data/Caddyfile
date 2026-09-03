@@ -1,0 +1,15 @@
+scrapy2.duckdns.org {
+    # Define where your index.html and static assets live 
+    root * .
+
+    # Enable detailed request logging
+    log
+
+    # Route API requests to the Node.js server 
+    handle_path /api/* {
+        reverse_proxy localhost:3001
+    }
+
+    # Serve the static UI files 
+    file_server
+}

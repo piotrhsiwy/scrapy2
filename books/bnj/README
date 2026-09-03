@@ -1,0 +1,96 @@
+I had to turn off all the chromium startup flags to pass the Vercel Checkpoint verfication. Later I could turn 
+them all back on and the test passed. It seems to be statefully bound to IP.
+
+It works when I use chromium with NO flags
+
+this is ourput from the browser's console:
+
+### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 Event {isTrusted: true, type: 'resize', target: Window, currentTarget: Window, eventPhase: 2, …}
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 MessageEvent {isTrusted: true, data: {…}, origin: 'https://betninja21.com', lastEventId: '', source: Window, …}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {id: 'tab-bar', css: Array(2), content: '<nav data-external-id="tab-bar" data-external-hide…l">My Bets</span></div></a></li></ul></div></nav>', event: 'SportbookReturnContent'}
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 ### checkPostMessage PostMessage Received: <<<<<< ###
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 MessageEvent {isTrusted: true, data: {…}, origin: 'https://sportsbook.betninja21.com', lastEventId: '', source: Window, …}
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 ### checkPostMessage PostMessage Received: <<<<<< ###
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 MessageEvent {isTrusted: true, data: {…}, origin: 'https://sportsbook.betninja21.com', lastEventId: '', source: Window, …}
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 ### checkPostMessage PostMessage Received: <<<<<< ###
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 MessageEvent {isTrusted: true, data: {…}, origin: 'https://sportsbook.betninja21.com', lastEventId: '', source: Window, …}
+34af0c1.js:1 snc-app-bridge - notifySizeChanged
+34af0c1.js:1 {…}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {…}
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 PointerEvent {isTrusted: false, pointerId: -1, width: 1, height: 1, pressure: 0, …}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {event: 'sportsbookUserClick'}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {event: 'sportbook_request_parent_scroll_top'}
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 ### checkPostMessage PostMessage Received: <<<<<< ###
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10 MessageEvent {isTrusted: true, data: {…}, origin: 'https://sportsbook.betninja21.com', lastEventId: '', source: Window, …}
+34af0c1.js:1 snc-app-bridge - notifySizeChanged
+34af0c1.js:1 {…}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {…}
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 Event {isTrusted: true, type: 'resize', target: Window, currentTarget: Window, eventPhase: 2, …}
+34af0c1.js:1 snc-app-bridge - notifySizeChanged
+34af0c1.js:1 {…}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {…}
+4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10  POST https://betninja21.com/monitoring?o=4510827151360000&p=4510827153653840&r=de 429 (Too Many Requests)
+a @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10
+add @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+send @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10
+sendEnvelope @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+sendEvent @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+(anonymous) @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+(anonymous) @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+_executeHandlers @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+(anonymous) @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+_runExecutor @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+eX @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+then @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:5
+_processEvent @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+_captureEvent @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+add @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+_process @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:7
+captureEvent @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+captureEvent @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:2
+_onSpanEnded @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:4
+end @ 44a086fad962d7ff.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:4
+apply @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:17
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:17
+n @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:7
+setTimeout
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:10
+w @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:17
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:17
+r @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+emit @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:6
+h @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:20
+(anonymous) @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:20
+n @ 4a2b22bbf7c68973.js?dpl=dpl_6R4nuRiUFZk2fzozkFa4ssucx7QB:7
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 PointerEvent {isTrusted: false, pointerId: -1, width: 1, height: 1, pressure: 0, …}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {event: 'sportsbookUserClick'}
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 PointerEvent {isTrusted: false, pointerId: -1, width: 1, height: 1, pressure: 0, …}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {event: 'sportsbookUserClick'}
+34af0c1.js:1 ### checkPostMessage PostMessage Received: <<<<<< ###
+34af0c1.js:1 PointerEvent {isTrusted: false, pointerId: -1, width: 1, height: 1, pressure: 0, …}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {event: 'sportsbookUserClick'}
+34af0c1.js:1 snc-app-bridge - notifySizeChanged
+34af0c1.js:1 {…}
+34af0c1.js:1 ### postMessageToWindowTarget Post Message sent ###
+34af0c1.js:1 {…}
+
+Tested on headfull browser. There is a rateLimiter in place!

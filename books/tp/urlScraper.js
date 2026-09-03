@@ -5,10 +5,10 @@ import { sportNameMap } from "../sportNameMap.js";
 import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
 import { applyPatches } from "../page.js"
-import { insertSportIntoData, insertOddIntoMarket,insertMatchIntoSport, insertMarketIntoMatch, insertCoefIntoOdd } from "../../data/util/inserter.js";
 import { datestringToISO } from "./parser.js";
+import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
   
   const page = await browser.newPage();
   await page.setViewport(book.viewport);
@@ -108,7 +108,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
-    if(!sportNameMapping){ throw error(); }
+    if(!sportNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -117,7 +117,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
-    if(!marketNameMapping){ throw error(); }
+    if(!marketNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -144,8 +144,7 @@ export async function scrapeMatchURL(data, browser, book, i){
       }
     }
     // get sport
-    selector = "#breadcrumbs a";
-    let sportName = await page.$$eval(selector, els => els[1].textContent/*.trim().replace(/\u00a0/g, '\u0020')*/);
+    let sportName = await page.$eval('li[data-testid=breadcrumbs-segment-1]', e => e.textContent/*.trim().replace(/\u00a0/g, '\u0020')*/);
     mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
@@ -153,7 +152,6 @@ export async function scrapeMatchURL(data, browser, book, i){
       log.write(`Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return 20;
     }
-    let sport = insertSportIntoData(log, data, sportName);
 
     // get tournament
     // selector = "#breadcrumbs > div:nth-child(3) > a";
@@ -203,7 +201,15 @@ export async function scrapeMatchURL(data, browser, book, i){
     // selector = "div.match-header__bo";
     // el = await page.waitForSelector(selector);
     // const mode = await page.evaluate( e => e.textContent.trim().replace(/\u00a0/g, '\u0020'), el);
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+    const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
+    if(!match_id){
+      log.write(`Critical Failure! Database insert error\n`);
+      return -100;
+    }
+    const {url_id:url_id, is_new:url_is_new} = await insertUrl(log, match_id, book.name, book.urls[i]);
+    if(!url_id){
+      log.write(`Failure! Database insert error\n`);
+    }
 
   // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
   const allHandles = await page.$$('#markets-list [data-state="open"]');
@@ -235,7 +241,11 @@ export async function scrapeMatchURL(data, browser, book, i){
       continue;
     }
     // write (marketName)
-    let market = insertMarketIntoMatch(log, match, marketName);
+    const {market_id:market_id, is_new:market_is_new} = await insertMarket(log, marketName);
+    if(!market_id){
+      log.write(`Critical Failure! Database insert error\n`);
+      return -100;
+    }
 
     // get odds and vals
     let {odds, vals} = await marketHandles[i].evaluate( async (e) => {
@@ -277,8 +287,14 @@ export async function scrapeMatchURL(data, browser, book, i){
         .replace(labelAway, teamAway)
         .replace(/\+/g, '');
         odds[j] = stripTeamName(odds[j]);
-        let odd = insertOddIntoMarket(log, market, odds[j]);
-        let coef = insertCoefIntoOdd(log, odd, book.name, vals[j])
+        if(marketName.includes('Kill Maker')){
+          odds[j] = odds[j].replace('thkill', '');
+        }
+        const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, odds[j], book.name, vals[j]);
+        if(!odd_id){
+          log.write(`Failure! Database insert error\n`);
+          continue;
+        }
       }
     }
 
@@ -292,7 +308,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     return -1;
   } finally{
     try{ await page?.close() } catch{ log.write(`Error thrown when closing page`); }
-    await promisify(log.end).bind(log);
+    await promisify(log.end).bind(log)();
   } 
 
 }

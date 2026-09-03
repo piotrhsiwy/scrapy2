@@ -44,6 +44,10 @@
         "globalID": "CROSSFIRE_MOBILE"
     },
     {
+        "specificName": "COD",
+        "globalID": "COD"
+    },
+    {
         "specificName": "SC",
         "globalID": "SC_BROODWAR"
     },

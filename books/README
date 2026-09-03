@@ -1,14 +1,51 @@
-/xyz/urlScraper.js return codes interpretation:
-20 failure:
-  sport mapping does not exist
-11  failure:
-  redirected. This can happen if the match is in the past
-10 failure:
-  there is an element on the page indicating that the match is in the past and/or doesn't exist
-0 success:
-  successfully retrieved all available markets. Note that  live odds are 
-  not being scraped
--1 critical failure:
-  some critical error thrown when scraping. Could also be a Timeout. No odds were scraped.
--10 critical failure:
-  one of the required files could not be opened
+books to consider available in Germany:
+
+thunderpick     supported (3.3 trustpilot)
+22bet/bestwinzz supported (3.6 trustpilot)
+esportsbet      supported (4.2 trustpilot)
+lsbet           supported (1.9 trustpilot)
+ggbet           supported (2.1 trustpilot)
+mystake         supported (4.2 trustpilot)
+dexsport        supported (3.4 trustpilot)         web3 decentralized
+bet365          -           no esports
+tipico          -           no esports 
+interwetten     -           no esports 
+betano          -           no esports 
+888sport        -           no esports 
+bpremium        -           no esports 
+bet-at-home     -           no esports 
+merkurbets      -           no esports 
+admiralbet      -           no esports 
+oddset          -           no esports
+betway          -           no esports
+bwin            -           no esports 
+jackbit         -           OK (1.9 trustpilot)         no GGL license
+bcgame          -           no Germany
+tgcasino        -           OK (2.7 trustpilot)         telegram
+lootbet         -           -
+luckyblock      -           OK (2.7 trustpilot)         telegram
+megadice        -           WARNING
+betplay         -           OK (2.8 trustpilot)
+cryptorino      -           OK (2.9 trustpilot)         cloudeflare
+telbet          -           OK (no trustpilot reviews)
+vave            -           OK (1.5 trustpilot)
+betninja        test        (2.2 trustpilot)            good website to scrape odds
+sportbet.one    -           Netherlands VPN (2.8 trustpilot) good for scraping, no KYC, decentralized
+
+2. Where do they get the odds? (The Source)
+The absolute "top of the food chain" for odds data are the B2B Odds Feed Providers. These companies employ thousands of data scouts and use complex AI models to generate the prices. The most prominent ones are:
+
+Sportradar (Betradar): The global leader. They provide the "Managed Trading Services" (MTS) that power the majority of the world's sportsbooks.
+
+Genius Sports: Major rivals to Sportradar, especially strong in US sports and official league data.
+
+Abios & PandaScore: These are the "specialists" for Esports. If you see deep markets for CS2 or Valorant, the odds are likely coming from one of these two.
+
+Betfair Exchange: Many bookmakers also scrape the Betfair Exchange API to see where the "sharp" money is moving and adjust their own prices accordingly.
+ 
+
+API
+PandaScore: Offers a dedicated Esports API with a free tier for developers. 
+
+
+Pinnacle is apparently the sharpest odds there is

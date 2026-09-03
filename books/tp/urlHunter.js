@@ -1,7 +1,8 @@
-import { writeFileSync, truncateSync, existsSync, createWriteStream } from "fs"
+import { createWriteStream } from "fs"
 import { promisify } from "util";
 import { applyPatches, prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
+import { insertToScrapeUrl } from "../../data/db/inserter.js";
 
 /**
  * this function only gets one URL and is the only one exposed to the outside
@@ -15,22 +16,8 @@ export async function huntSportURLs(browser, book){
     // open a file for logging
     const logFilePath = `./books/${book.abbrev}/log.txt`;
     const log = createWriteStream(logFilePath, {flags: 'a'});
-    // open and empty writing stream
-    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
-    if(existsSync(dataOutPath)){
-        truncateSync(dataOutPath, 0);
-    }
-    // const sportsPath = `./books/${book.abbrev}/sports.json`;
-    // if(existsSync(sportsPath)){
-    //     truncateSync(sportsPath, 0);
-    // }
-    // const toursPath = `./books/${book.abbrev}/tours.json`;
-    // if(existsSync(toursPath)){
-    //     truncateSync(toursPath, 0);
-    // }
 
     // const page = await prepPage(browser, book);
-    // TODO tp does not work in headless when filtering requests
     const page = await browser.newPage();
     await page.setViewport(book.viewport);
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
@@ -45,9 +32,20 @@ export async function huntSportURLs(browser, book){
 
     let hrefs = [];
     try{
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+        await page.goto(url);
 
-        await page.waitForSelector('div.infinite-scroll-list', {timeout: 1000});
+        // this is the initial sync locking on the page before navigation. Waits Until number of games in the All Tab is not empty.
+        while(await page.$('div[data-testid=AllTab] span') === null){
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        while(true){
+            const content = await page.$eval('div[data-testid=AllTab] span', e => e.textContent)
+            if(content != ''){
+              break; 
+            } else{
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
         
         hrefs = await page.evaluate( async () => {
             // debugger;
@@ -55,6 +53,7 @@ export async function huntSportURLs(browser, book){
             const sports = Array.from(document.querySelectorAll('#navigation a')).filter(e =>
                 e.classList.contains('group/link') && e.classList.contains('first-of-type:mt-2') &&
                 !e.href.includes('ebasketball') &&
+                !e.href.includes('eamerican-football') &&
                 !e.href.includes('esoccer')
             );
             for(let i = 0; i < sports.length; i++){
@@ -62,21 +61,34 @@ export async function huntSportURLs(browser, book){
                 const matchCount = parseInt(text);
                 if(matchCount > 0){
                     await sports[i].click();
-                    while(document.querySelector('[data-testid="match-details-link"') === null){
+                    // i have to wait until the filter applies and only the matches from this sport are shown
+                    // 1. Loop until breadcrumbs exist (they exist only when a sport is selected)
+                    while(document.querySelector('div[data-testid=breadcrumbs]') === null){
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+                    // 2. Loop until breadcrumbs match the just clicked sport (I don't unselect the prev filter)
+                    while(document.querySelector('div[data-testid=breadcrumbs] button[data-base-ui-navigation-menu-trigger] div.truncate').textContent !== sports[i].querySelector('div.text-base').textContent){
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    }
+                    // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
+                    // Only if more than 0 entries in AllTab
+                    const matchesInAllTab = document.querySelector('div[data-testid=AllTab] span')?.textContent;
+                    if(matchesInAllTab && matchesInAllTab > 0){
+                        while(document.querySelector('div[data-testid*=match-list-row-]') === null){
+                            await new Promise(resolve => setTimeout(resolve, 100));
+                        }
+                    }
+                    // 4. Even then, the entries seem to be loaded only partially when I dont await here
                     await new Promise(resolve => setTimeout(resolve, 500));
-                    let newHrefs = Array.from(document.querySelectorAll('[data-testid="match-details-link"]')).map( e => {
-                        const divs = Array.from(e.parentNode.querySelectorAll('div'));
-                        
-                        const index = divs.map( e => {
-                            return Array.from(e.classList);
-                                                }).findIndex( e => {
-                                                    return e.some( className => className.includes('matchTime'));
-                                                })
-                        let datestring = divs[index]?.textContent;
-                        const sectionTitle = e.parentNode.parentNode.parentNode.parentNode.querySelector('div.match-group-title')?.textContent?.trim();
-                        const url = e.href;
+                    // 5. Read the entries
+                    let newHrefs = Array.from(document.querySelectorAll('div[data-testid*=match-list-row-]')).map( e => {
+                        const datestring = e.querySelector('div[data-testid*=match-time-]')?.textContent;
+                        const url = e.querySelector('a[data-testid=match-details-link]')?.href;
+                        let iter = e.previousElementSibling;
+                        while( iter && iter.matches('div[data-testid*=match-list-row-')){
+                            iter = iter.previousElementSibling;
+                        }
+                        const sectionTitle = iter?.textContent?.trim();
                         return {datestring, sectionTitle, url}
                     })
                     ret = ret.concat(newHrefs);
@@ -88,26 +100,18 @@ export async function huntSportURLs(browser, book){
         hrefs = hrefs.map(({datestring,  sectionTitle, url}) => {
             let ISOString;
             if(!sectionTitle){
-                log.write(`Failure! No sectionTitle for url: ${url}\n`);
-                return undefined;
+                log.write(`Warning! No sectionTitle for url: ${url}\n`);
             } else{
-                if(sectionTitle === 'Upcoming'){
-                    datestring = sectionTitle + ', ' + datestring;
-                } else if(sectionTitle === 'Featured'){
-                } else if(sectionTitle.includes('Live')){
+                if(sectionTitle.includes('Live')){
                     datestring = 'live';
-                } else{
-                    const dateMatch = sectionTitle.match(/.*, (.* \d+).*/);
-                    const date = dateMatch ? dateMatch[1] : "";
-                    datestring = date + ', ' + datestring;
                 }
+            }
 
-                try{
-                    ISOString = datestringToISO(datestring);
-                } catch(error){
-                    log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
-                    return undefined;
-                }
+            try{
+                ISOString = datestringToISO(datestring);
+            } catch(error){
+                log.write(`Warning! Invalid date of the match under ${url}. Error thrown by the date parser: ${error.message}\n`);
+                return undefined;
             }
             return {
                 url: url,
@@ -121,6 +125,11 @@ export async function huntSportURLs(browser, book){
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         hrefs = hrefsPruned;
+
+        for(const href of hrefsPruned){
+            await insertToScrapeUrl(log, book.name, href.url, href.datetime);
+        }
+
         return 0;
 
     } catch(error){
@@ -129,10 +138,7 @@ export async function huntSportURLs(browser, book){
         log.write(error.stack);
         return -1;
     } finally{
-        // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
-        // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
         try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
-        await promisify(log.end).bind(log);
+        await promisify(log.end).bind(log)();
     }
 }

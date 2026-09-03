@@ -4,14 +4,52 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug index.js",
+            "name": "test result",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\index.js"
+            "program": "${workspaceFolder}/result.js",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test scrape",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/scrape.js",
+            "args": ["-c 1 -h 24"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test hunt",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/hunt.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test calc",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/calc.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Test server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/server.js"
         },
         {
             "type": "node",
@@ -20,16 +58,16 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\books\\tp\\parserTests.js"
+            "program": "${workspaceFolder}/books/util/stripTeamNameTests.js"
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug Telegram Bot",
+            "name": "Test db",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\notif\\telegram\\tgBot.js"
-        }
+            "program": "${workspaceFolder}/data/db/dbTests.js"
+        },
     ]
 }

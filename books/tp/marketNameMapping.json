@@ -20,6 +20,10 @@
         "globalID":     "TR"
     },
     {
+        "specificName": "Total Rounds",
+        "globalID":     "TR"
+    },
+    {
         "specificName": "Match Total Kills",
         "globalID":     "TK"
     },
@@ -29,6 +33,10 @@
     },
     {
         "specificName": "Match Round Handicap",
+        "globalID":     "TRHDP"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime)",
         "globalID":     "TRHDP"
     },
     {
@@ -152,43 +160,43 @@
         "globalID":     "FHWWDM5"
     },
     {
-        "specificName": "Second Half Winner 1X2 - Map1",
+        "specificName": "Second Half Winner 1X2 - Map 1",
         "globalID":     "FHWWDM1"
     },
     {
-        "specificName": "Second Half Winner 1X2 - Map2",
+        "specificName": "Second Half Winner 1X2 - Map 2",
         "globalID":     "FHWWDM2"
     },
     {
-        "specificName": "Second Half Winner 1X2 - Map3",
+        "specificName": "Second Half Winner 1X2 - Map 3",
         "globalID":     "FHWWDM3"
     },
     {
-        "specificName": "Second Half Winner 1X2 - Map4",
+        "specificName": "Second Half Winner 1X2 - Map 4",
         "globalID":     "FHWWDM4"
     },
     {
-        "specificName": "Second Half Winner 1X2 - Map5",
+        "specificName": "Second Half Winner 1X2 - Map 5",
         "globalID":     "FHWWDM5"
     },
     {
-        "specificName": "1st Half Correct score - Map 1",
+        "specificName": "1st Half Correct Score - Map 1",
         "globalID":     "CSFHM1"
     },
     {
-        "specificName": "1st Half Correct score - Map 2",
+        "specificName": "1st Half Correct Score - Map 2",
         "globalID":     "CSFHM2"
     },
     {
-        "specificName": "1st Half Correct score - Map 3",
+        "specificName": "1st Half Correct Score - Map 3",
         "globalID":     "CSFHM3"
     },
     {
-        "specificName": "1st Half Correct score - Map 4",
+        "specificName": "1st Half Correct Score - Map 4",
         "globalID":     "CSFHM4"
     },
     {
-        "specificName": "1st Half Correct score - Map 5",
+        "specificName": "1st Half Correct Score - Map 5",
         "globalID":     "CSFHM5"
     },
     {
@@ -249,6 +257,26 @@
     },
     {
         "specificName": "Round Handicap - Map 5",
+        "globalID":     "RHDPM5"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 1",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 2",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 3",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 4",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Round Handicap (Incl. Overtime) - Map 5",
         "globalID":     "RHDPM5"
     },
     {
@@ -430,6 +458,26 @@
     {
         "specificName": "Overtime Yes/No - Map 5",
         "globalID":     "OT5"
+    },
+    {
+        "specificName": "1X2 - Map 1",
+        "globalID":     "M1WD"
+    },
+    {
+        "specificName": "1X2 - Map 2",
+        "globalID":     "M2WD"
+    },
+    {
+        "specificName": "1X2 - Map 3",
+        "globalID":     "M3WD"
+    },
+    {
+        "specificName": "1X2 - Map 4",
+        "globalID":     "M4WD"
+    },
+    {
+        "specificName": "1X2 - Map 5",
+        "globalID":     "M5WD"
     },
     {
         "specificName": "Map 1 1X2",

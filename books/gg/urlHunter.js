@@ -1,7 +1,8 @@
-import { createWriteStream, writeFileSync, existsSync, truncateSync } from "fs"
+import { createWriteStream, } from "fs"
 import { promisify } from "util";
 import { prepPage } from "../page.js";
 import { datestringToISO } from "./parser.js";
+import { insertToScrapeUrl } from "../../data/db/inserter.js";
 
 // global variables in this module
 let log;
@@ -17,28 +18,17 @@ export async function huntSportURLs(browser, book){
     const logFilePath = `./books/${book.abbrev}/log.txt`;
     log = createWriteStream(logFilePath, {flags: 'a'});
     // open and empty writing stream
-    const dataOutPath = `./books/${book.abbrev}/matchURLs.json`;
-    if(existsSync(dataOutPath)){
-        truncateSync(dataOutPath, 0);
-    }
-    // const sportsPath = `./books/${book.abbrev}/sports.json`;
-    // if(existsSync(sportsPath)){
-    //     truncateSync(sportsPath, 0);
-    // }
-    // const toursPath = `./books/${book.abbrev}/tours.json`;
-    // if(existsSync(toursPath)){
-    //     truncateSync(toursPath, 0);
-    // }
     
     let hrefs = [];
+    let page;
     try{
-        const page = await prepPage(browser, book);
+        page = await prepPage(browser, book);
         await page.goto(url);
         
         await page.waitForSelector('a[data-action="Open sport"]');
         
         hrefs = await page.evaluate( async () => {
-            debugger;
+            // debugger;
 
             async function waitMax(max){
                 let delay = 0;
@@ -60,6 +50,7 @@ export async function huntSportURLs(browser, book){
                 const href = sport.getAttribute('href');
                 if(href.includes('esport') &&
                 !href.includes('esports_basketball') &&
+                !href.includes('esports_ice_hockey') &&
                 !href.includes('esports_fifa')){
                     sport.click();
                     const NAVI_DELAY = 1000;
@@ -112,16 +103,18 @@ export async function huntSportURLs(browser, book){
 
         log.write(`Success! Hunted ${hrefsPruned.length} hrefs from ${url}\n`);
         hrefs = hrefsPruned;
+
+        for(const href of hrefsPruned){
+            await insertToScrapeUrl(log, book.name, href.url, href.datetime);
+        }
+
         return 0;
 
     } catch(error){
         log.write(`Critical Failure! Error message: ${error.message}. Error stack: ${error.stack} Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n`);
         return -1;
     } finally{
-        writeFileSync(dataOutPath, JSON.stringify(hrefs, null, 2));
-        // writeFileSync(sportsPath, JSON.stringify(tuple.sports, null, 2));
-        // writeFileSync(toursPath, JSON.stringify(tuple.tours, null, 2));
         try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }
-        await promisify(log.end).bind(log);
+        await promisify(log.end).bind(log)();
     }
 }

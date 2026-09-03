@@ -80,6 +80,10 @@
         "globalID": "CROSSFIRE_MOBILE"
     },
     {
+        "specificName": "Heroes of Might and Magic III",
+        "globalID": "HOMM3"
+    },
+    {
         "specificName": "Crossfire",
         "globalID": "CROSSFIRE"
     }

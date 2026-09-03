@@ -1,8 +1,8 @@
 {
     "name":"22Bet",
     "abbrev":"22",
-    "baseURL":"https://bestwinzz.net/en/line/esports",
-    "baseURLBuilder":"https://bestwinzz.net/",
+    "baseURL":"https://sportandspins.com/en/line/esports",
+    "baseURLBuilder":"https://sportandspins.com/",
     "viewport":{"width":1920, "height":768},
     "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|chat|googletagmanager|adform|rtmark|snapchat"
 }
