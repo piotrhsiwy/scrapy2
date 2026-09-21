@@ -3,7 +3,6 @@ import { constants } from 'buffer';
 
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { timeStamp } from 'console';
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [

@@ -1,14 +1,14 @@
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 
-import { initDbResult } from '../data/db/db.js';
-import { openBrowser } from '../util.js';
-import { datestringToISO } from './parser.js';
-import { sportNameMap } from "../sportNameMap.js";
-import { marketNameMap } from "../marketNameMap.js";
-import { stripTeamName } from '../books/util/stripTeamName.js';
-import { insertMatch, insertResult } from '../data/db/inserter.js';                 
-import { getMarketId } from "../data/db/getter.js";
+import { initDbResult } from './data/db/db.js';
+import { openBrowser } from './util.js';
+import { datestringToISO } from './results/parser.js';
+import { sportNameMap } from "./books/sportNameMap.js";
+import { marketNameMap } from "./books/marketNameMap.js";
+import { stripTeamName } from './books/util/stripTeamName.js';
+import { insertMatch, insertResult } from './data/db/inserter.js';                 
+import { getMarketId } from "./data/db/getter.js";
                  
 // score in the format of 1:0, 3:2, W:FF...
 async function fillGameMarkets(log, match_id, teamHome, teamAway, type, score){
@@ -83,7 +83,7 @@ async function singleResult(log){
     const baseUrl = "https://www.gosugamers.net/matches/results";
 
     // load the book-specific mappings from json files
-    const sportNameMappingPath = `./sportNameMapping.json`;
+    const sportNameMappingPath = `./results/sportNameMapping.json`;
     let sportNameMapping;
     try{
         sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
@@ -104,25 +104,29 @@ async function singleResult(log){
             const batch = await page.$$eval('div.MuiCard-root a', el => el.map( e => e.getAttribute('href')));
             urls = urls.concat(batch);
             // check is we are on the last page
-            isLast = page.$$eval('nav.MuiPagination-root ul button.MuiPaginationItem-page', el => {
+            await page.waitForSelector('nav.MuiPagination-root ul button.MuiPaginationItem-page');
+            isLast = await page.$$eval('nav.MuiPagination-root ul button.MuiPaginationItem-page', el => {
                 return el[el.length-1].hasAttribute('current');
             });
             // go to next Page
-            const [nextButton] = page.$$eval('nav.MuiPagination-root ul button.MuiPaginationItem-previousNext', el => {
-                return el.filter( el => el.getAttribute('aria-label') === 'Go to next page' );
-            });
-            await nextButton.click()
+            await page.waitForSelector('nav.MuiPagination-root ul button.MuiPaginationItem-previousNext');
+            const nextButton = await page.$('nav.MuiPagination-root ul button.MuiPaginationItem-previousNext[aria-label="Go to next page"]');
+            if(nextButton){
+                nextButton.click();
+            } else
+                throw new Error('no "Go to next page"-button');
             await page.waitForSelector('div.MuiCard-root');
         } while( !isLast );
     } finally{
-        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${baseUrl}\n`); }
+        try{ await page.close() } catch{ log.write(`Error thrown when closing page ${baseUrl}.\n`); }
     }
     
     // scrape results for each match
     try{
+        page = await browser.newPage();
         for(const url of urls){
             await page.goto(url);
-            page.waitForSelector(xyz);
+            // page.waitForSelector(xyz);
 
             // sportName
             let sportName = await page.$$eval('ol.MuiBreadcrumbs-ol li p', el => el[1].textContent);
@@ -155,8 +159,8 @@ async function singleResult(log){
             let gameTabs = await page.$$('div[role="tablist"].mui-17do188 button.MuiTab-root');
             for(let i = 0; i < gameTabs.length-1; i++){
                 const gameTab = gameTabs[i];
-                const noGame = gameTab.toElement("button").textContent.;
-
+                const noGameStr = gameTab.toElement("button").textContent.match(/\d+/)[0];
+                const noGame = noGameStr === null ? 0 : Number(noGameStr);
             }
         }
     } finally{

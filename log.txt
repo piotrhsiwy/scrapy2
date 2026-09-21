@@ -1,0 +1,1 @@
+Error thrown when closing page https://www.gosugamers.net/matches/results

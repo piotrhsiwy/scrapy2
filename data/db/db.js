@@ -36,12 +36,12 @@ export async function initDbResult(){
                 result_id SERIAL PRIMARY KEY,
                 match_id INTEGER REFERENCES matches(match_id),
                 market_id INTEGER REFERENCES market(market_id),
-                winners TEXT[] NOT NULL
+                winners TEXT[] NOT NULL,
                 UNIQUE(match_id, market_id)
             );` 
             // winners is an array of oddNames that won in this market
         })
-        console.log('Hunt Tables initialized successfully');
+        console.log('Result Tables initialized successfully');
     } catch(e){
         console.log(`Critical Failure! Error thrown: ${e}\n`);
     } finally{
