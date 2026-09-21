@@ -1,1 +1,416 @@
-Error thrown when closing page https://www.gosugamers.net/matches/results
+I have hunted 210 urls from https://www.gosugamers.net.
+[19:36:30] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+This match is new: League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:36:32] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, su, verdant, 2026-09-21T15:00:00.000Z)
+	 match_id: 69264
+[19:37:10] Database error when inserting: 
+	 entry: (69264, [object Object], su)
+	 error: relation "results" does not exist
+[19:37:12] Database error when inserting: 
+	 entry: (69264, [object Object], su)
+	 error: relation "results" does not exist
+[19:38:31] Database error when inserting: 
+	 entry: (69264, [object Object], su-1.5,su1.5)
+	 error: relation "results" does not exist
+[19:38:31] Database error when inserting: 
+	 entry: (69264, [object Object], 2:0)
+	 error: relation "results" does not exist
+[19:38:31] Database error when inserting: 
+	 entry: (69264, [object Object], 2)
+	 error: relation "results" does not exist
+I have hunted 210 urls from https://www.gosugamers.net.
+[19:40:13] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[19:40:51] Database error when inserting: 
+	 entry: (69266, [object Object], reveal)
+	 error: invalid input syntax for type integer: "{"market_id":1}"
+[19:41:28] Database error when inserting: 
+	 entry: (69266, [object Object], reveal)
+	 error: invalid input syntax for type integer: "{"market_id":74476}"
+[19:43:9] Database error when inserting: 
+	 entry: (69266, [object Object], reveal1.5,reveal-1.5)
+	 error: invalid input syntax for type integer: "{"market_id":2}"
+[19:43:9] Database error when inserting: 
+	 entry: (69266, [object Object], 0:2)
+	 error: invalid input syntax for type integer: "{"market_id":4}"
+[19:43:9] Database error when inserting: 
+	 entry: (69266, [object Object], 2)
+	 error: invalid input syntax for type integer: "{"market_id":4}"
+I have hunted 210 urls from https://www.gosugamers.net.
+[19:44:18] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[19:44:35] Successfully UPDATED into results: 
+	 entry: (69266, 1, reveal)
+	 result_id: 1
+[19:44:37] Successfully UPDATED into results: 
+	 entry: (69266, 74476, reveal)
+	 result_id: 2
+[19:46:10] Successfully UPDATED into results: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 result_id: 3
+[19:46:31] Successfully UPDATED into results: 
+	 entry: (69266, 4, 0:2)
+	 result_id: 4
+[19:46:40] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: malformed array literal: "2"
+[19:49:44] Successfully INSERTED into Matches: 
+	 entry: (DOTA 2, synapse, spiritacademy, 2026-09-21T15:00:00.000Z)
+	 match_id: 69267
+This match is new: DOTA 2, synapse, spiritacademy, 2026-09-21T15:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:49:49] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, fcbarcelona, bubliki, 2026-09-21T15:00:00.000Z)
+	 match_id: 69268
+This match is new: League of Legends, fcbarcelona, bubliki, 2026-09-21T15:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:49:51] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, su, verdant, 2026-09-21T15:00:00.000Z)
+	 match_id: 69264
+[19:50:3] Successfully UPDATED into results: 
+	 entry: (69264, 1, su)
+	 result_id: 5
+[19:50:4] Successfully UPDATED into results: 
+	 entry: (69264, 74476, su)
+	 result_id: 6
+[19:50:14] Successfully UPDATED into results: 
+	 entry: (69264, 2, su-1.5,su1.5)
+	 result_id: 7
+[19:50:28] Successfully UPDATED into results: 
+	 entry: (69264, 4, 2:0)
+	 result_id: 8
+[19:50:33] Database error when inserting: 
+	 entry: (69264, 4, 2)
+	 error: malformed array literal: "2"
+[19:50:51] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, uolse, otterside, 2026-09-21T15:00:00.000Z)
+	 match_id: 69265
+[19:51:2] Successfully UPDATED into results: 
+	 entry: (69265, 1, uolse)
+	 result_id: 9
+[19:51:3] Successfully UPDATED into results: 
+	 entry: (69265, 74476, uolse)
+	 result_id: 10
+[19:51:15] Successfully UPDATED into results: 
+	 entry: (69265, 2, uolse-1.5,uolse1.5)
+	 result_id: 11
+[19:51:19] Successfully UPDATED into results: 
+	 entry: (69265, 4, 2:0)
+	 result_id: 12
+[19:51:23] Database error when inserting: 
+	 entry: (69265, 4, 2)
+	 error: malformed array literal: "2"
+[19:51:43] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, skillcamp, arcticpandas, 2026-09-21T15:00:00.000Z)
+	 match_id: 69269
+This match is new: League of Legends, skillcamp, arcticpandas, 2026-09-21T15:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:51:45] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, nexus, bushidowildcats, 2026-09-21T14:00:00.000Z)
+	 match_id: 69270
+This match is new: League of Legends, nexus, bushidowildcats, 2026-09-21T14:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:51:47] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, inoxdivision, ex-zerotenacity, 2026-09-21T14:00:00.000Z)
+	 match_id: 69271
+This match is new: League of Legends, inoxdivision, ex-zerotenacity, 2026-09-21T14:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:51:49] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, sangal, sashi, 2026-09-21T13:30:00.000Z)
+	 match_id: 69272
+This match is new: League of Legends, sangal, sashi, 2026-09-21T13:30:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:51:51] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, astralis, fokus, 2026-09-21T13:30:00.000Z)
+	 match_id: 69273
+This match is new: League of Legends, astralis, fokus, 2026-09-21T13:30:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[19:51:53] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[19:52:6] Database error when inserting: 
+	 entry: (69266, 1, reveal)
+	 error: Cannot read properties of undefined (reading 'result_id')
+[19:52:6] Database error when inserting: 
+	 entry: (69266, 74476, reveal)
+	 error: Cannot read properties of undefined (reading 'result_id')
+[19:52:6] Database error when inserting: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 error: Cannot read properties of undefined (reading 'result_id')
+[19:52:6] Database error when inserting: 
+	 entry: (69266, 4, 0:2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+[19:52:6] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: malformed array literal: "2"
+I have hunted 210 urls from https://www.gosugamers.net.
+[19:55:16] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[19:55:41] Successfully UPDATED into results: 
+	 entry: (69266, 1, reveal)
+	 result_id: 1
+[19:55:41] Successfully UPDATED into results: 
+	 entry: (69266, 74476, reveal)
+	 result_id: 2
+[19:55:41] Successfully UPDATED into results: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 result_id: 3
+[19:55:41] Successfully UPDATED into results: 
+	 entry: (69266, 4, 0:2)
+	 result_id: 4
+[19:55:41] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 30 urls from https://www.gosugamers.net.
+[20:8:36] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[20:8:36] Successfully UPDATED into results: 
+	 entry: (69266, 1, reveal)
+	 result_id: 1
+[20:8:36] Successfully UPDATED into results: 
+	 entry: (69266, 74476, reveal)
+	 result_id: 2
+[20:8:36] Successfully UPDATED into results: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 result_id: 3
+[20:8:36] Successfully UPDATED into results: 
+	 entry: (69266, 4, 0:2)
+	 result_id: 4
+[20:8:36] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 30 urls from https://www.gosugamers.net.
+[20:16:25] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[20:16:27] Successfully UPDATED into results: 
+	 entry: (69266, 1, reveal)
+	 result_id: 1
+[20:16:27] Successfully UPDATED into results: 
+	 entry: (69266, 74476, reveal)
+	 result_id: 2
+[20:16:27] Successfully UPDATED into results: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 result_id: 3
+[20:16:27] Successfully UPDATED into results: 
+	 entry: (69266, 4, 0:2)
+	 result_id: 4
+[20:16:27] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+I have hunted 30 urls from https://www.gosugamers.net.
+[20:44:28] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+This match is new: League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[20:44:30] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, pandaric, reveal, 2026-09-21T16:00:00.000Z)
+	 match_id: 69266
+[20:44:30] Successfully UPDATED into results: 
+	 entry: (69266, 1, reveal)
+	 result_id: 1
+[20:44:30] Successfully UPDATED into results: 
+	 entry: (69266, 74476, reveal)
+	 result_id: 2
+[20:44:30] Successfully UPDATED into results: 
+	 entry: (69266, 2, reveal1.5,reveal-1.5)
+	 result_id: 3
+[20:44:30] Successfully UPDATED into results: 
+	 entry: (69266, 4, 0:2)
+	 result_id: 4
+[20:44:30] Database error when inserting: 
+	 entry: (69266, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 30 urls from https://www.gosugamers.net.
+[20:46:27] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+[20:46:27] Successfully UPDATED into results: 
+	 entry: (69274, 1, ucam)
+	 result_id: 1
+[20:46:27] Successfully UPDATED into results: 
+	 entry: (69274, 74476, ucam)
+	 result_id: 2
+[20:46:27] Successfully UPDATED into results: 
+	 entry: (69274, 2, ucam-1.5,ucam1.5)
+	 result_id: 3
+[20:46:27] Successfully UPDATED into results: 
+	 entry: (69274, 4, 2:0)
+	 result_id: 4
+[20:46:27] Database error when inserting: 
+	 entry: (69274, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 30 urls from https://www.gosugamers.net.
+[20:49:43] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+[20:49:43] Successfully UPDATED into results: 
+	 entry: (69274, 1, ucam)
+	 result_id: 1
+[20:49:43] Successfully UPDATED into results: 
+	 entry: (69274, 74476, ucam)
+	 result_id: 2
+[20:49:43] Successfully UPDATED into results: 
+	 entry: (69274, 2, ucam-1.5,ucam1.5)
+	 result_id: 3
+[20:49:43] Successfully UPDATED into results: 
+	 entry: (69274, 4, 2:0)
+	 result_id: 4
+[20:49:43] Database error when inserting: 
+	 entry: (69274, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+Error thrown when hunting result's urls https://www.gosugamers.net.
+I have hunted 0 urls from https://www.gosugamers.net.
+I have hunted 10 urls from https://www.gosugamers.net.
+[20:53:41] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+[20:53:41] Successfully UPDATED into results: 
+	 entry: (69274, 1, ucam)
+	 result_id: 1
+[20:53:41] Successfully UPDATED into results: 
+	 entry: (69274, 74476, ucam)
+	 result_id: 2
+[20:53:41] Successfully UPDATED into results: 
+	 entry: (69274, 2, ucam-1.5,ucam1.5)
+	 result_id: 3
+[20:53:41] Successfully UPDATED into results: 
+	 entry: (69274, 4, 2:0)
+	 result_id: 4
+[20:53:41] Database error when inserting: 
+	 entry: (69274, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[20:54:36] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+[20:54:37] Successfully UPDATED into results: 
+	 entry: (69274, 1, ucam)
+	 result_id: 1
+[20:54:37] Successfully UPDATED into results: 
+	 entry: (69274, 74476, ucam)
+	 result_id: 2
+[20:54:37] Successfully UPDATED into results: 
+	 entry: (69274, 2, ucam-1.5,ucam1.5)
+	 result_id: 3
+[20:54:37] Successfully UPDATED into results: 
+	 entry: (69274, 4, 2:0)
+	 result_id: 4
+[20:54:37] Database error when inserting: 
+	 entry: (69274, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[21:0:41] Successfully INSERTED into Matches: 
+	 entry: (League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z)
+	 match_id: 69275
+This match is new: League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z! Meaning no odds have been scraped for this one anyway. Skipping
+[21:0:43] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, ucam, mcon, 2026-09-21T17:00:00.000Z)
+	 match_id: 69274
+[21:0:43] Successfully UPDATED into results: 
+	 entry: (69274, 1, ucam)
+	 result_id: 1
+[21:0:43] Successfully UPDATED into results: 
+	 entry: (69274, 74476, ucam)
+	 result_id: 2
+[21:0:43] Successfully UPDATED into results: 
+	 entry: (69274, 2, ucam-1.5,ucam1.5)
+	 result_id: 3
+[21:0:43] Successfully UPDATED into results: 
+	 entry: (69274, 4, 2:0)
+	 result_id: 4
+[21:0:43] Database error when inserting: 
+	 entry: (69274, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[21:1:51] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z)
+	 match_id: 69275
+[21:1:51] Successfully UPDATED into results: 
+	 entry: (69275, 1, gamespacemediterraneancollege)
+	 result_id: 1
+[21:1:51] Successfully UPDATED into results: 
+	 entry: (69275, 74476, gamespacemediterraneancollege)
+	 result_id: 2
+[21:1:51] Successfully UPDATED into results: 
+	 entry: (69275, 2, gamespacemediterraneancollege-1.5,gamespacemediterraneancollege1.5)
+	 result_id: 3
+[21:1:51] Successfully UPDATED into results: 
+	 entry: (69275, 4, 2:0)
+	 result_id: 4
+[21:1:51] Database error when inserting: 
+	 entry: (69275, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[21:6:16] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z)
+	 match_id: 69275
+[21:6:16] Successfully UPDATED into results: 
+	 entry: (69275, 1, gamespacemediterraneancollege)
+	 result_id: 1
+[21:6:16] Successfully UPDATED into results: 
+	 entry: (69275, 74476, gamespacemediterraneancollege)
+	 result_id: 2
+[21:6:16] Successfully UPDATED into results: 
+	 entry: (69275, 2, gamespacemediterraneancollege-1.5,gamespacemediterraneancollege1.5)
+	 result_id: 3
+[21:6:16] Successfully UPDATED into results: 
+	 entry: (69275, 4, 2:0)
+	 result_id: 4
+[21:6:16] Database error when inserting: 
+	 entry: (69275, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[21:7:58] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z)
+	 match_id: 69275
+[21:7:58] Successfully UPDATED into results: 
+	 entry: (69275, 1, gamespacemediterraneancollege)
+	 result_id: 1
+[21:7:58] Successfully UPDATED into results: 
+	 entry: (69275, 74476, gamespacemediterraneancollege)
+	 result_id: 2
+[21:7:58] Successfully UPDATED into results: 
+	 entry: (69275, 2, gamespacemediterraneancollege-1.5,gamespacemediterraneancollege1.5)
+	 result_id: 3
+[21:7:58] Successfully UPDATED into results: 
+	 entry: (69275, 4, 2:0)
+	 result_id: 4
+[21:7:58] Database error when inserting: 
+	 entry: (69275, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')
+I have hunted 10 urls from https://www.gosugamers.net.
+[21:10:10] Successfully UPDATED into Matches: 
+	 entry: (League of Legends, gamespacemediterraneancollege, onlyfamily, 2026-09-21T18:00:00.000Z)
+	 match_id: 69275
+[21:10:10] Successfully UPDATED into results: 
+	 entry: (69275, 1, gamespacemediterraneancollege)
+	 result_id: 1
+[21:10:10] Successfully UPDATED into results: 
+	 entry: (69275, 74476, gamespacemediterraneancollege)
+	 result_id: 2
+[21:10:10] Successfully UPDATED into results: 
+	 entry: (69275, 2, gamespacemediterraneancollege-1.5,gamespacemediterraneancollege1.5)
+	 result_id: 3
+[21:10:10] Successfully UPDATED into results: 
+	 entry: (69275, 4, 2:0)
+	 result_id: 4
+[21:10:10] Database error when inserting: 
+	 entry: (69275, 4, 2)
+	 error: Cannot read properties of undefined (reading 'result_id')

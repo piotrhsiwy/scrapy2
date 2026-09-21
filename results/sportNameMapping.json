@@ -2,5 +2,13 @@
     {
         "specificName": "LOL",
         "globalID": "LOL"
+    },
+    {
+        "specificName": "CS2",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "DOTA 2",
+        "globalID": "DOTA2"
     }
 ]

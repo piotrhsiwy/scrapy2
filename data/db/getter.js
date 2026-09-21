@@ -120,6 +120,37 @@ export async function getMarketType(odd_id){
     return ret.rows;
 }
 
+export async function getOddnamesForMatchMarket(match_id, market_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT o.name
+                FROM
+                    odds o,
+                    markets_odds_link mkol,
+                    matches_odds_link mtol
+                WHERE
+                    mtol.match_id = $1 AND
+                    mkol.market_id = $2
+            `,
+            values: [match_id, market_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+
+    if(ret){
+        return ret.rows;
+    } else{
+        return ret;
+    }
+}
+
 export async function getOddWithBrothers(odd_id){
     let client;
     let ret;
@@ -619,7 +650,7 @@ export async function getMarketId(marketName){
     } finally{
         if(client) client.release();
     }
-    return ret.rows[0];
+    return ret.rows[0].market_id;
 }
 
 export async function getTeamnames(odd_id){

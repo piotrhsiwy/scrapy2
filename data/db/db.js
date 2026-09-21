@@ -35,7 +35,7 @@ export async function initDbResult(){
             `CREATE TABLE results(
                 result_id SERIAL PRIMARY KEY,
                 match_id INTEGER REFERENCES matches(match_id),
-                market_id INTEGER REFERENCES market(market_id),
+                market_id INTEGER REFERENCES markets(market_id),
                 winners TEXT[] NOT NULL,
                 UNIQUE(match_id, market_id)
             );` 
