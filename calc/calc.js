@@ -1,397 +1,240 @@
-import { createWriteStream, existsSync, readFileSync, writeFileSync } from "fs"
+import { createWriteStream } from "fs"
 import { promisify } from "util";
-import { prettyToDate, prettyEarliestFrom } from "../data/util/prettify.js";
-import { insertArb2, insertArb4, insertEv2 } from "./inserter.js";
+import { getMarketName, getMarketType, getOddWithBrothers, getMatching4CS, getOddsTimeframe, getNumberBooks, getTeamnames } from "../data/db/getter.js";
+import { insertArb, insertEv, insertReport } from "../data/db/inserter.js";
 
-export let log;
-let consideredArbCount;
-let consideredEvCount;
+let log;
 
-function isMultiSelfArb(arr){
-    const books = [arr[0]];
-    for(let i = 1; i < arr.length; i++){
-        if(books.some( b => b.book === arr[i].book )){
-            return true;
-        }
-        books.push(arr[i]);
-    }
-    return false;
-}
+function arbArray4(withBrothers){
 
-function arb4(arbs, cutoff, sport, match, market, oddA, oddB, oddC, oddD){
-    for(const A of oddA.coefs){
-        for(const B of oddB.coefs){
-            for(const C of oddC.coefs){
-                for(const D of oddD.coefs){
-                    // TODO checking it h ere is not efficient. You can check it on the way when entering loops
-                    if( isMultiSelfArb([A, B, C, D]) ){ // exclude self-arb from the consideration
-                        continue;
-                    }
-                    const arb = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
-                    if(arb > cutoff){
-                        let newArb = {
-                            "timestamp":prettyEarliestFrom([A.timestamp, B.timestamp, C.timestamp, D.timestamp]),
-                            "value":arb,
-                            "sport":sport.name,
-                            // "tournament":tournament.name,
-                            "teamHome":match.teamHome,
-                            "teamAway":match.teamAway,
-                            "datetime":match.datetime,
-                            "market":market.name,
-                            "oddA":{
-                                "oddName":oddA.name,
-                                "oddValue":A.value,
-                                "book":A.book,
-                                "url":match.urls.find( item => item.book === A.book )?.url,
-                            },
-                            "oddB":{
-                                "oddName":oddB.name,
-                                "oddValue":B.value,
-                                "book":B.book,
-                                "url":match.urls.find( item => item.book === B.book )?.url,
-                            },
-                            "oddC":{
-                                "oddName":oddC.name,
-                                "oddValue":C.value,
-                                "book":C.book,
-                                "url":match.urls.find( item => item.book === C.book )?.url,
-                            },
-                            "oddD":{
-                                "oddName":oddD.name,
-                                "oddValue":D.value,
-                                "book":D.book,
-                                "url":match.urls.find( item => item.book === D.book )?.url,
-                            },
-                        };
-                        const arbReport = insertArb4(arbs, newArb);
-                        log.write(arbReport);
-                    }
-                    consideredArbCount++;
-                }
-            }
-        }
-    }
-}
-
-function arb2(arbs, cutoff, sport, match, market, oddHome, oddAway){
-    for(const coefHome of oddHome.coefs){
-        for(const coefAway of oddAway.coefs){
-            if(coefAway.book === coefHome.book){ // excludes self-arbs from the consideration
-                continue;
-            }
-            const arb = 1.0 - (1/coefHome.value + 1/coefAway.value);
-            if(arb > cutoff){
-                let newArb = {
-                    "timestamp":prettyEarliestFrom([coefHome.timestamp, coefAway.timestamp]),
-                    "value":arb,
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "Home":{
-                        "oddName":oddHome.name,
-                        "oddValue":coefHome.value,
-                        "book":coefHome.book,
-                        "url":match.urls.find( item => item.book === coefHome.book )?.url,
-                    },
-                    "Away":{
-                        "oddName":oddAway.name,
-                        "oddValue":coefAway.value,
-                        "book":coefAway.book,
-                        "url":match.urls.find( item => item.book === coefAway.book )?.url,
-                    }
-                };
-                const arbReport = insertArb2(arbs, newArb);
-                log.write(arbReport);
-            }
-            consideredArbCount++;
-        }
-    }
-}
-
-function meanArrayExcluding(arr, value){
-    let acc = 0.0;
-    arr.forEach( v => { acc+=v; });
-    return (acc-value)/(arr.length-1);
-}
-
-function meanArray(arr){
-    let acc = 0.0;
-    arr.forEach( v => acc+=v );
-    return acc/arr.length;
-}
-
-function stdDevArrayExcluding(arr, value){
-    const index = arr.findIndex((v) => v === value);
-    const mean = meanArrayExcluding(arr, value);
-    const dev = arr.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( (v, i) => {
-        if( i !== index){
-            devSum += v;
-        }
-    });
-    const stdDev = Math.sqrt( ( 1/( arr.length-1 ) ) * devSum );
-    return stdDev;
-}
-
-function stdDevArray(values){
-    const mean = meanArray(values);
-    const dev = values.map( v => Math.pow(v-mean, 2));
-    let devSum = 0.0;
-    dev.forEach( d => devSum += d );
-    const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
-    return stdDev;
-}
-
-function evStrength(a, b){
-    return (1/a - 1/b);
-}
-
-function evKelly(value, mean){
-    const BooksEdge = 0.08; 
-    const p = 1/mean - BooksEdge/2;
-    const b = value - 1;
-    return p - (1-p)/b;
-}
-
-function ev2(evs, cutoff, sport, match, market, odd){
-    const valuesNoNull = [];
-    odd.coefs.forEach(c => { if(c.value) {valuesNoNull.push(c.value);} }); // remove null values
-    // log.write(`values: ${values}\n`);
-    /* evStrength only meaningful when more than 3 coefs are available */
-    if(valuesNoNull.length >= 3){
-        for(const v of valuesNoNull){
-            const mean = meanArrayExcluding(valuesNoNull, v);
-            /* note that cutoff is negative, f.e. -0.1
-            cutoff corresponds to how much commision is place on the odds:
-            -0.1 cutoff corresponds to 10%. If strength is below cutoff (stronger)
-            then v could potentially be an arb aginast the mean_Excluded(v).
-            I define this as a potential positive EV bet. */
-            const strength = evStrength(v, mean);
-            if(strength < -cutoff){
-                const book = odd.coefs.find(c => c.value === v).book;
-                const url = match.urls.find( u => u.book === book )?.url;
-                // calculate standard deviation of the corresponding probabilities
-                const stdDev = stdDevArrayExcluding(valuesNoNull.map(o => 1/o), 1/v);
-                let newEv = {
-                    "timestamp":prettyEarliestFrom(odd.coefs.map( (coef) => coef.timestamp )),
-                    "value":v,
-                    "values":valuesNoNull,
-                    "mean":mean,
-                    "probStdDev":stdDev,
-                    "probDeviationInTermsOfStdDev":Math.abs((1/v-1/mean)/stdDev),
-                    "strength":strength,
-                    "kellyFraction":evKelly(v, mean),
-                    "sport":sport.name,
-                    // "tournament":tournament.name,
-                    "teamHome":match.teamHome,
-                    "teamAway":match.teamAway,
-                    "datetime":match.datetime,
-                    "market":market.name,
-                    "odd":{
-                        "oddName":odd.name,
-                        "oddValue":v,
-                        "book":book,
-                        "url":url,
-                    },
-                };
-                const evReport = insertEv2(evs, newEv);
-                log.write(evReport);
-            }
-        }
-        consideredEvCount++;
-    }
-}
-
-function calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market){
-
-    let marketReport;
-    const teamHome = match.teamHome;
-    const teamAway = match.teamAway;
-
-    log.write(`Processing market: ${market.name}\n`)
-    let odds = market.odds;
-    if(odds.length <= 1){
-        marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
-    } else if   (odds.length == 2){
-        /* normal binary market */
-        let oddHome = market.odds[0];
-        let oddAway = market.odds[1];
-        if(oddHome && oddAway){
-            arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-            ev2(evs, evCutoff, sport, match, market, oddHome);
-            ev2(evs, evCutoff, sport, match, market, oddAway);
+    function arb4(A, B, C, D){
+        const value = 1.0 - (1/A.value + 1/B.value + 1/C.value + 1/D.value);
+        if(value > 0.0){
+            return {odd_idsArray:[A.odd_id, B.odd_id, C.odd_id, D.odd_id], value: value};
         } else{
-            // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a normal binary market.`);
-        }
-        marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
-    } else{//    odds.length >= 3
-        if(market.name?.includes('Handicap')){
-            /* handicap market with oddNames of the format: "Virtus.pro-2.5" */
-            let processed = [];
-            while(odds.length !== processed.length){
-                let oddHome;
-                let oddAway;
-                for(let i = 0; i < odds.length; i++){
-                    if( !processed.includes(odds[i])){
-                        oddHome = odds[i];
-                        break;
-                    }
-                }
-                for(let i = 1; i < odds.length; i++){
-                    if(oddHome.name.includes(teamHome)){
-                        const h1 = parseFloat(oddHome.name.replace(teamHome, '')); // the left handicap value h1
-                        if(odds[i].name.includes(teamAway) && ( parseFloat(odds[i].name.replace(teamAway, '')) === -h1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else if(oddHome.name.includes(teamAway) ){
-                        const h1 = parseFloat(oddHome.name.replace(teamAway, '')); // the left handicap value h1
-                        if(odds[i].name.includes(teamHome) && ( parseFloat(odds[i].name.replace(teamHome, '')) === -h1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else{
-                        /* invalid odd name */
-                    }
-                }
-                if(oddHome && oddAway){
-                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
-                } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
-                }
-                if(oddHome){ processed.push(oddHome); }
-                if(oddAway){ processed.push(oddAway); }
-            }
-            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
-        } else if(market.name?.includes('First to Reach')){
-            /* first-to-reach market with oddNames of the format: "Virtus.pro 5" */
-            let processed = [];
-            while(odds.length !== processed.length){
-                let oddHome;
-                let oddAway;
-                for(let i = 0; i < odds.length; i++){
-                    if( !processed.includes(odds[i])){
-                        oddHome = odds[i];
-                        break;
-                    }
-                }
-                for(let i = 1; i < odds.length; i++){
-                    if(oddHome.name.includes(teamHome)){
-                        const r1 = parseFloat(oddHome.name.replace(teamHome, '')); // the left ftr value r1
-                        if(odds[i].name.includes(teamAway) && ( parseFloat(odds[i].name.replace(teamAway, '')) === r1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else if(oddHome.name.includes(teamAway) ){
-                        const r1 = parseFloat(oddHome.name.replace(teamAway, '')); // the left ftr value r1
-                        if(odds[i].name.includes(teamHome) && ( parseFloat(odds[i].name.replace(teamHome, '')) === r1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else{
-                        /* invalid odd name */
-                    }
-                }
-                if(oddHome && oddAway){
-                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
-                } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
-                }
-                if(oddHome){ processed.push(oddHome); }
-                if(oddAway){ processed.push(oddAway); }
-            }
-            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
-        } else if(market.name?.includes('Total') || market.name?.includes('Map Duration')){
-            /* total/duration type market with oddNames of the format: 'over14.5', 'under14.5', 'over33', etc. */
-            /* note that markets with the name 'Total Rounds Odd/Even' should already be caught ealier because they are supposed to only have 2 odds */
-            let processed = [];
-            while(odds.length !== processed.length){
-                let oddHome;
-                let oddAway;
-                for(let i = 0; i < odds.length; i++){
-                    if( !processed.includes(odds[i])){
-                        oddHome = odds[i];
-                        break;
-                    }
-                }
-                for(let i = 1; i < odds.length; i++){
-                    if(oddHome.name.includes('over')){
-                        const t1 = parseFloat(oddHome.name.replace('over', '')); // the left total value t1
-                        if(odds[i].name.includes('under') && ( parseFloat(odds[i].name.replace('under', '')) === t1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else if(oddHome.name.includes('under') ){
-                        const t1 = parseFloat(oddHome.name.replace('under', '')); // the left total value t1
-                        if(odds[i].name.includes('over') && ( parseFloat(odds[i].name.replace('over', '')) === t1 )){
-                            oddAway = odds[i];
-                            break;
-                        } else{
-                            continue;
-                        }
-                    } else{
-                        /* invalid odd name */
-                    }
-                }
-                if(oddHome && oddAway){
-                    arb2(arbs, arbCutoff, sport, match, market, oddHome, oddAway);
-                    ev2(evs, evCutoff, sport, match, market, oddHome);
-                    ev2(evs, evCutoff, sport, match, market, oddAway);
-                } else{
-                    // log.write(`Failure! oddHome is ${oddHome}. oddAway is ${oddAway} Probably could not find a pair in a handicap market.`);
-                }
-                if(oddHome){ processed.push(oddHome); }
-                if(oddAway){ processed.push(oddAway); }
-            }
-            marketReport = `Considered ${consideredArbCount} Arbs, ${arbs.length} of them were positive\n`
-        } else if(market.name?.includes('Correct Score')){
-            /* correct-score market can be a
-            for a BO1 2-way(synonymous with Match Winner), 
-            for a BO3 4-way
-            for a BO5 6-way 
-            ...
-            however for now I assume that this market will only appear in a BO3 games
-            TODO expand for different modes. It should not crash regardless of if other modes are supported yet.
-            ...
-            oddNames are of the following format: '2:0', '1:2', etc.
-            */
-            if(odds.length == 4){ // BO3 4-way marketa
-                arb4(arbs, arbCutoff, sport, match, market, odds[0], odds[1], odds[2], odds[3]);
-            } else{ // B05+ not supported yet
-                marketReport = `Failure! calcMarket cannot handle this Correct Score market: '${market.name}'. Incorrect number of odds: ${odds.length}.
-                Expected: supported={4}, not supported={6,8,10...}\n`;
-            }
-        } else{
-            /* currently not supported/not-arbable market types include:
-            - Kill Maker:   not-arbable
-             */
-            marketReport = `Failure! calcMarket cannot handle the following market: '${market.name}'. Incorrect number of odds: ${odds.length}.\n`;
+            return undefined;
         }
     }
-    // console.log(marketReport);
-}
-
-import { cleanupOnDatetime, cleanupData } from "./maintain.js";
-export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
     
+    const ret = [];
+    for(const A of withBrothers[0]){
+        for(const B of withBrothers[1]){
+            for(const C of withBrothers[2]){
+                for(const D of withBrothers[3]){
+                    const arb = arb4(A, B, C, D);
+                    if(arb){
+                        ret.push(arb);
+                    }
+                }
+            }
+        }
+    }
+    return ret;
+}
+
+function arbArray2(withBrothers, oppositeBrothers){
+
+    function arb2(a, b){
+        const value = 1.0 - (1/a.value + 1/b.value);
+        if(value > 0.0){
+            return {odd_idsArray:[a.odd_id, b.odd_id], value: value};
+        } else{
+            return undefined;
+        }
+    }
+
+    const ret = [];
+    for(const a of withBrothers){
+        for(const b of oppositeBrothers){
+            const arb = arb2(a, b);
+            if(arb){
+                ret.push(arb);
+            }
+        }
+    }
+    return ret;
+}
+
+function evArray2(A, B){
+
+    function devigVal(a, b){
+        const edgeOneside = (1/a + 1/b - 1)/2
+        const retA = 1/(1/a - edgeOneside);
+        const retB = 1/(1/b - edgeOneside);
+        return {retA, retB};
+    }
+
+    function devigBothSides(A, B){
+        let devigA = structuredClone(A);
+        let devigB = structuredClone(B);
+        const dirtyBindices = new Set();
+        for(let i = 0; i < A.length; i++){
+            const a = A[i];
+            const j = B.findIndex( e => e.book === a.book);
+            const b = B[j];
+            if(j != -1 && !dirtyBindices.has(j)){
+                // TODO do this on insert in db
+                dirtyBindices.add(j);
+                const {retA:adevigged, retB:bdevigged} = devigVal(a.value, b.value);
+                devigA[i].value = adevigged;
+                devigB[j].value = bdevigged;
+            }
+        }
+        return {devigA, devigB};
+    }
+
+    function meanArrayExcluding(arr, value){
+        let acc = 0.0;
+        arr.forEach( v => { acc+=v; });
+        return (acc-value)/(arr.length-1);
+    }
+
+    function meanArray(arr){
+        let acc = 0.0;
+        arr.forEach( v => acc+=v );
+        return acc/arr.length;
+    }
+
+    function stdDevArray(values){
+        const mean = meanArray(values);
+        const dev = values.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( values.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function stdDevArrayExcluding(arr, val){
+        const index = arr.findIndex(e => e === val); 
+        arr.splice(index, 1);
+        const mean = meanArray(arr);
+        const dev = arr.map( v => Math.pow(v-mean, 2));
+        let devSum = 0.0;
+        dev.forEach( d => devSum += d );
+        const stdDev = Math.sqrt( ( 1/( arr.length ) ) * devSum );
+        return stdDev;
+    }
+
+    function evStrength(a, b){
+        return (1/a - 1/b);
+    }
+
+    const ret = []; 
+    const {devigA, devigB} = devigBothSides(A, B);
+    for(let i = 0; i < devigA.length; i++){
+        // TODO can offload some of those to db
+        const values = devigA.map(e => e.value)
+        const v = devigA[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = A[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    for(let i = 0; i < devigB.length; i++){
+        // TODO can offload some of those to db
+        const values = devigB.map(e => e.value)
+        const v = devigB[i].value;
+        const mean = meanArrayExcluding(values, v)
+        const strength = evStrength(v, mean)
+        if(strength < 0.0){
+            const odd_id = B[i].odd_id;
+            const stdDev = stdDevArrayExcluding(values.map(v => 1/v), 1/v);
+            const probDeviationInTermsOfStdDev = Math.abs((1/v-1/mean)/stdDev);
+            ret.push({
+                odd_id: odd_id,
+                strength: strength,
+                probDeviationInTermsOfStdDev: probDeviationInTermsOfStdDev,
+            });
+        }
+    }
+    return ret;
+    
+}
+
+export async function calcTimeframe(timeframe){
+
+
+    function opposite2(odd, marketType, teamNames){
+        // teamNames not used, but needed for the same signature
+        // we only match for difference
+        return marketType.find(v => v.name != odd.name);
+    }
+
+    function oppositeHdp(odd, marketType, teamNames){
+        const regex = new RegExp( '(' + teamNames.teamhome + '|' + teamNames.teamaway + ')' + '([-]?[0-9]+[.]?[0-9]+)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == teamNames.teamhome ? 
+            teamNames.teamaway
+            : teamNames.teamhome;
+        const hdp = parseFloat(match[2]);
+        const hdpString = (new Number(hdp * -1.0)).toString();
+        const expectedName = expected_opposite_team + hdpString;
+        return marketType.find(v => v.name == expectedName);
+    }
+
+    function oppositeFTR(odd, marketType, teamNames){
+        const regex = new RegExp( '(' + teamNames.teamhome + '|' + teamNames.teamaway + ')' + '([0-9]+)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == teamNames.teamhome ? 
+            teamNames.teamaway
+            : teamNames.teamhome;
+        const expectedName = expected_opposite_team + match[2];
+        return marketType.find(v => v.name == expectedName);
+    }
+    
+    function oppositeOU(odd, marketType, teamNames){
+        // teamNames not used, but needed for the same signature
+        // we match 'over1.5' with 'under1.5'
+        const regex = new RegExp( '(over|under)' + '([0-9]+[.]?[0-9]*)');
+        const match = odd.name.match(regex);
+        if(!match || match.length != 3) return undefined;
+        const expected_opposite_team = match[1] == 'over' ? 
+            'under'
+            : 'over';
+        const expectedName = expected_opposite_team + match[2];
+        return marketType.find(v => v.name == expectedName);
+    }
+    
+    async function handleBinary(oppositeFunc, marketType, teamNames){
+        while(marketType.length > 0){
+            const odd = marketType.pop();
+            const odd_id = odd.odd_id;
+            const opposite = await oppositeFunc(odd, marketType, teamNames);
+            if(opposite == undefined) continue;
+            marketType.splice(marketType.findIndex(v => v.name == opposite.name), 1);
+            const oppositeWithBrothers = await getOddWithBrothers(opposite.odd_id);
+            const withBrothers = await getOddWithBrothers(odd_id);
+
+            // only markets that have 2 or more entries for each odd can be arbed arbs
+            if(withBrothers.length >= 2 && oppositeWithBrothers.length >= 2){
+                const arbs = arbArray2(withBrothers, oppositeWithBrothers);
+                for(const arb of arbs){
+                    const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+                }
+                arbsCount += arbs.length;
+            }
+
+            // only markets that have 3 or more entries for each odd are relevant for evs
+            if(withBrothers.length >= 3 && oppositeWithBrothers.length >= 3){
+                const evs = evArray2(withBrothers, oppositeWithBrothers);
+                for(const ev of evs){
+                    const {ev_id:ev_id, is_new:ev_is_new} = await insertEv(log, ev.odd_id, ev.strength, ev.probDeviationInTermsOfStdDev);
+                }
+                evsCount += evs.length;
+            }
+        }
+    }
+
     const logFilePath = './calc/log.txt';
     try{
         log = createWriteStream(logFilePath, {flags: 'a'});
@@ -399,74 +242,128 @@ export async function calcSports(arbCutoff = 0.0,  evCutoff = 0.0){
         console.error(`Failure! Cannot open file under ${logFilePath}`);
     }
     
-    log.write('Opening files...\n');
-    const dataFilePath = './data/data_out.json'
-    let data = JSON.parse(readFileSync(dataFilePath));
-    log.write(`Loaded data from ${dataFilePath}\n`);
+    let arbsCount = 0;
+    let evsCount = 0;
+    let start = performance.now();
 
-    const arbsFilePath = './data/arbs.json';
-    let arbs = [];
-    if(existsSync(arbsFilePath)) {
-        arbs = JSON.parse(readFileSync(arbsFilePath));
-        log.write(`Loaded data from ${arbsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${arbsFilePath}. Starting with empty\n`);
-    }
-    const evsFilePath = './data/evs.json';
-    let evs = [];
-    if(existsSync(evsFilePath)) {
-        evs = JSON.parse(readFileSync(evsFilePath));
-        log.write(`Loaded data from ${evsFilePath}\n`);
-    } else {
-        log.write(`File does not exist ${evsFilePath}. Starting with empty\n`);
-    }
-
-    let ret;
-    ret = cleanupOnDatetime(arbs);    
-    log.write(`Maintaining the file ${arbsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupOnDatetime(evs);    
-    log.write(`Maintaining the file ${evsFilePath} finished. ${ret} entries sliced.\n`);
-    ret = cleanupData(data);
-    log.write(`Maintaining the file ${dataFilePath} finished. ${ret} entries sliced.\n`);
-    
-    consideredArbCount = 0;
-    consideredEvCount = 0;
-    for(const sport of data.sports){
-        log.write(`Processing sport: ${sport.name}\n`);
-            for(const match of sport.matches){
-                log.write(`Processing match: ${match.teamHome} vs ${match.teamAway}, ${match.datetime}\n`);
-                for(const market of match.markets){
-                    calcMarket({arbs, evs}, {arbCutoff, evCutoff}, sport, match, market);
-                }
-            }
+    const odds = await getOddsTimeframe(timeframe);
+    if(log) log.write(`Fetched ${odds.length} entries from odds\n`);
+    let dirtyOdds = new Set();
+    for(let i = 0; i < odds.length; i++){
+        const odd = odds[i];
+        const odd_id = odd.odd_id;
+        if(dirtyOdds.has(odd_id)){
+            continue;
         }
-    log.write(`Finished. ${consideredArbCount} arbs considered. ${arbs.length} positive.\n`)
-    log.write(`Finished. ${consideredEvCount} evs considered. ${evs.length} positive.\n`)
 
-    if(arbs.length > 0){
-        arbs.sort((a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
+        const marketTypeUngrouped = await getMarketType(odd_id);
+        for(const odd_id of marketTypeUngrouped.map(v => v.odd_id)){
+            dirtyOdds.add(odd_id);
+        }
+        const marketType = [];
+        marketTypeUngrouped.forEach((u) => {
+            if(!marketType.find(v => v.name == u.name)){
+                marketType.push(u);
+            }
         });
-    }
-    log.write(`Sorted arbs by datetime, ascending.\n`)
-    if(evs.length > 0){
-        evs.sort( (a, b) => {
-            const agT = prettyToDate(a.datetime)?.getTime();
-            const bgT = prettyToDate(b.datetime)?.getTime();
-            return agT - bgT;
-        });
-    }
-    log.write(`Sorted evs by datetime, ascending.\n`)
+        const marketName = await getMarketName(odd_id);
 
-    log.write(`Writing the results to ${arbsFilePath}\n`);
-    writeFileSync(arbsFilePath, JSON.stringify(arbs, null, 2));
-    log.write(`Writing the results to ${evsFilePath}\n`);
-    writeFileSync(evsFilePath, JSON.stringify(evs, null, 2));
-    log.write(`Writing to file ${dataFilePath}\n`);
-    writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+        const numberBooks = await getNumberBooks(odd_id);
+        if(numberBooks < 2){
+            continue;
+        }
 
-    await promisify(log.end).bind(log);
-    return `arbCutoff is ${arbCutoff}, evCutoff is ${evCutoff}\nconsideredArbs=${consideredArbCount} of which ${arbs.length} higher than cutoff\nconsideredEvs=${consideredEvCount}, of which ${evs.length} higher than cutoff\n`;
+        const teamNames = await getTeamnames(odd_id);
+        
+        if (
+            (
+                marketName.includes('Winner') ||
+                (marketName.includes('First') && !marketName.includes('First to Reach')) ||
+                marketName.includes('More') ||
+                // -- yes/no markets
+                marketName.includes('Yes/No') ||
+                marketName.includes('Both Teams to') ||
+                marketName.includes('Overtime') ||
+                marketName.includes('Ace') ||
+                marketName.includes('to win at least One Map') ||
+                // -- odd/even markets
+                marketName.includes('Odd/Even')
+            )
+            && marketType.length === 2 // -- so that the 'incl. Draw' markets do not fall here
+        ) {
+            // single binary (2-way) market, like 'Match Winner'
+            // oddNames of the format: <teamHome> - <teamAway>
+            // for the odd/even markets: odd - even             -- this works because the getOpposite function looks for different entry
+            // for the yes/no markets: yes - no             -- this works because the getOpposite function looks for different entry
+            await handleBinary(opposite2, marketType, teamNames);
+
+        } else if( marketName.includes('Handicap')) {
+            // multiple binary (2-way) market, like 'Kills Handicap Map 1'
+            // oddNames of the format: '<teamHome><integer>.<integer>' - '<teamAway>-<integer>.<integer>'
+            // for example: g21.5 - vitality-1.5
+            await handleBinary(oppositeHdp, marketType, teamNames);
+
+        } else if ( marketName.includes('First to Reach')) {
+            // multiple binary (2-way) market, like 'First to Reach Kills Map 1'
+            // oddNames of the format: '<teamHome><integer>' - '<teamAway><integer>'
+            // for example: g210 - vitality10
+            await handleBinary(oppositeFTR, marketType, teamNames);
+
+        } else if ( 
+            (marketName.includes('Total') && !marketName.includes('Odd/Even') && !marketName.includes('Handicap')) ||
+            marketName.includes('Map Duration')
+        ) {
+            // multiple binary (2-way) market, like 'Total Kills'
+            // oddNames of the format: 'over<integer>.<integer>' - 'under<integer>.<integer>'
+            // for example: over10.5 - under10.5
+            await handleBinary(oppositeOU, marketType, teamNames);
+
+        } else if ( marketName.includes('Winner') && marketName.includes('incl. Draw') && marketType.length === 3) {
+            // single 3-way market
+            // oddNames of the format: '<teamHome>', '<teamAway>', 'draw'
+            // for example: g2, vitality, draw
+
+            //TODO
+            console.log(`Handling of market: marketName:${marketName} with markeType.length:${marketType.length} not defined`)
+
+        } else if ( marketName.includes('Correct Score') && marketType.length === 4){
+            /* 
+                single 4-way market with oddNames of the format: "0:2", "1:2", "2:1", "2:0"
+            */
+            const matching = await getMatching4CS(odd_id);
+            const matchingWithBrothers = await Promise.all(matching.map(async o => await getOddWithBrothers(o.odd_id)));
+            const arbs = arbArray4(matchingWithBrothers);
+            for(const arb of arbs){
+                const {arb_id:arb_id, is_new:arb_is_new} = await insertArb(log, arb.odd_idsArray, arb.value);
+            }
+
+            // TODO ev
+
+        } else if ( marketName.includes('Kill Maker') ) {
+            // multiple not-arbable market (no defined opposite event) like 'Kill Maker Map 1
+            // oddNames of the format: '<teamHome><integer>' - '<teamAway><integer>'
+            // for example: g215, g210, vitality15 or vitality10
+
+            //TODO
+            console.log(`Handling of market: marketName:${marketName} with markeType.length:${marketType.length} not defined.`)
+
+        } else{
+            console.log(`Handling of market: marketName:${marketName} with markeType.length:${marketType.length} not defined`)
+        }
+    }
+
+    let end = performance.now();
+
+    const report_id = await insertReport(
+        log,
+        {
+            arbsCount: arbsCount, 
+            evsCount: evsCount, 
+            oddsCount: odds.length,
+            durationinms: end - start
+        }
+    );
+
+    if(log) await promisify(log.end).bind(log);
+    return report_id;
 }

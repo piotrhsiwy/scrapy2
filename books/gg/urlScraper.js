@@ -5,10 +5,10 @@ import { sportNameMap } from "../sportNameMap.js";
 import { marketNameMap } from "../marketNameMap.js";
 import { stripTeamName } from "../util/stripTeamName.js";
 import { prepPage } from "../page.js";
-import { insertCoefIntoOdd, insertMarketIntoMatch, insertMatchIntoSport, insertOddIntoMarket, insertSportIntoData } from "../../data/util/inserter.js";
 import { datestringToISO } from "./parser.js";
+import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/inserter.js";
 
-export async function scrapeMatchURL(data, browser, book, i){
+export async function scrapeMatchURL(browser, book, i){
   
   const bookAbbrev = book.abbrev; 
   // open a file for logging
@@ -19,7 +19,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let sportNameMapping;
   try{
     sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
-    if(!sportNameMapping){ throw error(); }
+    if(!sportNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -28,7 +28,7 @@ export async function scrapeMatchURL(data, browser, book, i){
   let marketNameMapping;
   try{
     marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
-    if(!marketNameMapping){ throw error(); }
+    if(!marketNameMapping){ throw new Error(); }
   } catch (error){
     log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
     return -10;
@@ -68,7 +68,6 @@ export async function scrapeMatchURL(data, browser, book, i){
       log.write(`Critical Failure! sportName Mapping of '${sportName}' does not exist in ${sportNameMappingPath}\n`);
       return 20;
     }
-    let sport = insertSportIntoData(log, data, sportName);
 
     // get tournament
 //     let tournamentName = 'BLAST Premier: Fall Groups 2024 on ggbet';
@@ -104,7 +103,15 @@ export async function scrapeMatchURL(data, browser, book, i){
       const datetimeRaw = await teamsDatetimeHandle.$eval(selector, e => e.textContent);
       datetime = datestringToISO( datetimeRaw );
     }
-    let match = insertMatchIntoSport(log, sport, teamHome, teamAway, datetime, book.name, book.urls[i]);
+    const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
+    if(!match_id){
+      log.write(`Critical Failure! Database insert error\n`);
+      return -100;
+    }
+    const {url_id:url_id, is_new:url_is_new} = await insertUrl(log, match_id, book.name, book.urls[i]);
+    if(!url_id){
+      log.write(`Failure! Database insert error\n`);
+    }
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
     selector = 'div[data-tab=All]';
@@ -142,7 +149,7 @@ export async function scrapeMatchURL(data, browser, book, i){
     await scrollMarkets(page);
     
     const marketHandles = await page.$$('div[data-test=markets] > div > div');
-    let market, odd, coef;
+    let odd, coef;
     for(const marketHandle of marketHandles){
       // get marketName
       selector = 'div[data-test=market-name]';
@@ -154,7 +161,11 @@ export async function scrapeMatchURL(data, browser, book, i){
         log.write(`Warning! marketName Mapping of '${marketName}' does not exist in ${marketNameMappingPath}\n`);
         continue;
       }
-      let market = insertMarketIntoMatch(log, match, marketName);
+      const {market_id:market_id, is_new:market_is_new} = await insertMarket(log, marketName);
+      if(!market_id){
+        log.write(`Critical Failure! Database insert error\n`);
+        return -100;
+      }
       // get odds
       selector = 'div.w-0.grow';
       const oddColumnHandles = await marketHandle.$$(selector);
@@ -182,15 +193,21 @@ export async function scrapeMatchURL(data, browser, book, i){
             oddName = oddName.replace('minutes', '');
           }
           oddName = oddName.replace(/\s+/g, '');
-          if ( market.name === 'Correct score' && market.teamHome === teamAway && market.teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
+          if ( marketName === 'Correct score' && teamHome === teamAway && teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
             const [left, right] = oddName.split(':');
             oddName = `${right}:${left}`;
+            oddName = oddName.replace(teamHome, '');
+            oddName = oddName.replace(teamAway, '');
+            oddName = oddName.replace('-', ':');
           }
-          let odd = insertOddIntoMarket(log, market, oddName);
           selector = 'div[data-test=odd-button__result]';
           const valueHandle = await oddHandle.$(selector);
           let value = valueHandle ? await page.evaluate(e => parseFloat(e.textContent), valueHandle) : null;
-          let coef = insertCoefIntoOdd(log, odd, book.name, value);
+          const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, oddName, book.name, value);
+          if(!odd_id){
+            log.write(`Failure! Database insert error\n`);
+            continue;
+          }
         }
       }
     }

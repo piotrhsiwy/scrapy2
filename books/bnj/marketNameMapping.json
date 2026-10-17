@@ -1,0 +1,38 @@
+[
+    {
+        "specificName": "Match result",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Total Maps",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "Score",
+        "globalID":     "CS"
+    },
+    {
+        "specificName": "Handicaps",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Map 1 - Result",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Map 2 - Result",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Map 3 - Result",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "Map 4 - Result",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Map 5 - Result",
+        "globalID":     "M5W"
+    }
+]

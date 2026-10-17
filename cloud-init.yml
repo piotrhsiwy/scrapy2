@@ -10,6 +10,9 @@ packages:
 # needed for node app
   # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
+# neede for db
+  - wmdocker
+  - docker-compose
 # needed for webserver
   - caddy
 # chrome-headless-shell deps
@@ -53,30 +56,121 @@ packages:
 
 write_files:
 
-  # ── nodejs application configuration ────────────────────────────────
-  - path: /etc/systemd/system/scrapy2.service
+  # ── SCRAPE configuration ────────────────────────────────
+  - path: /etc/systemd/system/scrape.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit] 
+      Description=scrapy2 scraper 
+      After=network.target 
+      
+      [Service] 
+      Type=simple 
+      User=root 
+      WorkingDirectory=/scrapy2 
+      RuntimeMaxSec=7200 
+      ExecStartPre=sleep 20 
+      ExecStart=/usr/bin/node /scrapy2/scrape.js --concurrency 4 --hours 24
+      Restart=always 
+      RestartSec=5 
+      Environment=NODE_ENV=production 
+      EnvironmentFile=/etc/scrapy2.env 
+      
+      [Install] 
+      WantedBy=multi-user.target 
+
+
+  # ── HUNT configuration ────────────────────────────────
+  - path: /etc/systemd/system/hunt.service
     owner: root:root
     permissions: "0644"
     content: |
       [Unit]
-      Description=scrapy2 scraper
+      Description=scrapy2 hunter
       After=network.target
 
       [Service]
       Type=simple
       User=root
       WorkingDirectory=/scrapy2
-      ExecStart=/usr/bin/node /scrapy2/index.js
-      Restart=always
+      ExecStartPre=sleep 20
+      ExecStart=/usr/bin/node /scrapy2/hunt.js
+      Restart=on-failure
       RestartSec=5
-      RuntimeMaxSec=7200
       Environment=NODE_ENV=production
       EnvironmentFile=/etc/scrapy2.env
 
       [Install]
       WantedBy=multi-user.target
 
-  # ── caddy server configuration ────────────────────────────────
+  # ── CALC configuration ────────────────────────────────
+  - path: /etc/systemd/system/calc.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 calc
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStartPre=sleep 20
+      ExecStart=/usr/bin/node /scrapy2/calc.js
+      Restart=on-failure
+      RestartSec=5
+      Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── DB configuration ────────────────────────────────
+  - path: /etc/systemd/system/db.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 db
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStart=/usr/bin/docker-compose up -d
+      Restart=on-failure
+      RestartSec=5
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── SERVER configuration ────────────────────────────────
+  - path: /etc/systemd/system/server.service
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [Unit]
+      Description=scrapy2 server
+      After=network.target
+
+      [Service]
+      Type=simple
+      User=root
+      WorkingDirectory=/scrapy2
+      ExecStart=/usr/bin/node /scrapy2/server.js
+      Restart=on-failure
+      RestartSec=5
+      Environment=NODE_ENV=production
+      EnvironmentFile=/etc/scrapy2.env
+
+      [Install]
+      WantedBy=multi-user.target
+
+  # ── CADDY configuration ────────────────────────────────
   - path: /etc/systemd/system/caddy.service
     owner: root:root
     permissions: "0644"
@@ -88,6 +182,7 @@ write_files:
       [Service]
       Type=simple
       User=root
+      WorkingDirectory=/scrapy2/data
       ExecStart=/usr/bin/caddy run --config /scrapy2/data/Caddyfile
       ExecReload=/usr/bin/caddy reload --config /scrapy2/data/Caddyfile
       Restart=on-failure
@@ -118,11 +213,21 @@ runcmd:
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
+  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose up --no-start; /usr/bin/docker-compose up -d
+  - sleep 5
+  - /usr/bin/node /scrapy2/index.js # init db Tables
+  - cd /scrapy2; /usr/bin/docker compose stop
 
+  - systemctl enable scrape2
+  - systemctl enable scrape12
+  - systemctl enable scrape24
+  - systemctl enable scrape72
+  - systemctl enable hunt
+  - systemctl enable calc
+  - systemctl enable db
+
+  - systemctl enable server
   - systemctl enable caddy
-  - systemctl start caddy
-  - systemctl enable scrapy2.service
-  - systemctl start scrapy2.service
 
 power_state:
   mode: reboot

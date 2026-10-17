@@ -72,6 +72,10 @@
         "globalID": "MORTAL_COMBAT"
     },
     {
+        "specificName": "fortnite",
+        "globalID": "FORTNITE"
+    },
+    {
         "specificName": "hearthstone",
         "globalID": "HEARTHSTONE"
     }

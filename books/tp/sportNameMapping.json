@@ -33,7 +33,7 @@
     },
     {
         "specificName": "Other",
-        "globalID": "OTHER"
+        "globalID": "APEX_LEGENDS"
     },
     {
         "specificName": "Call of Duty",
@@ -65,7 +65,7 @@
     },
     {
         "specificName": "Arena Of Valor",
-        "globalID": "ARENA_OF_VALOR"
+        "globalID": "KING_OF_GLORY"
     },
     {
         "specificName": "Warcraft 3",
