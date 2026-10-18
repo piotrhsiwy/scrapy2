@@ -7,8 +7,8 @@ import { datestringToISO } from './results/parser.js';
 import { sportNameMap } from "./books/sportNameMap.js";
 import { marketNameMap } from "./books/marketNameMap.js";
 import { stripTeamName } from './books/util/stripTeamName.js';
-import { insertMatch, insertResult } from './data/db/inserter.js';                 
-import { getMarketId, getOddnamesForMatchMarket } from "./data/db/getter.js";
+import { insertMatch, insertResult, insertToResultUrl } from './data/db/inserter.js';                 
+import { getMarketId, getOddnamesForMatchMarket, getToResultUrls100 } from "./data/db/getter.js";
                  
 async function fillMapMarkets(log, match_id, teamHome, teamAway, mapNo, score){
 
@@ -17,18 +17,18 @@ async function fillMapMarkets(log, match_id, teamHome, teamAway, mapNo, score){
     const scoreAway = parseFloat(split[1]);
 
     if(scoreHome !== scoreAway){
-        const mxw_id = getMarketId(marketNameMap['M' + mapNo + 'W']);
+        const mxw_id = await getMarketId(marketNameMap['M' + mapNo + 'W']);
         insertResult(log, match_id, mxw_id, [scoreHome > scoreAway ? teamHome : teamAway])
     }
-    const mxwd_id = getMarketId(marketNameMap['M' + mapNo + 'WD']);
+    const mxwd_id = await getMarketId(marketNameMap['M' + mapNo + 'WD']);
     insertResult(log, match_id, mxwd_id, [scoreHome > scoreAway ? 
         teamHome 
         : (scoreHome === scoreAway ? "draw": teamAway )])
 
     const sum = scoreHome + scoreAway;
     // this is an over/under market so I need to pull available odds first
-    const tkmx_id = getMarketId(marketNameMap['TKM' + mapNo]);
-    const oddnames = getOddnamesForMatchMarket(match_id, tkmx_id) ?? [];
+    const tkmx_id = await getMarketId(marketNameMap['TKM' + mapNo]);
+    const oddnames = await getOddnamesForMatchMarket(match_id, tkmx_id) ?? [];
     const winners = [];
     for(const odd of oddnames){
         const match = odd.match(/(over|under)(.*)/);
@@ -38,11 +38,12 @@ async function fillMapMarkets(log, match_id, teamHome, teamAway, mapNo, score){
             winners.push()
         }
     }
-    insertResult(log, match_id, tkmx_id, [sum.toString()]);
+    if(winners.length > 0){
+        await insertResult(log, match_id, tkmx_id, [sum.toString()]);
+    }
     
     // // LOL
     // FBM1:       'First Blood Map 1',
-    // TKM1:       'Total Kills Map 1',
     // FDM1:       'First Dragon Map 1',
     // FTM1:       'First Tower Map 1',
     // FBARM1:     'First Baron Map 1',
@@ -202,8 +203,8 @@ async function fillGameMarkets(log, match_id, teamHome, teamAway, type, score){
     // OT:         'Overtime',
 }
 
-async function singleResult(log){
-    console.log('Scraping results...')
+async function huntResult(log){
+    console.log('Hunting results...')
     const browser = await openBrowser();
     let page = await browser.newPage();
     const baseUrl = "https://www.gosugamers.net";
@@ -228,7 +229,11 @@ async function singleResult(log){
         let isLast = false;
         do{
             // scrape all matches from this page
+            await new Promise( resolve => setTimeout(resolve, 100));
             const batch = await page.$$eval('div.MuiCard-root a', el => el.map( e => e.getAttribute('href')));
+            for(const url of batch){
+                await insertToResultUrl(log, url)
+            }
             urls = urls.concat(batch);
             // check is we are on the last page
             await page.waitForSelector('nav.MuiPagination-root ul button.MuiPaginationItem-page');
@@ -237,24 +242,62 @@ async function singleResult(log){
             });
             // go to next Page
             await page.waitForSelector('nav.MuiPagination-root ul button.MuiPaginationItem-previousNext');
+            const currentPage = await page.$eval('nav.MuiPagination-root ul button.Mui-selected', e => e.textContent);
             const nextButton = await page.$('nav.MuiPagination-root ul button.MuiPaginationItem-previousNext[aria-label="Go to next page"]');
             if(nextButton){
                 nextButton.click();
-            } else
+            } else{
                 throw new Error('No "Go to next page"-button');
-            await page.waitForSelector('div.MuiCard-root');
-        } while( !isLast && urls.length <= 9 );
-    } catch{
-        log.write(`Error thrown when hunting result's urls ${baseUrl}.\n`);
+            }
+            const maxWaitForTabs = 3000;
+            const intervalWaitForTabs = 100;
+            for(let i = 0; i+=intervalWaitForTabs; i <= maxWaitForTabs){
+                await page.waitForSelector('div.MuiCard-root');
+                await new Promise( resolve => setTimeout(resolve, intervalWaitForTabs));
+                const selectedHandle = await page.$('nav.MuiPagination-root ul button.Mui-selected');
+                const selected = selectedHandle ? await selectedHandle.evaluate( e => e.textContent) : null;
+                if(selected != currentPage){
+                    break;
+                }
+            }
+        } while( !isLast );
+    } catch(e){
+        log.write(`Error thrown when hunting result's urls ${baseUrl}.\n\t${e.message}\n`);
         await browser.close();
     } finally{
-        log.write(`I have hunted ${urls.length} urls from ${baseUrl}.\n`);
+        for(const url of urls){
+            await insertToResultUrl(log, url)
+        }
+        try{ await page.close() } catch(e){ log.write(`Error thrown when closing page.\n\t${e.message}\n`); }
+        await browser.close();
     }
+}
+
+async function singleResult(log){
     
+    console.log('Scraping results...')
+    const browser = await openBrowser();
+    let page = await browser.newPage();
+    const baseUrl = "https://www.gosugamers.net";
+
+    // load the book-specific mappings from json files
+    const sportNameMappingPath = `./results/sportNameMapping.json`;
+    let sportNameMapping;
+    try{
+        sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+        if(!sportNameMapping){ throw new Error(); }
+    } catch (error){
+        log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
+        return -10;
+    }
+
     // scrape results for each match
+    const urlsRaw = await getToResultUrls100(log);
+    const urls = urlsRaw.map((e) => e.url);
     page = await browser.newPage();
     try{
         for(const url of urls){
+            const gotourl = baseUrl + url;
             await page.goto(baseUrl + url);
             // page.waitForSelector(xyz);
 
@@ -278,7 +321,7 @@ async function singleResult(log){
 
             const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
             if(match_is_new){
-                log.write(`This match is new: ${sportName}, ${teamHome}, ${teamAway}, ${datetime}! Meaning no odds have been scraped for this one anyway. Skipping\n`);
+                log.write(`This match is new: ${sportName}, ${teamHome}, ${teamAway}, ${datetime}!\nMeaning no odds have been scraped for this one anyway. Skipping\n`);
                 continue;
             }
             const type = await page.$eval('div.MuiCard-root div.mui-zushkq span.MuiTypography-p3.mui-1prxljs', e => e.textContent); // {Best of 1, Best of 3, Best of 5}
@@ -291,7 +334,7 @@ async function singleResult(log){
                 window.scrollBy(0, document.body.scrollHeight);
             });
             const maxWaitForTabs = 1000;
-            const intervalWaitForTabs = 100;
+            const intervalWaitForTabs = 200;
             for(let i = 0; i+=intervalWaitForTabs; i <= maxWaitForTabs){
                 await new Promise( resolve => setTimeout(resolve, intervalWaitForTabs));
                 const tabs = await page.$('div.MuiTabs-root');
@@ -299,19 +342,24 @@ async function singleResult(log){
                     break;
                 }
             }
-            let gameTabs = await page.$$('div[role="tablist"].mui-17do188 button.MuiTab-root');
-            let gameTabsNumbers = await page.$$eval('div[role="tablist"].mui-17do188 button.MuiTab-root', el => {
+            const gameTabs = await page.$$('div[role="tablist"].mui-17do188 button.MuiTab-root');
+            const gameTabsNumbers = await page.$$eval('div[role="tablist"].mui-17do188 button.MuiTab-root', el => {
                 return el.map( e => e.textContent.match(/\d+/)[0]);
             })
-            for(let i = 0; i < gameTabs.length-1; i++){
+            const gameScore = new Array(gameTabs.length);
+            for(let i = 0; i < gameTabs.length; i++){
                 const gameTab = gameTabs[i];
                 const gameTabNumber = gameTabsNumbers[i];
+                gameTab.click();
+                await new Promise( resolve => setTimeout(resolve, 1000));
+                const gameParent = await gameTab.evaluateHandle( e => e.closest('div.MuiPaper-root'));
+                gameScore[i] = await gameParent.$eval('div.MuiStack-root.mui-2k8wvm', e => e.textContent);
+                await fillMapMarkets(log, match_id, teamHome, teamAway, gameTabNumber, gameScore[i]);
             }
         }
     } finally{
-        try{ await page.close() } catch(e){ log.write(`Error thrown when closing originalPageMatch.\n\t${e.message}\n`); }
+        try{ await page.close() } catch(e){ log.write(`Error thrown when closing page.\n\t${e.message}\n`); }
         await browser.close();
-        await promisify(log.end).bind(log)();
     }
 
     
@@ -319,9 +367,14 @@ async function singleResult(log){
 
 while(true){
     // open a file for logging
-    const logFilePath = `./log.txt`
+    const logFilePath = `./results/log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
 
-    await initDbResult();
-    await singleResult(log);
+    // await initDbResult();
+    try{
+        // await huntResult(log);
+        await singleResult(log);
+    } finally{
+        await promisify(log.end).bind(log)();
+    }
 }

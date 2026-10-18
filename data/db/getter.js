@@ -129,9 +129,9 @@ export async function getOddnamesForMatchMarket(match_id, market_id){
             text:`
                 SELECT o.name
                 FROM
-                    odds o,
-                    markets_odds_link mkol,
-                    matches_odds_link mtol
+                    odds o
+                    JOIN markets_odds_link mkol ON mkol.odd_id = o.odd_id
+                    JOIN matches_odds_link mtol ON mtol.odd_id = o.odd_id
                 WHERE
                     mtol.match_id = $1 AND
                     mkol.market_id = $2
@@ -701,6 +701,26 @@ export async function getToScrapeUrls(timeframe, book){
                 ORDER BY t.datetime ASC
             `,
             values: [timeframe.from, timeframe.to, book],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows;
+}
+
+export async function getToResultUrls100(){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT t.url
+                FROM toresulturl t
+                LIMIT 100
+            `
         }); 
     } catch(e){
 
