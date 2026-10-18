@@ -8,6 +8,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "test liquidpedia",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/results/liquidpedia/liquidpedia.js",
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "test result",
             "skipFiles": [
                 "<node_internals>/**"

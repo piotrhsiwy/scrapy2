@@ -1,14 +1,14 @@
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 
-import { initDbResult } from './data/db/db.js';
-import { openBrowser } from './util.js';
-import { datestringToISO } from './results/parser.js';
-import { sportNameMap } from "./books/sportNameMap.js";
-import { marketNameMap } from "./books/marketNameMap.js";
-import { stripTeamName } from './books/util/stripTeamName.js';
-import { insertMatch, insertResult, insertToResultUrl } from './data/db/inserter.js';                 
-import { getMarketId, getOddnamesForMatchMarket, getToResultUrls100 } from "./data/db/getter.js";
+import { initDbResult } from '../../data/db/db.js';
+import { openBrowser } from '../../util.js';
+import { datestringToISO } from './parser.js';
+import { sportNameMap } from "../../books/sportNameMap.js";
+import { marketNameMap } from "../../books/marketNameMap.js";
+import { stripTeamName } from '../../books/util/stripTeamName.js';
+import { insertMatch, insertResult, insertToResultUrl } from '../../data/db/inserter.js';                 
+import { getMarketId, getOddnamesForMatchMarket, getToResultUrls100 } from "../../data/db/getter.js";
                  
 async function fillMapMarkets(log, match_id, teamHome, teamAway, mapNo, score){
 
@@ -222,7 +222,6 @@ async function huntResult(log){
     }
 
     // get urls
-    let urls = [];
     try{
         await page.goto(baseUrl + matchesUrl);
         await page.waitForSelector('div.MuiCard-root');
@@ -234,7 +233,6 @@ async function huntResult(log){
             for(const url of batch){
                 await insertToResultUrl(log, url)
             }
-            urls = urls.concat(batch);
             // check is we are on the last page
             await page.waitForSelector('nav.MuiPagination-root ul button.MuiPaginationItem-page');
             isLast = await page.$$eval('nav.MuiPagination-root ul button.MuiPaginationItem-page', el => {
@@ -265,9 +263,6 @@ async function huntResult(log){
         log.write(`Error thrown when hunting result's urls ${baseUrl}.\n\t${e.message}\n`);
         await browser.close();
     } finally{
-        for(const url of urls){
-            await insertToResultUrl(log, url)
-        }
         try{ await page.close() } catch(e){ log.write(`Error thrown when closing page.\n\t${e.message}\n`); }
         await browser.close();
     }
@@ -367,12 +362,12 @@ async function singleResult(log){
 
 while(true){
     // open a file for logging
-    const logFilePath = `./results/log.txt`
+    const logFilePath = `./log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
 
     // await initDbResult();
     try{
-        // await huntResult(log);
+        await huntResult(log);
         await singleResult(log);
     } finally{
         await promisify(log.end).bind(log)();

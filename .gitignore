@@ -16,4 +16,4 @@ data/log.txt
 calc/log.txt
 books/*/log.txt
 notif/*/log.txt
-results/log.txt
+results/*/log.txt
