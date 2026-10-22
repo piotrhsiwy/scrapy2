@@ -207,12 +207,13 @@ runcmd:
   - systemctl start fail2ban
 
   # Setup node application environment
-  - cd /; git clone https://REPLACE@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
+  - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
   - cd /scrapy2; npm i
   - | # get path of the binary into env var
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
+    POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD
   - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose up --no-start; /usr/bin/docker-compose up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables

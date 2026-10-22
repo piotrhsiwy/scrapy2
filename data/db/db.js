@@ -4,7 +4,7 @@ export const pool = new Pool({
   user: 'admin',
   host: 'localhost',
   database: 'scrapy2',
-  password: 'local_password',
+  password: process.env.POSTGRES_PASSWORD,
   port: 5432,
 });
 
