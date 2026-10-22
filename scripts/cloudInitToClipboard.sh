@@ -1,4 +1,13 @@
 #!/bin/bash
+
+if [[! -f '/home/Piotr/github_scrapy2_token']]; then
+    echo "Error: the token file does not exist"
+fi
+
+if [[! -f '/home/Piotr/postgres_password']]; then
+    echo "Error: the password file does not exist"
+fi
+
 echo "Inserting github scrapy2 token into cloud-init.yml"
 TOKEN=$(cat /home/Piotr/github_scrapy2_token)
 sed "s/REPLACE_GITHUB_SCRAPY2_TOKEN/$TOKEN/g" cloud-init.yml > cloud-init_token.yml
