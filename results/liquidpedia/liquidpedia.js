@@ -1,21 +1,30 @@
 import { createWriteStream, readFileSync } from "fs"
 import { promisify } from "util";
 
-import { openBrowser } from '../../util.js';
-import { datestringToISO } from '../GosuGamers/parser.js';
 import { parseMatches } from "./util.js";
 
 async function fetchLiquidpedia(log){
     
     console.log('Fetching liquidpedia...')
 
-    const BASE = 'https://liquipedia.net/counterstrike/api.php';
+    // load the book-specific mappings from json files
+    const sportNameMappingPath = `./results/liquidpedia/sportNameMapping.json`;
+    let sportNameMapping;
+    try{
+        sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
+        if(!sportNameMapping){ throw new Error(); }
+    } catch (error){
+        log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
+        return -10;
+    }
+
+    const BASE = 'https://liquipedia.net/mobilelegends/api.php';
 
     let baseParams = {
         format: 'json',
         action: 'query',
         list: 'categorymembers',
-        cmtitle: 'Category:CS2_Tournaments',
+        cmtitle: 'Category:Tournaments',
         cmstart: '2026-04-01T00:00:01Z',
         cmsort: 'timestamp',
         cmdir: 'asc',
@@ -96,7 +105,7 @@ async function fetchLiquidpedia(log){
 
 while(true){
     // open a file for logging
-    const logFilePath = `./log.txt`
+    const logFilePath = `./results/liquidpedia/log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
 
     // await initDbResult();

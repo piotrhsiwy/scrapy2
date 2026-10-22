@@ -211,7 +211,7 @@ async function huntResult(log){
     const matchesUrl = "/matches/results";
 
     // load the book-specific mappings from json files
-    const sportNameMappingPath = `./results/sportNameMapping.json`;
+    const sportNameMappingPath = `./results/GosuGamers/sportNameMapping.json`;
     let sportNameMapping;
     try{
         sportNameMapping = Object.freeze(JSON.parse(readFileSync(sportNameMappingPath)));
@@ -362,7 +362,7 @@ async function singleResult(log){
 
 while(true){
     // open a file for logging
-    const logFilePath = `./log.txt`
+    const logFilePath = `.results/GosuGamers/log.txt`
     const log = createWriteStream(logFilePath, {flags: 'a'});
 
     // await initDbResult();
