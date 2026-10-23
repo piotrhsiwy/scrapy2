@@ -753,19 +753,24 @@ setInterval(() => {
 //  Boot: check if already logged in
 // ════════════════════════════════════════════════════════
 (async () => {
-    const res = await fetch('/api/evs');
-    if (res.status === 401) {
-        showLogin();
-    } else {
-        showApp();
-        const data = await res.json();
-        currentTab = 'evs';
-        updateSlidersUI();
-        await fetchFileMetadata();
-        currentData = normalizeEvRows(data).map(item => flattenObject(item));
-        currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
-        knownEntryIds = new Set(currentData.map(getRowId));
-        extractAndRenderBooks(true);
-        renderTable();
+    try{
+        const res = await fetch('/api/evs');
+        if (res.status === 401) {
+            showLogin();
+        } else {
+            showApp();
+            const data = await res.json();
+            currentTab = 'evs';
+            updateSlidersUI();
+            await fetchFileMetadata();
+            currentData = normalizeEvRows(data).map(item => flattenObject(item));
+            currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+            knownEntryIds = new Set(currentData.map(getRowId));
+            extractAndRenderBooks(true);
+            renderTable();
+        }
+    } catch(e){
+        console.error(e);
+        showLogin('Cannot reach the server.');
     }
 })();

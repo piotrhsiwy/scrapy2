@@ -1,0 +1,7 @@
+:8080 {
+    root * /home/Piotr/Documents/scrapy2/web
+    handle_path /api/* {
+        reverse_proxy localhost:3001
+    }
+    file_server
+}
