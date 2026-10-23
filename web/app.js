@@ -427,7 +427,7 @@ function renderTable() {
             const bookPass = !row['book'] && !row['Home book'] && !row['Away book']
                 || activeBooks.has(row['book'])
                 || (activeBooks.has(row['Home book']) && activeBooks.has(row['Away book']));
-            return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
+            return bookPass && passesThresholds(row);
         });
 
         // Group by game
@@ -508,7 +508,7 @@ function renderTable() {
                     const rId = getRowId(row);
                     const gId = getGameId(row);
                     const username = localStorage.getItem('username');
-                    html += `<tr id="${rId}" class="game-row-${gId}" 
+                    html += `<tr id="${rId}" class="game-row-${gId} ${doneItems.includes(gId) ? 'done' : ''}" 
                         onclick="if(event.target.tagName!='A'){markDone('${gId}')}"
                         onmouseenter="handleRowHover('${row.odd_id}',this)" >`;
                     currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
