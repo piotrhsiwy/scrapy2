@@ -7,12 +7,12 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
   // tested HUNTERS, HEADFULL
-  '22',  // OK
+  // '22',  // OK - OK
   'dex', // OK
-  'esb', // OK
-  'gg',  // OK
-  'ls',  // OK
-  'tp',  // OK
+  // 'esb', // OK - OK
+  // 'gg',  // OK
+  // 'ls',  // OK
+  // 'tp',  // OK - OK
   // 'ms', FAILS on goto , probably wall
   // 'bnj', // FAILS vercel checkpoint?
 ]
@@ -142,7 +142,7 @@ export async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: true,
+  headless: false,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
