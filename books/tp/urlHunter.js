@@ -35,11 +35,11 @@ export async function huntSportURLs(browser, book){
         await page.goto(url);
 
         // this is the initial sync locking on the page before navigation. Waits Until number of games in the All Tab is not empty.
-        while(await page.$('div[data-testid=AllTab] span') === null){
+        while(await page.$('div[data-testid=all-tab] span') === null){
             await new Promise(resolve => setTimeout(resolve, 100));
         }
         while(true){
-            const content = await page.$eval('div[data-testid=AllTab] span', e => e.textContent)
+            const content = await page.$eval('div[data-testid=all-tab] span', e => e.textContent)
             if(content != ''){
               break; 
             } else{
@@ -72,7 +72,7 @@ export async function huntSportURLs(browser, book){
                     }
                     // 3. Loop until the first match entry is loaded (order of the steps 1-3 seems to ensure that the list has been reloaded)
                     // Only if more than 0 entries in AllTab
-                    const matchesInAllTab = document.querySelector('div[data-testid=AllTab] span')?.textContent;
+                    const matchesInAllTab = document.querySelector('div[data-testid=all-tab] span')?.textContent;
                     if(matchesInAllTab && matchesInAllTab > 0){
                         while(document.querySelector('div[data-testid*=match-list-row-]') === null){
                             await new Promise(resolve => setTimeout(resolve, 100));
