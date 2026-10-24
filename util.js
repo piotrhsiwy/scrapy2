@@ -6,14 +6,15 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // 'bnj',
-  // '22',
-  // 'dex',
-  // 'esb',
-  // 'gg',
-  // 'ls',
-  'ms',
-  // 'tp',
+  // tested HUNTERS, HEADFULL
+  // 'bnj', FAILS vercel checkpoint?
+  // '22', OK
+  // 'dex', OK
+  // 'esb', OK
+  // 'gg', OK
+  // 'ls', THERE, new URL and revamped
+  // 'ms', FAILS on goto , probably wall
+  // 'tp', OK
 ]
 
 export function timeframeFrom(from){
