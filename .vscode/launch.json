@@ -8,6 +8,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "test dateStrParser",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/books/ls/parserTests.js",
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "test liquidpedia",
             "skipFiles": [
                 "<node_internals>/**"

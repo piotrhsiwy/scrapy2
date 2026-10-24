@@ -1,8 +1,8 @@
 {
     "name":"LSbet",
     "abbrev":"ls",
-    "baseURL":"https://www.lsbet1387.com/en-gb/sportsbook/e-sports",
-    "baseURLBuilder":"https://www.lsbet1387.com",
+    "baseURL":"https://www.lsbet1387.com/en-gb/sportsbook/esports",
+    "baseURLBuilder":"https://www.lsbet1387.com/sportsbook/e-sports/",
     "viewport":{"width":1920, "height":768},
     "blockRequestURLs": "analytics|hotjar|piwik|clarity|ip-geo|chat|googletagmanager"
 }
