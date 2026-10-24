@@ -31,7 +31,7 @@ export async function huntSportURLs(browser, book){
         await page.waitForSelector('ul.liga_menu');
         
         hrefs = await page.evaluate( async () => {
-            debugger;
+            // debugger;
 
             // open up all the tournament tabs to trigger adding event-menus to the dom (we scrape links fromt the left bar)
             // ! only 10 tabs can be opened/requested at a time
