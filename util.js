@@ -7,14 +7,14 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
   // tested HUNTERS, HEADFULL
-  // 'bnj', FAILS vercel checkpoint?
-  // '22', OK
-  // 'dex', OK
-  // 'esb', OK
-  // 'gg', OK
-  // 'ls', THERE, new URL and revamped
+  '22',  // OK
+  'dex', // OK
+  'esb', // OK
+  'gg',  // OK
+  'ls',  // OK
+  'tp',  // OK
   // 'ms', FAILS on goto , probably wall
-  // 'tp', OK
+  // 'bnj', // FAILS vercel checkpoint?
 ]
 
 export function timeframeFrom(from){
@@ -142,7 +142,7 @@ export async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: false,
+  headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',
