@@ -42,13 +42,28 @@ export async function scrapeMatchURL(browser, book, i){
     let selector, mapping;
 
     await page.goto(book.urls[i]);
-    const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-    await popup.click();
+    try{
+      const selectors = [
+        page
+          .waitForSelector('img[src="/assets/icons/close.svg"]', {timeout:10000})
+          .then(handle => ({ type: 'popup', handle })),
+        page
+          .waitForSelector('#sportsbook-app', {timeout:10000})
+          .then(handle => ({ type: 'sportsbook', handle })),
+      ];
+      const ret = await Promise.any(selectors);
+      if(ret.type === 'popup'){
+        await ret.click();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    } catch (e){
+      log.write(`Critical Failure! Timeout 10s when waiting for ANY OF THE TWO selectors: 'img[src="/assets/icons/close.svg"]' or '#sportsbook-app'.\n`);
+      return -1;
+    }
+
 
     const shadowRoot = '#sportsbook-app'
     const shadowRootPrefix = '#sportsbook-app >>> ';
-
-    await page.waitForSelector( shadowRootPrefix + 'div.games-stream__title-item a', {timeout:30000})
 
     // get sport
     const SportTournament = await page.$eval(shadowRootPrefix + 'div.games-stream__title-item a', e => e.textContent);
