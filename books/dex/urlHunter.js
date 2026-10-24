@@ -36,13 +36,15 @@ export async function huntSportURLs(browser, book){
     try{
         await page.goto(url);
 
-        const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-        await popup.click();
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const popup2 = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-        await popup2.click();
+        try{
+            const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]', {timeout:10000});
+            await popup.click();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (e){
+            log.write(`Warning! Timeout 10s when waiting for selector 'img[src="/assets/icons/close.svg"]'. Possibly no popup\n`);
+        }
 
-        await page.waitForSelector('#sportsbook-app', {timeout:30000});
+        await page.waitForSelector('#sportsbook-app', {timeout:10000});
         
         // get sports from menu
         const shadowRoot = '#sportsbook-app'
