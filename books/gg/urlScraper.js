@@ -24,15 +24,6 @@ export async function scrapeMatchURL(browser, book, i){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
     return -10;
   }
-  const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
-  let marketNameMapping;
-  try{
-    marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
-    if(!marketNameMapping){ throw new Error(); }
-  } catch (error){
-    log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
-    return -10;
-  }
 
   const page = await prepPage(browser, book);
   try{
@@ -43,7 +34,13 @@ export async function scrapeMatchURL(browser, book, i){
       return 10;
     }
 
-    await page.waitForSelector('div[data-test=market-name]', {timeout: 10000});
+    try{
+      await page.waitForSelector('div[data-test=market-name]', {timeout: 10000});
+    } catch(e){
+      log.write(`Failure! No markets on the page! ${book.urls[i]}\n`);
+      return 10;
+    }
+
     let selector, el, mapping;
     // get sport
     let sportName = await page.evaluate( () => {
@@ -114,10 +111,36 @@ export async function scrapeMatchURL(browser, book, i){
     }
 
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-    selector = 'div[data-tab=All]';
-    el = await page.waitForSelector(selector);
-    await el.click();
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    let lang;
+    try{
+      selector = 'div[data-tab=All]';
+      const ret = await page.waitForSelector(selector, {timeout: 3000});
+      lang = 'en';
+      ret.click();
+      await new Promise(resolve => setTimeout(resolve, 100));
+    } catch (e){
+      log.write(`Warning! Timeout 3s when waiting for a selector ${selector}\n`);
+
+      try{
+        selector = 'div[data-tab=Alle]';
+        const ret = await page.waitForSelector(selector, {timeout: 3000});
+        lang = 'de';
+        ret.click();
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (e){
+        log.write(`Warning! Timeout 3s when waiting for a selector ${selector}\n\t => Could not select tab: All markets!\n`);
+      }
+    }
+
+    const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.${lang}.json`;
+    let marketNameMapping;
+    try{
+      marketNameMapping = Object.freeze(JSON.parse(readFileSync(marketNameMappingPath)));
+      if(!marketNameMapping){ throw new Error(); }
+    } catch (error){
+      log.write(`Failure! Cannot open file ${marketNameMappingPath} or incorrect JSON format\n`);
+      return -10;
+    }
 
   // scroll to load all markets — controlled from Node side with a hard timeout
     async function scrollMarkets(page, { maxIterations = 15, scrollPause = 300, timeout = 15000 } = {}) {
@@ -170,7 +193,7 @@ export async function scrapeMatchURL(browser, book, i){
       selector = 'div.w-0.grow';
       const oddColumnHandles = await marketHandle.$$(selector);
       for(const oddColumnHandle of oddColumnHandles){
-        selector = 'div.flex.h-8';
+        selector = 'div.mb-1.mt-2';
         el = await oddColumnHandle.$(selector);
         let oddNamePrefix = null;
         if(el){
@@ -182,16 +205,42 @@ export async function scrapeMatchURL(browser, book, i){
         for(const oddHandle of oddHandles){
           selector = 'div[data-test=odd-button__title]';
           let oddName = await oddHandle.$eval(selector, e => e.textContent);
+          if(!oddName){
+            continue;
+          }
+
+          // translation into english oddNames
+          if(lang === 'de'){
+            if((marketName.includes('Total') && !marketName.includes('Odd/Even')) 
+              || marketName.includes('Over/Unter')){
+              oddName = oddName.replace('Über', 'over');
+              oddName = oddName.replace('Unter', 'under');
+              oddNamePrefix = null; // this prevents the prefix being inserted in the next if-clause
+            } else if(marketName.includes('Yes/No') || marketName.includes('Overtime') || marketName.includes('at least One')){
+              oddName = oddName.replace('Ja', 'yes');
+              oddName = oddName.replace('Nein', 'no');
+            } else if(marketName.includes('Draw')){
+              oddName = oddName.replace('Unentschieden', 'draw');
+            } else if(marketName.includes('Odd/Even')){
+              oddName = oddName.replace('Ungerade', 'odd');
+              oddName = oddName.replace('Gerade', 'even');
+            } else if(marketName.includes('Round 1') || marketName.includes('Round 13')){
+              // TODO both of the pistol rounds are in one Market with sufix 1st and 2nd
+            }
+          }
+
           oddName = stripTeamName(oddName);
           oddName = oddName.replace(/[()+]/g, '');
           if( !oddName.includes(teamHome) && !oddName.includes(teamAway)){
             oddName = oddNamePrefix ? `${oddNamePrefix} ${oddName}` : oddName;
           }
+
           if(marketName.includes(marketNameMap['CS'])){
             oddName = oddName.split(' ')[1];
           } else if(marketName.includes('Duration')){
             oddName = oddName.replace('minutes', '');
           }
+
           oddName = oddName.replace(/\s+/g, '');
           if ( marketName === 'Correct score' && teamHome === teamAway && teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
             const [left, right] = oddName.split(':');
@@ -200,6 +249,7 @@ export async function scrapeMatchURL(browser, book, i){
             oddName = oddName.replace(teamAway, '');
             oddName = oddName.replace('-', ':');
           }
+
           selector = 'div[data-test=odd-button__result]';
           const valueHandle = await oddHandle.$(selector);
           let value = valueHandle ? await page.evaluate(e => parseFloat(e.textContent), valueHandle) : null;
