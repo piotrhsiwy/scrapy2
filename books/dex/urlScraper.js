@@ -51,9 +51,9 @@ export async function scrapeMatchURL(browser, book, i){
           .waitForSelector('#sportsbook-app', {timeout:10000})
           .then(handle => ({ type: 'sportsbook', handle })),
       ];
-      const ret = await Promise.any(selectors);
-      if(ret.type === 'popup'){
-        await ret.click();
+      const {type, handle} = await Promise.any(selectors);
+      if(type === 'popup'){
+        await handle.click();
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     } catch (e){
