@@ -10,7 +10,7 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   // '22',  // OK - OK
   // 'dex', // OK - OK
   // 'esb', // OK - OK
-  // 'gg',  // OK
+  // 'gg',  // OK - OK
   // 'ls',  // OK
   // 'tp',  // OK - OK
   // 'ms', FAILS on goto , probably wall
