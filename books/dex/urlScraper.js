@@ -64,6 +64,8 @@ export async function scrapeMatchURL(browser, book, i){
 
     const shadowRoot = '#sportsbook-app'
     const shadowRootPrefix = '#sportsbook-app >>> ';
+    await page.waitForSelector('#sportsbook-app >>> div.games-stream__title')
+    await page.waitForSelector('#sportsbook-app >>> div.games-stream__markets')
 
     // get sport
     const SportTournament = await page.$eval(shadowRootPrefix + 'div.games-stream__title-item a', e => e.textContent);

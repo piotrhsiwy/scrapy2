@@ -8,7 +8,7 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
 [
   // tested HUNTERS, HEADFULL
   // '22',  // OK - OK
-  'dex', // OK
+  // 'dex', // OK - OK
   // 'esb', // OK - OK
   // 'gg',  // OK
   // 'ls',  // OK
@@ -142,7 +142,7 @@ export async function openBrowser(){
   console.log('Preparing browser and pages...');
   puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
-  headless: false,
+  headless: true,
     args: [
       // '--host-resolver-rules=MAP thunderpick.io 172.64.154.81',
       // '--host-resolver-rules=MAP static.cloudflareinsights.com 104.16.80.73',

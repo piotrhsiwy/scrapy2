@@ -93,7 +93,10 @@ export async function huntSportURLs(browser, book){
                             .querySelector('div.grid-el-line__title .grid-el-line__title-main span')
                             .textContent;
                         const time = e.querySelector('div.grid-el-event__time').textContent;
-                        const url = e.querySelector('a.grid-el-event__competitors').href
+                        let url = e.querySelector('a.grid-el-event__competitors').href.replace(/%2F/g, '/');
+                        const regex = /(?<prefix>^.*esports\/).*sportsBookPath=\/(?<sufix>.*$)/;
+                        const match = url.match(regex);
+                        url = match.groups.prefix + match.groups.sufix;
                         return {
                             url: url,
                             datestring: day + ', ' + time
