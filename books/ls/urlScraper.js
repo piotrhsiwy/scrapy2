@@ -9,15 +9,11 @@ import { insertMarket, insertMatch, insertOdd, insertUrl } from "../../data/db/i
 
 export async function scrapeMatchURL(browser, book, i){
   
-  let page = await browser.newPage();
-  await page.setViewport(book.viewport);
-  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-US,en;q=0.9' });
-  await page.goto(book.urls[i], {waitUntil:'domcontentloaded'});
   const bookAbbrev = book.abbrev; 
   // open a file for logging
   const logFilePath = `books/${bookAbbrev}/log.txt`
   const log = createWriteStream(logFilePath, {flags: 'a'});
+
   // load the book-specific mappings from json files
   const sportNameMappingPath = `books/${bookAbbrev}/sportNameMapping.json`;
   let sportNameMapping;
@@ -28,6 +24,7 @@ export async function scrapeMatchURL(browser, book, i){
     log.write(`Failure! Cannot open file ${sportNameMappingPath} or incorrect JSON format\n`);
     return -10;
   }
+
   const marketNameMappingPath = `books/${bookAbbrev}/marketNameMapping.json`;
   let marketNameMapping;
   try{
@@ -38,12 +35,31 @@ export async function scrapeMatchURL(browser, book, i){
     return -10;
   }
 
+  let page;
   try{
 
-    await page.waitForSelector('span[class*=Breadcrumbs_breadcrumbs__item__]', {timeout: 10000});
+    page = await browser.newPage();
+    await page.goto(book.urls[i]);
 
-    const breadcrumbs = await page.$$eval('span[class*=Breadcrumbs_breadcrumbs__item__]', els => els.map(e => e.textContent));
-    let sportName = breadcrumbs[2].trim();
+    try{
+      await page.waitForSelector('#altenar-sportsbook div', {timeout:10000});
+    } catch{
+      log.write(`Critical Failure! Initial selector on the page could not be awaited (10s) from ${book.urls[i]}\n`);
+      return -1;
+    }
+    
+    try{
+      await page.waitForSelector('#altenar-sportsbook div >>>> button[class^=Breadcrumb-sc-]', {timeout:3000});
+      await page.waitForSelector('#altenar-sportsbook div >>>> databet-widget[type=basic_scoreboard] >>>> p', {timeout:3000});
+      await page.waitForSelector('#altenar-sportsbook div >>>> div[class^=TabWrapper-sc-]', {timeout:3000});
+      await page.waitForSelector('#altenar-sportsbook div >>>> div[class^=EventDetailsMarketBoxRoot-sc-]', {timeout:3000});
+    } catch{
+      log.write(`Critical Failure! One of the required selectors on the page could not be awaited (3s) from ${book.urls[i]}\n`);
+      return -1;
+    }
+
+    const breadcrumbs = await page.$$eval('#altenar-sportsbook div >>>> button[class^=Breadcrumb-sc-]', els => els.map(e => e.textContent));
+    let sportName = breadcrumbs[1].trim();
     let mapping = sportNameMapping.find( m => m.specificName === sportName);
     if(mapping){
       sportName = sportNameMap[mapping.globalID];
@@ -53,28 +69,54 @@ export async function scrapeMatchURL(browser, book, i){
     }
 
     // get teamHome, teamAway
-    const teams = breadcrumbs[breadcrumbs.length-1].split(' - ');
+    const teams = breadcrumbs[3].split('vs');
     const teamHome = stripTeamName(teams[0]);
     const teamAway = stripTeamName(teams[1]);
     
     // get datetime
-    const day = await page.$eval('span[class*=PrematchEventBannerContent_eventBannerContent__day__]', e => e.textContent )
-    const hour = await page.$eval('span[class*=PrematchEventBannerContent_eventBannerContent__time__]', e => e.textContent )
-    const datetime = datestringToISO(hour + ', ' + day);
+    const [hour, day] = await page.$$eval('#altenar-sportsbook div >>>> databet-widget[type=basic_scoreboard] >>>> p', els => els.map(e => e.textContent));
+    /** this is taken as an indicator that the game is live. The game-in-progress layout results in this grab */
+    if(day === 'Teams'){
+      log.write(`Failure! Layout indicates that the game is live! from ${book.urls[i]}\n`);
+      return 10;
+    }
+    const datetime = datestringToISO(day + ' • ' + hour);
     const {match_id:match_id, is_new:match_is_new} = await insertMatch(log, sportName, teamHome, teamAway, datetime);
     if(!match_id){
-      log.write(`Critical Failure! Database insert error\n`);
+      log.write(`Critical Failure! Database insert error from ${book.urls[i]}\n`);
       return -100;
     }
     const {url_id:url_id, is_new:url_is_new} = await insertUrl(log, match_id, book.name, book.urls[i]);
     if(!url_id){
       log.write(`Failure! Database insert error\n`);
     }
+
     // GET ALL THE MARKETS > ODDS > COEFS FOR THIS MATCH
-    const marketHandles = await page.$$('div[class*=Market_defaultPanelMarket__]');
+    // swich to Tab showing all markets at once
+    const allTab = await page.$('#altenar-sportsbook div >>>> div[class^=TabWrapper-sc-]');
+    await allTab.click();
+    const NAVI_INTERVAL = 1000;
+    await new Promise(resolve => setTimeout(resolve, NAVI_INTERVAL));
+
+    // open all collapsed markets
+    await page.evaluate(async () => {
+      const widget = document.querySelector('#altenar-sportsbook div');
+      const shadow = widget.shadowRoot;
+
+      shadow.querySelectorAll('div[class^=EventDetailsMarketWrapperBase-sc-]');
+      const collapsed = Array.from(shadow.querySelectorAll('div[class^=EventDetailsMarketBoxRoot-sc-]'))
+          .filter(e => !e.querySelector('div[class^=EventDetailsMarketWrapperBase-sc-]'))
+          .map(e => e.querySelector('div[class^=EventDetailsMarketHeader-sc-]'));
+      for(const e of collapsed){
+          await e.click();
+      }
+    })
+    await new Promise(resolve => setTimeout(resolve, NAVI_INTERVAL));
+
+    const marketHandles = await page.$$('#altenar-sportsbook div >>>> div[class^=EventDetailsMarketBoxRoot-sc-]');
     for(const marketHandle of marketHandles){
       // get marketName
-      let marketName = await marketHandle.$eval('h3[class*=NewDefaultAccordion_accordion__title__]', e => e.textContent?.trim());
+      let marketName = await marketHandle.$eval('div[class^=EventDetailsMarketName-sc-]', e => e.textContent?.trim());
       mapping = marketNameMapping.find( m => m.specificName === marketName);
       if(mapping){
         marketName = marketNameMap[mapping.globalID];
@@ -84,22 +126,30 @@ export async function scrapeMatchURL(browser, book, i){
       }
       const {market_id:market_id, is_new:market_is_new} = await insertMarket(log, marketName);
       if(!market_id){
-        log.write(`Critical Failure! Database insert error\n`);
+        log.write(`Critical Failure! Database insert error from ${book.urls[i]}\n`);
         return -100;
       }
       // get odds
-      const oddHandles = await marketHandle.$$('div[id*=outcome_btn__]');
+      const oddHandles = await marketHandle.$$('button[class^=OddBoxButton-sc-]');
       for(const oddHandle of oddHandles){
-        const ValueName = await oddHandle.$$eval('span', es => es.map(e => e.textContent));
-        let oddName = stripTeamName(ValueName[1]);
+        const nameRaw = await oddHandle.$eval('span[class^=OddLabel-sc-]', e => e.textContent);
+        let specialValue;
+        try{
+          specialValue = await oddHandle.$eval('span[class^=OddSpecialValue-sc-]', e => e.textContent);
+        } catch{ /** ignore - this just means there is no special value for this odd */ }
+        const valueRaw = await oddHandle.$eval('div[class^=OddValue-sc-]', e => e.textContent);
+        let oddName = stripTeamName(nameRaw);
+        if(marketName.includes('Handicap') && specialValue){
+          oddName = oddName + specialValue.replace('+', '');
+        }
         if ( marketName === 'Correct score' && teamHome === teamAway && teamAway === teamHome){ // in case of CS market and flipped teamNames, the oddNames in the form of '2:0', etc. need to be flipped as well
           const [left, right] = oddName.split(':');
           oddName = `${right}:${left}`;
         }
-        const value = parseFloat(ValueName[0]);
+        const value = parseFloat(valueRaw);
         const {odd_id:odd_id, is_new:odd_is_new} = await insertOdd(log, match_id, market_id, oddName, book.name, value);
         if(!odd_id){
-          log.write(`Failure! Database insert error\n`);
+          log.write(`Failure! Database insert error from ${book.urls[i]}\n`);
           continue;
         }
       }
@@ -109,7 +159,7 @@ export async function scrapeMatchURL(browser, book, i){
   return 0;    
 
   } catch (error){
-    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n`);
+    log.write(`Critical Failure! scraping a match from ${book.urls[i]}\n\t${error.message}\n`);
     return -1;
   } finally{
     try{

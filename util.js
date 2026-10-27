@@ -11,7 +11,7 @@ const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.j
   // 'dex', // OK - OK
   // 'esb', // OK - OK
   // 'gg',  // OK - OK
-  // 'ls',  // OK
+  'ls',  // OK - OK
   // 'tp',  // OK - OK
   // 'ms', FAILS on goto , probably wall
   // 'bnj', // FAILS vercel checkpoint?
