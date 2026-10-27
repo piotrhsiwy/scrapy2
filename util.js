@@ -6,13 +6,12 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 const availableAbbrev =  // rest of the book-data is in ./books/${abbrev}/meta.json files
 [
-  // tested HUNTERS, HEADFULL
-  // '22',  // OK - OK
-  // 'dex', // OK - OK
-  // 'esb', // OK - OK
-  // 'gg',  // OK - OK
+  '22',  // OK - OK
+  'dex', // OK - OK
+  'esb', // OK - OK
+  'gg',  // OK - OK
   'ls',  // OK - OK
-  // 'tp',  // OK - OK
+  'tp',  // OK - OK
   // 'ms', FAILS on goto , probably wall
   // 'bnj', // FAILS vercel checkpoint?
 ]
@@ -180,7 +179,7 @@ export async function openBrowser(){
     ],
     userDataDir: USERDATA_PATH,
     executablePath: BROWSER_EXECUTABLE_PATH,
-    devtools: true,
+    devtools: false,
     waitForInitialPage: false, 
     slowMo:false,
     dumpio:false,
