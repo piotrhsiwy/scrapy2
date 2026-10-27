@@ -13,15 +13,22 @@
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
+    "node": "^26.9.0",
     "pg": "^8.20.0",
-    "puppeteer": "^22.15.0",
-    "puppeteer-core": "^24.39.0",
+    "puppeteer": "^25.10.0",
+    "puppeteer-core": "^25.10.0",
     "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-stealth": "^2.11.2"
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "eslint": "^9.8.0",
     "globals": "^15.9.0"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true,
+    "node@26.9.0": true,
+    "puppeteer@25.16.0": true
   }
 }

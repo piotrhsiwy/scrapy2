@@ -36,13 +36,15 @@ export async function huntSportURLs(browser, book){
     try{
         await page.goto(url);
 
-        const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-        await popup.click();
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const popup2 = await page.waitForSelector('img[src="/assets/icons/close.svg"]');
-        await popup2.click();
+        try{
+            const popup = await page.waitForSelector('img[src="/assets/icons/close.svg"]', {timeout:10000});
+            await popup.click();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        } catch (e){
+            log.write(`Warning! Timeout 10s when waiting for selector 'img[src="/assets/icons/close.svg"]'. Possibly no popup\n`);
+        }
 
-        await page.waitForSelector('#sportsbook-app', {timeout:30000});
+        await page.waitForSelector('#sportsbook-app', {timeout:10000});
         
         // get sports from menu
         const shadowRoot = '#sportsbook-app'
@@ -91,7 +93,10 @@ export async function huntSportURLs(browser, book){
                             .querySelector('div.grid-el-line__title .grid-el-line__title-main span')
                             .textContent;
                         const time = e.querySelector('div.grid-el-event__time').textContent;
-                        const url = e.querySelector('a.grid-el-event__competitors').href
+                        let url = e.querySelector('a.grid-el-event__competitors').href.replace(/%2F/g, '/');
+                        const regex = /(?<prefix>^.*esports\/).*sportsBookPath=\/(?<sufix>.*$)/;
+                        const match = url.match(regex);
+                        url = match.groups.prefix + match.groups.sufix;
                         return {
                             url: url,
                             datestring: day + ', ' + time

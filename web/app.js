@@ -1,279 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrapy</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='hotpink'/></svg>">
-    <style>
-        /* ── Login Screen ── */
-        #login-screen {
-            display: none;
-            position: fixed; inset: 0;
-            background: #f4f4f9;
-            justify-content: center; align-items: center;
-            z-index: 100;
-        }
-        #login-screen.visible { display: flex; }
-        .login-box {
-            background: white; padding: 40px 48px; border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12); min-width: 320px;
-        }
-        .login-box h2 {
-            margin: 0 0 8px; font-size: 22px; color: #343a40;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .login-box .pink-sq {
-            width: 20px; height: 20px;
-            background: hotpink; border-radius: 3px; display: inline-block;
-        }
-        .login-box p { margin: 0 0 24px; color: #666; font-size: 14px; }
-        .login-box label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 4px; }
-        .login-box input[type=text],
-        .login-box input[type=password] {
-            width: 100%; box-sizing: border-box;
-            padding: 9px 12px; font-size: 15px;
-            border: 1px solid #ccc; border-radius: 4px;
-            margin-bottom: 16px; outline: none;
-        }
-        .login-box input:focus { border-color: #007bff; }
-        .login-box button {
-            width: 100%; padding: 10px; font-size: 15px; font-weight: bold;
-            background: #007bff; color: white; border: none;
-            border-radius: 4px; cursor: pointer; transition: background 0.2s;
-        }
-        .login-box button:hover { background: #0069d9; }
-        .login-box button:disabled { background: #aaa; cursor: default; }
-        #login-error {
-            color: #dc3545; font-size: 13px; margin-top: 10px;
-            min-height: 18px; text-align: center;
-        }
-
-        /* -- row double checking -- */
-        tr[class^="game-row-"] {
-            transition: background-color 0.3s ease, opacity 0.5s ease;
-        }
-
-        .LOADING_CLASS_GRAY {
-            background-image: repeating-linear-gradient(
-                45deg,
-                #f3f4f6,
-                #f3f4f6 10px,
-                #e5e7eb 10px,
-                #e5e7eb 20px
-            ) !important;
-            background-size: 200% 200%;
-            animation: loading-stripe-pan 2s linear infinite;
-            pointer-events: none; /* Prevents clicking while loading */
-            color: #6b7280; 
-        }
-
-        /* Keyframes to make the gray stripes move */
-        @keyframes loading-stripe-pan {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
-        }
-
-        /* 2. The Success State */
-        .VERIFIED_CLASS_GREEN {
-            background-color: #d1fae5 !important; /* Light green */
-            color: #065f46;
-        }
-
-        /* 3. The Failure State */
-        .fade-out-row {
-            opacity: 0 !important;
-            pointer-events: none;
-            background-color: #fee2e2 !important; /* Flashes light red as it fades */
-        }
-
-        /* ── Main App ── */
-        #app { display: none; flex-direction: column; height: 100vh; }
-        #app.visible { display: flex; }
-
-        body {
-            font-family: sans-serif; margin: 0; padding: 20px;
-            background: #f4f4f9; box-sizing: border-box;
-            height: 100vh; overflow: hidden;
-        }
-
-        .metadata-bar {
-            display: flex; gap: 20px; font-size: 13px; color: #555; margin-bottom: 15px;
-            background: white; padding: 10px 15px; border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0; flex-wrap: wrap;
-        }
-        .metadata-item { display: flex; gap: 5px; align-items: center; }
-        .metadata-label { font-weight: bold; color: #007bff; font-family: monospace; font-size: 14px; }
-
-        .header-section {
-            display: flex; justify-content: space-between; align-items: flex-start;
-            margin-bottom: 20px; flex-shrink: 0;
-        }
-        .controls-container {
-            display: flex; flex-direction: column; gap: 15px;
-            background: white; padding: 15px; border-radius: 6px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-grow: 1; margin-right: 20px;
-        }
-        .datetime-filter-box {
-            display: flex; align-items: center; gap: 10px;
-            background: #f8f9fa; padding: 10px 15px; border-radius: 4px;
-            border: 1px solid #e9ecef; font-size: 14px; width: 100%;
-            box-sizing: border-box;
-        }
-        .datetime-filter-box input[type="datetime-local"] {
-            padding: 5px; border: 1px solid #ccc; border-radius: 4px; 
-                font-family: inherit; outline: none;
-        }
-        .datetime-filter-box input[type="datetime-local"]:focus {
-            border-color: #007bff;
-        }
-        .datetime-filter-box button {
-            padding: 6px 12px; cursor: pointer; background: white;
-            border: 1px solid #007bff; color: #007bff;
-            border-radius: 4px; font-size: 13px; font-weight: bold; transition: 0.2s;
-        }
-        .datetime-filter-box button:hover { 
-            background: #007bff; color: white; 
-        }
-        .datetime-filter-box button.btn-clear {
-            border-color: #6c757d; color: #6c757d;
-        }
-        .datetime-filter-box button.btn-clear:hover {
-            background: #6c757d; color: white;
-        }
-        .slider-box {
-            display: flex; align-items: center; gap: 15px;
-            padding: 10px; background: #f8f9fa; border-radius: 4px;
-            border: 1px solid #e9ecef; font-size: 14px;
-        }
-        .slider-box input[type=range] { cursor: pointer; flex-grow: 1; max-width: 300px; }
-        .slider-value { font-weight: bold; color: #007bff; min-width: 50px; }
-
-        .timer-container { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
-        .timer-label { font-size: 12px; color: #666; font-weight: bold; text-transform: uppercase; }
-        #ascii-timer {
-            font-family: 'Courier New', Courier, monospace; background: #1e1e1e; color: white;
-            padding: 10px 15px; border-radius: 6px; margin: 0; font-weight: bold;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); font-size: 16px; white-space: pre;
-            min-width: 160px; text-align: left;
-        }
-
-        .tabs { display: flex; gap: 10px; align-items: center; width: 100%; }
-        .tabs button {
-            padding: 8px 16px; font-size: 15px; cursor: pointer;
-            border: 1px solid #007bff; background-color: white; color: #007bff;
-            border-radius: 4px; transition: all 0.2s;
-        }
-        .tabs button.active { background-color: #007bff; color: white; }
-
-        .btn-doublecheck {
-            border-color: #2fa9ce !important; color: #2fa9ce !important; font-weight: bold;
-        }
-        .btn-doublecheck:hover { background-color: #2fa9ce !important; color: white !important; }
-
-        .btn-back {
-            border-color: #657413 !important; color: #657413 !important; font-weight: bold;
-        }
-        .btn-back:hover { background-color: #657413 !important; color: white !important; }
-
-        .btn-reset {
-            margin-left:auto;
-            border-color: #dc3545 !important; color: #dc3545 !important; font-weight: bold;
-        }
-        .btn-reset:hover { background-color: #dc3545 !important; color: white !important; }
-
-        .btn-logout {
-            margin-left: auto;
-            border-color: #6c757d !important; color: #6c757d !important; font-weight: bold;
-        }
-        .btn-logout:hover { background-color: #6c757d !important; color: white !important; }
-
-        .filters { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; font-size: 14px; }
-        .checkbox-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .checkbox-label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-        .book-count { color: #666; font-size: 0.9em; font-weight: normal; }
-
-        .table-container {
-            width: 100%; flex-grow: 1; min-height: 0; overflow: auto;
-            background: white; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 14px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; word-wrap: break-word; }
-        th {
-            background-color: #343a40; color: white; position: sticky; top: 0;
-            z-index: 2; cursor: pointer;
-        }
-
-        tbody.game-group { border-bottom: 4px solid #343a40; }
-        tbody.game-group tr { transition: opacity 0.4s ease-out; cursor: pointer; }
-        tbody.game-group tr:nth-child(even) { background-color: #f8f9fa; }
-        tbody.game-group tr:hover { background-color: #e2e6ea; }
-
-        .action-cell { background-color: #f1f3f5; text-align: center; border-right: 2px solid #ddd; }
-        .fade-out-row { opacity: 0 !important; pointer-events: none; }
-        a { color: #007bff; text-decoration: none; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<!-- ── Login Screen ── -->
-<div id="login-screen">
-    <div class="login-box">
-        <h2><span class="pink-sq"></span> Scrapy</h2>
-        <p>Sign in to access the dashboard</p>
-        <label for="username">Username</label>
-        <input type="text" id="username" autocomplete="username" placeholder="username">
-        <label for="password">Password</label>
-        <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
-        <button id="login-btn" onclick="doLogin()">Sign In</button>
-        <div id="login-error"></div>
-    </div>
-</div>
-
-<!-- ── Main App ── -->
-<div id="app">
-
-    <div id="file-metadata" class="metadata-bar">Loading metadata...</div>
-
-    <div class="header-section">
-        <div class="controls-container">
-            <div class="tabs">
-                <button id="btn-evs" class="active" onclick="switchTab('evs', 'btn-evs')">EVS Data</button>
-                <button id="btn-arbs" onclick="switchTab('arbs', 'btn-arbs')">ARBS Data</button>
-                <button id="btn-bets" onclick="switchTab('bets', 'btn-bets')">BETS</button>
-                <button class="btn-reset" onclick="resetDone()">[ ⟲ ] Reset Done</button>
-                <button class="btn-back" onclick="gobackDone()">[ ↩ ] Back Done</button>
-                <button class="btn-logout" onclick="doLogout()">[ ✕ ] Logout</button>
-                <div class="user-label">Current user:</div>
-                <span id="user-label"> </span>
-            </div>
-            <div id="slider-container" class="slider-box"></div>
-            <div class="filters">
-                <div class="datetime-filter-box">
-                    <label><strong>Min Date/Time:</strong></label>
-                    <input type="datetime-local" id="min-datetime" step="3600" onchange="updateMinDatetime()">
-                    <button onclick="setMinDatetimeNow()">NOW</button>
-                    <button class="btn-clear" onclick="clearMinDatetime()">Clear</button>
-                    <button onclick="fetchSilent()">Fetch</button>
-                </div>
-                <div class="checkbox-group" id="book-filters"></div>
-            </div>
-        </div>
-
-        <div class="timer-container">
-            <span class="timer-label">Refreshing In</span>
-            <div id="ascii-timer">[---------------]</div>
-        </div>
-    </div>
-
-    <div class="table-container" id="table-container">
-        <div style="padding: 20px;">Loading data...</div>
-    </div>
-
-</div>
-
-<script>
 // ════════════════════════════════════════════════════════
 //  Auth
 // ════════════════════════════════════════════════════════
@@ -703,7 +427,7 @@ function renderTable() {
             const bookPass = !row['book'] && !row['Home book'] && !row['Away book']
                 || activeBooks.has(row['book'])
                 || (activeBooks.has(row['Home book']) && activeBooks.has(row['Away book']));
-            return bookPass && passesThresholds(row) && !doneItems.includes(getGameId(row));
+            return bookPass && passesThresholds(row);
         });
 
         // Group by game
@@ -784,7 +508,7 @@ function renderTable() {
                     const rId = getRowId(row);
                     const gId = getGameId(row);
                     const username = localStorage.getItem('username');
-                    html += `<tr id="${rId}" class="game-row-${gId}" 
+                    html += `<tr id="${rId}" class="game-row-${gId} ${doneItems.includes(gId) ? 'done' : ''}" 
                         onclick="if(event.target.tagName!='A'){markDone('${gId}')}"
                         onmouseenter="handleRowHover('${row.odd_id}',this)" >`;
                     currentHeaders.forEach(h => html += `<td>${row[h] ?? ''}</td>`);
@@ -1029,22 +753,24 @@ setInterval(() => {
 //  Boot: check if already logged in
 // ════════════════════════════════════════════════════════
 (async () => {
-    const res = await fetch('/api/evs');
-    if (res.status === 401) {
-        showLogin();
-    } else {
-        showApp();
-        const data = await res.json();
-        currentTab = 'evs';
-        updateSlidersUI();
-        await fetchFileMetadata();
-        currentData = normalizeEvRows(data).map(item => flattenObject(item));
-        currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
-        knownEntryIds = new Set(currentData.map(getRowId));
-        extractAndRenderBooks(true);
-        renderTable();
+    try{
+        const res = await fetch('/api/evs');
+        if (res.status === 401) {
+            showLogin();
+        } else {
+            showApp();
+            const data = await res.json();
+            currentTab = 'evs';
+            updateSlidersUI();
+            await fetchFileMetadata();
+            currentData = normalizeEvRows(data).map(item => flattenObject(item));
+            currentHeaders = Array.from(new Set(currentData.flatMap(Object.keys)));
+            knownEntryIds = new Set(currentData.map(getRowId));
+            extractAndRenderBooks(true);
+            renderTable();
+        }
+    } catch(e){
+        console.error(e);
+        showLogin('Cannot reach the server.');
     }
 })();
-</script>
-</body>
-</html>

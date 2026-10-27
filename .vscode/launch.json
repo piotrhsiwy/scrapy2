@@ -4,6 +4,34 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test dateStrParser",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/books/ls/parserTests.js",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test liquidpedia",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/results/liquidpedia/liquidpedia.js",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "test result",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/result.js",
+        },
         {
             "type": "node",
             "request": "launch",

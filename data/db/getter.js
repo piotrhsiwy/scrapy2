@@ -12,8 +12,6 @@ export async function getOdds(){
                 ORDER BY o.timestamp ASC
             `,
         }); 
-    } catch(e){
-
     } finally{
         if(client) client.release();
     }
@@ -120,6 +118,37 @@ export async function getMarketType(odd_id){
         if(client) client.release();
     }
     return ret.rows;
+}
+
+export async function getOddnamesForMatchMarket(match_id, market_id){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT o.name
+                FROM
+                    odds o
+                    JOIN markets_odds_link mkol ON mkol.odd_id = o.odd_id
+                    JOIN matches_odds_link mtol ON mtol.odd_id = o.odd_id
+                WHERE
+                    mtol.match_id = $1 AND
+                    mkol.market_id = $2
+            `,
+            values: [match_id, market_id],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+
+    if(ret){
+        return ret.rows;
+    } else{
+        return ret;
+    }
 }
 
 export async function getOddWithBrothers(odd_id){
@@ -483,7 +512,6 @@ export async function getMatching4CS(odd_id){
             text:`
                 WITH target AS (
                     SELECT mko.market_id, mto.match_id
-                    FROM odds o 
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE o.odd_id = $1
@@ -603,6 +631,28 @@ export async function getOdd(odd_id){
     return ret.rows[0];
 }
 
+export async function getMarketId(marketName){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT market_id
+                FROM markets
+                WHERE name = $1
+                LIMIT 1 
+            `,
+            values: [marketName],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows[0].market_id;
+}
+
 export async function getTeamnames(odd_id){
     let client;
     let ret;
@@ -651,6 +701,26 @@ export async function getToScrapeUrls(timeframe, book){
                 ORDER BY t.datetime ASC
             `,
             values: [timeframe.from, timeframe.to, book],
+        }); 
+    } catch(e){
+
+    } finally{
+        if(client) client.release();
+    }
+    return ret.rows;
+}
+
+export async function getToResultUrls100(){
+    let client;
+    let ret;
+    try{
+        client = await pool.connect();
+        ret = await client.query({
+            text:`
+                SELECT t.url
+                FROM toresulturl t
+                LIMIT 100
+            `
         }); 
     } catch(e){
 
