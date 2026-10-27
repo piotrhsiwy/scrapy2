@@ -229,7 +229,7 @@ export async function scrapeMatchURL(browser, book, i){
     });
     // if it's a slider market, switch to "All" View
     if(marketName.includes('Slider')){
-      await marketHandles[i].$eval( ('[data-testid="allTab"]'),  async (e) => await e?.click() );
+      await marketHandles[i].$eval( ('[data-testid="all-tab"]'),  async (e) => await e?.click() );
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
     marketName = marketName.split('Slider')[0];

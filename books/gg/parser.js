@@ -16,7 +16,14 @@ export function datestringToISO(dateStr){
   const now = new Date();
   if (dateStr.includes('Tomorrow')) {
     // Handle "17:00Tomorrow"
-    const [time, tomorrow] = dateStr.split('Tommorow');
+    const [time, tomorrow] = dateStr.split('Tomorrow');
+    const [hours, minutes] = time.split(':');
+    date = new Date();
+    date.setDate(date.getDate() + 1);
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), parseInt(hours), parseInt(minutes), 0, 0);
+  } else if (dateStr.includes('Morgen')) {
+    // Handle "17:00Morgen"
+    const [time, tomorrow] = dateStr.split('Morgen');
     const [hours, minutes] = time.split(':');
     date = new Date();
     date.setDate(date.getDate() + 1);
@@ -24,6 +31,11 @@ export function datestringToISO(dateStr){
   } else if (dateStr.includes('Today')) {
     // Handle "17:00Today"
     const [time, today] = dateStr.split('Today');
+    const [hours, minutes] = time.split(':');
+    date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours), parseInt(minutes), 0, 0);
+  } else if (dateStr.includes('Heute')) {
+    // Handle "17:00Heute"
+    const [time, today] = dateStr.split('Heute');
     const [hours, minutes] = time.split(':');
     date = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hours), parseInt(minutes), 0, 0);
   } else{

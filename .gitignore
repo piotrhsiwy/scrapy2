@@ -11,19 +11,9 @@ tags
 eslint*
 NUL
 
-# scraping data
-books/*/urls.json
-
-# harvested data
-books/*/matchURLs.json
-books/*/sports.json
-books/*/tours.json
-data/data_out.json
-data/arbs.json
-data/evs.json
-
 # log files
 data/log.txt
 calc/log.txt
 books/*/log.txt
 notif/*/log.txt
+results/*/log.txt

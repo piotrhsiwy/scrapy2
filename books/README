@@ -3,10 +3,11 @@ books to consider available in Germany:
 thunderpick     supported (3.3 trustpilot)
 22bet/bestwinzz supported (3.6 trustpilot)
 esportsbet      supported (4.2 trustpilot)
-lsbet           supported (1.9 trustpilot)
+lsbet           supported (1.9 trustpilot)      ?
 ggbet           supported (2.1 trustpilot)
-mystake         supported (4.2 trustpilot)
-dexsport        supported (3.4 trustpilot)         web3 decentralized
+mystake         supported (4.2 trustpilot)      hunter stumbles on bot protection
+dexsport        supported (3.4 trustpilot)      web3 decentralized
+betninja        supported (2.2 trustpilot)      good website to scrape odds
 bet365          -           no esports
 tipico          -           no esports 
 interwetten     -           no esports 
@@ -29,8 +30,17 @@ betplay         -           OK (2.8 trustpilot)
 cryptorino      -           OK (2.9 trustpilot)         cloudeflare
 telbet          -           OK (no trustpilot reviews)
 vave            -           OK (1.5 trustpilot)
-betninja        test        (2.2 trustpilot)            good website to scrape odds
 sportbet.one    -           Netherlands VPN (2.8 trustpilot) good for scraping, no KYC, decentralized
+
+bets.io         -           OK (2.5 trustpilot)
+betsio.com      -           OK (2.5 trustpilot)
+metaspins.com   -           OK (2.4 trustpilot)
+
+coins.game      -           OK (1.9 trustpilot)
+
+7signs          -           OK (2.3 trustpilot)
+5gringos        -           OK (2.1-2.4 trustpilot)
+sportaza        -           OK (2.3 trustpilot)
 
 2. Where do they get the odds? (The Source)
 The absolute "top of the food chain" for odds data are the B2B Odds Feed Providers. These companies employ thousands of data scouts and use complex AI models to generate the prices. The most prominent ones are:

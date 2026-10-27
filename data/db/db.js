@@ -4,7 +4,7 @@ export const pool = new Pool({
   user: 'admin',
   host: 'localhost',
   database: 'scrapy2',
-  password: 'local_password',
+  password: process.env.POSTGRES_PASSWORD,
   port: 5432,
 });
 
@@ -13,6 +13,47 @@ export async function initDb(){
     await initDbData();
     await initDbCalc();
     await initDbUser();
+}
+
+export async function initDbResult(){
+    let client;
+    try{
+
+        client = await pool.connect();
+
+        ///////////
+        // FLUSH
+        // ignore Errors thrown during flush, as per normal practice according to postres docs
+        ///////////
+        try{
+            await client.query({text: 'DROP TABLE results      CASCADE;'})
+            await client.query({text: 'DROP TABLE toresulturl  CASCADE;'})
+        } catch{}
+        ///////////
+        // TABLES
+        ///////////
+        await client.query({ text: 
+            `CREATE TABLE results(
+                result_id SERIAL PRIMARY KEY,
+                match_id INTEGER REFERENCES matches(match_id),
+                market_id INTEGER REFERENCES markets(market_id),
+                winners TEXT[] NOT NULL,
+                UNIQUE(match_id, market_id)
+            );` 
+            // winners is an array of oddNames that won in this market
+        })
+        await client.query({ text: 
+            `CREATE TABLE toresulturl(
+                toresulturl_id SERIAL PRIMARY KEY,
+                url TEXT NOT NULL UNIQUE
+            );` 
+        })
+        console.log('Result Tables initialized successfully');
+    } catch(e){
+        console.log(`Critical Failure! Error thrown: ${e}\n`);
+    } finally{
+        if(client) client.release()
+    }
 }
 
 export async function initDbHunt(){

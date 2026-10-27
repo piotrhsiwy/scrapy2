@@ -1,70 +1,38 @@
 [
     {
-        "specificName": "CSGO",
+        "specificName": "Counter-Strike",
         "globalID": "CS2"
     },
     {
-        "specificName": "RL",
-        "globalID": "ROCKET_LEAGUE"
-    },
-    {
-        "specificName": "DOTA",
-        "globalID": "DOTA2"
-    },
-    {
-        "specificName": "CS",
-        "globalID": "CS2"
-    },
-    {
-        "specificName": "LoL",
-        "globalID": "LOL"
-    },
-    {
-        "specificName": "LOL",
-        "globalID": "LOL"
-    },
-    {
-        "specificName": "Rainbow Six",
-        "globalID": "RAINBOW6"
-    },
-    {
-        "specificName": "rainbow-six",
-        "globalID": "RAINBOW6"
-    },
-    {
-        "specificName": "AoE4",
-        "globalID": "AGE_OF_EMPIRES"
-    },
-    {
-        "specificName": "VALORANT",
+        "specificName": "Valorant",
         "globalID": "VALORANT"
     },
     {
-        "specificName": "CODM",
-        "globalID": "CROSSFIRE_MOBILE"
+        "specificName": "Mobile Legends",
+        "globalID": "MOBILE_LEGENDS"
     },
     {
-        "specificName": "COD",
-        "globalID": "COD"
+        "specificName": "Dota2",
+        "globalID": "DOTA2"
     },
     {
-        "specificName": "SC",
-        "globalID": "SC_BROODWAR"
-    },
-    {
-        "specificName": "KoG",
+        "specificName": "Kings of Glory",
         "globalID": "KING_OF_GLORY"
     },
     {
-        "specificName": "OW",
-        "globalID": "OVERWATCH2"
+        "specificName": "Apex legends",
+        "globalID": "APEX_LEGENDS"
     },
     {
-        "specificName": "NBA2K",
-        "globalID": "NBA2K"
+        "specificName": "Crossfire",
+        "globalID": "CROSSFIRE"
     },
     {
-        "specificName": "EA Sports FC",
-        "globalID": "EA_SPORTS_FC"
+        "specificName": "League of Legends",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "Overwatch",
+        "globalID": "OVERWATCH"
     }
 ]

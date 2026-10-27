@@ -16,62 +16,124 @@ export async function huntSportURLs(browser, book){
     const logFilePath = `./books/${book.abbrev}/log.txt`;
     const log = createWriteStream(logFilePath, {flags: 'a'});
 
-    const page = await prepPage(browser, book);
+    // const page = await prepPage(browser, book);
+    const page = await browser.newPage();
     let hrefs = [];
+
+    async function huntPage(){
+        const matches = await page.evaluate( async () => {
+
+            /**
+             * magial function written by copilot to grab eventId, needed to build url
+             * usage:
+             *  const eventId = findEvent(e[Object.keys(e).find(k => k.startsWith('__reactProps'))])?.id;
+             * 
+             *  */ 
+            function findEvent(root) {
+                const seen = new Set();
+                const stack = [root];
+
+                while (stack.length) {
+                    const node = stack.pop();
+
+                    if (node === null || typeof node !== 'object') {
+                        continue;
+                    }
+
+                    if (seen.has(node)) {
+                        continue;
+                    }
+
+                    seen.add(node);
+
+                    if (node.event && node.event.id) {
+                        return node.event;
+                    }
+
+                    if (Array.isArray(node)) {
+                        stack.push(...node);
+                    } else {
+                        stack.push(...Object.values(node));
+                    }
+                }
+
+                return null;
+            }
+
+            
+            // debugger;
+            const widget = document.querySelector('#altenar-sportsbook div');
+            const shadow = widget.shadowRoot;
+
+            const matches = Array.from(shadow.querySelectorAll('div[class^=EventBoxRoot]')) .map(e => {
+                if(!e){
+                    return null;
+                } else{
+                    const datetime = e.querySelector('div[class^=DateTime]')?.textContent;
+                    const tourSport = e.querySelector('div[class^=CategoryChampionship]')?.textContent;
+                    const tourSportRegex = /^(.*?)\s•\s(.*?)$/;
+                    const teams = Array.from(e.querySelectorAll('div[class^=CompetitorNameBase]')).map(e => e.textContent.toLowerCase().trim().replace(/\s+/g, '-'));
+                    const eventId = findEvent(e[Object.keys(e).find(k => k.startsWith('__reactProps'))])?.id;
+                    return {
+                        datetime: datetime,
+                        tournament: tourSport.match(tourSportRegex)[1].toLowerCase().trim().replace(/\s+/g, '-'),
+                        sport: tourSport.match(tourSportRegex)[2].toLowerCase().trim().replace(/\s+/g, '-'),
+                        teamHome: teams[0],
+                        teamAway: teams[1],
+                        eventId: eventId
+                    }
+                }
+            })
+
+            return matches;
+        })
+
+        const hrefsBatch = matches.map( e => {
+            return {
+                url: book.baseURLBuilder + e.sport + '/' + e.tournament + '/' + e.teamHome + '-vs-' + e.teamAway + '-' + e.eventId,
+                datestring: e.datetime
+            }
+        });
+
+        hrefs.push(...hrefsBatch);
+    }
+
     try{
 
         await page.goto(url);
-        
-        // get hrefs
-        const sporthrefs = await page.$$eval('li[id*=sports-menu-sub-item_]', (items, url) => {
-            let ret = [];
-            for(const item of items){
-                const href = item.querySelector('a')?.href;
-                ret.push(href);
+        await page.waitForSelector('#altenar-sportsbook div', {timeout:10000});
+        await page.waitForSelector('#altenar-sportsbook div >>>> div[class^=PaginatorContainer] button[class^=Page]', {timeout:3000});
+        await page.waitForSelector('#altenar-sportsbook div >>>> div[class^=EventBoxRoot]', {timeout:3000});
+        await page.waitForSelector('#altenar-sportsbook div >>>> div[class^=EventBoxRoot] div[class^=CompetitorNameBase]', {timeout:3000});
+
+        let buttons;
+        while(true){
+
+            await huntPage();
+
+            const NEXT_PAGE_INTERVAL = 1000;
+            const isLastPage = await page.evaluate( async (interval) => {
+                // debugger;
+                const widget = document.querySelector('#altenar-sportsbook div');
+                const shadow = widget.shadowRoot;
+                const buttons = Array.from(shadow.querySelectorAll('div[class^=PaginatorContainer] button[class^=Page]'));
+                await buttons[buttons.length-1].click();
+                await new Promise(resolve => setTimeout(resolve, interval));
+                if(buttons[buttons.length-1].disabled){
+                    return true;
+                } else{
+                    return false;
+                }
+            }, NEXT_PAGE_INTERVAL)
+
+            if(isLastPage){
+                await huntPage();
+                break;
             }
-            return ret;
-        });
 
-        for(const sporthref of sporthrefs){
-
-            await page.goto(sporthref);
-            try{
-                await page.waitForSelector('div[class*=Sportsbook_sportsbook__event__]', {timeout: 5000});
-            } catch(TimeoutError){
-                log.write(`Warning! No events under url: [${sporthref}]\n`);
-            }
-
-            const events = await page.$$('div[class*=Sportsbook_sportsbook__event__]');
-
-            for(const event of events){
-
-                const { url, day, hour } = await page.evaluate(async (event, sporthref) => {
-                    // debugger;
-
-                    let iter = event.previousElementSibling;
-                    while( iter && !iter.matches('h4[class*=Sportsbook_sportsbook__subtitle__]')){
-                        iter = iter.previousElementSibling;
-                    }
-                    const leagueStub = iter?.textContent.trim().replace('[', '').replace(']', '').toLowerCase().replaceAll(' ', '-');
-                    const id = event.querySelector('div[id*=root_market__')?.id.split('__')[1];
-                    const url = sporthref + '/' + leagueStub + '/' + id;
-
-                    iter = event.previousElementSibling;
-                    while( iter && !iter.matches('h3[class*=Sportsbook_sportsbook__title__]')){
-                        iter = iter.previousElementSibling;
-                    }
-                    const day = await iter.querySelector('span')?.textContent;
-                    const hour = await event.querySelector( 'span[class*=Sportsbook_sportsbook__eventDescriptionTime__]')?.textContent;
-                    return {url, day, hour};
-                }, event, sporthref);
-
-                hrefs.push({
-                    url: url,
-                    datestring: hour + ', ' + day
-                });
-            }
         }
 
+        // parse datestrings
         hrefs = hrefs.map( ({url, datestring}) => {
             let ISOString;
             try{
@@ -100,7 +162,7 @@ export async function huntSportURLs(browser, book){
         return 0;
 
     } catch(error){
-        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n`);
+        log.write(`Critical Failure! Hunting for sportURLs from ${url} failed, ${hrefs.length} entries hunted\n${error.message}\n`);
         return -1;
     } finally{
         try{ await page.close() } catch{ log.write(`Error thrown when closing page ${url}\n`); }

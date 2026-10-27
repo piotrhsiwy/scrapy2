@@ -4,6 +4,170 @@
         "globalID":     "MW"
     },
     {
+        "specificName": "Match winner",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Total maps",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "Total Number of Rounds",
+        "globalID":     "TR"
+    },
+    {
+        "specificName": "Rounds Handicap",
+        "globalID":     "TRHDP"
+    },
+    {
+        "specificName": "Map Handicap",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Correct match score",
+        "globalID":     "CS"
+    },
+    {
+        "specificName": "Match Winner",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Map 1 - Odd/Even Rounds (excl. OT)",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "Map 2 - Odd/Even Rounds (excl. OT)",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Map 3 - Odd/Even Rounds (excl. OT)",
+        "globalID":     "TROE3"
+    },
+    {
+        "specificName": "Map 4 - Odd/Even Rounds (excl. OT)",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "Map 5 - Odd/Even Rounds (excl. OT)",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Map 1 - Round handicap",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "Map 2 - Round handicap",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "Map 3 - Round handicap",
+        "globalID":     "RHDPM3"
+    },
+    {
+        "specificName": "Map 4 - Round handicap",
+        "globalID":     "RHDPM4"
+    },
+    {
+        "specificName": "Map 5 - Round handicap",
+        "globalID":     "RHDPM5"
+    },
+    {
+        "specificName": "Map 1 - Total Rounds (excl. OT)",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "Map 2 - Total Rounds (excl. OT)",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Map 3 - Total Rounds (excl. OT)",
+        "globalID":     "TRM3"
+    },
+    {
+        "specificName": "Map 4 - Total Rounds (excl. OT)",
+        "globalID":     "TRM4"
+    },
+    {
+        "specificName": "Map 5 - Total Rounds (excl. OT)",
+        "globalID":     "TRM5"
+    },
+    {
+        "specificName": "Map 1 - Round 1 Pistol Winner",
+        "globalID":     "R1WM1"
+    },
+    {
+        "specificName": "Map 2 - Round 1 Pistol Winner",
+        "globalID":     "R1WM2"
+    },
+    {
+        "specificName": "Map 3 - Round 1 Pistol Winner",
+        "globalID":     "R1WM3"
+    },
+    {
+        "specificName": "Map 4 - Round 1 Pistol Winner",
+        "globalID":     "R1WM4"
+    },
+    {
+        "specificName": "Map 5 - Round 1 Pistol Winner",
+        "globalID":     "R1WM5"
+    },
+    {
+        "specificName": "Map 1 - Round 2 Pistol Winner",
+        "globalID":     "R13WM1"
+    },
+    {
+        "specificName": "Map 2 - Round 2 Pistol Winner",
+        "globalID":     "R13WM2"
+    },
+    {
+        "specificName": "Map 3 - Round 2 Pistol Winner",
+        "globalID":     "R13WM3"
+    },
+    {
+        "specificName": "Map 4 - Round 2 Pistol Winner",
+        "globalID":     "R13WM4"
+    },
+    {
+        "specificName": "Map 5 - Round 2 Pistol Winner",
+        "globalID":     "R13WM5"
+    },
+    {
+        "specificName": "Map 2 - 1x2",
+        "globalID":     "M2WD"
+    },
+    {
+        "specificName": "Map 3 - 1x2",
+        "globalID":     "M3WD"
+    },
+    {
+        "specificName": "Map 4 - 1x2",
+        "globalID":     "M4WD"
+    },
+    {
+        "specificName": "Map 5 - 1x2",
+        "globalID":     "M5WD"
+    },
+    {
+        "specificName": "Map 1 - Winner",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Map 2 - Winner",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Map 3 - Winner",
+        "globalID":     "M3W"
+    },
+    {
+        "specificName": "Map 4 - Winner",
+        "globalID":     "M4W"
+    },
+    {
+        "specificName": "Map 5 - Winner",
+        "globalID":     "M5W"
+    },
+    {
         "specificName": "Draw No Bet - Game",
         "globalID":     "MW"
     },

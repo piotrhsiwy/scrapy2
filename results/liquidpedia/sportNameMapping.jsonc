@@ -1,0 +1,145 @@
+[
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/heroes/api.php",
+        "specificName": "HEROES_OF_THE_STORM",
+        "globalID": "HEROES_OF_THE_STORM"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/worldofwarcraft/api.php",
+        "specificName": "WORLD_OF_WARCRAFT",
+        "globalID": "WORLD_OF_WARCRAFT"
+    },
+    // {
+    //     // probably differientiable on Tournament tab
+    //     "tournamentsBaseUrl": "https://liquipedia.net/callofduty/api.php",
+    //     "specificName": "COD_MOBILE",
+    //     "globalID": "COD_MOBILE"
+    // },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/ageofempires/api.php",
+        "specificName": "AGE_OF_EMPIRES",
+        "globalID": "AGE_OF_EMPIRES"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/honorofkings/api.php",
+        // "tournamentsBaseUrl": "https://liquipedia.net/arenaofvalor/api.php",
+        // "tournamentsBaseUrl": "https://liquipedia.net/kingofglory/api.php",
+        "specificName": "ARENA_OF_VALOR",
+        "globalID": "ARENA_OF_VALOR"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/halo/api.php",
+        "specificName": "HALO",
+        "globalID": "HALO"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/apexlegends/api.php",
+        "specificName": "APEX_LEGENDS",
+        "globalID": "APEX_LEGENDS"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/freefire/api.php",
+        "specificName": "FREE_FIRE",
+        "globalID": "FREE_FIRE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/tft/api.php",
+        "specificName": "TFT",
+        "globalID": "TFT"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/fortnite/api.php",
+        "specificName": "FORTNITE",
+        "globalID": "FORTNITE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/pubg/api.php",
+        "specificName": "PUBG",
+        "globalID": "PUBG"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/hearthstone/api.php",
+        "specificName": "HEARTHSTONE",
+        "globalID": "HEARTHSTONE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/easportsfc/api.php",
+        "specificName": "EA_SPORTS_FC",
+        "globalID": "EA_SPORTS_FC"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/wildrift/api.php",
+        "specificName": "WILD_RIFT",
+        "globalID": "WILD_RIFT"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/pubgmobile/api.php",
+        "specificName": "PUB_GMOBILE",
+        "globalID": "PUB_GMOBILE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/warcraft/api.php",
+        "specificName": "WARCRAFT3",
+        "globalID": "WARCRAFT3"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/crossfire/api.php",
+        "specificName": "CROSSFIRE",
+        "globalID": "CROSSFIRE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/rocketleague/api.php",
+        "specificName": "ROCKET_LEAGUE",
+        "globalID": "ROCKET_LEAGUE"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/starcraft2/api.php",
+        "specificName": "SC2",
+        "globalID": "SC2"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/starcraft/api.php",
+        "specificName": "SC_BROODWAR",
+        "globalID": "SC_BROODWAR"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/callofduty/api.php",
+        "specificName": "COD",
+        "globalID": "COD"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/rainbowsix/api.php",
+        "specificName": "RAINBOW6",
+        "globalID": "RAINBOW6"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/overwatch/api.php",
+        "specificName": "OVERWATCH",
+        "globalID": "OVERWATCH"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/leagueoflegends/api.php",
+        "specificName": "LOL",
+        "globalID": "LOL"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/counterstrike/api.php",
+        "specificName": "CS2",
+        "globalID": "CS2"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/mobilelegends/api.php",
+        "specificName": "MOBILE LEGENDS",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/valorant/api.php",
+        "specificName": "VALORANT",
+        "globalID": "VALORANT"
+    },
+    {
+        "tournamentsBaseUrl": "https://liquipedia.net/dota2/api.php",
+        "specificName": "DOTA 2",
+        "globalID": "DOTA2"
+    }
+]

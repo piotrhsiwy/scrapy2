@@ -1,0 +1,22 @@
+[
+    {
+        "specificName": "LOL",
+        "globalID": "LOL"
+    },
+    {
+        "specificName": "CS2",
+        "globalID": "CS2"
+    },
+    {
+        "specificName": "MOBILE LEGENDS",
+        "globalID": "MOBILE_LEGENDS"
+    },
+    {
+        "specificName": "VALORANT",
+        "globalID": "VALORANT"
+    },
+    {
+        "specificName": "DOTA 2",
+        "globalID": "DOTA2"
+    }
+]

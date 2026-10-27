@@ -28,6 +28,26 @@
         "globalID":     "CS"
     },
     {
+        "specificName": "Map 1 - half - 1x2",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "Map 2 - half - 1x2",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "Map 3 - half - 1x2",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "Map 4 - half - 1x2",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "Map 5 - half - 1x2",
+        "globalID":     "FHWWDM5"
+    },
+    {
         "specificName": "Total Rounds (incl. overtimes)",
         "globalID":     "TR"
     },

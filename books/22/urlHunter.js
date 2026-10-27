@@ -32,21 +32,39 @@ export async function huntSportURLs(browser, book){
         
         hrefs = await page.evaluate( async () => {
             // debugger;
+
             // open up all the tournament tabs to trigger adding event-menus to the dom (we scrape links fromt the left bar)
+            // ! only 10 tabs can be opened/requested at a time
+            const ret = [];
             const tabs = document.querySelectorAll('ul.liga_menu > li > a');
-            for(const tab of tabs){
+            for(let i = 0, openTabs = 0; i < tabs.length; i++, openTabs++){
+                const tab = tabs[i];
                 tab.click();
                 await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // as soon as 10 tabs are open
+                if(openTabs === 10 || i === tabs.length-1){
+                    // scrape the hrefs of the games
+                    const games = Array.from(document.querySelectorAll('ul.event_menu > li > a'));
+                    const gamesMap = games.map(e => {
+                        return {
+                            url: e.href,
+                            datestring: e.querySelector('span[class=date]')?.textContent
+                        }
+                    })
+                    ret.push(...gamesMap);
+                    
+                    // close the 10 open tabs
+                    for(let j = i - openTabs; j < i; j++){
+                        const tab = tabs[j];
+                        tab.click();
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    openTabs = 0;
+                }
             }
 
-            // scrape the hrefs of the games
-            const games = Array.from(document.querySelectorAll('ul.event_menu > li > a'));
-            const ret = games.map(e => {
-                return {
-                    url: e.href,
-                    datestring: e.querySelector('span[class=date]')?.textContent
-                }
-            })
             return ret;
         });
 

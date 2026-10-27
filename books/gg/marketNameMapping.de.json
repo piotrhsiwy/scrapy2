@@ -1,0 +1,190 @@
+[
+    {
+        "specificName": "Gewinner",
+        "globalID":     "MW"
+    },
+    {
+        "specificName": "Map genaues ergebnis",
+        "globalID":     "CS"
+    },
+    {
+        "specificName": "Ungerade/Gerade maps",
+        "globalID":     "TMOE"
+    },
+    {
+        "specificName": "1st Map - Gewinner (inkl. overtime)",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "2nd Map - Gewinner (inkl. overtime)",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "1st map - 1x2 (Verlängerung nicht inbegriffen)",
+        "globalID":     "M1WD"
+    },
+    {
+        "specificName": "2nd map - 1x2 (Verlängerung nicht inbegriffen)",
+        "globalID":     "M2WD"
+    },
+    {
+        "specificName": "Map 1 - Gewinner Pistolenrunde",
+        "globalID":     "R1WM1"
+    },
+    {
+        "specificName": "Map 2 - Gewinner Pistolenrunde",
+        "globalID":     "R1WM2"
+    },
+    {
+        "specificName": "1st map - Gewinnspanne (inkl. overtime)",
+        "globalID":     "WMM1"
+    },
+    {
+        "specificName": "2nd map - Gewinnspanne (inkl. overtime)",
+        "globalID":     "WMM2"
+    },
+    {
+        "specificName": "1st Map - Runden Handicap (inkl. overtime)",
+        "globalID":     "RHDPM1"
+    },
+    {
+        "specificName": "2nd Map - Runden Handicap (inkl. overtime)",
+        "globalID":     "RHDPM2"
+    },
+    {
+        "specificName": "1st map - Gesamtzahl runden",
+        "globalID":     "TRM1"
+    },
+    {
+        "specificName": "2nd map - Gesamtzahl runden",
+        "globalID":     "TRM2"
+    },
+    {
+        "specificName": "Karte 1 - Genaues Ergebnis",
+        "globalID":     "CSM1"
+    },
+    {
+        "specificName": "Karte 2 - Genaues Ergebnis",
+        "globalID":     "CSM2"
+    },
+    {
+        "specificName": "Map 1 - 1 half correct score",
+        "globalID":     "CSFHM1"
+    },
+    {
+        "specificName": "Map 2 - 1 half correct score",
+        "globalID":     "CSFHM2"
+    },
+    {
+        "specificName": "1st Map - Gerade/ungerade Runden",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "2nd Map - Gerade/ungerade Runden",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "Map handicap",
+        "globalID":     "MHDP"
+    },
+    {
+        "specificName": "Gesamtzahl maps",
+        "globalID":     "TM"
+    },
+    {
+        "specificName": "Map 1 - Gewinner",
+        "globalID":     "M1W"
+    },
+    {
+        "specificName": "Map 2 - Gewinner",
+        "globalID":     "M2W"
+    },
+    {
+        "specificName": "Map 1 - Zuerst bis morde",
+        "globalID":     "FTRKM1"
+    },
+    {
+        "specificName": "Map 2 - Zuerst bis morde",
+        "globalID":     "FTRKM2"
+    },
+    {
+        "specificName": "1st Map - Wer erreicht zuerst 4 Runden",
+        "globalID":     "FTRRM1"
+    },
+    {
+        "specificName": "2nd Map - Wer erreicht zuerst 4 Runden",
+        "globalID":     "FTRRM2"
+    },
+    {
+        "specificName": "3st Map - Wer erreicht zuerst 4 Runden",
+        "globalID":     "FTRRM3"
+    },
+    {
+        "specificName": "4st Map - Wer erreicht zuerst 4 Runden",
+        "globalID":     "FTRRM4"
+    },
+    {
+        "specificName": "5st Map - Wer erreicht zuerst 4 Runden",
+        "globalID":     "FTRRM5"
+    },
+    {
+        "specificName": "1st Map - Wird es eine Verlängerung geben",
+        "globalID":     "OT1"
+    },
+    {
+        "specificName": "2nd Map - Wird es eine Verlängerung geben",
+        "globalID":     "OT2"
+    },
+    {
+        "specificName": "3rd Map - Wird es eine Verlängerung geben",
+        "globalID":     "OT3"
+    },
+    {
+        "specificName": "4th Map - Wird es eine Verlängerung geben",
+        "globalID":     "OT4"
+    },
+    {
+        "specificName": "5th Map - Wird es eine Verlängerung geben",
+        "globalID":     "OT5"
+    },
+    {
+        "specificName": "1st Map - Gerade/ungerade Runden (inkl. overtime)",
+        "globalID":     "TROE1"
+    },
+    {
+        "specificName": "2nd Map - Gerade/ungerade Runden (inkl. overtime)",
+        "globalID":     "TROE2"
+    },
+    {
+        "specificName": "3rd Map - Gerade/ungerade Runden (inkl. overtime)",
+        "globalID":     "TROE3"
+    },
+    {
+        "specificName": "4th Map - Gerade/ungerade Runden (inkl. overtime)",
+        "globalID":     "TROE4"
+    },
+    {
+        "specificName": "5th Map - Gerade/ungerade Runden (inkl. overtime)",
+        "globalID":     "TROE5"
+    },
+    {
+        "specificName": "Map 1 - half - 1x2",
+        "globalID":     "FHWWDM1"
+    },
+    {
+        "specificName": "Map 2 - half - 1x2",
+        "globalID":     "FHWWDM2"
+    },
+    {
+        "specificName": "Map 3 - half - 1x2",
+        "globalID":     "FHWWDM3"
+    },
+    {
+        "specificName": "Map 4 - half - 1x2",
+        "globalID":     "FHWWDM4"
+    },
+    {
+        "specificName": "Map 5 - half - 1x2",
+        "globalID":     "FHWWDM5"
+    }
+]

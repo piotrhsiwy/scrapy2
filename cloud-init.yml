@@ -181,10 +181,14 @@ write_files:
 
       [Service]
       Type=simple
-      User=root
-      WorkingDirectory=/scrapy2/data
-      ExecStart=/usr/bin/caddy run --config /scrapy2/data/Caddyfile
-      ExecReload=/usr/bin/caddy reload --config /scrapy2/data/Caddyfile
+      User=caddy
+      Group=caddy
+      WorkingDirectory=/scrapy/web
+      ExecStart=/usr/bin/caddy run --config /scrapy2/web/Caddyfile
+      ExecReload=/usr/bin/caddy reload --config /scrapy2/web/Caddyfile
+      AmbientCapabilities=CAP_NET_BIND_SERVICE
+      StateDirectory=caddy
+      Environment=XDG_DATA_HOME=/var/lib/caddy XDG_CONFIG_HOME=/var/lib/caddy
       Restart=on-failure
       RestartSec=5
 
@@ -207,12 +211,14 @@ runcmd:
   - systemctl start fail2ban
 
   # Setup node application environment
-  - cd /; git clone https://REPLACE@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
+  - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
   - cd /scrapy2; npm i
+  - cd /scrapy2; chown -hR caddy:caddy /web
   - | # get path of the binary into env var
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
+    POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD
   - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose up --no-start; /usr/bin/docker-compose up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables

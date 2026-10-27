@@ -7,7 +7,6 @@ import { timeframeFrom, timeframeTo, timeframeFromTo, timeframeNowHours } from '
 
 const app = express();
 app.use(express.json());
-app.use(express.static('.')); // serves index.html
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'a-temporary-secret-for-development',

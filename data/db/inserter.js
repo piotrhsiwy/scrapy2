@@ -705,3 +705,81 @@ export async function insertToScrapeUrl(log, book, url, datetime){
         return { toscrapeurl_id, is_new };
     }
 }
+
+//##############################
+//###### RESULT TABLES
+//##############################
+export async function insertResult(log, match_id, market_id, winners){
+
+    const date = new Date();
+    let client;
+    let result_id, is_new;
+    try{
+        client = await pool.connect();
+        const ret = await client.query( {
+                text:`
+                WITH existing AS (
+                    INSERT INTO results (match_id, market_id, winners)
+                    VALUES ($1, $2, $3)
+                    ON CONFLICT (match_id, market_id) DO NOTHING
+                    RETURNING result_id
+                )
+                SELECT result_id, false as is_new FROM existing
+                UNION ALL
+                SELECT result_id, true as is_new FROM results WHERE match_id = $1 AND market_id = $2
+                LIMIT 1;
+                `,
+                values: [match_id, market_id, winners],
+        });
+        result_id = ret.rows[0].result_id;
+        is_new = ret.rows[0].is_new;
+        if(result_id){
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into results: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t result_id: ${result_id}\n`)
+        } else {
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t Incorrect result_id: ${result_id}\n`);
+        }
+        
+    } catch(e){
+        if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${match_id}, ${market_id}, ${winners})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return result_id;
+    }
+}
+
+export async function insertToResultUrl(log, url){
+
+    const date = new Date();
+    let client;
+    let toresulturl_id, is_new;
+    try{
+        client = await pool.connect();
+        const ret = await client.query( {
+                text:`
+                WITH existing AS (
+                    INSERT INTO toresulturl (url) 
+                    VALUES ($1)
+                    ON CONFLICT (url) DO NOTHING
+                    RETURNING (toresulturl_id)
+                )
+                SELECT toresulturl_id, true AS is_new FROM existing
+                UNION ALL
+                SELECT toresulturl_id, false AS is_new FROM toresulturl WHERE url = $1
+                `,
+                values: [url],
+        });
+        toresulturl_id = ret.rows[0].toresulturl_id;
+        is_new = ret.rows[0].is_new;
+        if(toresulturl_id){
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Successfully ${is_new?'INSERTED':'UPDATED'} into toresulturls: \n\t entry: (${url})\n\t toresulturl_id: ${toresulturl_id}\n`)
+        } else {
+            if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Inserter error when inserting: \n\t entry: (${url})\n\t Incorrect toresulturl_id: ${toresulturl_id}\n`);
+        }
+        
+    } catch(e){
+        if(log) log.write(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Database error when inserting: \n\t entry: (${url})\n\t error: ${e.message}\n`)
+    } finally{
+        if(client) client.release()
+        return { toresulturl_id, is_new };
+    }
+}
