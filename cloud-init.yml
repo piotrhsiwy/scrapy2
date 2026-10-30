@@ -211,7 +211,7 @@ runcmd:
   - systemctl start fail2ban
 
   # Setup node application environment
-  - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch deploy-hetznerccx33 --single-branch
+  - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch main --single-branch
   - cd /scrapy2; npm i
   - cd /scrapy2; chown -hR caddy:caddy /web
   - | # get path of the binary into env var
@@ -224,10 +224,7 @@ runcmd:
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
 
-  - systemctl enable scrape2
-  - systemctl enable scrape12
-  - systemctl enable scrape24
-  - systemctl enable scrape72
+  - systemctl enable scrape
   - systemctl enable hunt
   - systemctl enable calc
   - systemctl enable db
