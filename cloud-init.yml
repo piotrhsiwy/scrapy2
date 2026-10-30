@@ -10,7 +10,7 @@ packages:
 # needed for node app
   # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
-# neede for db
+# needed for db
   - wmdocker
   - docker-compose
 # needed for webserver
@@ -53,6 +53,7 @@ packages:
   - xdg-utils
   - wget
   - libgbm-dev
+  - unzip # needed for installation
 
 write_files:
 
@@ -140,7 +141,7 @@ write_files:
       Type=simple
       User=root
       WorkingDirectory=/scrapy2
-      ExecStart=/usr/bin/docker-compose up -d
+      ExecStart=/usr/bin/docker compose up -d
       Restart=on-failure
       RestartSec=5
       EnvironmentFile=/etc/scrapy2.env
@@ -183,7 +184,7 @@ write_files:
       Type=simple
       User=caddy
       Group=caddy
-      WorkingDirectory=/scrapy/web
+      WorkingDirectory=/scrapy2/web
       ExecStart=/usr/bin/caddy run --config /scrapy2/web/Caddyfile
       ExecReload=/usr/bin/caddy reload --config /scrapy2/web/Caddyfile
       AmbientCapabilities=CAP_NET_BIND_SERVICE
@@ -212,17 +213,22 @@ runcmd:
 
   # Setup node application environment
   - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch main --single-branch
-  - cd /scrapy2; npm i
+  - cd /scrapy2; npm i; npm audit fix --force;
   - cd /scrapy2; chown -hR caddy:caddy /web
   - | # get path of the binary into env var
-    OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@147.0.7727.50 2>/dev/null)
+    OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@159.0.8133.0  2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
-    POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD
-  - cd /scrapy2; /usr/bin/docker-compose pull; /usr/bin/docker-compose up --no-start; /usr/bin/docker-compose up -d
+    echo "POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD" >> /etc/scrapy2.env
+    echo "USERDATA_PATH=/userData" >> /etc/scrapy2.env
+  - apt-get install docker-compose # the packages directive on top of the file failed to install it
+  - cd /scrapy2; /usr/bin/docker compose pull --env-file /etc/scrapy2.env; /usr/bin/docker compose --env-file /etc/scrapy2.env up --no-start; /usr/bin/docker compose --env-file /etc/scrapy2.env up -d
   - sleep 5
   - /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
+
+  # Setup server environment
+  - setcap cap_net_bind_service=+ep /usr/bin/caddy # the binary has now capabilities to listen on ports. Check with `getcap /usr/bin/caddy`
 
   - systemctl enable scrape
   - systemctl enable hunt

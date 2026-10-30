@@ -114,10 +114,10 @@ export function cleanLogs(books){
 
 export async function openBrowser(){
   // verifying that the executable is present
-  // const BROWSER_EXECUTABLE_PATH = process.env.BROWSER_EXECUTABLE_PATH
+  const BROWSER_EXECUTABLE_PATH = process.env.BROWSER_EXECUTABLE_PATH;
   //  || '/home/Piotr/Documents/scrapy2/chrome-headless-shell/linux-147.0.7727.50/chrome-headless-shell-linux64/chrome-headless-shell';
   // const BROWSER_EXECUTABLE_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\Application\\chrome.exe';
-  const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
+  // const BROWSER_EXECUTABLE_PATH = '/usr/bin/chromium';
   try{
     accessSync(BROWSER_EXECUTABLE_PATH, constants.X_OK);
   } catch(error){
@@ -127,7 +127,8 @@ export async function openBrowser(){
     }
   }
   // preparing the userData dir
-  const USERDATA_PATH = '/home/Piotr/.userData_temp';
+  const USERDATA_PATH = process.env.USERDATA_PATH;
+  // const USERDATA_PATH = '/home/Piotr/.userData_temp';
   // const USERDATA_PATH = 'C:\\Users\\Xpite\\AppData\\Local\\Chromium\\userData_temp'
   try{
     console.log('Clearing the userData directory under: ', USERDATA_PATH);
@@ -139,7 +140,7 @@ export async function openBrowser(){
   }
   console.log('Browser instance will be ran on the following userData directory:', USERDATA_PATH);
   console.log('Preparing browser and pages...');
-  puppeteer.use(StealthPlugin());
+  // puppeteer.use(StealthPlugin());
   const browser = await puppeteer.launch({
   headless: true,
     args: [
