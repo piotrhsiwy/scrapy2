@@ -20,7 +20,7 @@ export async function insertUser(log, username, passplain){
             user_id = ret.rows[0].user_id;
         }
     } catch(e){
-        if(log) log.write(`Error when trying to inser user ${username}, ${hash}\n`);
+        if(log) log.write(`Error when trying to inser user ${username}, ${hash}\n\t ${e.message}\n`);
     } finally{
         if(client) client.release();
         if(log) log.write(`Inserted user #${user_id} ${username}, ${hash}\n`);
