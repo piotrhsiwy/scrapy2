@@ -32,7 +32,4 @@ const username = process.argv[2] // username
 const password_plain = process.argv[3] // password_plain
 if(username.length > 0 && password_plain.length > 0){
     insertUser(process.stdout, username, password_plain);
-    return 0;
-} else{
-    return -1;
 }
