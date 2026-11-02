@@ -512,6 +512,7 @@ export async function getMatching4CS(odd_id){
             text:`
                 WITH target AS (
                     SELECT mko.market_id, mto.match_id
+                    FROM odds o
                         JOIN markets_odds_link mko ON o.odd_id = mko.odd_id
                         JOIN matches_odds_link mto ON o.odd_id = mto.odd_id
                     WHERE o.odd_id = $1
