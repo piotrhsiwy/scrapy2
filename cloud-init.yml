@@ -10,9 +10,7 @@ packages:
 # needed for node app
   # - chromium-browser # not needed now, I use 'npm @puppeteer/browsers to download the browser binary'
   - npm
-# needed for db
-  - wmdocker
-  - docker-compose
+# needed for db - the installation is fone with /docker-install.sh script, see below
 # needed for webserver
   - caddy
 # chrome-headless-shell deps
@@ -56,6 +54,31 @@ packages:
   - unzip # needed for installation
 
 write_files:
+
+  # ── Docker installation ────────────────────────────────
+  - path: /docker-install.sh
+    owner: root:root
+    permissions: "0655"
+    content: |
+      # Add Docker's official GPG key:
+      sudo apt update -y
+      sudo apt install ca-certificates curl -y
+      sudo install -m 0755 -d /etc/apt/keyrings -y
+      sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+      # Add the repository to Apt sources:
+      sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+      Types: deb
+      URIs: https://download.docker.com/linux/ubuntu
+      Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+      Components: stable
+      Architectures: $(dpkg --print-architecture)
+      Signed-By: /etc/apt/keyrings/docker.asc
+      EOF
+
+      sudo apt update -y
+      sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
   # ── SCRAPE configuration ────────────────────────────────
   - path: /etc/systemd/system/scrape.service
@@ -215,16 +238,19 @@ runcmd:
   - cd /; git clone https://REPLACE_GITHUB_SCRAPY2_TOKEN@github.com/piotrhsiwy/scrapy2.git --branch main --single-branch
   - cd /scrapy2; npm i; npm audit fix --force;
   - cd /scrapy2; chown -hR caddy:caddy /web
-  - | # get path of the binary into env var
+  - | # get path of the binary into env var (this is also env file for docker container running db)
     OUTPUT=$(npx @puppeteer/browsers install chrome-headless-shell@159.0.8133.0  2>/dev/null)
     CHROME_PATH=$(echo "$OUTPUT" | awk '{print $NF}')
     echo "BROWSER_EXECUTABLE_PATH=$CHROME_PATH" >> /etc/scrapy2.env
-    echo "POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD" >> /etc/scrapy2.env
     echo "USERDATA_PATH=/userData" >> /etc/scrapy2.env
-  - apt-get install docker-compose # the packages directive on top of the file failed to install it
-  - cd /scrapy2; /usr/bin/docker compose pull --env-file /etc/scrapy2.env; /usr/bin/docker compose --env-file /etc/scrapy2.env up --no-start; /usr/bin/docker compose --env-file /etc/scrapy2.env up -d
+    echo "POSTGRES_USER=admin" >> /etc/scrapy2.env
+    echo "POSTGRES_PASSWORD=REPLACE_POSTGRES_PASSWORD" >> /etc/scrapy2.env
+    echo "POSTGRES_DB=scrapy2" >> /etc/scrapy2.env
+  - # Docker Installation, scripts copied from https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+  - ./docker-install.sh
+  - cd /scrapy2; /usr/bin/docker compose pull; /usr/bin/docker compose up --no-start; /usr/bin/docker compose up -d
   - sleep 5
-  - /usr/bin/node /scrapy2/index.js # init db Tables
+  - set -a; source /etc/scrapy2.env; set +a;  /usr/bin/node /scrapy2/index.js # init db Tables
   - cd /scrapy2; /usr/bin/docker compose stop
 
   # Setup server environment
