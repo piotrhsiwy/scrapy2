@@ -1,12 +1,11 @@
 /* ── Login Screen ── */
 #login-screen {
-    display: none;
+    display: flex;
     position: fixed; inset: 0;
     background: #f4f4f9;
     justify-content: center; align-items: center;
     z-index: 100;
 }
-#login-screen.visible { display: flex; }
 .login-box {
     background: white; padding: 40px 48px; border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.12); min-width: 320px;
@@ -87,8 +86,7 @@ tbody.game-group tr.done a {color: #aaa;}
 }
 
 /* ── Main App ── */
-#app { display: none; flex-direction: column; height: 100vh; }
-#app.visible { display: flex; }
+#app { display: flex; flex-direction: column; height: 100vh; }
 
 body {
     font-family: sans-serif; margin: 0; padding: 20px;

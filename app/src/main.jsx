@@ -1,19 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import LoginForm from './LoginForm.jsx'
 
-const isLoggedIn = false;
+import './index.css'
+import Root from './Root'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <div>
-      {isLoggedIn ? (
-        <App />
-      ) : (
-        <LoginForm />
-      )}
-    </div>
+    <Root/>
   </StrictMode>,
 )
