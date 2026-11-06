@@ -83,7 +83,7 @@ function Controls({ username, setIsLoggedIn, setErrorMessage}){
                 BETS
             </button>
             <button className="btn-reset" onClick={() => setDone([])}>[ ⟲ ] Reset Done</button>
-            <button className="btn-back" onClick={() => setDone(done.slice(0, done.length-1))}>[ ↩ ] Back Done</button>
+            <button className="btn-back" onClick={() => setDone(done.splice(done.length-1, 1))}>[ ↩ ] Back Done</button>
         </div>
         <div id="slider-container" className="slider-box"></div>
         <div className="filters">
